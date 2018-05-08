@@ -3,7 +3,7 @@
     <div class="title">{{status[data].title || 'Basic Table'}}</div>
     <div @click="collapsedSider" :class="rotateIcon">
       <div class="navbar-collapse-bg"></div>
-      <img src="@/assets/images/toggle.png" alt="">
+      <img src="static/img/toggle.png" alt="">
     </div>
     <Menu width="auto" :class="menuitemClasses" :active-name="active" @on-select="mrouter">
       <MenuItem :name="item.value" v-for="(item, index) in status[data].menu" :key="index">

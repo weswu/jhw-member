@@ -8,9 +8,6 @@ axios.interceptors.response.use((res) => {
   if (typeof res.data === 'string') {
     return res.data
   }
-  if (typeof res.data === 'string') {
-    return res.data
-  }
   if (!res.data.success) {
     if (res.data.msg === '未登录') {
       // window.location.href = 'http://www.jihui88.com/member/login.html?backURL=' + location.href

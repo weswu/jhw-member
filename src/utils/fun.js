@@ -1,5 +1,5 @@
 import Vue from 'vue'
-// 全局过滤器
+// 全局方法
 
 /*
  * @author: wes

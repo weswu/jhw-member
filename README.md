@@ -1,13 +1,16 @@
 # jhw-management-platform
-
 > 机汇网后台管理（v4.0）
 
 ## 软件架构
-软件架构说明
+- VUE全家桶(vue vue-router vuex)
+- [axios](https://github.com/axios/axios) ajax类
+- [iview](http://v1.iviewui.com/docs/guide/install) 基于Vux的UI框架
+- [阿里图标](http://iconfont.cn/)
+- [sortablejs] 拖拉组件
+- [vue-clipboard2] 复制
 
 
 ## 安装教程
-
 ```
 # install dependencies
 npm install
@@ -20,23 +23,19 @@ npm run build
 ```
 
 ## 使用说明
-
-
-
-#### 使用阿里图标替换iview图标
-
-
+`master`主分支
+`dev`开发分支
 
 #### 参与贡献
-
 1. Fork 本项目
-2. 新建 Feat_xxx 分支
-3. 提交代码
-4. 新建 Pull Request
+2. 新建分支：git checkout -b name dev
+3. 在dev下合并分支：git merge --no-ff name
+4. 提交代码：git add . -> git commit -m wxw -> git push
+6. 分支拉取：git pull / git fetch origin develop:jhw -> git merge jhw
+7. 合并失败：git stash -> git merge jhw -> git stash pop
 
 
 #### 码云特技
-
 1. 使用 Readme\_XXX.md 来支持不同的语言，例如 Readme\_en.md, Readme\_zh.md
 2. 码云官方博客 [blog.gitee.com](https://blog.gitee.com)
 3. 你可以 [https://gitee.com/explore](https://gitee.com/explore) 这个地址来了解码云上的优秀开源项目

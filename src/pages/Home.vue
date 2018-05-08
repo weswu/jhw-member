@@ -46,10 +46,10 @@ export default {
 </script>
 <style lang="less" scoped>
   .j_home{
-    padding-bottom: 25px
-  }
-  .j_col{
-    padding-top: 28px;
+    padding-bottom: 25px;
+    .j_col{
+      padding-top: 28px;
+    }
   }
   .ivu-layout {
     background: #e7eaef
