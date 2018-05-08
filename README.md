@@ -28,8 +28,8 @@ npm run build
 
 #### 参与贡献
 1. Fork 本项目
-2. 新建分支：git checkout -b name dev
-3. 在dev下合并分支：git merge --no-ff name
+2. 新建分支：git checkout -b <name> dev
+3. 在dev下合并分支：git merge --no-ff <name>
 4. 提交代码：git add . -> git commit -m wxw -> git push
 6. 分支拉取：git pull / git fetch origin develop:jhw -> git merge jhw
 7. 合并失败：git stash -> git merge jhw -> git stash pop
