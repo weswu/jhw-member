@@ -1,0 +1,494 @@
+@import '~iview/src/styles/index.less';
+@import './variables.less';
+
+
+li{
+  list-style-type: none
+}
+iframe{
+  border: none;
+  width: 100%;
+  height: 100%;
+}
+a.primary{
+  color: @primary-color;
+}
+// 头像昵称
+.badge-normal{
+  background: #7ed321
+}
+.badge-vip .ivu-badge-count{
+  background: #ffb500
+}
+.badge-gray .ivu-badge-count{
+  background: #ccc
+}
+
+.j_panel{
+  background: #fff;box-shadow: 0 1px 6px rgba(0, 0, 0, 0.2);
+}
+
+// 高度
+.ivu-layout::-webkit-scrollbar-track{background-color: transparent;}
+.ivu-layout::-webkit-scrollbar{width: 6px;height: 6px;}
+.ivu-layout::-webkit-scrollbar-thumb{background-color: #dedee4;}
+.ivu-layout::-webkit-scrollbar-corner {background-color: transparent;}
+.ivu-layout-content::-webkit-scrollbar-track{background-color: transparent;}
+.ivu-layout-content::-webkit-scrollbar{width: 6px;height: 6px;}
+.ivu-layout-content::-webkit-scrollbar-thumb{background-color: #dedee4;}
+.ivu-layout-content::-webkit-scrollbar-corner {background-color: transparent;}
+.j_layout{
+  height: calc(100vh - 50px);
+  background: @background-color-base
+}
+.j_layout_content{
+  padding: 0 23px 0 21px;
+  .ivu-layout-content{
+    height: calc(100vh - 71px);
+  }
+}
+.j_form{
+  .ivu-layout-content{
+    height: calc(100vh - 116px);
+    overflow-y: scroll;
+  }
+  .ivu-layout-footer{
+    height: 66px;
+    background: @background-color;
+    border: 1px solid @border-color-base;
+    padding: 16px 50px;
+  }
+}
+// 其它高度
+.j_news .ivu-table-body,.j_product .ivu-table-body{
+  height: calc(100vh - 291px);
+}
+.j_company #edui1_iframeholder{
+  height: calc(100vh - 365px) !important;
+}
+.j_enterprise .ivu-layout-content{
+  height: calc(100vh - 176px);
+  padding-bottom: 50px;
+}
+.j_album{
+  .j_album_container{
+    padding: 0 0 0 21px;
+    height: calc(100vh - 145px);
+    .ivu-layout-content{
+      .picture_warpper{
+        height: calc(100vh - 300px);
+      }
+    }
+  }
+}
+
+
+
+
+.j_more{
+  color: #fff;
+  background: @info-color ;
+  text-align: center;
+  display: block;
+  width: 100%;
+  line-height: 45px;
+  height: 45px;
+}
+.j_more:hover{
+  color: #fff;
+}
+// 提示
+.j_tip{
+  padding: 10px 15px;
+  border: 1px solid #ddd;
+  margin: 20px 0;
+  background: #f9f9f9;
+}
+.head_portrait{
+  display: table-cell;
+  vertical-align: middle;
+  text-align: center;
+  img{
+    vertical-align: middle;
+    max-width: 100%;
+    max-height: 100%;
+    width: auto;
+    height: auto;
+    cursor: pointer;
+  }
+}
+// 内页标题
+.j_header{
+  border-bottom: 1px solid #c9c9c9;
+  padding: 26px 0 12px 0;
+  margin-bottom: 24px;
+  .title{
+    padding: 0 15px;
+    color: #595959;
+    font-size: 14px;
+    display: inline-block;
+    height: 32px;
+    line-height: 30px;
+    position: relative;
+    &::after{
+      content: '';
+      position:absolute;
+      left: 0;
+      top: 6px;
+      height: 17px;
+      width: 2px;
+      background: #12bedb;
+    }
+    span{
+      font-size: 12px;
+      padding-left: 10px;
+      color: #666;
+    }
+  }
+  .ivu-btn{
+    margin-left: 7px;
+  }
+}
+// 搜索
+.j_search {
+  button,input{
+    margin-bottom: 9px;
+  }
+}
+//表格
+.j_table_checkbox .ivu-table-cell{
+  padding: 0 11px;
+}
+.j_table_title .ivu-table-cell div{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.j_table_sort .ivu-table-cell div{
+  display: flex;
+  align-items: center;
+  .j_sort{
+    display: flex;flex-direction: column;
+    margin-left: 5px;
+  }
+}
+.ivu-table-wrapper{
+  .ivu-table {
+    color: #a0a0a0;
+    .ivu-table-body{
+      overflow: overlay;
+      &::-webkit-scrollbar-track{background-color: transparent;}
+      &::-webkit-scrollbar{width: 6px;height: 6px;}
+      &::-webkit-scrollbar-thumb{background-color: #dedee4;}
+      &::-webkit-scrollbar-corner {background-color: transparent;}
+      .ivu-table-row{
+        .ivu-table-cell{
+          .iconfont{
+            padding-left: 6px;
+            cursor: pointer;
+            vertical-align: middle;
+            display: inline-block;
+            font-size: 14px;
+            color: #999;
+            display: none;
+          }
+          .icon-bianji2{
+            font-size: 12px;
+          }
+        }
+        &.ivu-table-row-hover{
+          .ivu-table-cell{
+            .iconfont{
+              display: inline-block;
+            }
+          }
+        }
+      }
+    }
+    &::before{
+      height: 0px;
+    }
+    th{
+      font-weight: normal;
+      height: 28px;
+      background: @background-color;
+    }
+  }
+  .ivu-checkbox-inner{
+    border: 1px solid #b2b2b2;
+    border-radius: 4px;
+  }
+}
+
+// 分页
+.ivu-page{
+  vertical-align: middle;
+  display: inline-block;
+  li {
+    float: left;
+    min-width: 25px;
+    height: 25px;
+    line-height: 25px;
+    border-radius: 0px;
+    margin: 0;color: #979797;
+    a{
+      color: #979797;
+    }
+  }
+  .ivu-page-item-active a{
+    color: #fff;
+  }
+}
+
+.j_pagination{
+  overflow: hidden;
+  line-height: 38px;
+  background: @background-color;
+  border: 1px solid #e9e9e9;
+  border-top: none;
+  color: #a0a0a0;
+  font-size: 12px;
+  &.border{
+    border-bottom: none;
+  }
+  &.fixed{
+    border-top: 1px solid #e9e9e9;
+    .page{
+      padding-left: 7px;
+    }
+  }
+  .ivu-checkbox-wrapper{
+    margin: 0 20px 0 11px;
+    .ivu-checkbox-inner{
+      border: 1px solid #b2b2b2;
+      border-radius: 4px;
+    }
+  }
+  .ivu-btn,input{
+    height: 25px;
+    line-height: 25px;
+    padding: 0 10px;
+    box-shadow: none;
+  }
+  .j_buttom,input{
+    border: 1px solid #d5d5d5;
+  }
+  // 右
+  .number {
+    width: 45px;
+    padding-right: 0;
+    margin-right: 2px;
+  }
+  .ivu-page{
+    padding-left: 18px;
+  }
+  .page{
+    display:inline-block;
+    padding-right: 15px;
+    padding-left: 20px;
+    .ivu-input-wrapper{
+      width: 35px;
+      float: left;
+      padding-top: 7px;
+    }
+    .j_buttom{
+      margin-left: 8px;
+    }
+  }
+}
+
+
+
+// 弹出框表单
+.ivu-modal{
+  .ivu-input-wrapper{
+    width: 250px;
+  }
+}
+//微标数
+.ivu-badge-count{
+  border-radius: 5px;
+  font-size: 10px;
+}
+//卡片
+.ivu-card{
+  border-radius: 0px;
+}
+
+
+// Input
+.ivu-input{
+  border: 1px solid #c9c9c9;
+  border-radius: 0px;
+  box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+}
+//Select
+.ivu-select{
+  .ivu-select-selection{
+    border-radius: 0px;
+  }
+  .ivu-select-dropdown{
+    padding: 0;
+    margin: 0;
+    border-radius: 0;
+    box-shadow: none;
+    border: 1px solid @border-color-split;
+  }
+  &.primary{
+    text-align: center;
+    .ivu-select-selection{
+      background: @primary-color;
+      border-radius: 0px;
+      color: #fff;
+      border: none;
+      box-shadow: none;
+    }
+    .ivu-select-arrow{
+      color: #fff;
+      right: 25px;
+    }
+  }
+}
+// 表单
+.ivu-form{
+  .ivu-form-item{
+    margin-bottom: 7px;
+  }
+  .ivu-input-wrapper{
+    max-width: 450px;
+  }
+  .ivu-select{
+    max-width: 450px;
+  }
+  .ivu-cascader{
+    max-width: 450px
+  }
+  .ivu-form-item-content{
+    max-width: 450px;
+    .ivu-form-item-error-tip{
+      top: 100%;
+      right: 10px;    left: auto;
+      padding-top: 0;
+      top: 13px;
+    }
+  }
+  .ivu-select{
+    .ivu-select-selection{
+      border: 1px solid #c9c9c9;
+    }
+  }
+}
+//标签
+.ivu-tabs{
+  color: @title-color;
+  .ivu-tabs-bar{
+    .ivu-tabs-nav{
+      .ivu-tabs-tab-active{
+       color: @tabs-color ;
+      }
+      .ivu-tabs-ink-bar{
+        background-color: @tabs-color;
+      }
+    }
+  }
+}
+.j_home{
+  .ivu-tabs{
+    color: @title-color;
+    .ivu-tabs-bar{
+      border-bottom: none;
+      background: @background-color;
+      padding: 0 8px;
+      .ivu-tabs-nav{
+        .ivu-tabs-tab{
+          &:after {
+            content: '';
+            position: absolute;
+            height: 21px;
+            width: 1px;
+            background: #e8eaed;
+            left: -8px;
+          }
+        }
+      }
+    }
+  }
+}
+
+//对敌框
+.ivu-modal-content{
+  border-radius: 0px;
+  .ivu-modal-header{
+    background: @background-color;
+    border-bottom: none;
+    .ivu-modal-header-inner{
+      color: @title-color;
+    }
+  }
+  .ivu-modal-footer{
+    background: @background-color;
+    border-top: none;
+    overflow: hidden;
+    button{
+      float: right;
+    }
+    .ivu-btn-primary{
+      border: 1px solid @info-color;
+      background: @info-color;
+    }
+    .ivu-btn-text{
+      border: 1px solid @info-color;
+      color: @info-color;
+      margin-left: 10px;
+    }
+  }
+}
+//按钮
+.ivu-btn{
+  border-radius: 0px;
+  margin-right: 5px;
+  &:focus{
+    box-shadow: none;
+  }
+  i{
+    font-size: 12px;
+    padding-right: 5px;
+  }
+}
+.j_buttom_info {
+  border-color: @info-color;
+  color: @info-color;
+}
+// 搜索按钮
+.j_buttom{
+  background: #f7f7f7;
+  border: 1px solid #ddd;
+  padding: 0 15px;
+  height: 32px;
+  line-height: 32px;
+  color: #999;
+  vertical-align: middle;
+  cursor: pointer;
+  &:hover{
+    background: #f7f7f7;
+    border-color: #ddd;
+    color: #999;
+  }
+}
+// 选择按钮
+.j_btn{
+  background: #d9dee4;
+  border-color: #d9dee4;
+  color: #666;
+  margin-right: 5px;
+  &:hover{
+    background: #546478;
+    border-color: #546478;
+    color: #fff;
+  }
+  &.primary{
+    background: #546478;
+    border-color: #546478;
+    color: #fff;
+  }
+}

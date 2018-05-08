@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>机汇网后台</title>
+    <link rel="shortcut icon" href="http://cps.jihui88.com/static/img/favicon.ico">
+    <link rel="stylesheet" href="http://at.alicdn.com/t/font_594793_8kcdfyh1f9gj5rk9.css">
+    <style media="screen" type="text/css">
+      #app-loading{display:flex;justify-content:center;align-items:center;position:absolute;height:100%;width:100%}
+      .app-loading .rect{width:8px;height:36px;background-color:#14a4ff;float:left;margin:3px;animation:animate 1s infinite}
+      .app-loading .rect:nth-child(2){animation-delay:.1s}
+      .app-loading .rect:nth-child(3){animation-delay:.2s}
+      .app-loading .rect:nth-child(4){animation-delay:.3s}
+      .app-loading .rect:nth-child(5){animation-delay:.4s}
+      .app-loading .rect:nth-child(6){animation-delay:.5s}
+      .app-loading .rect:nth-child(7){animation-delay:.6s}
+      .app-loading .rect:nth-child(8){animation-delay:.7s}
+      .app-loading .rect:nth-child(9){animation-delay:.8s}
+      .app-loading .rect:nth-child(10){animation-delay:.9s}
+      @keyframes animate{
+        50%{
+          transform: scaleY(0)
+        }
+      }
+      body::-webkit-scrollbar-track{background-color: transparent;}
+      body::-webkit-scrollbar{width: 6px;height: 6px;}
+      body::-webkit-scrollbar-thumb{background-color: #dedee4;}
+      body::-webkit-scrollbar-corner {background-color: transparent;}
+    </style>
+  </head>
+  <body>
+    <div id="app-loading" class="loading">
+      <div class="app-loading">
+        <div class="rect"></div>
+        <div class="rect"></div>
+        <div class="rect"></div>
+        <div class="rect"></div>
+        <div class="rect"></div>
+        <div class="rect"></div>
+        <div class="rect"></div>
+        <div class="rect"></div>
+        <div class="rect"></div>
+        <div class="rect"></div>
+      </div>
+    </div>
+    <!-- 首页加载 -->
+    <div id="app"></div>
+    <!-- built files will be auto injected -->
+  </body>
+</html>
