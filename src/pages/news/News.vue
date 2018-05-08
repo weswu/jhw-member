@@ -61,7 +61,7 @@ export default {
         { title: '是否上架', sortable: true, width: 105, render: this.displayFilter },
         { title: '是否置顶', width: 90, render: this.topnewsFilter },
         { title: '排序', className: 'j_table_sort', sortable: true, minWidth: 80, render: this.sortFilter },
-        { title: '操作', align: 'left', width: 160, render: this.renderOperate }
+        { title: '操作', className: 'j_table_operate', align: 'left', width: 160, render: this.renderOperate }
       ],
       list: [],
       categoryList: [],
@@ -552,11 +552,7 @@ export default {
           }
         }, '修改'),
         h('span', {
-          style: {
-            paddingLeft: '10px',
-            paddingRight: '10px',
-            color: '#e6e1db'
-          }
+          class: { delimiter: true }
         }, '|'),
         h('a', {
           on: {
@@ -566,11 +562,7 @@ export default {
           }
         }, 'SEO'),
         h('span', {
-          style: {
-            paddingLeft: '10px',
-            paddingRight: '10px',
-            color: '#e6e1db'
-          }
+          class: { delimiter: true }
         }, '|'),
         h('a', [
           h('Poptip', {

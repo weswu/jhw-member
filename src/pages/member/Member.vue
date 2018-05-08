@@ -49,6 +49,7 @@ export default {
         { title: '邮箱', key: 'email' },
         { title: '注册时间', key: 'addTime' },
         { title: '状态', key: 'isAccountEnabled', render: this.typeFilter },
+        { title: '来源（网站编号）', key: '' },
         { title: '操作', width: 120, render: this.renderOperate }
       ],
       list: [],

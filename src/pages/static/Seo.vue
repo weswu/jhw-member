@@ -11,8 +11,9 @@
             </Col>
             <Col span="11" style="text-align:right">
               <Button class="j_buttom_info" @click="update">SEO模板配置</Button>
-              <Button class="j_buttom_info" @click="update">关键字管理</Button>
-              <Button class="j_buttom_info" @click="update" style="margin-right:0px;">Tag标题管理</Button>
+              <Button class="j_buttom_info" @click="update">关键词管理</Button>
+              <Button class="j_buttom_info" @click="update">Tag标签管理</Button>
+              <Button class="j_buttom_info" @click="update" style="margin-right:0px;">付费SEO推广</Button>
             </Col>
           </Row>
         </div>

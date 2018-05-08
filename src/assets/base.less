@@ -172,6 +172,15 @@ a.primary{
     margin-left: 5px;
   }
 }
+.j_table_operate{
+  a{
+
+  }
+  .delimiter{
+    padding: 0 10px;
+    color: '#aaa'
+  }
+}
 .ivu-table-wrapper{
   .ivu-table {
     color: #a0a0a0;
@@ -378,7 +387,7 @@ a.primary{
     }
   }
 }
-//标签
+// 标签切换
 .ivu-tabs{
   color: @title-color;
   .ivu-tabs-bar{
@@ -398,7 +407,17 @@ a.primary{
     .ivu-tabs-bar{
       border-bottom: none;
       background: @background-color;
-      padding: 0 8px;
+      padding: 0 34px;
+      margin-bottom: 20px;
+      &:after {
+        content: '';
+        position: absolute;
+        height: 21px;
+        width: 1px;
+        background: #e8eaed;
+        left: 28px;
+        top: 8px;
+      }
       .ivu-tabs-nav{
         .ivu-tabs-tab{
           &:after {
@@ -407,7 +426,7 @@ a.primary{
             height: 21px;
             width: 1px;
             background: #e8eaed;
-            left: -8px;
+            right: -8px;
           }
         }
       }

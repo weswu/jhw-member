@@ -27,7 +27,6 @@ export default new Router({
     // 企业
     { path: '/enterprise', component: require('@/pages/enterprise/Enterprise').default },
     { path: '/company', component: require('@/pages/enterprise/Company').default },
-    { path: '/sincerity', component: require('@/pages/enterprise/Sincerity').default },
     // 产品
     { path: '/product', component: require('@/pages/product/Product').default },
     // 新闻

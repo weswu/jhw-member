@@ -13,11 +13,11 @@
       <div class="j_search" v-if="searchData.type === '05'" style="margint-top: 12px;">
         <Row :gutter="24">
           <Col span="16">
-            <Input v-model="searchData.title" style="width:140px;margin-right:5px;" placeholder="请输入标题内容"></Input>
+            <Input v-model="searchData.title" style="width:178px;margin-right:5px;" placeholder="请输入标题内容"></Input>
             <button type="button" name="button" class="j_buttom" @click="search">搜索</button>
           </Col>
           <Col span="8" style="text-align:right">
-            <Button class="j_buttom_info" @click="blacklist" style="width:94px;">黑名单</Button>
+            <Button class="j_buttom_info" @click="blacklist" style="width:94px;margin-right:0px;">黑名单</Button>
           </Col>
         </Row>
       </div>
@@ -124,6 +124,7 @@ export default {
         { title: '类型', key: 'type', width: 150, render: this.typeFilter }
       ]
       if (this.searchData.type === '05') {
+        this.columns.splice(3, 0, { title: '来源（网站编号）', key: '', width: 100 })
         let columns2 = [
           { title: '发送人', key: 'fromName' },
           { title: '来源ip', key: 'ip' },
@@ -220,8 +221,7 @@ export default {
       ])
     },
     dataFilter (h, params) {
-      let format = this.dataFormat(params.row.addTime)
-      return h('div', format)
+      return h('div', this.dataFormat(params.row.addTime))
     },
     typeFilter (h, params) {
       let text = ''

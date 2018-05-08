@@ -1,5 +1,5 @@
 # jhw-management-platform
-> 机汇网后台管理（v4.0）
+> [机汇网后台管理](http://www.jihui88.com/member_new/index.html#/)（v4.0）
 
 ## 软件架构
 - VUE全家桶(vue vue-router vuex)
@@ -26,13 +26,15 @@ npm run build
 `master`主分支
 `dev`开发分支
 
-#### 参与贡献
+#### 参与开发
 1. Fork 本项目
 2. 新建分支：git checkout -b name dev
 3. 在dev下合并分支：git merge --no-ff name
 4. 提交代码：git add . -> git commit -m wxw -> git push
-6. 分支拉取：git pull / git fetch origin develop:jhw -> git merge jhw
+6. 分支拉取：git pull / git fetch origin dev:jhw -> git merge jhw
 7. 合并失败：git stash -> git merge jhw -> git stash pop
+
+
 
 
 #### 码云特技

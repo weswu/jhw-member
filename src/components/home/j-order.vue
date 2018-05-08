@@ -11,7 +11,7 @@
             已购产品
           </div>
         </TabPane>
-        <TabPane label="我的积分和权益" name="3">
+        <TabPane label="我的积分" name="3">
           <div style="padding: 0 28px;">
             我的积分和权益
           </div>
@@ -51,7 +51,7 @@ export default {
 
 <style lang="less">
 .j_warpper{
-  padding: 12px 28px 0 28px;
+  padding: 5px 28px 0 28px;
   height: 376px;
 }
 </style>
