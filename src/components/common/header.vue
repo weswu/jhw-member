@@ -1,10 +1,8 @@
 <template>
-  <Row id="J_Header" type="flex" justify="space-between" >
-    <Col span="6">
-      <div class="logo">
-        <a href="http://www.jihui88.com"><img src="http://img.jihui88.com/upload/w/w5/www2/picture/2017/07/05/54b68a5c-fdd2-4842-9e1e-b88d1c403f28.png" height="30" alt=""></a>
-      </div>
-    </Col>
+  <Row id="J_Header" type="flex" justify="space-between">
+    <div class="logo">
+      <a href="http://www.jihui88.com"><img src="http://img.jihui88.com/upload/w/w5/www2/picture/2017/07/05/54b68a5c-fdd2-4842-9e1e-b88d1c403f28.png" height="30" alt=""></a>
+    </div>
     <Col span="18" class="userInfo">
       <a href="#/" class="header_link">首页</a>
       <a href="#/" class="header_link">服务反馈</a>
@@ -115,11 +113,16 @@ export default {
   line-height: 50px;
   color: #fff;
   background: #383d41;
-  img{
-    height: 50px;
-    padding: 10px;
-    border-right: 1px solid #000000;
+  .logo{
+    float:left;
+    width: 120px;
+    border-right: 1px solid #000;
+    img{
+      height: 36px;
+      margin: 4px 0 0 25px;
+    }
   }
+
   .userInfo{
     text-align: right;
     .header_link{

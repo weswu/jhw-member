@@ -7,6 +7,7 @@ import store from './vuex/store'
 import Axios from './utils/diyaxios'
 import iView from 'iview'
 import VueClipboard from 'vue-clipboard2'
+import Cookie from 'vue-cookie'
 import './assets/base.less'
 import './utils/filters'
 import './utils/fun'
@@ -17,6 +18,7 @@ import './../static/ueditor1_4_3/lang/zh-cn/zh-cn.js'
 Vue.use(iView)
 // ajax
 Vue.prototype.$http = Axios
+Vue.prototype.$cookie = Cookie
 // 复制
 Vue.use(VueClipboard)
 // vue config

@@ -115,7 +115,10 @@ export default {
       this.$router.push({path: '/' + name})
     },
     getCps () {
-      return '/index/f45b86af-7a8d-4240-b01f-f1460282e12b'
+      if (!this.$cookie.get('sid') || this.$cookie.get('sid').length < 1) {
+        return ''
+      }
+      return '/index/' + this.$cookie.get('sid')
     }
   }
 }

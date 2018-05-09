@@ -323,6 +323,7 @@ export default {
         h('span', params.row.isdisplay === '1' ? '是' : '否'),
         h('i', {
           class: {
+            'none': true,
             'iconfont': true,
             'icon-bianji2': true
           },
@@ -382,6 +383,7 @@ export default {
         h('span', params.row.sort),
         h('i', {
           class: {
+            'none': true,
             'iconfont': true,
             'icon-bianji2': true
           },
@@ -430,6 +432,7 @@ export default {
         }, [
           h('i', {
             class: {
+              'none': true,
               'iconfont': true,
               'icon-icon--': true
             },
@@ -443,12 +446,14 @@ export default {
           }),
           h('i', {
             class: {
+              'none': true,
               'iconfont': true,
               'icon-tuozhuai': true
             }
           }),
           h('i', {
             class: {
+              'none': true,
               'iconfont': true,
               'icon-icon--1': true
             },

@@ -11,7 +11,7 @@
                   <span class="name">网站名称</span> <i class="iconfont icon-bianji2"></i> <span>(语言：中文)</span> <span class="type">未上线</span>
                 </p>
                 <p>
-                  hppt://pc.jihui88.com/rest/site/203/index <span class="time">(到期时间：2018-04-09 09：00)</span>  <a href="javascript:;" class="buy">购买</a>
+                  http://pc.jihui88.com/rest/site/203/index <span class="time">(到期时间：2018-04-09 09：00)</span>  <a href="javascript:;" class="buy">购买</a>
                 </p>
                 <p class="more">
                   <a href="javascript:;">进入编辑</a><a href="javascript:;">更多选项</a>
@@ -72,6 +72,11 @@ export default {
     background-color: #ff6700;
     border-color: #ff6700;
     color: #fff;
+    &:hover{
+      background-color: #ff6700;
+      border-color: #ff6700;
+      color: #fff;
+    }
   }
   .static_info{
     margin-top: 20px;

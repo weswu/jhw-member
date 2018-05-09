@@ -13,6 +13,9 @@ iframe{
 a.primary{
   color: @primary-color;
 }
+.clear{
+  clear: both
+}
 // 头像昵称
 .badge-normal{
   background: #7ed321
@@ -61,7 +64,7 @@ a.primary{
 }
 // 其它高度
 .j_news .ivu-table-body,.j_product .ivu-table-body{
-  height: calc(100vh - 291px);
+  height: calc(100vh - 297px);
 }
 .j_company #edui1_iframeholder{
   height: calc(100vh - 365px) !important;
@@ -159,7 +162,7 @@ a.primary{
 .j_table_checkbox .ivu-table-cell{
   padding: 0 11px;
 }
-.j_table_title .ivu-table-cell div{
+.j_table_title .ivu-table-cell .title{
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -199,6 +202,8 @@ a.primary{
             display: inline-block;
             font-size: 14px;
             color: #999;
+          }
+          .none{
             display: none;
           }
           .icon-bianji2{
@@ -207,7 +212,7 @@ a.primary{
         }
         &.ivu-table-row-hover{
           .ivu-table-cell{
-            .iconfont{
+            .none{
               display: inline-block;
             }
           }

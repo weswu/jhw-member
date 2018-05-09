@@ -10,7 +10,7 @@
               <Button type="info" icon="plus" @click="update">添加产品</Button>
             </Col>
             <Col span="18" style="text-align:right">
-              <a href="#" class="myShow">我的显示</a>
+              <a href="#" class="myShow" @click="myShow">我的显示</a>
               <Input v-model="model.title" placeholder="请输入新闻标题" style="width:200px"></Input>
               <Button class="j_buttom" @click="search">搜索</Button>
               <Button class="j_btn" @click="update" style="margin-right: 0;">高级搜索</Button>
@@ -32,6 +32,22 @@
     </Layout>
     <SeoDetail ref="seoDetail"/>
     <TransferCategory ref="transferCategory" :data="categoryList" :ids="ids" :type="'product'" @on-change="get"/>
+    <Modal class-name="j_modal" v-model="modalMyShow" width="430">
+      <i class="iconfont icon-x" slot="close"></i>
+      <JHeader :title="'我的显示'" style="border-bottom:none;margin-bottom:5px;"/>
+      <div class="j_tip" style="margin: 0 0 20px 0">
+        温馨提醒：勾选不要超过8个，以免列表显示不下。
+      </div>
+      <CheckboxGroup v-model="checkboxMyShow" class="j_checkout">
+        <Checkbox value="序号">序号</Checkbox><Checkbox value="产品图片">产品图片</Checkbox>
+        <Checkbox value="产品名称">产品名称</Checkbox><Checkbox value="产品型号">产品型号</Checkbox>
+        <Checkbox value="产品价格">产品价格</Checkbox><Checkbox value="产品分类">产品分类</Checkbox>
+        <Checkbox value="添加时间">添加时间</Checkbox><Checkbox value="是否上架">是否上架</Checkbox>
+        <Checkbox value="排序">排序</Checkbox><Checkbox value="二维码">二维码</Checkbox>
+        <Checkbox value="id">id</Checkbox>
+      </CheckboxGroup>
+      <Button type="primary" @click="save" style="margin-top: 10px">保存</Button>
+    </Modal>
   </Layout>
 </template>
 
@@ -53,18 +69,9 @@ export default {
   },
   data () {
     return {
-      columns: [
-        { type: 'selection', className: 'j_table_checkbox', width: 44 },
-        { type: 'index2', className: 'j_table_checkbox', title: '序号', align: 'center', width: 60, render: this.indexFilter },
-        { title: '产品图片', key: 'pic', render: this.imgFilter },
-        { title: '产品名称', className: 'j_table_title', sortable: true, width: 120, render: this.nameFilter },
-        { title: '产品型号', className: 'j_table_title', sortable: true, width: 120, render: this.prodtypeFilter },
-        { title: '产品分类', sortable: true, width: 105, ellipsis: true, render: this.categoryFilter },
-        { title: '添加时间', sortable: true, width: 105, render: this.dataFilter },
-        { title: '是否上架', sortable: true, width: 105, render: this.isdisplayFilter },
-        { title: '排序', className: 'j_table_sort', sortable: true, minWidth: 80, render: this.sortFilter },
-        { title: '操作', align: 'left', width: 160, render: this.renderOperate }
-      ],
+      modalMyShow: false,
+      checkboxMyShow: ['序号', '产品图片', '产品名称', '产品型号', '产品分类', '添加时间', '是否上架', '排序'],
+      columns: [],
       list: [],
       categoryList: [],
       searchData: {
@@ -96,6 +103,7 @@ export default {
   created () {
     this.get()
     this.getCate()
+    this.save()
   },
   methods: {
     get () {
@@ -124,6 +132,42 @@ export default {
     },
     add () {
       this.$router.push({ path: '/product/add' })
+    },
+    myShow () {
+      this.modalMyShow = true
+    },
+    save () {
+      this.columns = [
+        { type: 'selection', className: 'j_table_checkbox', width: 44 }
+      ]
+      this.checkboxMyShow.forEach(val => {
+        if (val === '序号') {
+          this.columns.push({ type: 'index2', className: 'j_table_index', title: '序号', align: 'center', width: 60, render: this.indexFilter })
+        }
+        if (val === '产品图片') {
+          this.columns.push({ title: '产品图片', className: 'j_table_img', key: 'pic', width: 105, render: this.imgFilter })
+        }
+        if (val === '产品名称') {
+          this.columns.push({ title: '产品名称', className: 'j_table_title', sortable: true, width: 150, render: this.nameFilter })
+        }
+        if (val === '产品型号') {
+          this.columns.push({ title: '产品型号', className: 'j_table_title', sortable: true, width: 120, render: this.prodtypeFilter })
+        }
+        if (val === '产品分类') {
+          this.columns.push({ title: '产品分类', className: 'j_table_category', sortable: true, width: 130, ellipsis: true, render: this.categoryFilter })
+        }
+        if (val === '添加时间') {
+          this.columns.push({ title: '添加时间', sortable: true, width: 105, render: this.dataFilter })
+        }
+        if (val === '是否上架') {
+          this.columns.push({ title: '是否上架', sortable: true, width: 105, render: this.isdisplayFilter })
+        }
+        if (val === '排序') {
+          this.columns.push({ title: '排序', className: 'j_table_sort', sortable: true, minWidth: 80, render: this.sortFilter })
+        }
+      })
+      this.columns.push({ title: '操作', align: 'left', width: 160, render: this.renderOperate })
+      this.modalMyShow = false
     },
     sortable (a, b) {
       let objA = this.list[a]
@@ -211,22 +255,98 @@ export default {
     },
     // 过滤
     indexFilter (h, params) {
-      return h('span', params.index + (this.searchData.page - 1) * this.searchData.pageSize + 1)
+      let index = 0
+      let data = []
+      if (params.row.isBest === '01') {
+        index += 1
+      }
+      if (params.row.isNew === '01') {
+        index += 1
+      }
+      if (params.row.isHot === '01') {
+        index += 1
+      }
+      if (index > 1) {
+        if (params.row.isBest === '01') {
+          data.push(h('span', {
+            style: {
+              color: '#ff7e3e'
+            }
+          }, '精'))
+        }
+        if (params.row.isNew === '01') {
+          data.push(h('span', {
+            style: {
+              color: '#417505'
+            }
+          }, '新'))
+        }
+        if (params.row.isHot === '01') {
+          data.push(h('span', {
+            style: {
+              color: '#d0021b'
+            }
+          }, '热'))
+        }
+      } else {
+        if (params.row.isBest === '01') {
+          data.push(h('span', {
+            style: {
+              color: '#ff7e3e'
+            },
+            domProps: {
+              innerHTML: '精<br/>品'
+            }
+          }))
+        }
+        if (params.row.isNew === '01') {
+          data.push(h('span', {
+            style: {
+              color: '#417505'
+            },
+            domProps: {
+              innerHTML: '新<br/>品'
+            }
+          }))
+        }
+        if (params.row.isHot === '01') {
+          data.push(h('span', {
+            style: {
+              color: '#d0021b'
+            },
+            domProps: {
+              innerHTML: '热<br/>销'
+            }
+          }))
+        }
+      }
+      return h('div', [
+        h('div', {
+          class: {
+            proType: true
+          }
+        }, [
+          h('div', data),
+          h('i', {
+            class: {
+              'none': true,
+              'iconfont': true,
+              'icon-bianji2': true
+            },
+            on: {
+              click: () => {
+                this.$Message.info('info')
+              }
+            }
+          })
+        ]),
+        h('span', params.index + (this.searchData.page - 1) * this.searchData.pageSize + 1)
+      ])
     },
     imgFilter (h, params) {
       return h('div', {
-        style: {
-          width: '68px',
-          height: '68px',
-          lineHeight: '68px',
-          textAlign: 'center',
-          background: '#f5f6fa',
-          border: '1px solid #d5d5d5'
-        },
-        on: {
-          click: () => {
-            this.$Message.info('ok')
-          }
+        class: {
+          'product-img': true
         }
       }, [
         h('i', {
@@ -242,9 +362,7 @@ export default {
         }),
         h('img', {
           style: {
-            maxHeight: '100%',
-            margin: '0 auto',
-            display: params.row.picPath ? 'block' : 'none'
+            display: params.row.picPath ? 'inline-block' : 'none'
           },
           attrs: {
             src: 'http://img.jihui88.com/' + params.row.picPath
@@ -254,14 +372,57 @@ export default {
     },
     nameFilter (h, params) {
       var ctx = this
-      return h('div', [
-        h('span', {
-          style: {
-            color: '#5b5b5b'
-          }
-        }, params.row.name),
+      return h('div', {
+        class: {
+          title: true
+        }
+      }, [
+        h('div', [
+          h('span', {
+            style: {
+              color: '#5b5b5b'
+            }
+          }, params.row.name),
+          h('p', [
+            h('Poptip', {
+              props: {
+                placement: 'right'
+              }
+            }, [
+              h('span', {
+                style: {
+                  color: '#fff',
+                  background: '#ce3b28',
+                  padding: '3px',
+                  cursor: 'pointer'
+                }
+              }, '码'),
+              h('i', {
+                style: {
+                  paddingLeft: '2px'
+                },
+                class: {
+                  'iconfont': true,
+                  'icon-tel': true
+                }
+              }),
+              h('img', {
+                slot: 'content',
+                attrs: {
+                  src: 'http://wcd.jihui88.com/rest/comm/qrbar/create?w=210&text=http://pc.jihui88.com/rest/site/203/pd?itemId=' + params.row.productId2
+                }
+              })
+            ])
+          ]),
+          h('span', {
+            style: {
+              color: '#a4a4a4'
+            }
+          }, 'id:' + params.row.productId2)
+        ]),
         h('i', {
           class: {
+            'none': true,
             'iconfont': true,
             'icon-bianji2': true
           },
@@ -307,7 +468,11 @@ export default {
     },
     prodtypeFilter (h, params) {
       var ctx = this
-      return h('div', [
+      return h('div', {
+        class: {
+          title: true
+        }
+      }, [
         h('span', {
           style: {
             color: '#5b5b5b'
@@ -315,6 +480,7 @@ export default {
         }, params.row.prodtype),
         h('i', {
           class: {
+            'none': true,
             'iconfont': true,
             'icon-bianji2': true
           },
@@ -380,6 +546,7 @@ export default {
         }, text),
         h('i', {
           class: {
+            'none': true,
             'iconfont': true,
             'icon-shangxiajiantou': true
           },
@@ -425,7 +592,6 @@ export default {
         })
       ])
     },
-    // 时间格式化
     dataFilter (h, params) {
       let format = this.dataFormat(params.row.addTime)
       return h('div', format)
@@ -436,6 +602,7 @@ export default {
         h('span', params.row.isdisplay === '1' ? '是' : '否'),
         h('i', {
           class: {
+            'none': true,
             'iconfont': true,
             'icon-bianji2': true
           },
@@ -495,6 +662,7 @@ export default {
         h('span', params.row.topproduct === '01' ? '是' : '否'),
         h('i', {
           class: {
+            'none': true,
             'iconfont': true,
             'icon-bianji2': true
           },
@@ -554,6 +722,7 @@ export default {
         h('span', params.row.sort),
         h('i', {
           class: {
+            'none': true,
             'iconfont': true,
             'icon-bianji2': true
           },
@@ -602,6 +771,7 @@ export default {
         }, [
           h('i', {
             class: {
+              'none': true,
               'iconfont': true,
               'icon-icon--': true
             },
@@ -615,12 +785,14 @@ export default {
           }),
           h('i', {
             class: {
+              'none': true,
               'iconfont': true,
               'icon-tuozhuai': true
             }
           }),
           h('i', {
             class: {
+              'none': true,
               'iconfont': true,
               'icon-icon--1': true
             },
@@ -646,11 +818,7 @@ export default {
           }
         }, '修改'),
         h('span', {
-          style: {
-            paddingLeft: '10px',
-            paddingRight: '10px',
-            color: '#e6e1db'
-          }
+          class: { delimiter: true }
         }, '|'),
         h('a', {
           on: {
@@ -660,11 +828,7 @@ export default {
           }
         }, 'SEO'),
         h('span', {
-          style: {
-            paddingLeft: '10px',
-            paddingRight: '10px',
-            color: '#e6e1db'
-          }
+          class: { delimiter: true }
         }, '|'),
         h('a', [
           h('Poptip', {
@@ -703,11 +867,98 @@ export default {
 </script>
 
 <style lang="less">
-.myShow{
+.j_modal{
+  .ivu-modal-body{
+    padding: 22px 54px 45px 54px;
+  }
+  .ivu-modal-close{
+    right: 25px;
+    top: 25px;
+  }
+  .icon-x{
+    color: #c7c7c7
+  }
+  .ivu-modal-footer{
+    display: none
+  }
+}
+.j_checkout{
+  .ivu-checkbox-group-item{
+    width: 45%;
+    margin-bottom: 5px;
+    .ivu-checkbox{
+      margin-right: 5px;
+    }
+  }
+  .ivu-checkbox-checked .ivu-checkbox-inner{
+    border-color: #e1e6eb;
+    background-color: #fff;
+    &::after{
+      border: 1px solid #f5a623;
+      border-top: 0;
+      border-left: 0;
+    }
+  }
+}
+.j_product {
+  .myShow{
     text-decoration: underline;
     margin-right: 20px;
+  }
+  .ivu-table td{
+    height: 98px
+  }
+  .j_table_checkbox{
+    vertical-align: top;
+    .ivu-table-cell{
+      padding-top: 12px;
+      &:first-child{
+        padding: 4px 11px 0 11px;
+      }
+    }
+  }
+  .j_table_index{
+    position: relative;
+    .proType{
+      position: absolute;
+      left: -32px;
+      display: flex;
+      align-items: center;
+      line-height: 1.4;
+      div{
+        display: flex;
+        flex-direction: column;
+      }
+    }
+  }
+  .j_table_img{
+    .product-img{
+      width: 68px;
+      height: 68px;
+      line-height: 66px;
+      text-align: center;
+      background: #f5f6fa;
+      border: 1px solid #d5d5d5;
+      img{
+        margin: 0px auto;
+        display: inline-block;
+        vertical-align: middle;
+        max-height: 68px;
+        max-width: 68px;
+      }
+    }
+  }
+  .j_table_category .ivu-table-cell div{
+    span{
+     width: 80%;
+     display: inline-block;
+     white-space: nowrap;
+     overflow: hidden;
+     text-overflow: ellipsis;
+    }
+    i{
+      vertical-align: top !important;
+    }
+  }
 }
-.j_product .ivu-table td{
-   height: 98px
- }
 </style>

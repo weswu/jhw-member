@@ -8,6 +8,7 @@ const store = new Vuex.Store({
     user: {
       name: '未登录',
       username: '未登录',
+      addTime: 1507786014000,
       enterprise: {}
     },
     userInfo: {

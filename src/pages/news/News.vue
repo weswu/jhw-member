@@ -213,7 +213,11 @@ export default {
     },
     titleFilter (h, params) {
       var ctx = this
-      return h('div', [
+      return h('div', {
+        class: {
+          title: true
+        }
+      }, [
         h('span', {
           style: {
             color: '#5b5b5b'
@@ -221,6 +225,7 @@ export default {
         }, params.row.title),
         h('i', {
           class: {
+            'none': true,
             'iconfont': true,
             'icon-bianji2': true
           },
@@ -286,6 +291,7 @@ export default {
         }, text),
         h('i', {
           class: {
+            'none': true,
             'iconfont': true,
             'icon-shangxiajiantou': true
           },
@@ -342,6 +348,7 @@ export default {
         h('span', params.row.display === '01' ? '是' : '否'),
         h('i', {
           class: {
+            'none': true,
             'iconfont': true,
             'icon-bianji2': true
           },
@@ -401,6 +408,7 @@ export default {
         h('span', params.row.topnews === '01' ? '是' : '否'),
         h('i', {
           class: {
+            'none': true,
             'iconfont': true,
             'icon-bianji2': true
           },
@@ -460,6 +468,7 @@ export default {
         h('span', params.row.sort),
         h('i', {
           class: {
+            'none': true,
             'iconfont': true,
             'icon-bianji2': true
           },
@@ -508,6 +517,7 @@ export default {
         }, [
           h('i', {
             class: {
+              'none': true,
               'iconfont': true,
               'icon-icon--': true
             },
@@ -521,12 +531,14 @@ export default {
           }),
           h('i', {
             class: {
+              'none': true,
               'iconfont': true,
               'icon-tuozhuai': true
             }
           }),
           h('i', {
             class: {
+              'none': true,
               'iconfont': true,
               'icon-icon--1': true
             },
