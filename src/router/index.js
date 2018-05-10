@@ -27,12 +27,15 @@ export default new Router({
     // 企业
     { path: '/enterprise', component: require('@/pages/enterprise/Enterprise').default },
     { path: '/company', component: require('@/pages/enterprise/Company').default },
-    // 产品
-    { path: '/product', component: require('@/pages/product/Product').default },
-    // 新闻
-    { path: '/news', component: require('@/pages/news/News').default },
     // 分类
     { path: '/category/:id', component: require('@/pages/category/Category').default },
+    // 产品
+    { path: '/product', component: require('@/pages/product/Product').default },
+    { path: '/product/:id', component: require('@/pages/product/Product').default },
+    { path: '/product_import', component: require('@/pages/product/Import').default },
+    { path: '/product_download', component: require('@/pages/product/DownLoad').default },
+    // 新闻
+    { path: '/news', component: require('@/pages/news/News').default },
     // 相册
     { path: '/album', component: require('@/pages/album/Album').default },
     // 会员管理

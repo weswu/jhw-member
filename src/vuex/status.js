@@ -61,8 +61,8 @@ const state = {
     menu: [
       { text: '产品列表', value: 'product' },
       { text: '分类管理', value: 'category/product' },
-      { text: '导入', value: 'import' },
-      { text: '下载', value: 'download' }
+      { text: '导入', value: 'product_import' },
+      { text: '下载', value: 'product_download' }
     ]
   },
   menu_news: {
