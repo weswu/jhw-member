@@ -1,11 +1,11 @@
 <template>
   <div class="">
-    <div class="j_pagination fixed border btn" v-if="fixed && checkbox">
+    <div class="j_pagination fixed border" v-if="fixed && checkbox">
       <div class="btn">
         <slot name="btn"></slot>
       </div>
     </div>
-    <div class="j_pagination fixed" v-if="fixed" style="text-align:right">
+    <div class="j_pagination fixed" v-if="fixed" style="text-align:right" :class="{border_top: borderTop}">
       {{searchData.page}}/{{ Math.ceil(total/searchData.pageSize)}}页，共有{{total}}{{unit}}，每页显示：
       <input v-model="searchData.pageSize" type="number" class="number"/>{{unit}}
       <Page :total="total" @on-change="pageChange"></Page>
@@ -26,7 +26,7 @@
           <Page :total="total" @on-change="pageChange"></Page>
           <div class="page">
             <Input size="small" v-model="page"></Input>
-            <Button size="small" @click="pageChange(page)" class="go">GO</Button>
+            <Button size="small" @click="pageChange(page)" class="go" style="margin-left: 8px;">GO</Button>
           </div>
         </Col>
       </Row>
@@ -61,6 +61,10 @@ export default {
     right: {
       type: String,
       default: '18'
+    },
+    borderTop: {
+      type: Boolean,
+      default: false
     }
   },
   data () {
@@ -98,6 +102,9 @@ export default {
       padding-left: 6px;
     }
   }
+  &.border_top{
+    border-top: none;
+  }
   .ivu-checkbox-wrapper{
     margin: 0 20px 0 11px;
     .ivu-checkbox-inner{
@@ -115,6 +122,7 @@ export default {
   // 右
   .btn .ivu-btn{
     color: #a0a0a0;
+    background: #f5f6fa;
   }
   .number {
     height: 27px;

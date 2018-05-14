@@ -1,12 +1,12 @@
 <template>
-  <Layout class="ivu-layout-has-sider j_product_import">
+  <Layout class="ivu-layout-has-sider j_product_import j_product_import_download">
     <MenuBar :data="'menu_product'" :active="'product_download'"/>
     <Layout class="j_layout_content">
       <Content>
         <JHeader :title="'下载'" :lan="true"/>
         <div class="j_search">
-          <Button class="j_btn primary">产品表格下载</Button>
-          <Button class="j_btn">产品相册下载</Button>
+          <Button class="grey primary">产品表格下载</Button>
+          <Button class="grey" @click="update">产品相册下载</Button>
         </div>
         <table class="j_table">
           <thead>
@@ -29,7 +29,7 @@
             <tr>
               <th>
                 表格模板内容：需要的请“打勾”，再点下载。温馨提醒（如需下载下面的内容，请先选择好所属的网站编号）
-                <Select v-model="website" class="j_select_qrcode_img">
+                <Select v-model="website" class="small" style="width:111px">
                   <Option v-for="item in websiteList" :value="item.value" :key="item.value" :label="item.label">
                     <span>{{ item.label }}</span>
                   </Option>
@@ -47,7 +47,7 @@
             </tr>
           </tbody>
         </table>
-        <Button type="info" @click="update" style="width:124px;">下载</Button>
+        <Button type="primary" @click="update" style="width:124px;">下载</Button>
       </Content>
     </Layout>
   </Layout>
@@ -113,39 +113,8 @@ export default {
 
 <style lang="less">
 .j_product_import{
-  .j_table {
-    border-bottom: none;
-    border-left: none;
-    td{
-      padding: 0;
-      border-bottom: none;
-      border-left: none;
-    }
-  }
-  .ivu-checkbox-group-item{
-    width: 14.285%;
-    margin-right: 0;
-    padding: 15px 10px;
-    border-left: 1px solid #e9e9e9;
-    border-bottom: 1px solid #e9e9e9;
-    white-space: nowrap;
-    text-overflow: ellipsis;
-    .ivu-checkbox{
-      padding-right: 7%
-    }
-  }
-  .j_select_qrcode_img{
-    position: relative;
-    width: 111px;
-    .ivu-select-selection{
-      height: 18px;
-      line-height: 18px;
-      border: 1px solid #c6c6c6;
-      .ivu-select-placeholder{
-        height: 18px !important;
-        line-height: 18px !important;
-      }
-    }
+  .j_search button{
+    width: 130px;
   }
 }
 </style>

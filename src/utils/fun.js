@@ -44,3 +44,12 @@ Vue.prototype.decodeId = function (id, prefix, length) {
   var len = prefix.length + id.length - 1
   return prefix + new Array(length - len).join('0') + id
 }
+
+/*
+ * @author: wes
+ * @date: 2018-5-5
+ * @desc: 时间选择
+*/
+Vue.prototype.index2 = function (index, obj) {
+  return index + (obj.page - 1) * obj.pageSize + 1
+}

@@ -74,7 +74,7 @@
         </Form>
       </Content>
       <Footer>
-        <Button type="primary" @click="submit">保存</Button>
+        <Button type="primary" size="small" @click="submit">保存</Button>
       </Footer>
     </Layout>
   </Layout>

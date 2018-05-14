@@ -23,6 +23,7 @@ Vue.filter('price', function (v) {
  * 3.合并
 */
 Vue.filter('time', function (date, format) {
+  if (!date) return ''
   date = new Date(date)
   format = format || 'yyyy-MM-dd hh:mm:ss'
   var o = {

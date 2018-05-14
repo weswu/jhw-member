@@ -1,5 +1,5 @@
 <template>
-  <Layout class="ivu-layout-has-sider j_product_import">
+  <Layout class="ivu-layout-has-sider j_product_import j_product_import_download">
     <MenuBar :data="'menu_product'" :active="'product_import'"/>
     <Layout class="j_layout_content">
       <Content>
@@ -26,12 +26,12 @@
             </tr>
           </tbody>
         </table>
-        <a href="http://www.jihui88.com/sample/productMulti.xls"><Button type="info">生成产品表格模板</Button></a>
+        <a href="http://www.jihui88.com/sample/productMulti.xls"><Button type="primary" style="margin-bottom:22px;">生成产品表格模板</Button></a>
 
         <div class="j_tip">
           <span class="red">步骤二：</span>进行批量上传产品表格前，请先把产品图片上传好
         </div>
-        <Button type="info" @click="update">上传产品图片</Button>
+        <Button type="primary" @click="update" style="margin-bottom:16px;">上传产品图片</Button>
         <div class="j_tip">
           <span class="red">步骤三：</span>提交填写好的产品表格
         </div>
@@ -40,9 +40,9 @@
             <span class="star">*</span>上传表格:
           </Col>
           <Col span="21">
-            <input id="fileUpload" type="file" style="width:440px;" class="ivu-input"></input>
+            <input id="fileUpload" type="file" style="width:440px;float:left" class="ivu-input"></input>
             <span class="select" @click="select">选择文件</span>
-            <Button type="primary" @click="submit()" class="j_btn_submit">提交</Button>
+            <Button type="primary" @click="submit()" class="submit">提交</Button>
           </Col>
         </Row>
       </Content>
@@ -149,31 +149,6 @@ export default {
 </script>
 
 <style lang="less">
-// 通用
-.j_product_import{
-  .j_table {
-    border-bottom: none;
-    border-left: none;
-    td{
-      padding: 0;
-      border-bottom: none;
-      border-left: none;
-    }
-  }
-  .ivu-checkbox-group-item{
-    width: 14.285%;
-    margin-right: 0;
-    padding: 15px 10px;
-    border-left: 1px solid #e9e9e9;
-    border-bottom: 1px solid #e9e9e9;
-    white-space: nowrap;
-    text-overflow: ellipsis;
-    .ivu-checkbox{
-      padding-right: 7%
-    }
-  }
-}
-
 .j_product_import{
   .import_title{
     font-size: 14px;
@@ -182,6 +157,7 @@ export default {
   }
   .j_tip{
     margin: 20px 0 13px 0;
+    color: #656565;
   }
   .j_select_qrcode_img{
     position: relative;
@@ -198,7 +174,7 @@ export default {
   }
   .submit{
     width:640px;
-    line-height: 33px;
+    line-height: 32px;
     .star{
       border: 0 none;
       font-family: inherit;
@@ -216,29 +192,21 @@ export default {
     .ivu-upload-select{
       width: 100%;
     }
+    #fileUpload{
+      color: #aaa;
+      cursor: pointer;
+    }
     .select{
       position: absolute;
       left: 22px;
       top: 5px;
       background: #fff;
+      color: #aaa;
       text-decoration: underline;
       padding: 0 9px;
       line-height: 26px;
       cursor: pointer;
     }
-  }
-  .j_btn_submit{
-    background: #f5f6fa;
-    border: 1px solid #c9c9c9;
-    padding: 0 15px;
-    height: 33px;
-    line-height: 33px;
-    color: #777;
-    vertical-align: middle;
-    cursor: pointer;
-    border-radius: 4px;
-    box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
-    margin-left: 4px;
   }
 }
 </style>

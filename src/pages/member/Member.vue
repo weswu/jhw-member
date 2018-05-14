@@ -7,12 +7,12 @@
         <div class="j_search">
           <Row :gutter="24">
             <Col span="13">
-              <Button type="info" icon="plus" @click="add">添加会员</Button>
+              <Button type="info" icon="plus" class="w130" @click="add">添加会员</Button>
             </Col>
             <Col span="11" style="text-align:right">
               <Input v-model="searchData.name" style="width:140px;padding-right:5px;" placeholder="请输入用户名"></Input>
-              <Button class="j_btn_search" @click="search">搜索</Button>
-              <Button class="j_btn" @click="update">高级搜索</Button>
+              <Button class="search" @click="search">搜索</Button>
+              <Button class="grey w130" @click="update" style="margin-right: 0;">高级搜索</Button>
             </Col>
           </Row>
         </div>

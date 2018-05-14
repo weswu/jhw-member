@@ -17,7 +17,7 @@
                 账号昵称：<Input v-model="user.nickName" @on-blur="input" placeholder="账号昵称" style="width:130px"></Input><br>
                 会员账号ID：{{user.username}}<br>
                 注册时间： {{user.addTime | time}}<br>
-                <Badge count="正常" class-name="badge-normal" style="margin-right: 2px"></Badge>
+                <Badge :count="user.username === '未登录' ? '未登录' : '正常'" class-name="badge-normal" style="margin-right: 2px"></Badge>
                 <Badge count="VIP" :class="[user.pcSitePayTime ? 'badge-vip' : 'badge-gray']"></Badge>
               </div>
             </Col>
@@ -396,6 +396,7 @@ export default {
       font-weight: bold;
       text-align: center;
       vertical-align: middle;
+      color: #000;
     }
     .flex-right{
       text-align: center;
@@ -412,6 +413,9 @@ export default {
       .error{
         color: #f29c39;
       }
+    }
+    a{
+      color: #2467c5;
     }
   }
   a:hover{

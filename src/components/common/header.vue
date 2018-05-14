@@ -16,7 +16,7 @@
             </div>
             <ul>
               <li v-for="(item, index) in messageList" :key="index" v-if="index<5">
-                <div class="title">
+                <div class="title" @click="detail(item.messageId)">
                   {{item.title}}
                 </div>
                 <p>
@@ -57,12 +57,17 @@
       </Dropdown>
       <span class="border"></span>
     </Col>
+    <Detail ref="detail"/>
   </Row>
 </template>
 
 <script>
 import { mapState, mapActions } from 'vuex'
+import Detail from '@/pages/message/Detail'
 export default {
+  components: {
+    Detail
+  },
   data () {
     return {
       visible: false
@@ -101,6 +106,9 @@ export default {
       ifr.setAttribute('src', url)
       ifr.style.display = 'none'
       document.getElementById('JHW').appendChild(ifr)
+    },
+    detail (id) {
+      this.$refs.detail.open(id)
     }
   }
 }
@@ -122,13 +130,12 @@ export default {
       margin: 4px 0 0 25px;
     }
   }
-
   .userInfo{
     text-align: right;
     .header_link{
       height: 50px;
       line-height: 50px;
-      padding: 0 10px;
+      padding: 0 15px;
       display: inline-block;
       color: #fff
     }
@@ -146,7 +153,8 @@ export default {
       }
     }
     .j_dropdown_username{
-      margin-left: 10px;background: #2a2a2a;
+      margin-left: 15px;
+      background: #2a2a2a;
       .ivu-icon-arrow-down-b{
         transition: all .3s;
       }
@@ -219,20 +227,22 @@ export default {
       text-align: left;
       i{
         cursor: pointer;
+        font-size: 22px;
         .badge{
           font-size: 12px;
           background: #ff6700;
           color: #fff;
-          border-radius: 3px;
+          border-radius: 4px;
           padding: 3px 5px;
           margin-left: 5px;
+          vertical-align: top;
         }
       }
-      .ivu-select-dropdown{
-        position: fixed !important;
+      .header_link{
+        padding: 0 10px;
       }
       .ivu-dropdown-menu{
-        width: 250px;
+        width: 280px;
         max-height: 500px;
         .name{
           background: #eaedf1;
@@ -259,6 +269,7 @@ export default {
             line-height: 1.6;
             .title{
               color: #72dced;
+              cursor: pointer;
             }
             p{
               color: #595959;

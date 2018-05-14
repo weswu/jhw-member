@@ -1,8 +1,8 @@
 // 存放各种常量
 const state = {
   lanList: [
-    { value: '1', label: '中文' },
-    { value: '2', label: '英文' }
+    { value: '1', text: '中文' },
+    { value: '2', text: '英文' }
   ],
   menuAccount: {
     title: '账号管理',
@@ -96,9 +96,7 @@ const state = {
   }
 }
 
-const getters = {
-  lanList: state => state.lanList
-}
+const getters = {}
 
 const mutations = {}
 

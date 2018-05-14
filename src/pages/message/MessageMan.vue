@@ -1,22 +1,19 @@
 <template>
   <Layout class="j_layout ivu-layout-has-sider j_messageMan">
     <MenuBar :data="'menuMessage'" :active="'messageMan'"/>
-    <Content :style="{padding: '20px'}">
-      <div class="j_header">
-        <Row :gutter="24" class="account_user">
-          <Col span="10">
-            <span class="title">消息接收人管理</span>
-          </Col>
-          <Col span="14" style="text-align:right">
+    <Layout class="j_layout_content">
+      <Content>
+        <JHeader :title="'消息接收人管理'">
+          <div slot="btn">
             <Button type="primary" icon="plus" @click="add">新建消息接收人</Button>
-          </Col>
-        </Row>
-      </div>
-      <div class="j_tip">
-        提醒：以下联系人都可以设置为消息接收人，机汇网不会将这些信息对外披露或向第三方提供。
-      </div>
-      <Table :columns="columns" :data="list"></Table>
-    </Content>
+          </div>
+        </JHeader>
+        <div class="j_tip">
+          提醒：以下联系人都可以设置为消息接收人，机汇网不会将这些信息对外披露或向第三方提供。
+        </div>
+        <Table :columns="columns" :data="list"></Table>
+      </Content>
+    </Layout>
     <Detail ref="detail" @on-add="onAdd" @on-edit="onEdit"/>
   </Layout>
 </template>
@@ -25,10 +22,12 @@
 import qs from 'qs'
 import { mapState } from 'vuex'
 import MenuBar from '@/components/common/menu_bar'
+import JHeader from '@/components/group/j-header'
 import Detail from '@/pages/message/messageManDetail'
 export default {
   components: {
     MenuBar,
+    JHeader,
     Detail
   },
   computed: {

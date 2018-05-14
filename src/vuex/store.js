@@ -8,7 +8,7 @@ const store = new Vuex.Store({
     user: {
       name: '未登录',
       username: '未登录',
-      addTime: 1507786014000,
+      addTime: 1272102123858,
       enterprise: {}
     },
     userInfo: {
@@ -19,18 +19,27 @@ const store = new Vuex.Store({
       order_unpaid: 27,
       order: 45
     },
-    messageList: [],
+    // 列表数据
     productCategory: [],
     newsCategory: [],
+    messageList: [],
+    staticList: [
+      { value: '203', text: '网站编辑：203' },
+      { value: '204', text: '网站编辑：204' },
+      { value: '205', text: '网站编辑：205' },
+      { value: '206', text: '网站编辑：206' },
+      { value: '207', text: '网站编辑：207' }
+    ],
     lanId: '1',
     uid: ['0', '0', '0']
   },
   getters: {
     user: state => state.user,
     userInfo: state => state.userInfo,
-    messageList: state => state.messageList,
     productCategory: state => state.productCategory,
     newsCategory: state => state.newsCategory,
+    messageList: state => state.messageList,
+    staticList: state => state.staticList,
     lanId: state => state.lanId
   },
   mutations: {
@@ -40,14 +49,17 @@ const store = new Vuex.Store({
     setUserInfo (state, userInfo) {
       state.userInfo = userInfo
     },
-    setMessageList (state, messageList) {
-      state.messageList = messageList
-    },
     setProductCategory (state, productCategory) {
       state.productCategory = productCategory
     },
     setNewsCategory (state, newsCategory) {
       state.newsCategory = newsCategory
+    },
+    setMessageList (state, messageList) {
+      state.messageList = messageList
+    },
+    setStaticList (state, staticList) {
+      state.staticList = staticList
     },
     setLanId (state, lanId) {
       state.lanId = lanId

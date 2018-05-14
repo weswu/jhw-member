@@ -5,7 +5,7 @@
       <JHeader :title="'积分来源'" :count="count"/>
       <Content>
         <div class="j_search">
-          <Button class="j_btn" @click="search(item.value)" v-for="(item, index) in btns" :key="index" :class="{primary: searchData.listType === item.value}">{{item.text}}</Button>
+          <Button class="grey" @click="search(item.value)" v-for="(item, index) in btns" :key="index" :class="{primary: searchData.listType === item.value}">{{item.text}}</Button>
         </div>
         <Table :columns="columns" :data="list"></Table>
       </Content>

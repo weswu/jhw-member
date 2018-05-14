@@ -3,18 +3,45 @@
     <Tabs :value="tabActive">
         <TabPane label="我的网站" name="0">
           <div style="padding: 0 28px 28px 28px;">
-            <div class="j_tip">由于互联网信息管理法规，发布网站需要验证你的手机号信息。 <a href="javascript:;" class="">立即验证</a> </div>
-            <Button icon="plus" class="btn-add">创建新网站</Button> 你有0个网站上线了
+            <div class="j_tip">由于互联网信息管理法规，发布网站需要验证你的手机号信息。 <span class="a_underline">立即验证</span></div>
+            <Button icon="plus" class="orange">创建新网站</Button> 你有0个网站上线了
             <ul class="static_info">
-              <li>
+              <li class="item" v-for="item in list" :key="item.id">
                 <p>
-                  <span class="name">网站名称</span> <i class="iconfont icon-bianji2"></i> <span>(语言：中文)</span> <span class="type">未上线</span>
+                  <span class="name">{{item.name}}</span> <i class="iconfont icon-bianji2"></i>
+                  <span v-if="item.lan === '1'">(语言：中文)</span><span v-if="item.lan === '2'">(语言：中文)</span>
+                  <span class="type">未上线</span>
                 </p>
                 <p>
-                  http://pc.jihui88.com/rest/site/203/index <span class="time">(到期时间：2018-04-09 09：00)</span>  <a href="javascript:;" class="buy">购买</a>
+                  http://pc.jihui88.com/rest/site/{{item.id}}/index <span class="time">(到期时间：{{item.endTime}})</span>
+                  <Poptip trigger="hover" placement="top" class="j_poptip_ul">
+                    <a href="javascript:;" class="buy">续费</a>
+                    <ul slot="content">
+                      <li> 自选模板 </li>
+                      <li> 定制设计 </li>
+                    </ul>
+                  </Poptip>
+                  <Poptip trigger="hover" placement="top" class="j_poptip_ul" v-if="item.type === '2'">
+                    <a href="javascript:;" class="buy">升级</a>
+                    <ul slot="content">
+                      <li> 定制功能 </li>
+                      <li> 定制设计 </li>
+                    </ul>
+                  </Poptip>
+
                 </p>
                 <p class="more">
-                  <a href="javascript:;">进入编辑</a><a href="javascript:;">更多选项</a>
+                  <span class="a_underline">进入编辑</span>
+                  <Poptip trigger="hover" placement="top" class="j_poptip_ul">
+                    <span class="a_underline">更多选项</span>
+                    <ul slot="content">
+                      <li> 复制网站 </li>
+                      <li> 删除网站 </li>
+                      <li> 网站上线 </li>
+                      <li> 语言设置 </li>
+                      <li> 同步数据 </li>
+                    </ul>
+                  </Poptip>
                 </p>
               </li>
             </ul>
@@ -39,7 +66,22 @@ export default {
   data () {
     return {
       tabActive: '0',
-      list: [],
+      list: [
+        {
+          name: '网站名称',
+          lan: '1',
+          id: 203,
+          endTime: '2018-04-09 09：00',
+          type: '1'
+        },
+        {
+          name: '网站名称',
+          lan: '2',
+          id: 204,
+          endTime: '2019-04-09 09：00',
+          type: '2'
+        }
+      ],
       searchData: {
         page: 1,
         pageSize: 2
@@ -64,26 +106,34 @@ export default {
 </script>
 
 <style lang="less">
+.j_poptip_ul{
+  .ivu-poptip-popper{
+    min-width: 100px;
+    width: 115px;
+  }
+  .ivu-poptip-body{
+    padding: 0;
+    li{
+      color: #595959;
+      padding: 8px 0;
+      text-align: center;
+      cursor: pointer;
+      &:hover{
+        background: #f9f9fa;
+      }
+    }
+  }
+}
 .j_home_static{
   .j_tip{
     margin-top: 0;
-  }
-  .btn-add{
-    background-color: #ff6700;
-    border-color: #ff6700;
-    color: #fff;
-    &:hover{
-      background-color: #ff6700;
-      border-color: #ff6700;
-      color: #fff;
-    }
   }
   .static_info{
     margin-top: 20px;
     border-left: 1px solid #e9e9e9;
     border-right: 1px solid #e9e9e9;
     color: #b9b9b9;
-    li{
+    .item{
       border-top: 1px solid #e9e9e9;
       padding: 0 18px;
       &:hover{
@@ -110,12 +160,11 @@ export default {
       .buy{
         color: #939393;
         text-decoration: underline;
+        margin-right: 3px;
       }
       .more{
-        a{
-          color: #186dc6;
+        span{
           margin-right: 18px;
-          text-decoration: underline;
         }
       }
       p{

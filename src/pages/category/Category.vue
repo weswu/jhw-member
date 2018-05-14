@@ -5,7 +5,7 @@
       <Content>
         <JHeader :title="'分类管理'" :lan="true" @on-change="get"/>
         <div class="j_search">
-          <Button type="info" icon="plus" @click="add">添加{{$route.params.id === 'product' ?'产品':'新闻'}}分类</Button>
+          <Button type="info" icon="plus" class="w130" @click="add">添加{{$route.params.id === 'product' ?'产品':'新闻'}}分类</Button>
         </div>
         <Table ref="selection" :columns="columns" :data="list" @on-selection-change="handleSelectChange">
         </Table>

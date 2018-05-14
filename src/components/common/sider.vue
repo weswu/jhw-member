@@ -145,11 +145,8 @@ export default {
       }
     }
     .menu-icon{
-      color: rgba(255, 255, 255, 0.7);
+      color: #d8d8d8;
     }
-  }
-  .ivu-menu-dark {
-    background: #3a3f51;
   }
   .ivu-menu-dark.ivu-menu-vertical .ivu-menu-opened {
     background: #2d303c;
@@ -158,7 +155,6 @@ export default {
   .ivu-menu-dark.ivu-menu-vertical .ivu-menu-item-active:not(.ivu-menu-submenu), .ivu-menu-dark.ivu-menu-vertical .ivu-menu-submenu-title-active:not(.ivu-menu-submenu) {
     border-right: none;
     color: #fff;
-    background: @info-color !important;
   }
   // 展开
   .ivu-icon-navicon{

@@ -1,36 +1,34 @@
 <template>
   <Layout class="j_layout ivu-layout-has-sider j_message">
     <MenuBar :data="'menuMessage'" :active="'message'+(pageName?('/'+pageName):'')"/>
-    <Content :style="{padding: '20px'}">
-      <div class="j_header">
-        <span class="title" v-if="!pageName">全部消息</span>
-        <span class="title" v-if="pageName === '00'">未读消息</span>
-        <span class="title" v-if="pageName === '01'">已读消息</span>
-      </div>
-      <div class="j_search">
-        <Button class="j_btn" @click="search(item.value)" v-for="(item, index) in btns" :key="index" :class="{primary: searchData.type === item.value}">{{item.text}}</Button>
-      </div>
-      <div class="j_search" v-if="searchData.type === '05'" style="margint-top: 12px;">
-        <Row :gutter="24">
-          <Col span="16">
-            <Input v-model="searchData.title" style="width:178px;margin-right:5px;" placeholder="请输入标题内容"></Input>
-            <Button class="j_btn_search" @click="search">搜索</Button>
-          </Col>
-          <Col span="8" style="text-align:right">
-            <Button class="j_btn_info" @click="blacklist" style="width:94px;margin-right:0px;">黑名单</Button>
-          </Col>
-        </Row>
-      </div>
-      <Table :columns="columns" :data="list" @on-selection-change="handleSelectChange"></Table>
-      <JPagination :checkbox="true" :total="total" :searchData='searchData' @on-change="pageChange" :left="'10'" :right="'14'">
-        <span slot="btn">
-          <Checkbox v-model="toggle" @on-change="handleSelectAll(toggle)"/>
-          <Button size="small" @click="delAll">删除</Button>
-          <Button size="small" @click="readState">标记已读</Button>
-          <Button size="small" @click="readStateAll" style="color:#333">全部已读</Button>
-        </span>
-      </JPagination>
-    </Content>
+    <Layout class="j_layout_content">
+      <Content>
+        <JHeader :title="pageName === '00' ? '未读消息' : (pageName === '01' ? '已读消息' : '全部消息')"/>
+        <div class="j_search">
+          <Button class="grey" @click="search(item.value)" v-for="(item, index) in btns" :key="index" :class="{primary: searchData.type === item.value}">{{item.text}}</Button>
+        </div>
+        <div class="j_search" v-if="searchData.type === '05'" style="margint-top: 12px;">
+          <Row :gutter="24">
+            <Col span="16">
+              <Input v-model="searchData.title" style="width:178px;margin-right:5px;" placeholder="请输入标题内容"></Input>
+              <Button class="search" @click="search">搜索</Button>
+            </Col>
+            <Col span="8" style="text-align:right">
+              <Button class="info" @click="blacklist" style="width:94px;margin-right:0px;">黑名单</Button>
+            </Col>
+          </Row>
+        </div>
+        <Table :columns="columns" :data="list" @on-selection-change="handleSelectChange"></Table>
+        <JPagination :checkbox="true" :total="total" :searchData='searchData' @on-change="pageChange" :left="'10'" :right="'14'">
+          <span slot="btn">
+            <Checkbox v-model="toggle" @on-change="handleSelectAll(toggle)"/>
+            <Button size="small" @click="delAll">删除</Button>
+            <Button size="small" @click="readState">标记已读</Button>
+            <Button size="small" @click="readStateAll" style="color:#333">全部已读</Button>
+          </span>
+        </JPagination>
+      </Content>
+    </Layout>
     <Detail ref="detail"/>
     <Add ref="add"/>
     <BlackList ref="blacklist"/>
@@ -40,6 +38,7 @@
 <script>
 import qs from 'qs'
 import MenuBar from '@/components/common/menu_bar'
+import JHeader from '@/components/group/j-header'
 import JPagination from '@/components/group/j-pagination'
 import Detail from '@/pages/message/Detail'
 import Add from '@/pages/message/Add'
@@ -47,6 +46,7 @@ import BlackList from '@/pages/message/BlackList'
 export default {
   components: {
     MenuBar,
+    JHeader,
     JPagination,
     Detail,
     Add,

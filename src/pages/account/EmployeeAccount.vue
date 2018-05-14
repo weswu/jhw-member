@@ -3,17 +3,12 @@
       <MenuBar :data="'menuAccount'" :active="'employee_account'"/>
       <Layout class="j_layout_content">
         <Content>
-          <div class="j_header">
-            <Row :gutter="24">
-              <Col span="10">
-                <span class="title">员工账号管理</span>
-              </Col>
-              <Col span="14" style="text-align:right">
-                <Button type="primary" @click="add">新增员工</Button>
-                <Button type="primary" @click="analysis">员工推广分析</Button>
-              </Col>
-            </Row>
-          </div>
+          <JHeader :title="'员工账号管理'">
+            <div slot="btn">
+              <Button type="primary" @click="add">新增员工</Button>
+              <Button type="primary" @click="analysis">员工推广分析</Button>
+            </div>
+          </JHeader>
           <Table highlight-row :columns="columns" :data="list" @on-selection-change="handleSelectChange"></Table>
           <JPagination :checkbox="true" :total="total" :searchData='searchData' @on-change="pageChange">
             <span slot="btn">
@@ -48,12 +43,14 @@
 <script>
 import qs from 'qs'
 import MenuBar from '@/components/common/menu_bar'
+import JHeader from '@/components/group/j-header'
 import JPagination from '@/components/group/j-pagination'
 import Detail from '@/pages/account/Detail'
 import Authority from '@/pages/account/Authority'
 export default {
   components: {
     MenuBar,
+    JHeader,
     JPagination,
     Detail,
     Authority

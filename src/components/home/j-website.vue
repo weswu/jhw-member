@@ -8,18 +8,18 @@
       <span>
         账号昵称：
         <span class="nickName" @click="href">{{user.nickName || user.username}}</span>
-        <span class="j_tip">温馨提醒：为了你账号的安全，请及时 <a href="javascript:;" @click="href" class="">设置你的邮箱及密码</a> </span>
+        <div class="j_tip">温馨提醒：为了你账号的安全，请及时 <span class="a_underline" @click="href">设置你的邮箱及密码</span></div>
       </span>
       <p>
         <span>注册时间：{{user.addTime | time}}</span>
-        <Badge count="正常" class-name="badge-normal" style="margin: 0 2px 0 5px"></Badge>
+        <Badge :count="user.username === '未登录' ? '未登录' : '正常'" class-name="badge-normal" style="margin: 0 2px 0 5px"></Badge>
         <Badge count="VIP" :class="[user.pcSitePayTime ? 'badge-vip' : 'badge-gray']"></Badge>
       </p>
     </div>
     <div class="buy">
       <Select class="primary" placeholder="升级购买" @on-change="change" style="width:121px">
-        <Option v-for="item in list" :value="item.value" :key="item.value" label="升级购买">
-          {{ item.label }}
+        <Option v-for="item in staticList" :value="item.value" :key="item.value" label="升级购买">
+          {{ item.text }}
         </Option>
       </Select>
       <i class="iconfont icon-update"></i>
@@ -32,18 +32,10 @@
 import { mapState } from 'vuex'
 export default {
   data () {
-    return {
-      list: [
-        { value: '203', label: '网站编辑：203' },
-        { value: '204', label: '网站编辑：204' },
-        { value: '205', label: '网站编辑：205' },
-        { value: '206', label: '网站编辑：206' },
-        { value: '207', label: '网站编辑：207' }
-      ]
-    }
+    return {}
   },
   computed: {
-    ...mapState(['user'])
+    ...mapState(['user', 'staticList'])
   },
   methods: {
     href () {
@@ -92,16 +84,13 @@ export default {
       padding-right: 3px;
       cursor: pointer;
     }
+    .j_tip{
+      display: inline-block;
+      margin: 0 0 0 3px
+    }
   }
   .ivu-badge{
     vertical-align: initial;
-  }
-  .j_tip{
-    margin-left: 3px;
-    a{
-      color: #2549a6;
-      text-decoration: underline;
-    }
   }
   .buy{
     float: right;

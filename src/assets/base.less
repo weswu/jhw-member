@@ -1,5 +1,6 @@
 @import '~iview/src/styles/index.less';
 @import './variables.less';
+@import './common.less';
 
 
 li{
@@ -15,7 +16,7 @@ a.primary{
   color: @primary-color;
 }
 .a_underline{
-  color: #0769cf;
+  color: #0366ce;
   cursor: pointer;
   text-decoration: underline;
 }
@@ -95,8 +96,10 @@ a.primary{
   }
 }
 
-
-
+// 侧边栏提示
+.ivu-tooltip-inner{
+  background-color: #393939;
+}
 
 .j_more{
   color: #fff;
@@ -113,13 +116,14 @@ a.primary{
 // 提示
 .j_tip{
   color: #595959;
-  padding: 6px 15px;
+  padding: 7px 15px;
   border: 1px solid #ddd;
   margin: 20px 0;
   background: #f9f9f9;
   line-height: 1.7;
   .red{
-    color: #fe170f;padding-right: 3px;
+    color: #ff0800;
+    padding-right: 3px;
   }
 }
 .head_portrait{
@@ -133,12 +137,6 @@ a.primary{
     width: auto;
     height: auto;
     cursor: pointer;
-  }
-}
-// 搜索
-.j_search {
-  button,input{
-    margin-bottom: 9px;
   }
 }
 //表格
@@ -231,10 +229,6 @@ a.primary{
       background: @background-gray-color;
     }
   }
-  .ivu-checkbox-inner{
-    border: 1px solid #b2b2b2;
-    border-radius: 4px;
-  }
 }
 // 单选
 .ivu-radio-inner{
@@ -245,6 +239,10 @@ a.primary{
     left: 0px;
     top: 0px;
   }
+}
+.ivu-checkbox-inner{
+  border: 1px solid #b2b2b2;
+  border-radius: 4px;
 }
 
 // 分页
@@ -327,6 +325,32 @@ a.primary{
       right: 25px;
     }
   }
+  &.small{
+    position: relative;
+    text-align: center;
+    .ivu-select-selection{
+      color: #6c6d6d;
+      height: 20px;
+      line-height: 20px;
+      border: 1px solid #c6c6c6;
+      .ivu-select-placeholder{
+        color: #6c6d6d;
+        height: 20px;
+        line-height: 20px;
+      }
+      .ivu-select-selected-value{
+        height: 20px;
+        line-height: 20px;
+      }
+    }
+    .ivu-select-arrow{
+      color: #6c6d6d;
+      right: 12px;
+    }
+    .ivu-select-item{
+      padding: 3px 10px;
+    }
+  }
 }
 // 表单
 .ivu-form{
@@ -361,8 +385,13 @@ a.primary{
   color: @title-color;
   .ivu-tabs-bar{
     .ivu-tabs-nav{
+      .ivu-tabs-tab{
+        &:hover{
+          color: @tabs-color;
+        }
+      }
       .ivu-tabs-tab-active{
-       color: @tabs-color ;
+       color: @tabs-color;
       }
       .ivu-tabs-ink-bar{
         background-color: @tabs-color;
@@ -431,49 +460,94 @@ a.primary{
     }
   }
 }
+
+// 搜索按钮
+.j_search {
+  button,input{
+    margin-bottom: 9px;
+  }
+}
 //按钮
 .ivu-btn{
-  margin-right: 5px;
+  margin-right: 4px;
   &:focus{
     box-shadow: none;
   }
   i{
     font-size: 12px;
-    padding-right: 5px;
+  }
+  &.grey{
+    background: #d9dee4;
+    border-color: #d9dee4;
+    color: #696a6a;
+    min-width: 90px;
+    margin-right: 5px;
+    &:hover{
+      background: #546478;
+      border-color: #546478;
+      color: #fff;
+    }
+    &.primary{
+      background: #546478;
+      border-color: #546478;
+      color: #fff;
+    }
+  }
+  &.mormal{
+    border-color: #e9e9e9;
+    color: #666;
+    &:hover{
+      background: #efefef;
+      border-color: #e9e9e9;
+      color: #666;
+    }
+  }
+  &.active{
+    background: #efefef;
+    border-color: #e9e9e9;
+    color: #666;
+  }
+  // 搜索按钮
+  &.search{
+    background: #f7f7f7;
+    &:hover{
+      background: #f7f7f7;
+      border-color: #dddddd;
+      color: @text-color;
+    }
+  }
+  &.info {
+    border-color: @info-color;
+    color: @info-color;
+  }
+  // 提交按钮
+  &.submit{
+    background: #f5f6fa;
+    border: 1px solid #c9c9c9;
+    color: #777;
+    cursor: pointer;
+    border-radius: 4px;
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+    margin-left: 7px;
+    padding: 6px 25px;
+  }
+  &.w130{
+    width: 130px
+  }
+  &.orange{
+    background-color: #ff6700;
+    border-color: #ff6700;
+    color: #fff;
+    &:hover{
+      background-color: #ff6700;
+      border-color: #ff6700;
+      color: #fff;
+    }
   }
 }
 .ivu-btn-small{
   &:hover{
     border-color: @btn-default-border;
-    color: text-color;
-  }
-}
-// 按钮
-.j_btn_search{
-  background: #f7f7f7;
-  &:hover{
-    background: #f7f7f7;
-    border-color: #dddddd;
     color: @text-color;
-  }
-}
-.j_btn_info {
-  border-color: @info-color;
-  color: @info-color;
-}
-.j_btn{
-  background: #d9dee4;
-  border-color: #d9dee4;
-  color: #696a6a;
-  margin-right: 5px;
-  &:hover{
-    background: #546478;
-    border-color: #546478;
-    color: #fff;
-  }
-  &.primary{
-    background: #546478;
-    border-color: #546478;
-    color: #fff;
   }
 }

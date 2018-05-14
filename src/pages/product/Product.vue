@@ -7,13 +7,13 @@
         <div class="j_search">
           <Row :gutter="24">
             <Col span="6">
-              <Button type="info" icon="plus" @click="add">添加产品</Button>
+              <Button type="info" icon="plus" class="w130" @click="add">添加产品</Button>
             </Col>
             <Col span="18" style="text-align:right">
               <span class="a_underline" @click="myShow">我的显示</span>
-              <Input v-model="model.title" placeholder="请输入新闻标题" style="width:200px"></Input>
-              <Button class="j_btn_search" @click="search">搜索</Button>
-              <Button class="j_btn" @click="update" style="margin-right: 0;">高级搜索</Button>
+              <Input v-model="model.title" placeholder="请输入产品名称" style="width:200px"></Input>
+              <Button class="search" @click="search">搜索</Button>
+              <Button class="grey w130" @click="update" style="margin-right: 0;">高级搜索</Button>
             </Col>
           </Row>
         </div>
@@ -962,12 +962,11 @@ export default {
   .ivu-table td{
     height: 98px
   }
-  .j_table_checkbox{
-    vertical-align: top;
-    .ivu-table-cell{
-      padding-top: 12px;
-      &:first-child{
-        padding: 4px 11px 0 11px;
+  .ivu-table-body{
+    .j_table_checkbox{
+      vertical-align: top;
+      .ivu-table-cell{
+        padding-top: 16px;
       }
     }
   }
