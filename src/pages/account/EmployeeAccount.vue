@@ -18,7 +18,7 @@
           <JPagination :checkbox="true" :total="total" :searchData='searchData' @on-change="pageChange">
             <span slot="btn">
               <Checkbox v-model="toggle" @on-change="handleSelectAll(toggle)"/>
-              <Button class="j_buttom" @click="delAll">删除</Button>
+              <Button size="small" @click="delAll">删除</Button>
             </span>
           </JPagination>
         </Content>
@@ -68,7 +68,7 @@ export default {
         { title: '职位', key: 'position' },
         { title: '手机号码', key: 'mobile' },
         { title: 'Email', key: 'email' },
-        { title: '操作', key: 'action', align: 'right', width: 180, render: this.renderOperate }
+        { title: '操作', className: 'j_table_operate', align: 'right', width: 202, render: this.renderOperate }
       ],
       list: [],
       searchData: {
@@ -165,11 +165,7 @@ export default {
           }
         }, '权限'),
         h('span', {
-          style: {
-            paddingLeft: '5px',
-            paddingRight: '5px',
-            color: '#e6e1db'
-          }
+          class: { delimiter: true }
         }, '|'),
         h('a', {
           on: {
@@ -179,11 +175,7 @@ export default {
           }
         }, '修改'),
         h('span', {
-          style: {
-            paddingLeft: '5px',
-            paddingRight: '5px',
-            color: '#e6e1db'
-          }
+          class: { delimiter: true }
         }, '|'),
         h('a', [
           h('Poptip', {
@@ -212,11 +204,7 @@ export default {
           }, '删除')
         ]),
         h('span', {
-          style: {
-            paddingLeft: '5px',
-            paddingRight: '5px',
-            color: '#e6e1db'
-          }
+          class: { delimiter: true }
         }, '|'),
         h('a', {
           on: {

@@ -11,7 +11,7 @@
             </Col>
             <Col span="18" style="text-align:right">
               <Input v-model="model.title" placeholder="请输入新闻标题" style="width:200px"></Input>
-              <Button class="j_buttom" @click="search">搜索</Button>
+              <Button class="j_btn_search" @click="search">搜索</Button>
               <Button class="j_btn" @click="update" style="margin-right: 0;">高级搜索</Button>
             </Col>
           </Row>
@@ -20,11 +20,11 @@
         <JPagination :fixed="true" :checkbox="true" :total="total" :searchData='searchData' @on-change="pageChange">
           <span slot="btn">
             <Checkbox v-model="toggle" @on-change="handleSelectAll(toggle)"/>
-            <Button class="j_buttom" @click="delAll">删除</Button>
-            <Button class="j_buttom" @click="update">复制</Button>
-            <Button class="j_buttom" @click="update">上架</Button>
-            <Button class="j_buttom" @click="update">下架</Button>
-            <Button class="j_buttom" @click="categoryAll">转移分类</Button>
+            <Button size="small" @click="delAll">删除</Button>
+            <Button size="small" @click="update">复制</Button>
+            <Button size="small" @click="update">上架</Button>
+            <Button size="small" @click="update">下架</Button>
+            <Button size="small" @click="categoryAll">转移分类</Button>
           </span>
         </JPagination>
       </Content>

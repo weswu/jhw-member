@@ -1,7 +1,7 @@
 <template>
   <Layout class="ivu-layout-has-sider j_company">
     <MenuBar :data="'menuEnter'" :active="'company'"/>
-    <Layout class="j_layout_content j_form">
+    <Layout class="j_layout_content j_form_detail">
       <JHeader :title="'公司简介'" :lan="true"/>
       <Content>
         <UE :content='user.enterprise.edesc' ref='ue' style="z-index: 1;position: relative;"></UE>

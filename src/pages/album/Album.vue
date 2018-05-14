@@ -9,15 +9,15 @@
             <Row :gutter="24">
               <Col span="10">
                 <Button type="info" @click="upload"><i class="iconfont icon-shangchuan"></i>上传图片到当前目录</Button>
-                <Button class="j_buttom_info" @click="update"><i class="iconfont icon-wenjianjia"></i>新建相册</Button>
-                <Button class="j_buttom_info" @click="update"><i class="iconfont icon-huishouzhan"></i>回收站</Button>
+                <Button class="j_btn_info" @click="update"><i class="iconfont icon-wenjianjia"></i>新建相册</Button>
+                <Button class="j_btn_info" @click="update"><i class="iconfont icon-huishouzhan"></i>回收站</Button>
               </Col>
               <Col span="14" style="text-align:right">
                 <Input v-model="pic" style="width:140px;padding-right:5px;" placeholder="搜索图片名称"></Input>
-                <Button class="j_buttom" @click="update">搜索</Button>
+                <Button class="j_btn_search" @click="update">搜索</Button>
                 <Button class="j_btn" @click="update">高级搜索</Button>
-                <Button class="j_buttom_info" @click="update"><i class="iconfont icon-tupian3"></i>设置水印</Button>
-                <Button class="j_buttom_info" @click="update" style="padding: 6px 5px;margin-right:0px;">一键载入产品分类名称</Button>
+                <Button class="j_btn_info" @click="update"><i class="iconfont icon-tupian3"></i>设置水印</Button>
+                <Button class="j_btn_info" @click="update" style="padding: 6px 5px;margin-right:0px;">一键载入产品分类名称</Button>
               </Col>
             </Row>
           </div>
@@ -56,11 +56,11 @@
           <JPagination :checkbox="true" :fixed="true" :total="total" :searchData='searchData' @on-change="pageChange" :unit="'个'">
             <span slot="btn">
               <Checkbox v-model="toggle" @on-change="handleSelectAll(toggle)"/>
-              <Button class="j_buttom">删除</Button>
-              <Button class="j_buttom">复制</Button>
-              <Button class="j_buttom">移动</Button>
-              <Button class="j_buttom">重命名</Button>
-              <Button class="j_buttom">一键删除非引用</Button>
+              <Button size="small">删除</Button>
+              <Button size="small">复制</Button>
+              <Button size="small">移动</Button>
+              <Button size="small">重命名</Button>
+              <Button size="small">一键删除非引用</Button>
             </span>
           </JPagination>
         </Layout>

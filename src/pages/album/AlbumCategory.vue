@@ -5,7 +5,7 @@
     </div>
     <div class="">
       <Input v-model="name" style="width:140px;padding-right:5px;" placeholder="搜索文件夹"></Input>
-      <Button class="j_buttom" @click="search">搜索</Button>
+      <Button class="j_btn_search" @click="search">搜索</Button>
     </div>
     <Tree :data="data" @on-select-change="clickCategory"></Tree>
   </div>

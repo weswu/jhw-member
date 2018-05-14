@@ -14,10 +14,10 @@
         <Row :gutter="24">
           <Col span="16">
             <Input v-model="searchData.title" style="width:178px;margin-right:5px;" placeholder="请输入标题内容"></Input>
-            <button type="button" name="button" class="j_buttom" @click="search">搜索</button>
+            <Button class="j_btn_search" @click="search">搜索</Button>
           </Col>
           <Col span="8" style="text-align:right">
-            <Button class="j_buttom_info" @click="blacklist" style="width:94px;margin-right:0px;">黑名单</Button>
+            <Button class="j_btn_info" @click="blacklist" style="width:94px;margin-right:0px;">黑名单</Button>
           </Col>
         </Row>
       </div>
@@ -25,9 +25,9 @@
       <JPagination :checkbox="true" :total="total" :searchData='searchData' @on-change="pageChange" :left="'10'" :right="'14'">
         <span slot="btn">
           <Checkbox v-model="toggle" @on-change="handleSelectAll(toggle)"/>
-          <Button class="j_buttom" @click="delAll">删除</Button>
-          <Button class="j_buttom" @click="readState">标记已读</Button>
-          <Button class="j_buttom" @click="readStateAll" style="color:#333">全部已读</Button>
+          <Button size="small" @click="delAll">删除</Button>
+          <Button size="small" @click="readState">标记已读</Button>
+          <Button size="small" @click="readStateAll" style="color:#333">全部已读</Button>
         </span>
       </JPagination>
     </Content>
@@ -128,7 +128,7 @@ export default {
         let columns2 = [
           { title: '发送人', key: 'fromName' },
           { title: '来源ip', key: 'ip' },
-          { title: '操作', width: 155, render: this.renderOperate }
+          { title: '操作', className: 'j_table_operate', width: 155, render: this.renderOperate }
         ]
         columns2.forEach(item => {
           this.columns.push(item)
@@ -257,11 +257,7 @@ export default {
           }
         }, '查看'),
         h('span', {
-          style: {
-            paddingLeft: '10px',
-            paddingRight: '10px',
-            color: '#e6e1db'
-          }
+          class: { delimiter: true }
         }, '|'),
         h('a', {
           on: {
@@ -275,11 +271,7 @@ export default {
           }
         }, '回复'),
         h('span', {
-          style: {
-            paddingLeft: '10px',
-            paddingRight: '10px',
-            color: '#e6e1db'
-          }
+          class: { delimiter: true }
         }, '|'),
         h('a', [
           h('Poptip', {

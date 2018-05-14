@@ -11,7 +11,7 @@
             </Col>
             <Col span="11" style="text-align:right">
               <Input v-model="searchData.name" style="width:140px;padding-right:5px;" placeholder="请输入用户名"></Input>
-              <Button class="j_buttom" @click="search">搜索</Button>
+              <Button class="j_btn_search" @click="search">搜索</Button>
               <Button class="j_btn" @click="update">高级搜索</Button>
             </Col>
           </Row>
@@ -20,7 +20,7 @@
         <JPagination :checkbox="true" :total="total" :searchData='searchData' @on-change="pageChange">
           <span slot="btn">
             <Checkbox v-model="toggle" @on-change="handleSelectAll(toggle)"/>
-            <Button class="j_buttom"  @click="delAll">删除</Button>
+            <Button size="small"  @click="delAll">删除</Button>
           </span>
         </JPagination>
       </Content>
@@ -50,7 +50,7 @@ export default {
         { title: '注册时间', key: 'addTime' },
         { title: '状态', key: 'isAccountEnabled', render: this.typeFilter },
         { title: '来源（网站编号）', key: '' },
-        { title: '操作', width: 120, render: this.renderOperate }
+        { title: '操作', className: 'j_table_operate', width: 120, render: this.renderOperate }
       ],
       list: [],
       searchData: {
@@ -151,11 +151,7 @@ export default {
           }
         }, '修改'),
         h('span', {
-          style: {
-            paddingLeft: '10px',
-            paddingRight: '10px',
-            color: '#e6e1db'
-          }
+          class: { delimiter: true }
         }, '|'),
         h('a', [
           h('Poptip', {

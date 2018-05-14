@@ -10,10 +10,10 @@
               <Button class="j_btn" @click="search(item.value)" v-for="(item, index) in btns" :key="index" :class="{primary: active === item.value}">{{item.text}}</Button>
             </Col>
             <Col span="11" style="text-align:right">
-              <Button class="j_buttom_info" @click="update">SEO模板配置</Button>
-              <Button class="j_buttom_info" @click="update">关键词管理</Button>
-              <Button class="j_buttom_info" @click="update">Tag标签管理</Button>
-              <Button class="j_buttom_info" @click="update" style="margin-right:0px;">付费SEO推广</Button>
+              <Button class="j_btn_info" @click="update">SEO模板配置</Button>
+              <Button class="j_btn_info" @click="update">关键词管理</Button>
+              <Button class="j_btn_info" @click="update">Tag标签管理</Button>
+              <Button class="j_btn_info" @click="update" style="margin-right:0px;">付费SEO推广</Button>
             </Col>
           </Row>
         </div>
@@ -52,7 +52,7 @@ export default {
         { type: 'index2', title: '序号', align: 'center', width: 60, render: this.indexFilter },
         { title: '导航名称', key: 'name', render: this.nameFilter },
         { title: '页面地址', key: 'page', render: this.pageFilter },
-        { title: '操作', align: 'center', width: 100, render: this.renderOperate }
+        { title: '操作', className: 'j_table_operate', align: 'center', width: 100, render: this.renderOperate }
       ],
       list: [],
       total: 0,

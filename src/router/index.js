@@ -31,7 +31,7 @@ export default new Router({
     { path: '/category/:id', component: require('@/pages/category/Category').default },
     // 产品
     { path: '/product', component: require('@/pages/product/Product').default },
-    { path: '/product/:id', component: require('@/pages/product/Product').default },
+    { path: '/product/:id', component: require('@/pages/product/Detail').default },
     { path: '/product_import', component: require('@/pages/product/Import').default },
     { path: '/product_download', component: require('@/pages/product/DownLoad').default },
     // 新闻

@@ -149,15 +149,8 @@ export default {
 </script>
 
 <style lang="less">
+// 通用
 .j_product_import{
-  .import_title{
-    font-size: 14px;
-    color: #595959;
-    padding: 10px 0 5px 0;
-  }
-  .j_tip{
-    margin: 20px 0 13px 0;
-  }
   .j_table {
     border-bottom: none;
     border-left: none;
@@ -175,6 +168,33 @@ export default {
     border-bottom: 1px solid #e9e9e9;
     white-space: nowrap;
     text-overflow: ellipsis;
+    .ivu-checkbox{
+      padding-right: 7%
+    }
+  }
+}
+
+.j_product_import{
+  .import_title{
+    font-size: 14px;
+    color: #595959;
+    padding: 10px 0 5px 0;
+  }
+  .j_tip{
+    margin: 20px 0 13px 0;
+  }
+  .j_select_qrcode_img{
+    position: relative;
+    width: 111px;
+    .ivu-select-selection{
+      height: 18px;
+      line-height: 18px;
+      border: 1px solid #c6c6c6;
+      .ivu-select-placeholder{
+        height: 18px !important;
+        line-height: 18px !important;
+      }
+    }
   }
   .submit{
     width:640px;

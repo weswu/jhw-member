@@ -65,6 +65,19 @@ const state = {
       { text: '下载', value: 'product_download' }
     ]
   },
+  menu_product_detail: {
+    title: '返回',
+    menu: [
+      { text: '产品基本信息', value: '0' },
+      { text: '电脑端产品内容', value: '1' },
+      { text: '手机端产品内容', value: '2' },
+      { text: '产品描述', value: '3' },
+      { text: '产品卖点', value: '4' },
+      { text: '商城属性', value: '5' },
+      { text: '产品标签', value: '6' },
+      { text: 'SEO设置', value: '7' }
+    ]
+  },
   menu_news: {
     title: '新闻管理',
     menu: [

@@ -7,12 +7,12 @@
         <div class="j_search">
           <Row :gutter="24">
             <Col span="6">
-              <Button type="info" icon="plus" @click="update">添加产品</Button>
+              <Button type="info" icon="plus" @click="add">添加产品</Button>
             </Col>
             <Col span="18" style="text-align:right">
-              <a href="#" class="myShow" @click="myShow">我的显示</a>
+              <span class="a_underline" @click="myShow">我的显示</span>
               <Input v-model="model.title" placeholder="请输入新闻标题" style="width:200px"></Input>
-              <Button class="j_buttom" @click="search">搜索</Button>
+              <Button class="j_btn_search" @click="search">搜索</Button>
               <Button class="j_btn" @click="update" style="margin-right: 0;">高级搜索</Button>
             </Col>
           </Row>
@@ -22,11 +22,11 @@
       <JPagination :fixed="true" :checkbox="true" :total="total" :searchData='searchData' @on-change="pageChange">
         <span slot="btn">
           <Checkbox v-model="toggle" @on-change="handleSelectAll(toggle)"/>
-          <Button class="j_buttom" @click="delAll">删除</Button>
-          <Button class="j_buttom" @click="update">复制</Button>
-          <Button class="j_buttom" @click="update">上架</Button>
-          <Button class="j_buttom" @click="update">下架</Button>
-          <Button class="j_buttom" @click="categoryAll">转移分类</Button>
+          <Button size="small" @click="delAll">删除</Button>
+          <Button size="small" @click="update">复制</Button>
+          <Button size="small" @click="update">上架</Button>
+          <Button size="small" @click="update">下架</Button>
+          <Button size="small" @click="categoryAll">转移分类</Button>
         </span>
       </JPagination>
     </Layout>
@@ -39,12 +39,11 @@
         温馨提醒：勾选不要超过8个，以免列表显示不下。
       </div>
       <CheckboxGroup v-model="checkboxMyShow" class="j_checkout">
-        <Checkbox value="序号">序号</Checkbox><Checkbox value="产品图片">产品图片</Checkbox>
-        <Checkbox value="产品名称">产品名称</Checkbox><Checkbox value="产品型号">产品型号</Checkbox>
-        <Checkbox value="产品价格">产品价格</Checkbox><Checkbox value="产品分类">产品分类</Checkbox>
-        <Checkbox value="添加时间">添加时间</Checkbox><Checkbox value="是否上架">是否上架</Checkbox>
-        <Checkbox value="排序">排序</Checkbox><Checkbox value="二维码">二维码</Checkbox>
-        <Checkbox value="id">id</Checkbox>
+        <Checkbox label="序号">序号</Checkbox><Checkbox label="产品图片">产品图片</Checkbox>
+        <Checkbox label="产品名称">产品名称</Checkbox><Checkbox label="产品型号">产品型号</Checkbox>
+        <Checkbox label="产品价格">产品价格</Checkbox><Checkbox label="产品分类">产品分类</Checkbox>
+        <Checkbox label="添加时间">添加时间</Checkbox><Checkbox label="是否上架">是否上架</Checkbox>
+        <Checkbox label="排序">排序</Checkbox><Checkbox label="二维码">二维码</Checkbox>
       </CheckboxGroup>
       <Button type="primary" @click="save" style="margin-top: 10px">保存</Button>
     </Modal>
@@ -166,7 +165,7 @@ export default {
           this.columns.push({ title: '排序', className: 'j_table_sort', sortable: true, minWidth: 80, render: this.sortFilter })
         }
       })
-      this.columns.push({ title: '操作', align: 'left', width: 160, render: this.renderOperate })
+      this.columns.push({ title: '操作', className: 'j_table_operate', align: 'left', width: 160, render: this.renderOperate })
       this.modalMyShow = false
     },
     sortable (a, b) {
@@ -372,6 +371,51 @@ export default {
     },
     nameFilter (h, params) {
       var ctx = this
+      let data = [
+        h('li', {
+          style: {
+            background: '#e9e9e9'
+          }
+        }, '请选择')
+      ]
+      data.push(h('li', [
+        h('Poptip', {
+          props: {
+            placement: 'right',
+            trigger: 'hover'
+          },
+          class: {
+            'pro_name_pop': true
+          }
+        }, [
+          h('span', '网站编号： 203'),
+          h('img', {
+            slot: 'content',
+            attrs: {
+              src: 'http://wcd.jihui88.com/rest/comm/qrbar/create?w=210&text=http://pc.jihui88.com/rest/site/203/pd?itemId=' + params.row.productId2
+            }
+          })
+        ])
+      ]))
+      data.push(h('li', [
+        h('Poptip', {
+          props: {
+            placement: 'right',
+            trigger: 'hover'
+          },
+          class: {
+            'pro_name_pop': true
+          }
+        }, [
+          h('span', '网站编号： 203'),
+          h('img', {
+            slot: 'content',
+            attrs: {
+              src: 'http://wcd.jihui88.com/rest/comm/qrbar/create?w=210&text=http://pc.jihui88.com/rest/site/203/pd?itemId=' + params.row.productId2
+            }
+          })
+        ])
+      ]))
       return h('div', {
         class: {
           title: true
@@ -380,13 +424,18 @@ export default {
         h('div', [
           h('span', {
             style: {
-              color: '#5b5b5b'
+              color: '#5b5b5b',
+              height: '40px',
+              display: 'block'
             }
-          }, params.row.name),
+          }, params.row.name || '产品名称'),
           h('p', [
             h('Poptip', {
               props: {
                 placement: 'right'
+              },
+              class: {
+                'pro_name_pop': true
               }
             }, [
               h('span', {
@@ -406,19 +455,11 @@ export default {
                   'icon-tel': true
                 }
               }),
-              h('img', {
-                slot: 'content',
-                attrs: {
-                  src: 'http://wcd.jihui88.com/rest/comm/qrbar/create?w=210&text=http://pc.jihui88.com/rest/site/203/pd?itemId=' + params.row.productId2
-                }
-              })
+              h('ul', {
+                slot: 'content'
+              }, data)
             ])
-          ]),
-          h('span', {
-            style: {
-              color: '#a4a4a4'
-            }
-          }, 'id:' + params.row.productId2)
+          ])
         ]),
         h('i', {
           class: {
@@ -901,8 +942,21 @@ export default {
   }
 }
 .j_product {
-  .myShow{
-    text-decoration: underline;
+  .pro_name_pop{
+    .ivu-poptip-arrow{
+      border-right-color: '#e9e9e9'
+    }
+    .ivu-poptip-body{
+      padding: 0;
+      .ivu-poptip-body{
+        padding: 5px;
+      }
+      li{
+        padding: 8px 10px;
+      }
+    }
+  }
+  .a_underline{
     margin-right: 20px;
   }
   .ivu-table td{

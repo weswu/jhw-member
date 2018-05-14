@@ -41,7 +41,7 @@ export default {
         { title: '邮箱', key: 'key', render: this.emailFilter },
         { title: '手机', key: 'cellphone', render: this.phoneFilter },
         { title: '职位', key: 'position' },
-        { title: '操作', key: 'type', align: 'right', width: 150, render: this.renderOperate }
+        { title: '操作', className: 'j_table_operate', align: 'right', width: 150, render: this.renderOperate }
       ],
       list: [
         {
@@ -111,11 +111,7 @@ export default {
           }
         }, '详情'),
         h('span', {
-          style: {
-            paddingLeft: '10px',
-            paddingRight: '10px',
-            color: '#e6e1db'
-          }
+          class: { delimiter: true }
         }, '|'),
         h('a', {
           on: {

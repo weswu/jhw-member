@@ -12,12 +12,12 @@
       </Content>
       <div class="j_pagination fixed border">
         <Checkbox v-model="toggle" @on-change="handleSelectAll(toggle)"/>
-        <Button class="j_buttom" @click="delAll">删除</Button>
-        <Button class="j_buttom" @click="update">显示</Button>
-        <Button class="j_buttom" @click="update">隐藏</Button>
-        <Button class="j_buttom" @click="categoryAll">转换分类</Button>
-        <Button class="j_buttom">展开</Button>
-        <Button class="j_buttom">折叠</Button>
+        <Button size="small" @click="delAll">删除</Button>
+        <Button size="small" @click="update">显示</Button>
+        <Button size="small" @click="update">隐藏</Button>
+        <Button size="small" @click="categoryAll">转换分类</Button>
+        <Button size="small">展开</Button>
+        <Button size="small">折叠</Button>
       </div>
     </Layout>
     <SeoDetail ref="seoDetail"/>
@@ -44,7 +44,7 @@ export default {
         { title: '分类名称', className: 'j_table_title', minWidth: 200, render: this.nameFilter },
         { title: '是否显示', width: 105, render: this.displayFilter },
         { title: '移序', className: 'j_table_sort', width: 130, render: this.sortFilter },
-        { title: '操作', align: 'left', width: 160, render: this.renderOperate }
+        { title: '操作', className: 'j_table_operate', align: 'left', width: 160, render: this.renderOperate }
       ],
       list: [],
       ids: '',
@@ -479,11 +479,7 @@ export default {
           }
         }, '修改'),
         h('span', {
-          style: {
-            paddingLeft: '10px',
-            paddingRight: '10px',
-            color: '#e6e1db'
-          }
+          class: { delimiter: true }
         }, '|'),
         h('a', {
           on: {
@@ -493,11 +489,7 @@ export default {
           }
         }, 'SEO'),
         h('span', {
-          style: {
-            paddingLeft: '10px',
-            paddingRight: '10px',
-            color: '#e6e1db'
-          }
+          class: { delimiter: true }
         }, '|'),
         h('a', [
           h('Poptip', {

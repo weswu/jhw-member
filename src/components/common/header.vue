@@ -187,7 +187,7 @@ export default {
             margin: 5px;
             padding: 10px 0 0 0;
             &:hover{
-              background: @background-color;
+              background: @background-gray-color;
             }
           }
         }
@@ -196,7 +196,7 @@ export default {
           bottom: 0;
           width: 100%;
           left: 0;
-          background: @background-color;
+          background: @background-gray-color;
           color: #4f4e4f;
           font-size: 14px;
         }

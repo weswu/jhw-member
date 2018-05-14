@@ -32,7 +32,7 @@ export default {
 .j_carousel{
   padding: 25px;
   .demo-carousel{
-    background: @background-color;
+    background: @background-gray-color;
     text-align: center;
     height: 223px;
     line-height: 223px;

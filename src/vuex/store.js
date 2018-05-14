@@ -20,6 +20,8 @@ const store = new Vuex.Store({
       order: 45
     },
     messageList: [],
+    productCategory: [],
+    newsCategory: [],
     lanId: '1',
     uid: ['0', '0', '0']
   },
@@ -27,6 +29,8 @@ const store = new Vuex.Store({
     user: state => state.user,
     userInfo: state => state.userInfo,
     messageList: state => state.messageList,
+    productCategory: state => state.productCategory,
+    newsCategory: state => state.newsCategory,
     lanId: state => state.lanId
   },
   mutations: {
@@ -38,6 +42,12 @@ const store = new Vuex.Store({
     },
     setMessageList (state, messageList) {
       state.messageList = messageList
+    },
+    setProductCategory (state, productCategory) {
+      state.productCategory = productCategory
+    },
+    setNewsCategory (state, newsCategory) {
+      state.newsCategory = newsCategory
     },
     setLanId (state, lanId) {
       state.lanId = lanId
@@ -90,6 +100,13 @@ const store = new Vuex.Store({
       this._vm.$http.get('/rest/api/message/list?page=1&pageSize=5&recvState=00').then((res) => {
         if (res.success) {
           this.commit('setMessageList', res.attributes.data)
+        }
+      })
+    },
+    getCategory ({commit, state}, type) {
+      this._vm.$http.get('/rest/api/category/' + type + '?pageSize=1000').then(res => {
+        if (res.success) {
+          debugger
         }
       })
     },

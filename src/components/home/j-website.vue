@@ -97,7 +97,6 @@ export default {
     vertical-align: initial;
   }
   .j_tip{
-    color: #595959;
     margin-left: 3px;
     a{
       color: #2549a6;
@@ -109,9 +108,7 @@ export default {
     position: relative;
     margin-top: 15px;
     .ivu-select-placeholder{
-      color: #fff;text-align: right;
-      height: 32px;
-      line-height: 32px;
+      text-align: right;
     }
     .ivu-icon-arrow-down-b{
       display: none;
