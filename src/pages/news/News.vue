@@ -20,11 +20,11 @@
         <JPagination :fixed="true" :checkbox="true" :total="total" :searchData='searchData' @on-change="pageChange">
           <span slot="btn">
             <Checkbox v-model="toggle" @on-change="handleSelectAll(toggle)"/>
-            <Button size="small" @click="delAll">删除</Button>
-            <Button size="small" @click="update">复制</Button>
-            <Button size="small" @click="update">上架</Button>
-            <Button size="small" @click="update">下架</Button>
-            <Button size="small" @click="categoryAll">转移分类</Button>
+            <Button type="ghost" size="small" @click="delAll">删除</Button>
+            <Button type="ghost" size="small" @click="update">复制</Button>
+            <Button type="ghost" size="small" @click="update">上架</Button>
+            <Button type="ghost" size="small" @click="update">下架</Button>
+            <Button type="ghost" size="small" @click="categoryAll">转移分类</Button>
           </span>
         </JPagination>
       </Content>

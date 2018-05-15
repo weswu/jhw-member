@@ -48,7 +48,7 @@
               <Col span="8"><a href="#/cost_order"><i class="iconfont icon-price"></i>费用中心</a></Col>
             </Row>
             <Row>
-              <Col span="8"><a href="#"><i class="iconfont icon-quanyi"></i>账号权益</a></Col>
+              <Col span="8"><a href="#/point_origin"><i class="iconfont icon-quanyi"></i>积分来源</a></Col>
               <Col span="8"><a href="#/point"><i class="iconfont icon-jifen"></i>账号积分</a></Col>
               <Col span="8"><a href="#/enterprise"><i class="iconfont icon-gongsi"></i>公司信息</a></Col>
             </Row>
@@ -150,6 +150,7 @@ export default {
         padding: 0;
         border-radius: 0;
         color: #5d5d5d;
+        z-index: 1000;
       }
     }
     .j_dropdown_username{

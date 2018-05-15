@@ -13,7 +13,7 @@
           <JPagination :checkbox="true" :total="total" :searchData='searchData' @on-change="pageChange">
             <span slot="btn">
               <Checkbox v-model="toggle" @on-change="handleSelectAll(toggle)"/>
-              <Button size="small" @click="delAll">删除</Button>
+              <Button type="ghost" size="small" @click="delAll">删除</Button>
             </span>
           </JPagination>
         </Content>

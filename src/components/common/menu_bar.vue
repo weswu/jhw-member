@@ -104,7 +104,7 @@ export default {
     position: absolute;
     z-index: 100;
     right: 0;
-    top: 34.7%;
+    top: 34.2%;
     width: 20px;
     height: 50px;
     cursor: pointer;

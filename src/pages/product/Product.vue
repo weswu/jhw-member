@@ -22,11 +22,11 @@
       <JPagination :fixed="true" :checkbox="true" :total="total" :searchData='searchData' @on-change="pageChange">
         <span slot="btn">
           <Checkbox v-model="toggle" @on-change="handleSelectAll(toggle)"/>
-          <Button size="small" @click="delAll">删除</Button>
-          <Button size="small" @click="update">复制</Button>
-          <Button size="small" @click="update">上架</Button>
-          <Button size="small" @click="update">下架</Button>
-          <Button size="small" @click="categoryAll">转移分类</Button>
+          <Button type="ghost" size="small" @click="delAll">删除</Button>
+          <Button type="ghost" size="small" @click="update">复制</Button>
+          <Button type="ghost" size="small" @click="update">上架</Button>
+          <Button type="ghost" size="small" @click="update">下架</Button>
+          <Button type="ghost" size="small" @click="categoryAll">转移分类</Button>
         </span>
       </JPagination>
     </Layout>
@@ -383,9 +383,6 @@ export default {
           props: {
             placement: 'right',
             trigger: 'hover'
-          },
-          class: {
-            'pro_name_pop': true
           }
         }, [
           h('span', '网站编号： 203'),
@@ -402,9 +399,6 @@ export default {
           props: {
             placement: 'right',
             trigger: 'hover'
-          },
-          class: {
-            'pro_name_pop': true
           }
         }, [
           h('span', '网站编号： 203'),
@@ -435,7 +429,10 @@ export default {
                 placement: 'right'
               },
               class: {
-                'pro_name_pop': true
+                'j_poptip_ul': true
+              },
+              style: {
+                width: '120px'
               }
             }, [
               h('span', {
@@ -942,18 +939,10 @@ export default {
   }
 }
 .j_product {
-  .pro_name_pop{
-    .ivu-poptip-arrow{
-      border-right-color: '#e9e9e9'
-    }
-    .ivu-poptip-body{
-      padding: 0;
-      .ivu-poptip-body{
-        padding: 5px;
-      }
-      li{
-        padding: 8px 10px;
-      }
+  .j_poptip_ul .ivu-poptip-popper{
+    width: 135px;
+    .ivu-poptip-popper{
+      width: 223px;
     }
   }
   .a_underline{

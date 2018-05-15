@@ -35,7 +35,7 @@
         <div class="j_tip">
           <span class="red">步骤三：</span>提交填写好的产品表格
         </div>
-        <Row :gutter="24" class="submit">
+        <Row :gutter="24" class="form">
           <Col span="3">
             <span class="star">*</span>上传表格:
           </Col>
@@ -172,7 +172,7 @@ export default {
       }
     }
   }
-  .submit{
+  .form{
     width:640px;
     line-height: 32px;
     .star{

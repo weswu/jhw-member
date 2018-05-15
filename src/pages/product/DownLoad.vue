@@ -5,8 +5,8 @@
       <Content>
         <JHeader :title="'下载'" :lan="true"/>
         <div class="j_search">
-          <Button class="grey primary">产品表格下载</Button>
-          <Button class="grey" @click="update">产品相册下载</Button>
+          <Button class="grey primary w130">产品表格下载</Button>
+          <Button class="grey w130" @click="update">产品相册下载</Button>
         </div>
         <table class="j_table">
           <thead>
@@ -93,13 +93,13 @@ export default {
         { value: 'c', text: '-' }
       ],
       list2: [
-        { value: 'a', text: '产品二维码' },
-        { value: 'b', text: '-' },
-        { value: 'c', text: '-' },
+        { value: 'qrcode', text: '产品二维码' },
         { value: 'd', text: '-' },
         { value: 'e', text: '-' },
         { value: 'f', text: '-' },
-        { value: 'g', text: '-' }
+        { value: 'g', text: '-' },
+        { value: 'h', text: '-' },
+        { value: 'j', text: '-' }
       ]
     }
   },
@@ -112,9 +112,4 @@ export default {
 </script>
 
 <style lang="less">
-.j_product_import{
-  .j_search button{
-    width: 130px;
-  }
-}
 </style>

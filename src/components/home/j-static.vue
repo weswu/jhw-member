@@ -106,25 +106,12 @@ export default {
 </script>
 
 <style lang="less">
-.j_poptip_ul{
-  .ivu-poptip-popper{
-    min-width: 100px;
-    width: 115px;
-  }
-  .ivu-poptip-body{
-    padding: 0;
+.j_home_static{
+  .j_poptip_ul{
     li{
-      color: #595959;
-      padding: 8px 0;
       text-align: center;
-      cursor: pointer;
-      &:hover{
-        background: #f9f9fa;
-      }
     }
   }
-}
-.j_home_static{
   .j_tip{
     margin-top: 0;
   }

@@ -265,7 +265,71 @@ a.primary{
   }
 }
 
-
+.j_pagination{
+  overflow: hidden;
+  line-height: 38px;
+  background: #f5f6fa;
+  border: 1px solid #e9e9e9;
+  border-top: none;
+  color: #a0a0a0;
+  font-size: 12px;
+  &.border{
+    border-bottom: none;
+  }
+  &.fixed{
+    border-top: 1px solid #e9e9e9;
+    .page{
+      padding-left: 6px;
+    }
+  }
+  &.border_top{
+    border-top: none;
+  }
+  .ivu-checkbox-wrapper{
+    margin: 0 20px 0 11px;
+    .ivu-checkbox-inner{
+      border: 1px solid #b2b2b2;
+      border-radius: 4px;
+    }
+  }
+  input{
+    box-shadow: none;
+    border: 1px solid #d5d5d5;
+    &:hover{
+      border: 1px solid #d5d5d5;
+    }
+  }
+  // 右
+  .number {
+    height: 27px;
+    line-height: 27px;
+    border: 1px solid #d5d5d5;
+    width: 45px;
+    padding-left: 10px;
+    padding-right: 0;
+    margin-right: 2px;
+  }
+  .ivu-page{
+    padding-left: 18px;
+  }
+  .page{
+    display:inline-block;
+    padding-right: 15px;
+    padding-left: 20px;
+    .ivu-input-wrapper{
+      width: 35px;
+      float: left;
+      padding-top: 7px;
+    }
+  }
+  .go{
+    background: #f4f3f5;
+    color: #a0a0a0;
+    &:hover{
+      color: #a0a0a0;
+    }
+  }
+}
 
 
 // 弹出框表单
@@ -273,6 +337,9 @@ a.primary{
   .ivu-input-wrapper{
     width: 250px;
   }
+}
+.ivu-poptip-inner{
+  border-radius: 0px;
 }
 //微标数
 .ivu-badge-count{
@@ -286,6 +353,24 @@ a.primary{
 
 .ivu-cascader-arrow,.ivu-select-arrow{
   color: #000;
+}
+
+// 弹出框ul
+.j_poptip_ul{
+  .ivu-poptip-popper{
+    min-width: 120px;
+  }
+  .ivu-poptip-body{
+    padding: 0;
+    li{
+      color: #595959;
+      padding: 8px 15px;
+      cursor: pointer;
+      &:hover{
+        background: #f9f9fa;
+      }
+    }
+  }
 }
 
 // Input
@@ -546,8 +631,13 @@ a.primary{
   }
 }
 .ivu-btn-small{
-  &:hover{
-    border-color: @btn-default-border;
-    color: @text-color;
+  &.ivu-btn-ghost{
+    color: #a0a0a0;
+    background: #f5f6fa;
+    border-color: #d5d5d5;
+    &:hover{
+      border-color: @btn-default-border;
+      color: @text-color;
+    }
   }
 }

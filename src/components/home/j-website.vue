@@ -17,8 +17,12 @@
       </p>
     </div>
     <div class="buy">
-      <Select class="primary" placeholder="升级购买" @on-change="change" style="width:121px">
+      <Select class="primary" placeholder="升级购买" @on-change="change" style="width:123px">
+        <Option class="head" value="0" label="升级购买"> 网站 </Option>
         <Option v-for="item in staticList" :value="item.value" :key="item.value" label="升级购买">
+          {{ item.text }}
+        </Option>
+        <Option class="head" v-for="item in list" :value="item.value" :key="item.value" label="升级购买">
           {{ item.text }}
         </Option>
       </Select>
@@ -32,7 +36,15 @@
 import { mapState } from 'vuex'
 export default {
   data () {
-    return {}
+    return {
+      list: [
+        { value: '1', text: '小程序' },
+        { value: '2', text: '微分销' },
+        { value: '3', text: '微传单' },
+        { value: '4', text: '其它功能' },
+        { value: '5', text: '其它套餐' }
+      ]
+    }
   },
   computed: {
     ...mapState(['user', 'staticList'])
@@ -42,7 +54,15 @@ export default {
       this.$router.push({'path': '/account'})
     },
     change (e) {
-      this.$Message.info('更新中...' + e)
+      if (e === '0') {
+        console.log('0')
+      } else if (e === '4') {
+        window.location.href = 'http://buy.jihui88.com/#/?tab=tab1'
+      } else if (e === '5') {
+        window.location.href = 'http://buy.jihui88.com/#/'
+      } else {
+        this.$Message.info('更新中...' + e)
+      }
     }
   }
 }
@@ -96,7 +116,18 @@ export default {
     float: right;
     position: relative;
     margin-top: 15px;
-    .ivu-select-placeholder{
+    .ivu-select-dropdown {
+      max-height: 340px;
+      .head{
+        background: #e7eaef;text-align: left;padding: 8px 16px;
+        color: #6a6a6a;
+      }
+      .ivu-select-item{
+        padding: 7px 10px;
+        text-align: left;
+      }
+    }
+    .ivu-select-placeholder,.ivu-select-selected-value{
       text-align: right;
     }
     .ivu-icon-arrow-down-b{

@@ -115,10 +115,58 @@ const store = new Vuex.Store({
         }
       })
     },
-    getCategory ({commit, state}, type) {
-      this._vm.$http.get('/rest/api/category/' + type + '?pageSize=1000').then(res => {
+    getProductCategory ({commit, state}) {
+      this._vm.$http.get('/rest/api/category/product?pageSize=1000').then(res => {
         if (res.success) {
-          debugger
+          let data = res.attributes.data
+          let list = []
+          // 1级
+          data.forEach(item => {
+            if (!item.belongId && item.isdisplay === '1') {
+              item._checked = true
+              item.grade = '1'
+              list.push(item)
+            }
+          })
+          // 2级
+          data.forEach(row => {
+            row.isdisplay === '1' && list.forEach((item, index) => {
+              if (item.grade === '1' && (row.belongId === item.categoryId)) {
+                row._checked = true
+                row.grade = '2'
+                list.splice(index + 1, 0, row)
+              }
+            })
+          })
+          // 3级
+          data.forEach(row => {
+            row.isdisplay === '1' && list.forEach((item, index) => {
+              if (item.grade === '2' && (row.belongId === item.categoryId)) {
+                row._checked = true
+                row.grade = '3'
+                list.splice(index + 1, 0, row)
+              }
+            })
+          })
+          list.forEach((item, index) => {
+            item.isroot = false
+            if (list.length > (index + 1)) {
+              if (item.grade === '1') {
+                item.isroot = item.grade === '1' && list[index + 1].grade === '2'
+              }
+              if (item.grade === '2') {
+                item.isroot = item.grade === '2' && list[index + 1].grade === '3'
+              }
+            }
+          })
+          this.commit('setProductCategory', list)
+        }
+      })
+    },
+    getNewsCategory ({commit, state}) {
+      this._vm.$http.get('/rest/api/category/news?pageSize=1000').then(res => {
+        if (res.success) {
+          this.commit('setNewsCategory', res.attributes.data)
         }
       })
     },

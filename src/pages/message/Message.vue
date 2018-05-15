@@ -22,9 +22,9 @@
         <JPagination :checkbox="true" :total="total" :searchData='searchData' @on-change="pageChange" :left="'10'" :right="'14'">
           <span slot="btn">
             <Checkbox v-model="toggle" @on-change="handleSelectAll(toggle)"/>
-            <Button size="small" @click="delAll">删除</Button>
-            <Button size="small" @click="readState">标记已读</Button>
-            <Button size="small" @click="readStateAll" style="color:#333">全部已读</Button>
+            <Button type="ghost" size="small" @click="delAll">删除</Button>
+            <Button type="ghost" size="small" @click="readState">标记已读</Button>
+            <Button type="ghost" size="small" @click="readStateAll" style="color:#333">全部已读</Button>
           </span>
         </JPagination>
       </Content>
@@ -199,20 +199,19 @@ export default {
       return h('span', params.index + (this.searchData.page - 1) * this.searchData.pageSize + 1)
     },
     titleFilter (h, params) {
-      // params.row.recvState
+      // 00：未读  其它已读
       return h('div', [
         h('span', {
-          'class': {
-            'state-unread': true,
-            foo: params.row.recvState === '00'
+          class: {
+            'state-unread': true
           },
-          domProps: {
-            innerHTML: params.row.recvState === '00' ? '●' : ''
+          style: {
+            color: params.row.recvState === '00' ? '#418bca' : ''
           }
-        }),
+        }, '●'),
         h('a', {
-          'style': {
-            color: params.row.recvState === '01' ? '#999' : ''
+          style: {
+            color: params.row.recvState === '00' ? '#5b5b5b' : '#a0a0a0'
           },
           domProps: {
             innerHTML: params.row.title
@@ -314,10 +313,8 @@ export default {
   .state-unread{
     width: 20px;
     display: inline-block;
-    &.foo{
-      font-size: 16px;
-      color: #428bca;
-    }
+    font-size: 16px;
+    color: #a0a0a0;
   }
   .ivu-table-row td:nth-child(2) .ivu-table-cell{
     padding-left: 0;

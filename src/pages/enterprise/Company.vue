@@ -4,7 +4,7 @@
     <Layout class="j_layout_content j_form_detail">
       <JHeader :title="'公司简介'" :lan="true"/>
       <Content>
-        <UE :content='user.enterprise.edesc' ref='ue' style="z-index: 1;position: relative;"></UE>
+        <UE :content='user.enterprise.edesc' ref='ue'></UE>
       </Content>
       <Footer>
         <Button type="primary" @click="submit">保存</Button>

@@ -11,13 +11,15 @@
         </Table>
       </Content>
       <div class="j_pagination fixed border">
-        <Checkbox v-model="toggle" @on-change="handleSelectAll(toggle)"/>
-        <Button size="small" @click="delAll">删除</Button>
-        <Button size="small" @click="update">显示</Button>
-        <Button size="small" @click="update">隐藏</Button>
-        <Button size="small" @click="categoryAll">转换分类</Button>
-        <Button size="small">展开</Button>
-        <Button size="small">折叠</Button>
+        <div class="btn">
+          <Checkbox v-model="toggle" @on-change="handleSelectAll(toggle)"/>
+          <Button type="ghost" size="small" @click="delAll">删除</Button>
+          <Button type="ghost" size="small" @click="update">显示</Button>
+          <Button type="ghost" size="small" @click="update">隐藏</Button>
+          <Button type="ghost" size="small" @click="categoryAll">转换分类</Button>
+          <Button type="ghost" size="small">展开</Button>
+          <Button type="ghost" size="small">折叠</Button>
+        </div>
       </div>
     </Layout>
     <SeoDetail ref="seoDetail"/>
@@ -85,44 +87,33 @@ export default {
       })
     },
     init (data) {
+      var ctx = this
       // 1级
       data.forEach(item => {
         if (!item.belongId) {
           item._checked = false
-          item.sonCate = []
           item.grade = '1'
           this.list.push(item)
         }
       })
       // 2级
-      this.list.forEach(item => {
-        data.forEach(row => {
-          if (row.belongId === item.categoryId) {
+      data.forEach(row => {
+        this.list.forEach((item, index) => {
+          if (item.grade === '1' && (row.belongId === item.categoryId)) {
             row._checked = false
-            row.sonCate = []
             row.grade = '2'
-            item.sonCate.push(row)
+            ctx.list.splice(index + 1, 0, row)
           }
         })
       })
       // 3级
-      this.list.forEach(item => {
-        item.sonCate.forEach(son => {
-          data.forEach(row => {
-            if (row.belongId === son.categoryId) {
-              row._checked = false
-              row.sonCate = []
-              row.grade = '3'
-              son.sonCate.push(row)
-            }
-          })
-        })
-      })
-      // ok
-      var ctx = this
-      this.list.forEach((item, index) => {
-        item.sonCate && item.sonCate.forEach(son => {
-          ctx.list.splice(index + 1, 0, son)
+      data.forEach(row => {
+        this.list.forEach((item, index) => {
+          if (item.grade === '2' && (row.belongId === item.categoryId)) {
+            row._checked = false
+            row.grade = '3'
+            ctx.list.splice(index + 1, 0, row)
+          }
         })
       })
     },
@@ -203,11 +194,15 @@ export default {
     },
     // 过滤
     indexFilter (h, params) {
+      let isroot = false
+      if (this.list.length > (params.index + 1)) {
+        isroot = params.row.grade === '1' && this.list[params.index + 1].grade !== '1'
+      }
       return h('div', [
         h('i', {
           class: {
             iconfont: true,
-            'icon-xialajiantou': !params.row.belongId && params.row.sonCate.length > 0
+            'icon-xialajiantou': isroot
           },
           style: {
             color: '#000',
@@ -218,21 +213,30 @@ export default {
     },
     nameFilter (h, params) {
       var ctx = this
-      return h('div', [
+      let isroot = false
+      if (this.list.length > (params.index + 1)) {
+        isroot = params.row.grade === '2' && this.list[params.index + 1].grade === '3'
+      }
+      return h('div', {
+        class: {
+          j_category_name: true
+        }
+      }, [
         h('span', {
           class: {
             iconfont: true,
-            'icon-xialajiantou': params.row.sonCate.length > 0
+            'icon-xialajiantou': isroot
           },
           style: {
-            padding: '0 10px',
-            display: params.row.grade !== '1' ? 'block' : 'none'
+            padding: '7px 10px',
+            color: '#000',
+            display: params.row.grade !== '1' ? 'inline-block' : 'none'
           }
         }),
         h('span', {
           style: {
             padding: '0 16px',
-            display: params.row.grade === '3' ? 'block' : 'none'
+            display: params.row.grade === '3' ? 'inline-block' : 'none'
           }
         }),
         h('Input', {
@@ -531,6 +535,12 @@ export default {
   font-size: 8px
 }
 .j_category .ivu-table td{
-   height: 50px
+   height: 55px
+ }
+ .j_category_name{
+   display: flex;
+   i{
+     line-height: 32px;
+   }
  }
 </style>

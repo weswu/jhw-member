@@ -56,11 +56,11 @@
           <JPagination :checkbox="true" :fixed="true" :total="total" :searchData='searchData' @on-change="pageChange" :unit="'个'">
             <span slot="btn">
               <Checkbox v-model="toggle" @on-change="handleSelectAll(toggle)"/>
-              <Button size="small">删除</Button>
-              <Button size="small">复制</Button>
-              <Button size="small">移动</Button>
-              <Button size="small">重命名</Button>
-              <Button size="small">一键删除非引用</Button>
+              <Button type="ghost" size="small">删除</Button>
+              <Button type="ghost" size="small">复制</Button>
+              <Button type="ghost" size="small">移动</Button>
+              <Button type="ghost" size="small">重命名</Button>
+              <Button type="ghost" size="small">一键删除非引用</Button>
             </span>
           </JPagination>
         </Layout>
