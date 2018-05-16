@@ -248,9 +248,6 @@ export default {
       })
     },
     // 功能
-    update () {
-      this.$Message.info('更新中')
-    },
     activeChange (e) {
       this.active = e
       if (e === '6') {

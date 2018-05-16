@@ -12,7 +12,7 @@
       <div class="page">
         <Input size="small" v-model="page"></Input>
         <Button type="primary" size="small" @click="pageChange(page)">GO</Button>
-        <Button type="primary" size="small" @click="refresh" class="refresh"><i class="iconfont icon-shuaxin"></i>刷新</Button>
+        <Button type="primary" size="small" @click="refresh" class="refresh"><i class="iconfont icon-shuaxin"></i><span>刷新</span></Button>
       </div>
     </div>
     <div class="j_pagination" v-if="!fixed">

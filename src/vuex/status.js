@@ -11,6 +11,13 @@ const state = {
       { text: '员工账号管理', value: 'employee_account' }
     ]
   },
+  menuAnalysis: {
+    title: '员工推广分析',
+    menu: [
+      { text: 'PC端', value: 'pc' },
+      { text: '手机端', value: 'mobile' }
+    ]
+  },
   menuCost: {
     title: '费用中心',
     menu: [

@@ -7,12 +7,12 @@
         <div class="j_search">
           <Row :gutter="24">
             <Col span="6">
-              <Button type="info" icon="plus" class="w130" @click="update">添加新闻</Button>
+              <Button type="info" icon="plus" class="w130" @click="update($Message)">添加新闻</Button>
             </Col>
             <Col span="18" style="text-align:right">
               <Input v-model="model.title" placeholder="请输入新闻标题" style="width:200px"></Input>
               <Button class="search" @click="search">搜索</Button>
-              <Button class="grey w130" @click="update" style="margin-right: 0;">高级搜索</Button>
+              <Button class="grey w130" @click="update($Message)" style="margin-right: 0;">高级搜索</Button>
             </Col>
           </Row>
         </div>
@@ -21,9 +21,9 @@
           <span slot="btn">
             <Checkbox v-model="toggle" @on-change="handleSelectAll(toggle)"/>
             <Button type="ghost" size="small" @click="delAll">删除</Button>
-            <Button type="ghost" size="small" @click="update">复制</Button>
-            <Button type="ghost" size="small" @click="update">上架</Button>
-            <Button type="ghost" size="small" @click="update">下架</Button>
+            <Button type="ghost" size="small" @click="update($Message)">复制</Button>
+            <Button type="ghost" size="small" @click="update($Message)">上架</Button>
+            <Button type="ghost" size="small" @click="update($Message)">下架</Button>
             <Button type="ghost" size="small" @click="categoryAll">转移分类</Button>
           </span>
         </JPagination>
@@ -176,9 +176,6 @@ export default {
     },
     handleSelectAll () {
       this.$refs.selection.selectAll(this.toggle)
-    },
-    update () {
-      return this.$Message.info('更新中...')
     },
     delAll () {
       if (!this.ids) {

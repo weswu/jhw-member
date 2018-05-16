@@ -31,7 +31,7 @@
         <div class="j_tip">
           <span class="red">步骤二：</span>进行批量上传产品表格前，请先把产品图片上传好
         </div>
-        <Button type="primary" @click="update" style="margin-bottom:16px;">上传产品图片</Button>
+        <Button type="primary" @click="update($Message)" style="margin-bottom:16px;">上传产品图片</Button>
         <div class="j_tip">
           <span class="red">步骤三：</span>提交填写好的产品表格
         </div>
@@ -88,9 +88,6 @@ export default {
     }
   },
   methods: {
-    update () {
-      this.$Message.info('更新中')
-    },
     select () {
       var btn = document.getElementById('fileUpload')
       btn.click()

@@ -53,3 +53,7 @@ Vue.prototype.decodeId = function (id, prefix, length) {
 Vue.prototype.index2 = function (index, obj) {
   return index + (obj.page - 1) * obj.pageSize + 1
 }
+
+Vue.prototype.update = function (e) {
+  e.info('更新中...')
+}

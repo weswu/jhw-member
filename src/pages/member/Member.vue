@@ -12,7 +12,7 @@
             <Col span="11" style="text-align:right">
               <Input v-model="searchData.name" style="width:140px;padding-right:5px;" placeholder="请输入用户名"></Input>
               <Button class="search" @click="search">搜索</Button>
-              <Button class="grey w130" @click="update" style="margin-right: 0;">高级搜索</Button>
+              <Button class="grey w130" @click="update($Message)" style="margin-right: 0;">高级搜索</Button>
             </Col>
           </Row>
         </div>
@@ -86,9 +86,6 @@ export default {
     search () {
       this.searchData.page = 1
       this.get()
-    },
-    update () {
-      this.$Message.success('更新中...')
     },
     pageChange (page) {
       this.searchData.page = page

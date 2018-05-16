@@ -60,9 +60,6 @@ export default {
     },
     change (e) {
       this.staticId = e
-    },
-    update () {
-      this.$Message.info('更新中...')
     }
   }
 }

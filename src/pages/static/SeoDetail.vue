@@ -13,19 +13,19 @@
         <Input v-model="model.title" :maxlength="100" placeholder="请输入Seo标题"></Input>
         <span class="char">{{len1}}&nbsp;/&nbsp;100&nbsp;字符</span><br>
         <a href="http://www.jihui88.com/html/201703221490154284762temp_0.html" class="seo_a" target="_blank">不知道怎么填写？</a>
-        <a href="javascript:;" class="seo_a" @click="update">提取关键字</a>
+        <a href="javascript:;" class="seo_a" @click="update($Message)">提取关键字</a>
       </FormItem>
       <FormItem label="Seo关键字：">
         <Input v-model="model.keywords" :maxlength="100" placeholder="请输入Seo关键字"></Input>
         <span class="char">{{len2}}&nbsp;/&nbsp;100&nbsp;字符</span><br>
         <a href="http://www.jihui88.com/html/201703221490159979488temp_0.html" class="seo_a" target="_blank">不知道怎么填写？</a>
-        <a href="javascript:;" class="seo_a" @click="update">提取关键字</a>
+        <a href="javascript:;" class="seo_a" @click="update($Message)">提取关键字</a>
       </FormItem>
       <FormItem label="Seo描述：">
         <Input v-model="model.description" :maxlength="250" type="textarea" :autosize="{minRows: 2,maxRows: 5}" placeholder="限250字符内，加联系电话或邮件"></Input>
         <span class="char">{{len3}}&nbsp;/&nbsp;100&nbsp;字符</span><br>
         <a href="http://www.jihui88.com/html/201703221490160215562temp_0.html" class="seo_a" target="_blank">不知道怎么填写？</a>
-        <a href="javascript:;" class="seo_a" @click="update">提取关键字</a>
+        <a href="javascript:;" class="seo_a" @click="update($Message)">提取关键字</a>
       </FormItem>
     </Form>
   </Modal>
@@ -69,9 +69,6 @@ export default {
     },
     cancel () {
       this.modal = false
-    },
-    update () {
-      this.$Message.info('更新中...')
     },
     publish () {
       let id = this.model.seoId

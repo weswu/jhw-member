@@ -13,7 +13,7 @@
               <span class="a_underline" @click="myShow">我的显示</span>
               <Input v-model="model.title" placeholder="请输入产品名称" style="width:200px"></Input>
               <Button class="search" @click="search">搜索</Button>
-              <Button class="grey w130" @click="update" style="margin-right: 0;">高级搜索</Button>
+              <Button class="grey w130" @click="update($Message)" style="margin-right: 0;">高级搜索</Button>
             </Col>
           </Row>
         </div>
@@ -23,30 +23,27 @@
         <span slot="btn">
           <Checkbox v-model="toggle" @on-change="handleSelectAll(toggle)"/>
           <Button type="ghost" size="small" @click="delAll">删除</Button>
-          <Button type="ghost" size="small" @click="update">复制</Button>
-          <Button type="ghost" size="small" @click="update">上架</Button>
-          <Button type="ghost" size="small" @click="update">下架</Button>
+          <Button type="ghost" size="small" @click="update($Message)">复制</Button>
+          <Button type="ghost" size="small" @click="update($Message)">上架</Button>
+          <Button type="ghost" size="small" @click="update($Message)">下架</Button>
           <Button type="ghost" size="small" @click="categoryAll">转移分类</Button>
         </span>
       </JPagination>
     </Layout>
     <SeoDetail ref="seoDetail"/>
     <TransferCategory ref="transferCategory" :data="categoryList" :ids="ids" :type="'product'" @on-change="get"/>
-    <Modal class-name="j_modal" v-model="modalMyShow" width="430">
-      <i class="iconfont icon-x" slot="close"></i>
-      <JHeader :title="'我的显示'" style="border-bottom:none;margin-bottom:5px;"/>
-      <div class="j_tip" style="margin: 0 0 20px 0">
-        温馨提醒：勾选不要超过8个，以免列表显示不下。
+    <JDialog ref="dialog" :title="'我的显示'" :tip="'温馨提醒：勾选不要超过8个，以免列表显示不下。'" @on-ok="save">
+      <div slot="content">
+        <CheckboxGroup v-model="checkboxMyShow" class="j_checkout">
+          <Checkbox label="序号">序号</Checkbox><Checkbox label="产品图片">产品图片</Checkbox>
+          <Checkbox label="产品名称">产品名称</Checkbox><Checkbox label="产品型号">产品型号</Checkbox>
+          <Checkbox label="产品价格">产品价格</Checkbox><Checkbox label="产品分类">产品分类</Checkbox>
+          <Checkbox label="添加时间">添加时间</Checkbox><Checkbox label="是否上架">是否上架</Checkbox>
+          <Checkbox label="排序">排序</Checkbox><Checkbox label="二维码">二维码</Checkbox>
+        </CheckboxGroup>
       </div>
-      <CheckboxGroup v-model="checkboxMyShow" class="j_checkout">
-        <Checkbox label="序号">序号</Checkbox><Checkbox label="产品图片">产品图片</Checkbox>
-        <Checkbox label="产品名称">产品名称</Checkbox><Checkbox label="产品型号">产品型号</Checkbox>
-        <Checkbox label="产品价格">产品价格</Checkbox><Checkbox label="产品分类">产品分类</Checkbox>
-        <Checkbox label="添加时间">添加时间</Checkbox><Checkbox label="是否上架">是否上架</Checkbox>
-        <Checkbox label="排序">排序</Checkbox><Checkbox label="二维码">二维码</Checkbox>
-      </CheckboxGroup>
-      <Button type="primary" @click="save" style="margin-top: 10px">保存</Button>
-    </Modal>
+    </JDialog>
+
   </Layout>
 </template>
 
@@ -55,6 +52,7 @@ import qs from 'qs'
 import MenuBar from '@/components/common/menu_bar'
 import JHeader from '@/components/group/j-header'
 import JPagination from '@/components/group/j-pagination'
+import JDialog from '@/components/group/j-dialog'
 import Sortable from 'sortablejs'
 import SeoDetail from '@/pages/static/SeoDetail'
 import TransferCategory from '@/components/group/transfer-category'
@@ -63,12 +61,12 @@ export default {
     MenuBar,
     JHeader,
     JPagination,
+    JDialog,
     SeoDetail,
     TransferCategory
   },
   data () {
     return {
-      modalMyShow: false,
       checkboxMyShow: ['序号', '产品图片', '产品名称', '产品型号', '产品分类', '添加时间', '是否上架', '排序'],
       columns: [],
       list: [],
@@ -133,7 +131,7 @@ export default {
       this.$router.push({ path: '/product/add' })
     },
     myShow () {
-      this.modalMyShow = true
+      this.$refs.dialog.open()
     },
     save () {
       this.columns = [
@@ -166,7 +164,6 @@ export default {
         }
       })
       this.columns.push({ title: '操作', className: 'j_table_operate', align: 'left', width: 160, render: this.renderOperate })
-      this.modalMyShow = false
     },
     sortable (a, b) {
       let objA = this.list[a]
@@ -221,9 +218,6 @@ export default {
     },
     handleSelectAll () {
       this.$refs.selection.selectAll(this.toggle)
-    },
-    update () {
-      return this.$Message.info('更新中...')
     },
     delAll () {
       if (!this.ids) {
@@ -905,21 +899,6 @@ export default {
 </script>
 
 <style lang="less">
-.j_modal{
-  .ivu-modal-body{
-    padding: 22px 54px 45px 54px;
-  }
-  .ivu-modal-close{
-    right: 25px;
-    top: 25px;
-  }
-  .icon-x{
-    color: #c7c7c7
-  }
-  .ivu-modal-footer{
-    display: none
-  }
-}
 .j_checkout{
   .ivu-checkbox-group-item{
     width: 45%;

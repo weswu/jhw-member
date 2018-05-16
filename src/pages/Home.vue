@@ -1,23 +1,23 @@
 <template>
   <Layout class="j_home">
-      <Content :style="{padding: '32px 32px 0 30px'}">
-        <Row :gutter="24">
-          <Col :lg="16" :md="16" class="j_col">
-            <JWebsite style="margin-bottom: 25px;"/>
-            <div id="HomeSortable">
-              <JStatic style="margin-bottom: 25px;"/>
-              <JLink style="margin-bottom: 25px;"/>
-              <JOrder style="margin-bottom: 25px;"/>
-            </div>
-          </Col>
-          <Col :lg="8" :md="8" class="j_col" style="padding-left:17px;">
-            <JBanner/>
-            <JSubscribe/>
-            <JApp/>
-          </Col>
-        </Row>
-        <JConsult/>
-      </Content>
+    <Content :style="{padding: '32px 32px 0 30px'}">
+      <Row :gutter="24">
+        <Col :lg="16" :md="16" class="j_col">
+          <JWebsite style="margin-bottom: 25px;"/>
+          <div id="HomeSortable">
+            <JStatic style="margin-bottom: 25px;"/>
+            <JLink style="margin-bottom: 25px;"/>
+            <JOrder style="margin-bottom: 25px;"/>
+          </div>
+        </Col>
+        <Col :lg="8" :md="8" class="j_col" style="padding-left:17px;">
+          <JBanner/>
+          <JSubscribe/>
+          <JApp/>
+        </Col>
+      </Row>
+      <JConsult/>
+    </Content>
   </Layout>
 </template>
 

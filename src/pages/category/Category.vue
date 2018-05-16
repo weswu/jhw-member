@@ -14,8 +14,8 @@
         <div class="btn">
           <Checkbox v-model="toggle" @on-change="handleSelectAll(toggle)"/>
           <Button type="ghost" size="small" @click="delAll">删除</Button>
-          <Button type="ghost" size="small" @click="update">显示</Button>
-          <Button type="ghost" size="small" @click="update">隐藏</Button>
+          <Button type="ghost" size="small" @click="update($Message)">显示</Button>
+          <Button type="ghost" size="small" @click="update($Message)">隐藏</Button>
           <Button type="ghost" size="small" @click="categoryAll">转换分类</Button>
           <Button type="ghost" size="small">展开</Button>
           <Button type="ghost" size="small">折叠</Button>
@@ -120,9 +120,6 @@ export default {
     // 功能
     add () {
       this.$router.push({ path: '/news/add' })
-    },
-    update () {
-      this.$Message.info('update')
     },
     sortable (a, b) {
       let objA = this.list[a]

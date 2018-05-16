@@ -6,7 +6,7 @@
         <JHeader :title="'下载'" :lan="true"/>
         <div class="j_search">
           <Button class="grey primary w130">产品表格下载</Button>
-          <Button class="grey w130" @click="update">产品相册下载</Button>
+          <Button class="grey w130" @click="update($Message)">产品相册下载</Button>
         </div>
         <table class="j_table">
           <thead>
@@ -47,7 +47,7 @@
             </tr>
           </tbody>
         </table>
-        <Button type="primary" @click="update" style="width:124px;">下载</Button>
+        <Button type="primary" @click="update($Message)" style="width:124px;">下载</Button>
       </Content>
     </Layout>
   </Layout>
@@ -103,11 +103,7 @@ export default {
       ]
     }
   },
-  methods: {
-    update () {
-      this.$Message.info('更新中')
-    }
-  }
+  methods: {}
 }
 </script>
 
