@@ -153,6 +153,7 @@ export default {
   }
   // 选中
   .ivu-menu-dark.ivu-menu-vertical .ivu-menu-item-active:not(.ivu-menu-submenu), .ivu-menu-dark.ivu-menu-vertical .ivu-menu-submenu-title-active:not(.ivu-menu-submenu) {
+    background: #12bedb !important;
     border-right: none;
     color: #fff;
   }

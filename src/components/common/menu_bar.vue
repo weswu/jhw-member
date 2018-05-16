@@ -97,6 +97,8 @@ export default {
       i{
         font-size: 12px;
         padding-right: 6px;
+        display: inline-block;
+        vertical-align: top;
       }
     }
   }

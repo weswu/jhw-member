@@ -30,6 +30,7 @@ const store = new Vuex.Store({
       { value: '206', text: '网站编辑：206' },
       { value: '207', text: '网站编辑：207' }
     ],
+    tagList: [],
     lanId: '1',
     uid: ['0', '0', '0']
   },
@@ -40,6 +41,7 @@ const store = new Vuex.Store({
     newsCategory: state => state.newsCategory,
     messageList: state => state.messageList,
     staticList: state => state.staticList,
+    tagList: state => state.tagList,
     lanId: state => state.lanId
   },
   mutations: {
@@ -57,6 +59,9 @@ const store = new Vuex.Store({
     },
     setMessageList (state, messageList) {
       state.messageList = messageList
+    },
+    setTagList (state, tagList) {
+      state.tagList = tagList
     },
     setStaticList (state, staticList) {
       state.staticList = staticList
@@ -124,6 +129,7 @@ const store = new Vuex.Store({
           data.forEach(item => {
             if (!item.belongId && item.isdisplay === '1') {
               item._checked = true
+              item._selected = true
               item.grade = '1'
               list.push(item)
             }
@@ -132,7 +138,8 @@ const store = new Vuex.Store({
           data.forEach(row => {
             row.isdisplay === '1' && list.forEach((item, index) => {
               if (item.grade === '1' && (row.belongId === item.categoryId)) {
-                row._checked = true
+                row._checked = false
+                item._selected = false
                 row.grade = '2'
                 list.splice(index + 1, 0, row)
               }
@@ -142,7 +149,7 @@ const store = new Vuex.Store({
           data.forEach(row => {
             row.isdisplay === '1' && list.forEach((item, index) => {
               if (item.grade === '2' && (row.belongId === item.categoryId)) {
-                row._checked = true
+                row._checked = false
                 row.grade = '3'
                 list.splice(index + 1, 0, row)
               }
@@ -167,6 +174,13 @@ const store = new Vuex.Store({
       this._vm.$http.get('/rest/api/category/news?pageSize=1000').then(res => {
         if (res.success) {
           this.commit('setNewsCategory', res.attributes.data)
+        }
+      })
+    },
+    getTagList ({commit, state}) {
+      this._vm.$http.get('/rest/api/tag/list?pageSize=1000').then(res => {
+        if (res.success) {
+          this.commit('setTagList', res.attributes.data)
         }
       })
     },

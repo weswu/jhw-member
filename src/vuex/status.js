@@ -78,6 +78,11 @@ const state = {
       { text: 'SEO设置', value: '7' }
     ]
   },
+  menuEvaluate: {
+    menu: [
+      { text: '商品评价', value: '0' }
+    ]
+  },
   menu_news: {
     title: '新闻管理',
     menu: [

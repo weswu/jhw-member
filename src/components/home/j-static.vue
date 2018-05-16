@@ -9,7 +9,7 @@
               <li class="item" v-for="item in list" :key="item.id">
                 <p>
                   <span class="name">{{item.name}}</span> <i class="iconfont icon-bianji2"></i>
-                  <span v-if="item.lan === '1'">(语言：中文)</span><span v-if="item.lan === '2'">(语言：中文)</span>
+                  <span>(网站编号：{{item.id}}&nbsp;&nbsp;/&nbsp;&nbsp;语言：<span v-if="item.lan === '1'">中文</span><span v-if="item.lan === '2'">英文</span>)</span>
                   <span class="type">未上线</span>
                 </p>
                 <p>

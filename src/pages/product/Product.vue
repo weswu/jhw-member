@@ -851,7 +851,7 @@ export default {
         h('a', {
           on: {
             click: () => {
-              this.$Message.success('更新中..')
+              this.$router.push({path: '/product/' + params.row.productId2})
             }
           }
         }, '修改'),

@@ -9,12 +9,11 @@
             <Input v-model="detail.name" placeholder="请输入产品名称"></Input>
           </FormItem>
           <FormItem label="产品分类：">
-            <Select v-model="detail.category" class="product_category_list" @on-change="change">
+            <Select v-model="detail.category" class="product_category_list">
               <Option v-for="item in categoryList" :value="item.categoryId" :key="item.categoryId" v-if="item._checked" :class="'item' + item.grade">
-                <div class="item">
-                  <span>{{item.name}}</span>
-                  <i class="iconfont icon-xialajiantou" v-if="item.isroot" @click="changeCateList(item.categoryId)"></i>
-                </div>
+                <span>{{item.name}}</span>
+                <i class="iconfont icon-xialajiantou" v-if="item.isroot && !item._selected" @click.stop="changeCateList($event, item)"></i>
+                <i class="iconfont icon-xialajiantou rotate" v-if="item.isroot && item._selected" @click.stop="changeCateList($event, item)"></i>
               </Option>
             </Select>
             <span class="a_normal" style="padding-left:10px;">新增分类</span>
@@ -88,7 +87,7 @@
             <Input v-model="detail.weight" placeholder="请输入商品重量"></Input>
           </FormItem>
           <FormItem label="重量单位：" class="formitem_left">
-            <Select v-model="detail.weightUnit" style="width: 144px;">
+            <Select v-model="detail.weightUnit" style="width: 155px;">
               <Option value="g">克</Option>
               <Option value="kg">千克</Option>
               <Option value="t">吨</Option>
@@ -101,17 +100,17 @@
             <Input v-model="detail.point" placeholder="请输入商品积分"></Input>
           </FormItem>
           <hr/>
-          <FormItem label="秒杀开始时间：" class="formitem_left">
-            <DatePicker type="date" placeholder="选择时间" v-model="detail.publishTime" @on-change="detail.publishTime=$event"></DatePicker>
+          <FormItem label="秒杀开始：" class="formitem_left">
+            <DatePicker type="datetime" placeholder="秒杀开始时间" v-model="detail.publishTime" @on-change="detail.publishTime=$event"></DatePicker>
           </FormItem>
-          <FormItem label="商品评价：" class="formitem_left">
+          <FormItem label="商品评价：" class="formitem_left" v-if="this.$route.params.id !== 'add'">
             <span class="a_underline">查看评价</span>
           </FormItem>
           <br/>
-          <FormItem label="秒杀开始时间：" class="formitem_left">
-            <DatePicker type="date" placeholder="选择时间" v-model="detail.unpublishTime" @on-change="detail.unpublishTime=$event"></DatePicker>
+          <FormItem label="秒杀结束：" class="formitem_left">
+            <DatePicker type="datetime" placeholder="秒杀结束时间" v-model="detail.unpublishTime" @on-change="detail.unpublishTime=$event"></DatePicker>
           </FormItem>
-          <FormItem label="最低购买数量：" class="formitem_left" style="width: 325px;">
+          <FormItem label="最低购买数量：" class="formitem_left" style="width: 330px;">
             <Input v-model="detail.purchaseNum" placeholder="请输入购买数量"></Input><span class="unit">件起售</span>
           </FormItem>
           <hr/>
@@ -156,13 +155,28 @@
             </div>
           </FormItem>
         </Form>
-        <Form :model="detail" :label-width="130" ref="model3" v-if="active === '6'">
-          <FormItem label="产品标签：">
-            <Select v-model="detail.taglist" multiple style="width:260px">
-              <Option v-for="item in detail.tagMapStore" :value="item.tagId" :key="item.tagId">{{ item.name }}</Option>
-            </Select>
-          </FormItem>
-        </Form>
+        <div v-if="active === '6'">
+          <Form :model="detail" :label-width="130" ref="model3">
+            <FormItem label="产品标签：">
+              <Select v-model="detail.taglist" multiple style="width:350px">
+                <Option v-for="item in tagList" :value="item.name" :key="item.name">{{ item.name }}</Option>
+              </Select>
+              <Poptip placement="bottom" width="235">
+                <span class="a_underline pl5">新增标签</span>
+                <div slot="content">
+                  <Input v-model="tag" placeholder="请输入标签名称" style="width:200px;margin-bottom:10px;"></Input><br/>
+                  <Button type="primary" size="small" @click="addTag">添加</Button>
+                </div>
+              </Poptip>
+            </FormItem>
+          </Form>
+          <div class="j_tip" style="width: 560px;margin-left: 130px;">
+            小提示: <br>
+            <span class="red">1.标签说明：</span> 产品标签主要用于网站显示个性化定制的模块，比如打折商品模块、最新商品模块等<br>
+            <span class="red">2.标签使用：</span> 新添加的标签将保存到标签库， 方便下次选择<br>
+            <span class="red">3.注意事项：</span> 标签的添加跟产品的保存无关， 请慎重添加
+          </div>
+        </div>
         <Form :model="detail" :label-width="130" ref="model4" v-if="active === '7'">
           <FormItem label="SEO标题：">
             <Input v-model="detail.seoTitle" :maxlength="100" placeholder="请输入SEO标题"></Input>
@@ -175,10 +189,13 @@
           </FormItem>
         </Form>
       </Content>
-      <Footer>
-        <Button type="primary" size="small" @click="publish" v-if="this.$route.params.id !== 'add'">发布</Button>
+      <Footer v-if="this.$route.params.id !== 'add'">
+        <Button type="primary" size="small" @click="publish">发布</Button>
         <Button type="ghost" size="small" @click="submit">保存草稿</Button>
-        <Button type="ghost" size="small" @click="view" v-if="this.$route.params.id !== 'add'">预览</Button>
+        <Button type="ghost" size="small" @click="view">预览</Button>
+      </Footer>
+      <Footer v-if="this.$route.params.id === 'add'">
+        <Button type="primary" size="small" @click="submit">保存</Button>
       </Footer>
     </Layout>
   </Layout>
@@ -199,13 +216,17 @@ export default {
   data () {
     return {
       active: '0',
-      detail: {}
+      detail: {
+        taglist: []
+      },
+      tag: ''
     }
   },
   computed: {
     ...mapState({
       menuBarList: state => state.status.menu_product_detail,
-      categoryList: state => state.productCategory
+      categoryList: state => state.productCategory,
+      tagList: state => state.tagList
     })
   },
   created () {
@@ -217,32 +238,67 @@ export default {
       let id = this.decodeId(this.$route.params.id, 'Product_', 32)
       this.$route.params.id !== 'add' && this.$http.get('/rest/api/product/detail/' + id).then(res => {
         if (res.success) {
-          this.detail = res.attributes.data
+          let data = res.attributes.data
+          data.taglist = []
+          data.tagMapStore.forEach(item => {
+            data.taglist.push(item.name)
+          })
+          this.detail = data
         }
       })
     },
+    // 功能
     update () {
       this.$Message.info('更新中')
     },
     activeChange (e) {
       this.active = e
+      if (e === '6') {
+        this.$store.dispatch('getTagList')
+      }
     },
-    change (e) {
-      console.log(e)
-    },
-    changeCateList (id) {
+    changeCateList (e, data) {
+      var ctx = this
+      data._selected = !data._selected
       this.categoryList.forEach(item => {
-        if (item.belongId === id) {
+        if (item.belongId === data.categoryId) {
           item._checked = !item._checked
+          ctx.categoryList.forEach(row => {
+            if (row.belongId === item.categoryId) {
+              row._checked = !row._checked
+            }
+          })
+        }
+      })
+      e.stopPropagation()
+    },
+    addTag () {
+      let data = {
+        model: JSON.stringify({
+          name: this.tag
+        })
+      }
+      this.$http.post('/rest/api/tag/detail/' + this.detail.productId, qs.stringify(data)).then((res) => {
+        if (res.success) {
+          this.$Message.success('添加成功')
+          this.detail.tagList.push(this.tag)
+          this.tag = ''
+        } else {
+          this.$Message.error(res.msg)
         }
       })
     },
+    cancel () {
+      this.$Message.info('You click cancel')
+    },
+    // 提交
     submit () {
-      // this.detail.proddesc = this.$refs.ue1.getUEContent().replace(/\uD83C[\uDF00-\uDFFF]|\uD83D[\uDC00-\uDE4F]/g, '')
-      // this.detail.mobiledesc = this.$refs.ue2.getUEContent().replace(/\uD83C[\uDF00-\uDFFF]|\uD83D[\uDC00-\uDE4F]/g, '')
-      // this.detail.detail1 = this.$refs.ue3.getUEContent().replace(/\uD83C[\uDF00-\uDFFF]|\uD83D[\uDC00-\uDE4F]/g, '')
-      // this.detail.detail2 = this.$refs.ue4.getUEContent().replace(/\uD83C[\uDF00-\uDFFF]|\uD83D[\uDC00-\uDE4F]/g, '')
-      this.detail.purchaseNum = parseInt(this.detail.purchaseNum)
+      this.detail.proddesc = this.$refs.ue1.getUEContent()
+      this.detail.mobiledesc = this.$refs.ue2.getUEContent()
+      this.detail.detail1 = this.$refs.ue3.getUEContent()
+      this.detail.detail2 = this.$refs.ue4.getUEContent()
+      this.detail.purchaseNum = this.detail.purchaseNum + ''
+      this.detail.taglist = this.detail.taglist.join(',')
       let data = {
         model: JSON.stringify(this.detail),
         _method: 'put'
@@ -287,6 +343,10 @@ export default {
     float: right;
     color: #797979;
     font-size: 14px;
+    padding: 0px 5px;
+    &.rotate{
+      transform: rotate(180deg);
+    }
   }
   .item2{
     padding: 7px 16px 7px 36px;
@@ -377,7 +437,7 @@ export default {
       position: absolute;
     }
     .ivu-input-wrapper{
-      width: 144px;
+      width: 155px;
     }
     hr{
       height: 1px;

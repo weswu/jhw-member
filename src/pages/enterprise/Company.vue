@@ -35,7 +35,7 @@ export default {
   },
   methods: {
     submit () {
-      this.user.enterprise.edesc = this.$refs.ue.getUEContent().replace(/\uD83C[\uDF00-\uDFFF]|\uD83D[\uDC00-\uDE4F]/g, '')
+      this.user.enterprise.edesc = this.$refs.ue.getUEContent()
       let data = {
         model: JSON.stringify(this.user.enterprise),
         _method: 'put'

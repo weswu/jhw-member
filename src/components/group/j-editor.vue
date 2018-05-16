@@ -94,7 +94,7 @@ export default {
   },
   methods: {
     getUEContent () { // 获取内容方法
-      return this.editor.getContent()
+      return this.editor.getContent().replace(/\uD83C[\uDF00-\uDFFF]|\uD83D[\uDC00-\uDE4F]/g, '')
     },
     setUEContent (data) { // 设置内容方法
       this.editor.setContent(data)
