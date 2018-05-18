@@ -94,8 +94,8 @@ export default {
   }
   .name{
     float:left;
-    line-height: 33px;
-    padding: 8px 0 0 0;
+    line-height: 34px;
+    padding: 14px 0 0;
     color: #9b9b9b;
     .nickName{
       color: #000;

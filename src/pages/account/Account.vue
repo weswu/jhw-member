@@ -3,7 +3,7 @@
       <MenuBar :data="'menuAccount'" :active="'account'"/>
       <Layout class="j_layout_content">
         <JHeader :title="'安全设置'"/>
-        <Content>
+        <Content class="scroll">
           <Row :gutter="24" class="account_user">
             <Col span="6" style="width:130px">
               <div @click="avatar">
@@ -307,19 +307,22 @@ export default {
             },
             on: {
               input: (val) => {
-                this.user.email = val
+                this.email = val
               }
             }
           })
         },
         onOk: () => {
+          let user = this.user
+          user.email = this.email
           let data = {
-            model: JSON.stringify(this.user),
+            model: JSON.stringify(user),
             _method: 'put'
           }
-          this.$http.put('/rest/api/user/detail/' + this.user.userId, qs.stringify(data)).then((res) => {
+          this.$http.post('/rest/api/user/detail/' + this.user.userId, qs.stringify(data)).then((res) => {
             if (res.success) {
               ctx.$Message.success('修改成功')
+              ctx.user.email = ctx.email
               ctx.$store.commit('setUser', ctx.user)
             } else {
               ctx.$Message.error(res.msg)

@@ -2,9 +2,9 @@
   <Layout class="j_layout ivu-layout-has-sider">
     <MenuBar :data="'menuAnalysis'" :active="active" :detail="true" @on-change="activeChange"/>
     <Layout class="j_layout_content">
+      <JHeader :title="'员工推广分析'"/>
       <Content>
-        <JHeader :title="'员工推广分析'"/>
-        <div id="employee_account_analysis" :style="{height: height + 'px'}"></div>
+        <div id="employee_account_analysis" style="width:100%;"></div>
       </Content>
     </Layout>
   </Layout>
@@ -23,9 +23,8 @@ export default {
     return {
       active: 'pc',
       categories: [],
-      list: [],
       data: [],
-      height: 100
+      height: 0
     }
   },
   created () {
@@ -36,19 +35,21 @@ export default {
       this.$http.get('/rest/api/submember/list_s?type=' + this.active).then(res => {
         if (res.success) {
           this.categories = res.attributes.categories
-          this.height = this.categories.length * 40
-          this.list = res.attributes.list
           this.data = res.attributes.data
+          this.height = this.categories.length * 40
           this.init()
         }
       })
     },
     activeChange (e) {
       this.active = e
+      this.get()
     },
     init () {
-      let visiteVolume = echarts.init(document.getElementById('employee_account_analysis'))
-
+      let analysis = document.getElementById('employee_account_analysis')
+      // 设置容器高宽
+      analysis.style.height = this.height + 'px'
+      let myChart = echarts.init(analysis)
       let data = []
       for (var i = 0; i < this.categories.length; i++) {
         data.push({value: this.data[i], name: this.categories[i], itemStyle: {normal: {color: '#2d8cf0'}}})
@@ -86,8 +87,12 @@ export default {
           }
         ]
       }
-
-      visiteVolume.setOption(option)
+      myChart.setOption(option)
+      myChart.resize()
+      // 自适应高度和宽度
+      window.onresize = function () {
+        myChart.resize()
+      }
     }
   }
 }

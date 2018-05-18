@@ -1,7 +1,7 @@
 <template>
   <Modal class-name="j_dialog" v-model="modal" :width="width || 430">
     <i class="iconfont icon-x" slot="close"></i>
-    <JHeader :title="title" :tip="tip" style="border-bottom:none;margin-bottom:5px;"/>
+    <JHeader :title="title" :tip="tip"/>
     <slot name="content"></slot>
     <Button type="primary" @click="ok" style="margin-top: 30px">{{okText || '保存'}}</Button>
   </Modal>
@@ -33,6 +33,7 @@ export default {
 
 <style lang="less">
 .j_dialog{
+  z-index: 1060;
   .ivu-modal-body{
     padding: 22px 54px 45px 54px;
   }

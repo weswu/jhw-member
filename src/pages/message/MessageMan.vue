@@ -92,7 +92,7 @@ export default {
           this.$Message.success('保存成功')
           this.$store.commit('serUser', this.user)
         } else {
-          this.$Message.success(res.msg)
+          this.$Message.error(res.msg)
         }
       })
     },

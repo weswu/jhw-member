@@ -2,13 +2,13 @@
   <Layout class="ivu-layout-has-sider j_employee_account">
       <MenuBar :data="'menuAccount'" :active="'employee_account'"/>
       <Layout class="j_layout_content">
+        <JHeader :title="'员工账号管理'">
+          <div slot="btn">
+            <Button type="primary" @click="add">新增员工</Button>
+            <Button type="primary" @click="analysis">员工推广分析</Button>
+          </div>
+        </JHeader>
         <Content>
-          <JHeader :title="'员工账号管理'">
-            <div slot="btn">
-              <Button type="primary" @click="add">新增员工</Button>
-              <Button type="primary" @click="analysis">员工推广分析</Button>
-            </div>
-          </JHeader>
           <Table highlight-row :columns="columns" :data="list" @on-selection-change="handleSelectChange"></Table>
           <JPagination :checkbox="true" :total="total" :searchData='searchData' @on-change="pageChange">
             <span slot="btn">

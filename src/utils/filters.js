@@ -53,6 +53,16 @@ Vue.filter('time', function (date, format) {
 Vue.filter('limitString', function (input, begin, end) {
   return input.substring(begin, input.length - end)
 })
+
+/*
+ * @author: wes
+ * @date: 2017-8-3
+ * @desc: 邮箱
+*/
+Vue.filter('limitEmail', function (str) {
+  var reg = /(.{1}).+(.{0}@.+)/g
+  return str.replace(reg, '$1****$2')
+})
 /*
  * @author: wes
  * @date: 2017-8-7

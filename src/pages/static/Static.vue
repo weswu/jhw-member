@@ -2,8 +2,8 @@
   <Layout class="j_layout ivu-layout-has-sider j_static">
     <MenuBar :data="'menuStatic'" :active="'static'"/>
     <Layout class="j_layout_content">
+      <JHeader :title="'站点数据管理'"/>
       <Content>
-        <JHeader :title="'站点数据管理'"/>
         <div class="j_search">
           <Button class="grey" @click="active = item.value" v-for="(item, index) in btns" :key="index" :class="{primary: active === item.value}">{{item.text}}</Button>
         </div>

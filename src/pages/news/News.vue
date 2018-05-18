@@ -147,7 +147,7 @@ export default {
         if (res.success) {
           console.log(sort)
         } else {
-          this.$Message.success(res.msg)
+          this.$Message.error(res.msg)
         }
       })
     },

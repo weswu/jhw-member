@@ -6,7 +6,6 @@
       <li class="item" v-for="item in list" :key="item.id">
         <p>
           <span class="name">{{item.seoTitle}}</span>
-
           <Poptip placement="right" class="j_poptip_confirm_edit"
             confirm
             @on-ok="edit(item)">
@@ -63,17 +62,17 @@
         </Select>
       </div>
     </JDialog>
-    <JDialog ref="data" :title="'同步数据'" :width="600" :okText="'确定'" :tip="'温馨提醒：同步数据包含（新闻和产品数据），请完善总站的数据后再导数据，导入后“文字内容”需自行修改'"  @on-ok="save" >
+    <JDialog ref="data" :title="'同步数据'" :width="715" :okText="'确定'" :tip="'温馨提醒：同步数据包含（新闻和产品数据），请完善总站的数据后再导数据，导入后“文字内容”需自行修改'"  @on-ok="save" >
       <div slot="content">
         <Form :model="detail" :label-width="120">
           <FormItem label="来源语言版本：">
-            <Select v-model="detail.begin" style="width:144px">
+            <Select v-model="detail.begin" class="border" style="width:144px">
               <Option value="1">中文版</Option>
               <Option value="2">英文版</Option>
             </Select>
           </FormItem>
           <FormItem label="目标语言版本：">
-            <Select v-model="detail.end" style="width:144px">
+            <Select v-model="detail.end" class="border" style="width:144px">
               <Option value="1">中文版</Option>
               <Option value="2">英文版</Option>
             </Select>
@@ -118,7 +117,7 @@ export default {
   },
   computed: {
     ...mapState({
-      'lanList': state => state.status.lanList
+      lanList: state => state.status.lanList
     })
   },
   created () {
@@ -241,6 +240,8 @@ export default {
 
 <style lang="less">
 .j_static_website .j_poptip_ul{
+  height: 16px;
+  line-height: 16px;
   .ivu-poptip-body {
     .ivu-poptip,.ivu-poptip-rel{
       width: 100%
@@ -312,14 +313,6 @@ export default {
         border-bottom: none;
       }
     }
-  }
-}
-.j_poptip_confirm_edit{
-  .ivu-icon{
-    display: none
-  }
-  .ivu-poptip-body-message{
-    padding-left: 0;
   }
 }
 </style>

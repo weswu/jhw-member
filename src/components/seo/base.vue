@@ -1,10 +1,10 @@
 <template>
-  <div class="">
+  <div class="j_seo_base">
     <div class="j_search">
       <Button class="mormal" @click="search(item.value)" v-for="(item, index) in btns" :key="index" :class="{active: active === item.value}">{{item.text}}</Button>
     </div>
     <Table :columns="columns" :data="list"/>
-    <JPagination :fixed="true" :borderTop="true" :total="total" :searchData='searchData' @on-change="pageChange" v-if="active !== 'navigator/list'"/>
+    <JPagination :fixed="true" :borderTop="true" :total="total" :searchData='searchData' @on-change="pageChange"/>
     <Detail ref="detail"/>
   </div>
 </template>
@@ -125,5 +125,10 @@ export default {
 }
 </script>
 
-<style lang="css">
+<style lang="less">
+.j_seo {
+  .j_layout_content .ivu-layout-content .j_seo_base .ivu-table-body{
+    max-height: calc(100vh - 368px);
+  }
+}
 </style>

@@ -87,7 +87,7 @@
             <Input v-model="detail.weight" placeholder="请输入商品重量"></Input>
           </FormItem>
           <FormItem label="重量单位：" class="formitem_left">
-            <Select v-model="detail.weightUnit" style="width: 155px;">
+            <Select v-model="detail.weightUnit" class="border" style="width: 155px;">
               <Option value="g">克</Option>
               <Option value="kg">千克</Option>
               <Option value="t">吨</Option>
@@ -304,7 +304,7 @@ export default {
         if (res.success) {
           this.$Message.success('保存成功')
         } else {
-          this.$Message.success(res.msg)
+          this.$Message.error(res.msg)
         }
       })
     },
@@ -367,56 +367,6 @@ export default {
   }
 }
 .j_product_detail{
-  .pro_img_list{
-    li{
-      width: 104px;
-      height: 104px;
-      line-height: 104px;
-      border: 1px solid #c9c9c9;
-      float: left;
-      text-align: center;
-      margin-right: 11px;
-      position: relative;
-      background: #f5f6fa;
-      .top{
-        position: absolute;
-        left: -1px;
-        top: -1px;
-        background: #3e3e3e;
-        width: 104px;
-        color: #fff;height: 21px;
-        line-height: 21px
-      }
-      .bom{
-        position: absolute;
-        left: 0px;
-        bottom: 0px;
-        background: #f5f6fa;
-        border-top: 1px solid #c9c9c9;
-        width: 102px;
-        color: #fff;height: 20px;
-        line-height: 20px;
-        i{
-          color: #437708;
-          font-size: 22px;
-          float: left;
-          width: 30%;
-        }
-        .icon-x{
-          color: #d0021b;
-          font-size: 14px;
-        }
-      }
-    }
-    .icon-plus-add{
-      font-size: 38px;
-      color: #c9c9c9;
-      position: absolute;
-      left: 0px;
-      top: 0px;
-      width: 104px;
-    }
-  }
   .j_tip_category{
     position: absolute;
     left: 533px;

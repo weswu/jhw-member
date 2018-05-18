@@ -85,7 +85,7 @@ import qs from 'qs'
 import { mapState, mapActions } from 'vuex'
 import MenuBar from '@/components/common/menu_bar'
 import JHeader from '@/components/group/j-header'
-import JPictrue from '@/components/group/j-pictrue'
+import JPictrue from '@/components/group/j-image'
 export default {
   components: {
     MenuBar, JHeader, JPictrue
@@ -94,7 +94,7 @@ export default {
     ...mapState({
       'user': state => state.user,
       'lanId': state => state.lanId,
-      'lanList': state => state.status.lanList
+      lanList: state => state.status.lanList
     })
   },
   data () {
@@ -205,7 +205,7 @@ export default {
         if (res.success) {
           // this.$Message.success('保存成功')
         } else {
-          this.$Message.success(res.msg)
+          this.$Message.error(res.msg)
         }
       })
     },
@@ -219,7 +219,7 @@ export default {
         if (res.success) {
           this.$Message.success('保存成功')
         } else {
-          this.$Message.success(res.msg)
+          this.$Message.error(res.msg)
         }
       })
     }

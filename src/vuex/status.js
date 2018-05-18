@@ -59,8 +59,8 @@ const state = {
     menu: [
       { text: '基本资料', value: 'enterprise' },
       { text: '公司简介', value: 'company' },
-      { text: '招聘管理', value: '' },
-      { text: '友情链接', value: '' }
+      { text: '招聘管理', value: 'recruit' },
+      { text: '友情链接', value: 'link' }
     ]
   },
   menu_product: {

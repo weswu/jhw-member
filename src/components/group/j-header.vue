@@ -43,7 +43,7 @@ export default {
   computed: {
     ...mapState({
       'lanId': state => state.lanId,
-      'lanList': state => state.status.lanList
+      lanList: state => state.status.lanList
     })
   },
   methods: {

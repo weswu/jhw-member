@@ -8,7 +8,7 @@ import Vue from 'vue'
 */
 Vue.prototype.dataFormat = function (date, format) {
   date = new Date(date)
-  format = 'yyyy-MM-dd hh:mm'
+  format = format || 'yyyy-MM-dd hh:mm'
   var o = {
     'M+': date.getMonth() + 1, // 月份
     'd+': date.getDate(), // 日
@@ -43,6 +43,22 @@ Vue.prototype.dataFormat = function (date, format) {
 Vue.prototype.decodeId = function (id, prefix, length) {
   var len = prefix.length + id.length - 1
   return prefix + new Array(length - len).join('0') + id
+}
+
+/*
+ * @author: wes
+ * @date: 2017-8-7
+ * @desc: 图片缩略图
+*/
+Vue.prototype.picUrl = function (src, number) {
+  if (src === null || src.length === 0) return 'http://img.jihui88.com/upload/j/j2/jihui88/picture/2015/04/01/72041ac7-51fa-4163-906d-8b576955d29e.jpg'
+  if (number > 10) {
+    src = src + '!' + number
+  } else {
+    var src2 = src.substring(src.lastIndexOf('.') + 1, src.length)
+    src = src.substring(0, src.lastIndexOf('.')) + '_' + number + '.' + src2
+  }
+  return src
 }
 
 /*

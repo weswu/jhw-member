@@ -19,6 +19,10 @@ a.primary{
   color: #0366ce;
   cursor: pointer;
   text-decoration: underline;
+  &:hover{
+    color: #0366ce;
+    text-decoration: underline;
+  }
 }
 .a_normal{
   color: #096ad0;
@@ -54,6 +58,7 @@ a.primary{
 .ivu-layout-content::-webkit-scrollbar{width: 6px;height: 6px;}
 .ivu-layout-content::-webkit-scrollbar-thumb{background-color: #dedee4;}
 .ivu-layout-content::-webkit-scrollbar-corner {background-color: transparent;}
+.j_scroll{ overflow-y: scroll;}
 .j_scroll::-webkit-scrollbar-track{background-color: transparent;}
 .j_scroll::-webkit-scrollbar{width: 6px;height: 6px;}
 .j_scroll::-webkit-scrollbar-thumb{background-color: #dedee4;}
@@ -65,7 +70,13 @@ a.primary{
 .j_layout_content{
   padding: 0 23px 0 21px;
   .ivu-layout-content{
-    height: calc(100vh - 71px);
+    height: calc(100vh - 95px);
+    &.scroll {
+      overflow-y: scroll;
+    }
+    .ivu-table-body{
+      max-height: calc(100vh - 213px);
+    }
   }
 }
 .j_form_detail{
@@ -80,10 +91,12 @@ a.primary{
     padding: 16px 50px;
   }
 }
-// 其它高度
+// 表格调试
 .j_news .ivu-table-body,.j_product .ivu-table-body{
   height: calc(100vh - 297px);
 }
+
+// 其它高度
 .j_company #edui1_iframeholder{
   height: calc(100vh - 365px) !important;
 }
@@ -254,6 +267,34 @@ a.primary{
   border: 1px solid #b2b2b2;
   border-radius: 4px;
 }
+// 多选
+.ivu-checkbox-group{
+  &.j_checkout{
+    .ivu-checkbox-inner{
+      border: 1px solid #e1e6eb;
+      border-radius: 0px;
+      &.ivu-checkbox-focus{
+        box-shadow: none;
+      }
+    }
+    .ivu-checkbox-group-item{
+      width: 45%;
+      margin-bottom: 5px;
+      .ivu-checkbox{
+        margin-right: 5px;
+      }
+    }
+    .ivu-checkbox-checked .ivu-checkbox-inner{
+      border-color: #e1e6eb;
+      background-color: #fff;
+      &::after{
+        border: 1px solid #f5a623;
+        border-top: 0;
+        border-left: 0;
+      }
+    }
+  }
+}
 
 // 分页
 .ivu-page{
@@ -355,6 +396,7 @@ a.primary{
 .ivu-badge-count{
   border-radius: 5px;
   font-size: 10px;
+  height: 19px;
 }
 //卡片
 .ivu-card{
@@ -383,6 +425,18 @@ a.primary{
   }
 }
 
+.j_poptip_confirm_edit{
+  .ivu-poptip-popper{
+
+  }
+  .ivu-icon{
+    display: none
+  }
+  .ivu-poptip-body-message{
+    padding-left: 0;
+  }
+}
+
 // Input
 .ivu-input{
   border: 1px solid #c9c9c9;
@@ -391,15 +445,18 @@ a.primary{
 }
 //Select
 .ivu-select{
-  .ivu-select-selection{
-    border-radius: 0px;
-  }
   .ivu-select-dropdown{
     padding: 0;
     margin: 0;
     border-radius: 0;
     box-shadow: none;
     border: 1px solid @border-color-split;
+  }
+  &.border{
+    .ivu-select-selection{
+      border-radius: 4px;
+      box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+    }
   }
   &.primary{
     text-align: center;
@@ -528,30 +585,37 @@ a.primary{
 }
 
 //对敌框
-.ivu-modal-content{
-  border-radius: 0px;
-  .ivu-modal-header{
-    background: @background-gray-color;
-    border-bottom: none;
-    .ivu-modal-header-inner{
-      color: @title-color;
+.ivu-modal-mask{
+  background: none;
+}
+.ivu-modal{
+  top: 186px;
+  .ivu-modal-content{
+    border-radius: 0px;
+    border: 1px solid #e1e6eb;
+    .ivu-modal-header{
+      background: @background-gray-color;
+      border-bottom: none;
+      .ivu-modal-header-inner{
+        color: @title-color;
+      }
     }
-  }
-  .ivu-modal-footer{
-    background: @background-gray-color;
-    border-top: none;
-    overflow: hidden;
-    button{
-      float: right;
-    }
-    .ivu-btn-primary{
-      border: 1px solid @info-color;
-      background: @info-color;
-    }
-    .ivu-btn-text{
-      border: 1px solid @info-color;
-      color: @info-color;
-      margin-left: 10px;
+    .ivu-modal-footer{
+      background: @background-gray-color;
+      border-top: none;
+      overflow: hidden;
+      button{
+        float: right;
+      }
+      .ivu-btn-primary{
+        border: 1px solid @info-color;
+        background: @info-color;
+      }
+      .ivu-btn-text{
+        border: 1px solid @info-color;
+        color: @info-color;
+        margin-left: 10px;
+      }
     }
   }
 }
@@ -560,6 +624,9 @@ a.primary{
 .j_search {
   button,input{
     margin-bottom: 9px;
+  }
+  .j_tip{
+    margin-top: 2px;
   }
 }
 //按钮

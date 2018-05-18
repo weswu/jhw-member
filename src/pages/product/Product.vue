@@ -49,6 +49,7 @@
 
 <script>
 import qs from 'qs'
+import { mapState } from 'vuex'
 import MenuBar from '@/components/common/menu_bar'
 import JHeader from '@/components/group/j-header'
 import JPagination from '@/components/group/j-pagination'
@@ -70,7 +71,6 @@ export default {
       checkboxMyShow: ['序号', '产品图片', '产品名称', '产品型号', '产品分类', '添加时间', '是否上架', '排序'],
       columns: [],
       list: [],
-      categoryList: [],
       searchData: {
         page: 1,
         pageSize: 10
@@ -80,6 +80,11 @@ export default {
       toggle: false,
       ids: ''
     }
+  },
+  computed: {
+    ...mapState({
+      categoryList: state => state.productCategory
+    })
   },
   mounted () {
     var ctx = this
@@ -98,8 +103,9 @@ export default {
     }, 2000)
   },
   created () {
+    this.searchData.page = this.$cookie.get('productPage') || 1
     this.get()
-    this.getCate()
+    this.$store.dispatch('getProductCategory')
     this.save()
   },
   methods: {
@@ -112,13 +118,6 @@ export default {
             item._checked = false
           })
           this.list = data || []
-        }
-      })
-    },
-    getCate () {
-      this.$http.get('/rest/api/category/product?pageSize=1000').then(res => {
-        if (res.success) {
-          this.categoryList = res.attributes.data
         }
       })
     },
@@ -189,7 +188,7 @@ export default {
         if (res.success) {
           console.log(sort)
         } else {
-          this.$Message.success(res.msg)
+          this.$Message.error(res.msg)
         }
       })
     },
@@ -845,6 +844,7 @@ export default {
         h('a', {
           on: {
             click: () => {
+              this.$cookie.set('productPage', this.searchData.page)
               this.$router.push({path: '/product/' + params.row.productId2})
             }
           }
@@ -899,24 +899,6 @@ export default {
 </script>
 
 <style lang="less">
-.j_checkout{
-  .ivu-checkbox-group-item{
-    width: 45%;
-    margin-bottom: 5px;
-    .ivu-checkbox{
-      margin-right: 5px;
-    }
-  }
-  .ivu-checkbox-checked .ivu-checkbox-inner{
-    border-color: #e1e6eb;
-    background-color: #fff;
-    &::after{
-      border: 1px solid #f5a623;
-      border-top: 0;
-      border-left: 0;
-    }
-  }
-}
 .j_product {
   .j_poptip_ul .ivu-poptip-popper{
     width: 135px;

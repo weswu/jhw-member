@@ -9,13 +9,14 @@
           </Select>
         </div>
       </JHeader>
-      <div class="j_search">
-        <Button class="grey" @click="search(item.value)" v-for="(item, index) in btns" :key="index" :class="{primary: active === item.value}">{{item.text}}</Button>
-      </div>
       <Content>
-        <div class="warpper">
+        <div class="j_search">
+          <Button class="grey" @click="search(item.value)" v-for="(item, index) in btns" :key="index" :class="{primary: active === item.value}">{{item.text}}</Button>
+        </div>
+        <div class="warpper j_scroll">
           <SBase v-if="active === '0'"/>
-          <div v-else>
+          <STemplate @on-change="search" v-if="active === '1'"/>
+          <div v-if="active === '2'">
             更新中
           </div>
         </div>
@@ -29,11 +30,13 @@ import { mapState } from 'vuex'
 import MenuBar from '@/components/common/menu_bar'
 import JHeader from '@/components/group/j-header'
 import SBase from '@/components/seo/base'
+import STemplate from '@/components/seo/template'
 export default {
   components: {
     MenuBar,
     JHeader,
-    SBase
+    SBase,
+    STemplate
   },
   data () {
     return {
@@ -69,7 +72,7 @@ export default {
 .j_seo{
   .ivu-layout-content{
     .warpper{
-      height: calc(100vh - 216px);
+      height: calc(100vh - 215px);
       padding: 21px 19px;
       border: 1px solid #e9e9e9;
     }

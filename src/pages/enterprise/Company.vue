@@ -7,7 +7,7 @@
         <UE :content='user.enterprise.edesc' ref='ue'></UE>
       </Content>
       <Footer>
-        <Button type="primary" @click="submit">保存</Button>
+        <Button type="primary" size="small" @click="submit">保存</Button>
       </Footer>
     </Layout>
   </Layout>
@@ -45,7 +45,7 @@ export default {
           this.$Message.success('保存成功')
           this.$store.commit('serUser', this.user)
         } else {
-          this.$Message.success(res.msg)
+          this.$Message.error(res.msg)
         }
       })
     }

@@ -27,6 +27,8 @@ export default new Router({
     // 企业
     { path: '/enterprise', component: require('@/pages/enterprise/Enterprise').default },
     { path: '/company', component: require('@/pages/enterprise/Company').default },
+    { path: '/recruit', component: require('@/pages/enterprise/Recruit').default },
+    { path: '/link', component: require('@/pages/enterprise/Link').default },
     // 分类
     { path: '/category/:id', component: require('@/pages/category/Category').default },
     // 产品
