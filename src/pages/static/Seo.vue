@@ -2,7 +2,7 @@
   <Layout class="j_layout ivu-layout-has-sider j_seo">
     <MenuBar :data="'menuStatic'" :active="'seo'"/>
     <Layout class="j_layout_content">
-      <JHeader :title="'SEO管理'" :website="true" @on-static="staticChange"></JHeader>
+      <JHeader :title="'SEO管理'" :website="active === '0' && true" @on-static="staticChange"></JHeader>
       <Content>
         <div class="j_search">
           <Button class="grey" @click="btnChange(item.value)" v-for="(item, index) in btns" :key="index" :class="{primary: active === item.value}">{{item.text}}</Button>
@@ -10,7 +10,8 @@
         <div class="warpper j_scroll">
           <SBase v-if="active === '0'"/>
           <STemplate @on-change="search" v-if="active === '1'"/>
-          <div v-if="active === '2'">
+          <KeywordStore v-if="active === '2'"/>
+          <div v-if="active === '3'">
             更新中
           </div>
         </div>
@@ -24,12 +25,14 @@ import MenuBar from '@/components/common/menu_bar'
 import JHeader from '@/components/group/j-header'
 import SBase from '@/components/seo/base'
 import STemplate from '@/components/seo/template'
+import KeywordStore from '@/components/seo/keyword_store'
 export default {
   components: {
     MenuBar,
     JHeader,
     SBase,
-    STemplate
+    STemplate,
+    KeywordStore
   },
   data () {
     return {
@@ -42,7 +45,7 @@ export default {
         { text: 'Tag标签管理', value: '5' },
         { text: '付费SEO推广', value: '6' }
       ],
-      active: '0'
+      active: '2'
     }
   },
   methods: {

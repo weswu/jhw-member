@@ -142,7 +142,7 @@ export default {
   methods: {
     ...mapActions(['lanIdChange']),
     getArea () {
-      this.$http.get('http://www.jihui88.com/rest/api/area/list').then((res) => {
+      this.$http.get('/rest/api/area/list').then((res) => {
         if (res.success) {
           this.initArea(res.attributes.data)
         } else {
