@@ -9,7 +9,7 @@
             <Input v-model="detail.title" placeholder="请输入新闻标题"></Input>
           </FormItem>
           <FormItem label="新闻分类：" prop="category">
-            <CategorySelect :model="detail.category" :type="'news'"/>
+            <CategorySelect :model="detail.category" :categoryList="$store.state.newsCategory" :type="'news'"/>
             <span class="a_normal" style="padding-left:10px;">新增分类</span>
           </FormItem>
           <FormItem label="延时发布：">

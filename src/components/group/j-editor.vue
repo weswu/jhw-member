@@ -18,9 +18,8 @@ export default {
       type: String,
       default: ''
     },
-    editorWidth: {
-      type: String
-    }
+    eWidth: {},
+    eHeight: {}
   },
   data () {
     return {
@@ -58,8 +57,11 @@ export default {
   },
   mounted () {
     const ctx = this
-    if (this.editorWidth) {
-      this.config.initialFrameWidth = this.editorWidth
+    if (this.eWidth) {
+      this.config.initialFrameWidth = this.eWidth
+    }
+    if (this.eHeight) {
+      this.config.initialFrameHeight = this.eHeight
     }
     this.editor = window.UE.getEditor(this.id, this.config) // 初始化UE
     this.editor.addListener('ready', function () {

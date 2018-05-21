@@ -9,27 +9,14 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
 export default {
   props: {
     model: {},
-    type: {
-      type: String,
-      default: function (e) {
-        debugger
-      }
-    }
+    type: {},
+    categoryList: {}
   },
   data () {
-    return {
-      categoryList: []
-    }
-  },
-  computed: {
-    ...mapState({
-      productCategory: state => state.productCategory,
-      newsCategory: state => state.newsCategory
-    })
+    return {}
   },
   methods: {
     changeCateList (e, data) {

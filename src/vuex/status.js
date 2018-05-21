@@ -47,8 +47,8 @@ const state = {
     menu: [
       { text: '站点数据管理', value: 'static' },
       { text: 'SEO管理', value: 'seo' },
-      { text: '域名备案', value: '' },
-      { text: 'SiteMap生成', value: '' },
+      { text: '域名备案', value: 'beian' },
+      { text: 'Sitemap生成', value: '' },
       { text: '批量提交', value: '' },
       { text: '第三方统计', value: '' },
       { text: '便捷登录配置', value: '' }

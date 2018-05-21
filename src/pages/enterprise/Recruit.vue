@@ -4,10 +4,14 @@
     <Layout class="j_layout_content">
       <JHeader :title="'招聘管理'"/>
       <Content>
+        <div class="j_search">
+          <Button type="info" icon="plus" class="w130" @click="add">添加招聘</Button>
+        </div>
         <Table :columns="columns" :data="list"></Table>
         <JPagination :total="total" :searchData='searchData' @on-change="pageChange" :right="'24'"/>
       </Content>
     </Layout>
+    <Detail ref='detail'/>
   </Layout>
 </template>
 
@@ -16,11 +20,13 @@ import qs from 'qs'
 import MenuBar from '@/components/common/menu_bar'
 import JHeader from '@/components/group/j-header'
 import JPagination from '@/components/group/j-pagination'
+import Detail from '@/pages/enterprise/RecruitDetail'
 export default {
   components: {
     MenuBar,
     JHeader,
-    JPagination
+    JPagination,
+    Detail
   },
   data () {
     return {
@@ -28,11 +34,11 @@ export default {
         { type: 'index2', title: '序号', align: 'center', width: 60, render: this.indexFilter },
         { title: '标题', render: this.titleFilter },
         { title: '职务', render: this.dutyFilter },
-        { title: '招聘人数', key: 'sum' },
+        { title: '招聘人数', render: this.sumFilter },
         { title: '添加时间', key: 'addTime', width: 100, render: this.dataFilter },
         { title: '状态', width: 100, render: this.stateFilter },
-        { title: '排序', key: 'sort', width: 100 },
-        { title: '操作', className: 'j_table_operate', width: 120, align: 'right', render: this.renderOperate }
+        { title: '排序', className: 'j_table_sort', width: 100, render: this.sortFilter },
+        { title: '操作', className: 'j_table_operate', width: 120, render: this.renderOperate }
       ],
       list: [],
       searchData: {
@@ -51,6 +57,37 @@ export default {
         if (res.success) {
           this.total = res.attributes.count
           this.list = res.attributes.data
+        }
+      })
+    },
+    add () {
+      this.$refs.detail.open()
+    },
+    sortable (a, b) {
+      let objA = this.list[a]
+      let objB = this.list[b]
+      let sortA = this.list[a].sort
+      let sortB = this.list[b].sort
+      this.sortPost(this.list[a].jobId, sortB)
+      this.sortPost(this.list[b].jobId, sortA)
+      objA.sort = sortB
+      objB.sort = sortA
+      this.list[a] = objB
+      this.list[b] = objA
+    },
+    sortPost (id, sort) {
+      let data = {
+        model: JSON.stringify({
+          id: id,
+          sort: sort
+        }),
+        _method: 'put'
+      }
+      this.$http.post('/rest/api/job/detail/' + id, qs.stringify(data)).then((res) => {
+        if (res.success) {
+          console.log(sort)
+        } else {
+          this.$Message.error(res.msg)
         }
       })
     },
@@ -114,7 +151,7 @@ export default {
             props: {
               value: params.row.title,
               autofocus: true,
-              placeholder: '修改新闻标题'
+              placeholder: '修改标题'
             },
             on: {
               input: (val) => {
@@ -177,11 +214,74 @@ export default {
             props: {
               value: params.row.duty,
               autofocus: true,
-              placeholder: '修改新闻标题'
+              placeholder: '修改职务'
             },
             on: {
               input: (val) => {
                 params.row.duty2 = val
+              }
+            }
+          })
+        ])
+      ])
+    },
+    sumFilter (h, params) {
+      var ctx = this
+      return h('div', [
+        h('span', {
+          style: {
+            color: '#5b5b5b'
+          }
+        }, params.row.sum),
+        h('Poptip', {
+          props: {
+            confirm: true,
+            width: '200',
+            placement: 'right'
+          },
+          class: {
+            j_poptip_confirm_edit: true
+          },
+          on: {
+            'on-ok': () => {
+              let data = {
+                model: JSON.stringify({
+                  id: params.row.jobId,
+                  sum: params.row.sum2
+                }),
+                _method: 'put'
+              }
+              this.$http.post('/rest/api/job/detail/' + params.row.jobId, qs.stringify(data)).then((res) => {
+                if (res.success) {
+                  ctx.$Message.success('修改成功')
+                  params.row.sum = params.row.sum2
+                } else {
+                  ctx.$Message.success(res.msg)
+                }
+              })
+            },
+            'on-cancel': () => {
+              console.log('cancel')
+            }
+          }
+        }, [
+          h('i', {
+            class: {
+              'none': true,
+              'iconfont': true,
+              'icon-bianji2': true
+            }
+          }),
+          h('Input', {
+            slot: 'title',
+            props: {
+              value: params.row.sum,
+              autofocus: true,
+              placeholder: '修改招聘人数'
+            },
+            on: {
+              input: (val) => {
+                params.row.sum2 = val
               }
             }
           })
@@ -195,13 +295,97 @@ export default {
     stateFilter (h, params) {
       return h('div', params.row.state === '01' ? '通过审核' : '未审核')
     },
+    sortFilter (h, params) {
+      var ctx = this
+      return h('div', [
+        h('span', params.row.sort),
+        h('i', {
+          class: {
+            'none': true,
+            'iconfont': true,
+            'icon-bianji2': true
+          },
+          on: {
+            click: () => {
+              this.$Modal.confirm({
+                render: (h) => {
+                  return h('Input', {
+                    props: {
+                      value: params.row.sort,
+                      autofocus: true,
+                      placeholder: '修改排序'
+                    },
+                    on: {
+                      input: (val) => {
+                        params.row.sort2 = val
+                      }
+                    }
+                  })
+                },
+                onOk: () => {
+                  let data = {
+                    model: JSON.stringify({
+                      id: params.row.newsId,
+                      sort: params.row.sort2
+                    }),
+                    _method: 'put'
+                  }
+                  ctx.$http.post('/rest/api/job/detail/' + params.row.jobId, qs.stringify(data)).then((res) => {
+                    if (res.success) {
+                      ctx.$Message.success('修改成功')
+                      ctx.list[params.index].sort = params.row.sort2
+                    } else {
+                      ctx.$Message.error(res.msg)
+                    }
+                  })
+                }
+              })
+            }
+          }
+        }),
+        h('span', {
+          class: {
+            'j_sort': true
+          }
+        }, [
+          h('i', {
+            class: {
+              'none': true,
+              'iconfont': true,
+              'icon-icon--': true
+            },
+            on: {
+              click: () => {
+                if (params.index > 0) {
+                  this.sortable(params.index, params.index - 1)
+                }
+              }
+            }
+          }),
+          h('i', {
+            class: {
+              'none': true,
+              'iconfont': true,
+              'icon-icon--1': true
+            },
+            on: {
+              click: () => {
+                if (params.index < this.searchData.pageSize - 1) {
+                  this.sortable(params.index, params.index + 1)
+                }
+              }
+            }
+          })
+        ])
+      ])
+    },
     renderOperate (h, params) {
       var ctx = this
       return h('div', [
         h('a', {
           on: {
             click: () => {
-              this.$Message.info('更新中')
+              this.$refs.detail.open(params.row.jobId)
             }
           }
         }, '修改'),

@@ -23,6 +23,7 @@ const store = new Vuex.Store({
     productCategory: [],
     newsCategory: [],
     messageList: [],
+    tagList: [],
     staticList: [
       { value: '203', text: '网站编辑：203' },
       { value: '204', text: '网站编辑：204' },
@@ -30,7 +31,7 @@ const store = new Vuex.Store({
       { value: '206', text: '网站编辑：206' },
       { value: '207', text: '网站编辑：207' }
     ],
-    tagList: [],
+    staticId: '',
     lanId: '1',
     uid: ['0', '0', '0']
   },
@@ -40,8 +41,9 @@ const store = new Vuex.Store({
     productCategory: state => state.productCategory,
     newsCategory: state => state.newsCategory,
     messageList: state => state.messageList,
-    staticList: state => state.staticList,
     tagList: state => state.tagList,
+    staticList: state => state.staticList,
+    staticId: state => state.staticId,
     lanId: state => state.lanId
   },
   mutations: {
@@ -65,6 +67,9 @@ const store = new Vuex.Store({
     },
     setStaticList (state, staticList) {
       state.staticList = staticList
+    },
+    setStaticId (state, staticId) {
+      state.staticId = staticId
     },
     setLanId (state, lanId) {
       state.lanId = lanId
@@ -226,6 +231,10 @@ const store = new Vuex.Store({
           this.commit('setTagList', res.attributes.data)
         }
       })
+    },
+    staticIdChange ({dispatch, commit}, staticId) {
+      this.commit('setStaticId', staticId)
+      window.localStorage.setItem('staticId', staticId)
     },
     lanIdChange ({dispatch, commit}, lanId) {
       this.commit('setLanId', lanId)

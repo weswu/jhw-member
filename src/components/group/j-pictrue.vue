@@ -1,23 +1,21 @@
 <template>
   <ul class="j_picture">
-    <li>
-      <i class="iconfont icon-plus-add" v-if="!bad"></i>
-      <img :src="'http://img.jihui88.com/'+src" @click="open" @error="setErrorImg" v-if="bad">
-      <div class="bom">
-        上传
-      </div>
+    <li v-if="!list">
+      <i class="iconfont icon-plus-add" v-if="!src"></i>
+      <img :src="'http://img.jihui88.com/'+src" @click="open" v-if="src">
+      <div class="bom">上传</div>
     </li>
-    <li v-for="(item, index) in list" :key="index">
-      <i class="iconfont icon-plus-add" v-if="item.bad"></i>
-      <img :src="'http://img.jihui88.com/'+item.src" alt="" @click="open" @error="setErrorImg(item)">
-      <div class="top" v-if="type === 'product'">产品主图</div>
+    <li v-for="(item, index) in list" :key="index" v-if="list">
+      <i class="iconfont icon-plus-add" v-if="!item.src"></i>
+      <img :src="'http://img.jihui88.com/'+item.src" @click="open" v-if="item.src">
+      <div class="top" v-if="type === 'product' && index === 0">产品主图</div>
       <div class="bom">
         <i class="iconfont icon-zuojiantou" @click="prev"></i>
         <i class="iconfont icon-youjiantou" @click="next"></i>
         <i class="iconfont icon-x" @click="del"></i>
       </div>
     </li>
-    <li class="add" v-if="add">
+    <li class="add" v-if="list">
       <i class="iconfont icon-plus-add"></i>
     </li>
   </ul>
@@ -28,27 +26,22 @@ import JAblum from '@/components/group/j-ablum'
 export default {
   props: {
     src: {},
-    list: [],
-    add: {
+    list: {},
+    type: {},
+    multiple: {
       type: Boolean,
       default: false
-    },
-    type: {}
+    }
   },
   components: {
     JAblum
   },
   data () {
-    return {
-      bad: false
-    }
+    return {}
   },
   methods: {
-    setErrorImg (e) {
-      this.bad = true
-    },
     open () {
-
+      this.$emit('on-change')
     },
     prev () {
 
@@ -73,14 +66,19 @@ export default {
     float: left;
     cursor: pointer;
     display: table-cell;
-    vertical-align: middle;
     text-align: center;
     margin-right: 11px;
     position: relative;
     background: #f5f6fa;
+    &:hover{
+      .bom{
+         opacity: 1
+      }
+    }
     img {
       max-width: 100%;
       max-height: 100%;
+      vertical-align: middle;
     }
     .top{
       position: absolute;
@@ -101,6 +99,8 @@ export default {
       height: 20px;
       color: #999;
       line-height: 20px;
+      opacity: 0;
+      transition: 0.3s ease;
       i{
         color: #437708;
         font-size: 22px;

@@ -24,6 +24,7 @@ export default new Router({
     // 站点管理
     { path: '/static', component: require('@/pages/static/Static').default },
     { path: '/seo', component: require('@/pages/static/Seo').default },
+    { path: '/beian', component: require('@/pages/static/Beian').default },
     // 企业
     { path: '/enterprise', component: require('@/pages/enterprise/Enterprise').default },
     { path: '/company', component: require('@/pages/enterprise/Company').default },

@@ -2,16 +2,10 @@
   <Layout class="j_layout ivu-layout-has-sider j_seo">
     <MenuBar :data="'menuStatic'" :active="'seo'"/>
     <Layout class="j_layout_content">
-      <JHeader :title="'SEO管理'">
-        <div slot="btn">
-          <Select v-model="staticId" class="primary" @on-change="change" style="width:167px">
-            <Option v-for="item in staticList" :value="item.value" :key="item.value">{{ item.text }}</Option>
-          </Select>
-        </div>
-      </JHeader>
+      <JHeader :title="'SEO管理'" :website="true" @on-static="staticChange"></JHeader>
       <Content>
         <div class="j_search">
-          <Button class="grey" @click="search(item.value)" v-for="(item, index) in btns" :key="index" :class="{primary: active === item.value}">{{item.text}}</Button>
+          <Button class="grey" @click="btnChange(item.value)" v-for="(item, index) in btns" :key="index" :class="{primary: active === item.value}">{{item.text}}</Button>
         </div>
         <div class="warpper j_scroll">
           <SBase v-if="active === '0'"/>
@@ -26,7 +20,6 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
 import MenuBar from '@/components/common/menu_bar'
 import JHeader from '@/components/group/j-header'
 import SBase from '@/components/seo/base'
@@ -49,20 +42,15 @@ export default {
         { text: 'Tag标签管理', value: '5' },
         { text: '付费SEO推广', value: '6' }
       ],
-      active: '0',
-      staticId: ''
+      active: '0'
     }
   },
-  computed: {
-    ...mapState(['staticList'])
-  },
   methods: {
-    // 功能
-    search (e) {
+    btnChange (e) {
       this.active = e
     },
-    change (e) {
-      this.staticId = e
+    staticChange (e) {
+      // this.staticId = e
     }
   }
 }

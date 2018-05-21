@@ -52,22 +52,7 @@
           <br/>
           <img src="" alt="">
           <FormItem label="产品图片：">
-            <ul class="pro_img_list">
-              <li>
-                <i class="iconfont icon-plus-add"></i>
-                <div class="more">
-                  <div class="top">产品主图</div>
-                  <div class="bom">
-                    <i class="iconfont icon-zuojiantou"></i>
-                    <i class="iconfont icon-youjiantou"></i>
-                    <i class="iconfont icon-x"></i>
-                  </div>
-                </div>
-              </li>
-              <li class="add">
-                <i class="iconfont icon-plus-add"></i>
-              </li>
-            </ul>
+            <JPictrue :list="imgList" :multiple="true" :type="'product'" @on-change="imgChange"/>
           </FormItem>
         </Form>
         <UE :content='detail.proddesc' ref='ue1' :hidden="active !== '1'"></UE>
@@ -158,16 +143,7 @@
         <div v-if="active === '6'">
           <Form :model="detail" :label-width="130" ref="model3">
             <FormItem label="产品标签：">
-              <Select v-model="detail.taglist" multiple style="width:350px">
-                <Option v-for="item in tagList" :value="item.name" :key="item.name">{{ item.name }}</Option>
-              </Select>
-              <Poptip placement="bottom" width="235">
-                <span class="a_underline pl5">新增标签</span>
-                <div slot="content">
-                  <Input v-model="tag" placeholder="请输入标签名称" style="width:200px;margin-bottom:10px;"></Input><br/>
-                  <Button type="primary" size="small" @click="addTag">添加</Button>
-                </div>
-              </Poptip>
+              <JTag :tagMapStore="detail.tagMapStore" :id="detail.pruductId" :type="'product'"/>
             </FormItem>
           </Form>
           <div class="j_tip" style="width: 560px;margin-left: 130px;">
@@ -207,19 +183,21 @@ import { mapState } from 'vuex'
 import MenuBar from '@/components/common/menu_bar'
 import JHeader from '@/components/group/j-header'
 import UE from '@/components/group/j-editor'
+import JPictrue from '@/components/group/j-pictrue'
+import JTag from '@/components/group/j-tag'
 export default {
   components: {
     MenuBar,
     JHeader,
-    UE
+    UE,
+    JPictrue,
+    JTag
   },
   data () {
     return {
       active: '0',
-      detail: {
-        taglist: []
-      },
-      tag: ''
+      detail: {},
+      imgList: []
     }
   },
   computed: {
@@ -235,6 +213,7 @@ export default {
   },
   methods: {
     get () {
+      var ctx = this
       let id = this.decodeId(this.$route.params.id, 'Product_', 32)
       this.$route.params.id !== 'add' && this.$http.get('/rest/api/product/detail/' + id).then(res => {
         if (res.success) {
@@ -242,6 +221,10 @@ export default {
           data.taglist = []
           data.tagMapStore.forEach(item => {
             data.taglist.push(item.name)
+          })
+          let imglist = JSON.parse(data.productImageListStore)
+          imglist && imglist.forEach(item => {
+            ctx.imgList.push({id: item.id, src: item.sourceProductImagePath})
           })
           this.detail = data
         }
@@ -269,21 +252,8 @@ export default {
       })
       e.stopPropagation()
     },
-    addTag () {
-      let data = {
-        model: JSON.stringify({
-          name: this.tag
-        })
-      }
-      this.$http.post('/rest/api/tag/detail/' + this.detail.productId, qs.stringify(data)).then((res) => {
-        if (res.success) {
-          this.$Message.success('添加成功')
-          this.detail.tagList.push(this.tag)
-          this.tag = ''
-        } else {
-          this.$Message.error(res.msg)
-        }
-      })
+    imgChange () {
+      console.log('aaa')
     },
     cancel () {
       this.$Message.info('You click cancel')
@@ -385,12 +355,6 @@ export default {
     }
     .ivu-input-wrapper{
       width: 155px;
-    }
-    hr{
-      height: 1px;
-      background: #dddddd;
-      border: none;
-      margin: 20px 0 23px 0;
     }
   }
 }

@@ -1,21 +1,24 @@
 <template>
-  <Modal
+  <Modal class-name="j_recruit_deatil"
     v-model="modal"
-    title="友情链接"
+    title="招聘"
     @on-cancel="cancel">
     <div slot="footer">
       <Button type="text" size="large" @click="cancel">取消</Button>
       <Button type="primary" size="large" @click="submit('modalForm')">保存</Button>
     </div>
     <Form ref="modalForm" :model="detail" :rules="rules" :label-width="110">
-      <FormItem label="链接名称：" prop="name">
-        <Input v-model="detail.name" placeholder="请输入链接名称"></Input>
+      <FormItem label="标题：" prop="title">
+        <Input v-model="detail.title" placeholder="请输入标题"></Input>
       </FormItem>
-      <FormItem label="链接地址：" prop="url">
-        <Input v-model="detail.url" placeholder="请输入链接地址"></Input>
+      <FormItem label="职务：" prop="duty">
+        <Input v-model="detail.duty" placeholder="请输入职务"></Input>
       </FormItem>
-      <FormItem label="链接图片：">
-        <JPictrue :src="detail.image" @on-change="change"/>
+      <FormItem label="招聘人数：">
+        <Input v-model="detail.sum" placeholder="请输入招聘人数"></Input>
+      </FormItem>
+      <FormItem label="要求：">
+        <UE :content='detail.content' ref='ue' :eWidth="535" :eHeight="350"></UE>
       </FormItem>
     </Form>
   </Modal>
@@ -23,21 +26,21 @@
 
 <script>
 import qs from 'qs'
-import JPictrue from '@/components/group/j-pictrue'
+import UE from '@/components/group/j-editor'
 export default {
   components: {
-    JPictrue
+    UE
   },
   data () {
     return {
       modal: false,
       detail: {},
       rules: {
-        name: [
-          { required: true, message: '链接名称不能为空', trigger: 'blur' }
+        title: [
+          { required: true, message: '标题不能为空', trigger: 'blur' }
         ],
-        url: [
-          { required: true, message: '链接地址不能为空', trigger: 'blur' }
+        duty: [
+          { required: true, message: '职务不能为空', trigger: 'blur' }
         ]
       }
     }
@@ -47,7 +50,7 @@ export default {
       this.modal = true
       if (id) {
         this.$refs['modalForm'].resetFields()
-        this.$http.get('/rest/api/link/detail/' + id).then((res) => {
+        this.$http.get('/rest/api/job/detail/' + id).then((res) => {
           if (res.success) {
             this.detail = res.attributes.data
           } else {
@@ -62,24 +65,23 @@ export default {
       this.modal = false
     },
     change (e) {
-      console.log('image update')
+
     },
     submit (name) {
       this.$refs[name].validate((valid) => {
         if (valid) {
+          this.detail.content = this.$refs.ue.getUEContent()
           let data = {
             model: JSON.stringify(this.detail)
           }
           let url = ''
-          if (this.detail.linkId) {
-            url = '/' + this.detail.linkId
+          if (this.detail.jobId) {
+            url = '/' + this.detail.jobId
             data._method = 'put'
           }
-          var ctx = this
-          this.$http.post('/rest/api/link/detail' + url, qs.stringify(data)).then((res) => {
+          this.$http.post('/rest/api/job/detail' + url, qs.stringify(data)).then((res) => {
             if (res.success) {
               this.$Message.success('保存成功')
-              this.$emit('on-change', res.attributes.data, ctx.detail.linkId ? '' : 'add')
               this.modal = false
             } else {
               this.$Message.error(res.msg)
@@ -93,4 +95,8 @@ export default {
 </script>
 
 <style lang="less">
+.j_recruit_deatil .ivu-modal{
+  width: 700px !important;
+  top: 50px;
+}
 </style>
