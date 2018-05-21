@@ -7,7 +7,7 @@
         <div class="j_search">
           <Row :gutter="24">
             <Col span="6">
-              <Button type="info" icon="plus" class="w130" @click="add">添加产品</Button>
+              <Button type="info" icon="plus" class="w130" @click="url('/product/add')">添加产品</Button>
             </Col>
             <Col span="18" style="text-align:right">
               <span class="a_underline" @click="myShow">我的显示</span>
@@ -125,9 +125,6 @@ export default {
     lanRefresh () {
       this.searchData.page = 1
       this.get()
-    },
-    add () {
-      this.$router.push({ path: '/product/add' })
     },
     myShow () {
       this.$refs.dialog.open()

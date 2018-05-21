@@ -92,7 +92,6 @@ export default {
       })
     },
     submit () {
-      var ctx = this
       let data = {
         templatePage: this.detail.page,
         seoTitle: this.detail.seoTitle,

@@ -39,6 +39,7 @@ export default new Router({
     { path: '/evaluate/:id', component: require('@/pages/product/Evaluate').default },
     // 新闻
     { path: '/news', component: require('@/pages/news/News').default },
+    { path: '/news/:id', component: require('@/pages/news/Detail').default },
     // 相册
     { path: '/album', component: require('@/pages/album/Album').default },
     // 会员管理

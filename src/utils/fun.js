@@ -69,6 +69,14 @@ Vue.prototype.picUrl = function (src, number) {
 Vue.prototype.index2 = function (index, obj) {
   return index + (obj.page - 1) * obj.pageSize + 1
 }
+/*
+ * @author: wes
+ * @date: 2018-5-18
+ * @desc: 路由
+*/
+Vue.prototype.url = function (e) {
+  this.$router.push({ path: e })
+}
 
 Vue.prototype.update = function (e) {
   e.info('更新中...')

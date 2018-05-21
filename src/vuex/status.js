@@ -30,7 +30,7 @@ const state = {
     menu: [
       { text: '积分列表', value: 'point' },
       { text: '积分兑换', value: 'point_goods' },
-      { text: '积分来源', value: 'point_origin' }
+      { text: '积分规则', value: 'point_origin' }
     ]
   },
   menuMessage: {
@@ -95,6 +95,14 @@ const state = {
     menu: [
       { text: '新闻列表', value: 'news' },
       { text: '分类管理', value: 'category/news' }
+    ]
+  },
+  menu_news_detail: {
+    menu: [
+      { text: '新闻基本信息', value: '0' },
+      { text: '新闻内容', value: '1' },
+      { text: '新闻标签', value: '2' },
+      { text: 'SEO设置', value: '3' }
     ]
   },
   menuMember: {

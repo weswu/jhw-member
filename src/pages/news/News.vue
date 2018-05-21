@@ -7,7 +7,7 @@
         <div class="j_search">
           <Row :gutter="24">
             <Col span="6">
-              <Button type="info" icon="plus" class="w130" @click="update($Message)">添加新闻</Button>
+              <Button type="info" icon="plus" class="w130" @click="url('/news/add')">添加新闻</Button>
             </Col>
             <Col span="18" style="text-align:right">
               <Input v-model="model.title" placeholder="请输入新闻标题" style="width:200px"></Input>
@@ -92,6 +92,7 @@ export default {
     }, 2000)
   },
   created () {
+    this.searchData.page = this.$cookie.get('newsPage') || 1
     this.get()
     this.getCate()
   },
@@ -556,7 +557,8 @@ export default {
         h('a', {
           on: {
             click: () => {
-              this.$Message.success('更新中..')
+              this.$cookie.set('newsPage', this.searchData.page)
+              this.$router.push({path: '/news/' + params.row.newsId2})
             }
           }
         }, '修改'),
