@@ -1,52 +1,81 @@
 <template>
-  <div class="j_website j_panel">
-    <Row :gutter="24" style="width:440px;float:left;">
-      <Col span="6" >
-        <div @click="href">
-          <Avatar shape="square" :src="'http://img.jihui88.com/'+user.enterprise.logo" size="large" v-if="user.enterprise.logo" class="head_portrait"/>
-          <i class="iconfont icon-huiyuan" v-if="!user.enterprise.logo"></i>
-        </div>
-      </Col>
-      <Col span="18">
-        <div class="name">
-          <span>账号昵称：<span class="nickName" @click="href">{{user.nickName || user.username}}</span> </span>
-          <p>
-            <span v-if="user.pcSitePayTime">账号到期时间：{{user.pcSitePayTime}}</span>
-            <span v-if="!user.pcSitePayTime">未购买</span>
-            <Badge count="正常" class-name="badge-normal" style="margin: 0 2px 0 5px"></Badge>
-            <Badge count="VIP" :class="[user.pcSitePayTime ? 'badge-vip' : 'badge-gray']"></Badge>
-          </p>
-        </div>
-      </Col>
-    </Row>
-    <a href="http://buy.jihui88.com/#/" target="_blank" class="buy"><Button type="primary"><i class="iconfont icon-update"></i>升级购买</Button></a>
-    <ul class="j_nav_link">
-      <li><a href="http://pc.jihui88.com/pc/index.html" target="_blank"><i class="iconfont icon-diannaoshouji01"></i>网站界面管理</a></li>
-      <li><a href="http://www.jihui88.com/member/index.html" target="_blank"><i class="iconfont icon-shujuku"></i>数据管理中心</a></li>
-      <li><a href="http://www.jihui88.com/member/index.html#/seo_list" target="_blank"><i class="iconfont icon-seo-marketing-business-code-validation"></i>SEO管理</a></li>
-      <li class="add"><Icon type="plus"></Icon>定制功能模块</li>
-    </ul>
+  <div class="j_home_website j_panel">
+    <div class="img" @click="href">
+      <Avatar shape="square" :src="'http://img.jihui88.com/'+user.enterprise.logo" size="large" v-if="user.enterprise.logo" class="head_portrait"/>
+      <i class="iconfont icon-huiyuan" v-if="!user.enterprise.logo"></i>
+    </div>
+    <div class="name">
+      <span>
+        账号昵称：
+        <span class="nickName" @click="href">{{user.nickName || user.username}}</span>
+        <div class="j_tip">温馨提醒：为了你账号的安全，请及时 <span class="a_underline" @click="href">设置你的邮箱及密码</span></div>
+      </span>
+      <p>
+        <span>注册时间：{{user.addTime | time}}</span>
+        <Badge :count="user.username === '未登录' ? '未登录' : '正常'" class-name="badge-normal" style="margin: 0 2px 0 5px"></Badge>
+        <Badge count="VIP" :class="[user.pcSitePayTime ? 'badge-vip' : 'badge-gray']"></Badge>
+      </p>
+    </div>
+    <div class="buy">
+      <Select class="primary" placeholder="升级购买" @on-change="change" style="width:123px">
+        <Option class="head" value="0" label="升级购买"> 网站 </Option>
+        <Option v-for="item in staticList" :value="item.value" :key="item.value" label="升级购买">
+          {{ item.text }}
+        </Option>
+        <Option class="head" v-for="item in list" :value="item.value" :key="item.value" label="升级购买">
+          {{ item.text }}
+        </Option>
+      </Select>
+      <i class="iconfont icon-update"></i>
+    </div>
+    <div class="clear"></div>
   </div>
 </template>
 
 <script>
 import { mapState } from 'vuex'
 export default {
+  data () {
+    return {
+      list: [
+        { value: '1', text: '小程序' },
+        { value: '2', text: '微分销' },
+        { value: '3', text: '微传单' },
+        { value: '4', text: '其它功能' },
+        { value: '5', text: '其它套餐' }
+      ]
+    }
+  },
   computed: {
-    ...mapState(['user'])
+    ...mapState(['user', 'staticList'])
   },
   methods: {
     href () {
       this.$router.push({'path': '/account'})
+    },
+    change (e) {
+      if (e === '0') {
+        console.log('0')
+      } else if (e === '4') {
+        window.location.href = 'http://buy.jihui88.com/#/?tab=tab1'
+      } else if (e === '5') {
+        window.location.href = 'http://buy.jihui88.com/#/'
+      } else {
+        this.$Message.info('更新中...' + e)
+      }
     }
   }
 }
 </script>
 
 <style lang="less">
-@import '../../assets/variables.less';
-.j_website{
+.j_home_website{
   padding: 25px 26px 34px 30px;
+  .img{
+    float:left;
+    width: 75px;
+    margin-right: 16px;
+  }
   .icon-huiyuan{
     width: 75px;
     height: 75px;
@@ -64,8 +93,9 @@ export default {
     cursor: pointer;
   }
   .name{
-    line-height: 33px;
-    padding: 8px 0 0 0;
+    float:left;
+    line-height: 34px;
+    padding: 14px 0 0;
     color: #9b9b9b;
     .nickName{
       color: #000;
@@ -74,56 +104,42 @@ export default {
       padding-right: 3px;
       cursor: pointer;
     }
+    .j_tip{
+      display: inline-block;
+      margin: 0 0 0 3px
+    }
   }
   .ivu-badge{
     vertical-align: initial;
   }
   .buy{
     float: right;
+    position: relative;
+    margin-top: 15px;
+    .ivu-select-dropdown {
+      max-height: 340px;
+      .head{
+        background: #e7eaef;text-align: left;padding: 8px 16px;
+        color: #6a6a6a;
+      }
+      .ivu-select-item{
+        padding: 7px 10px;
+        text-align: left;
+      }
+    }
+    .ivu-select-placeholder,.ivu-select-selected-value{
+      text-align: right;
+    }
+    .ivu-icon-arrow-down-b{
+      display: none;
+    }
     .icon-update{
-      padding-right: 5px;
       font-size: 18px;
+      position: absolute;
+      top: 3px;
+      color: #fff;
+      left: 22px;
     }
-    button{
-      padding: 7px 18px;
-      font-size: 13px;
-    }
-  }
-}
-.j_nav_link{
-  overflow: hidden;
-  clear: both;
-  li{
-    margin-top: 21px;
-    float: left;
-    text-align: center;
-    background: @background-color;
-    list-style-type: none;
-    margin-right: 25px;
-    color: #9c9c9c;
-    width: 130px;
-    height: 138px;
-    a{
-      color: #9c9c9c;
-    }
-    i{
-      display: block;
-      font-size: 60px;
-      color: #bfcace;
-      padding-top: 5px;
-    }
-  }
-  .add{
-    background: none;
-    border: 1px solid #e8e8e8;
-    i{
-      font-size: 40px;
-      padding-top: 32px;
-      padding-bottom: 20px;
-    }
-  }
-  .ivu-badge-count{
-    height: 19px;line-height: 19px;
   }
 }
 </style>

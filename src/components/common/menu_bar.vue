@@ -1,6 +1,9 @@
 <template>
   <Sider id="J_Menu_Bar" ref="side1" hide-trigger collapsible :collapsed-width="0" v-model="isCollapsed" width="180">
-    <div class="title">{{status[data].title || 'Basic Table'}}</div>
+    <div class="title">
+      <span v-if="!detail">{{status[data].title || 'Basic Table'}}</span>
+      <span v-else @click="back" class="back"><i class="iconfont icon-fanhui"></i>返回</span>
+    </div>
     <div @click="collapsedSider" :class="rotateIcon">
       <div class="navbar-collapse-bg"></div>
       <img src="static/img/toggle.png" alt="">
@@ -24,6 +27,10 @@ export default {
     active: {
       type: String,
       default: '0'
+    },
+    detail: {
+      type: Boolean,
+      default: false
     }
   },
   data () {
@@ -58,7 +65,14 @@ export default {
       this.$refs.side1.toggleCollapse()
     },
     mrouter (name) {
-      this.$router.push({path: '/' + name})
+      if (this.detail) {
+        this.$emit('on-change', name)
+      } else {
+        this.$router.push({path: '/' + name})
+      }
+    },
+    back () {
+      this.$router.back()
     }
   }
 }
@@ -78,12 +92,21 @@ export default {
     text-overflow: ellipsis;
     white-space: nowrap;
     overflow: hidden;
+    .back {
+      cursor: pointer;
+      i{
+        font-size: 12px;
+        padding-right: 6px;
+        display: inline-block;
+        vertical-align: top;
+      }
+    }
   }
   .rotate{
     position: absolute;
     z-index: 100;
     right: 0;
-    top: 34.7%;
+    top: 34.2%;
     width: 20px;
     height: 50px;
     cursor: pointer;

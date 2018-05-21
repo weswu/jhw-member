@@ -8,6 +8,7 @@ const store = new Vuex.Store({
     user: {
       name: '未登录',
       username: '未登录',
+      addTime: 1272102123858,
       enterprise: {}
     },
     userInfo: {
@@ -18,14 +19,31 @@ const store = new Vuex.Store({
       order_unpaid: 27,
       order: 45
     },
+    // 列表数据
+    productCategory: [],
+    newsCategory: [],
     messageList: [],
+    tagList: [],
+    staticList: [
+      { value: '203', text: '网站编辑：203' },
+      { value: '204', text: '网站编辑：204' },
+      { value: '205', text: '网站编辑：205' },
+      { value: '206', text: '网站编辑：206' },
+      { value: '207', text: '网站编辑：207' }
+    ],
+    staticId: '',
     lanId: '1',
     uid: ['0', '0', '0']
   },
   getters: {
     user: state => state.user,
     userInfo: state => state.userInfo,
+    productCategory: state => state.productCategory,
+    newsCategory: state => state.newsCategory,
     messageList: state => state.messageList,
+    tagList: state => state.tagList,
+    staticList: state => state.staticList,
+    staticId: state => state.staticId,
     lanId: state => state.lanId
   },
   mutations: {
@@ -35,8 +53,23 @@ const store = new Vuex.Store({
     setUserInfo (state, userInfo) {
       state.userInfo = userInfo
     },
+    setProductCategory (state, productCategory) {
+      state.productCategory = productCategory
+    },
+    setNewsCategory (state, newsCategory) {
+      state.newsCategory = newsCategory
+    },
     setMessageList (state, messageList) {
       state.messageList = messageList
+    },
+    setTagList (state, tagList) {
+      state.tagList = tagList
+    },
+    setStaticList (state, staticList) {
+      state.staticList = staticList
+    },
+    setStaticId (state, staticId) {
+      state.staticId = staticId
     },
     setLanId (state, lanId) {
       state.lanId = lanId
@@ -91,6 +124,117 @@ const store = new Vuex.Store({
           this.commit('setMessageList', res.attributes.data)
         }
       })
+    },
+    getProductCategory ({commit, state}) {
+      this._vm.$http.get('/rest/api/category/product?pageSize=1000').then(res => {
+        if (res.success) {
+          let data = res.attributes.data
+          let list = []
+          // 1级
+          data.forEach(item => {
+            if (!item.belongId && item.isdisplay === '1') {
+              item._checked = true
+              item._selected = true
+              item.grade = '1'
+              list.push(item)
+            }
+          })
+          // 2级
+          data.forEach(row => {
+            row.isdisplay === '1' && list.forEach((item, index) => {
+              if (item.grade === '1' && (row.belongId === item.categoryId)) {
+                row._checked = false
+                item._selected = false
+                row.grade = '2'
+                list.splice(index + 1, 0, row)
+              }
+            })
+          })
+          // 3级
+          data.forEach(row => {
+            row.isdisplay === '1' && list.forEach((item, index) => {
+              if (item.grade === '2' && (row.belongId === item.categoryId)) {
+                row._checked = false
+                row.grade = '3'
+                list.splice(index + 1, 0, row)
+              }
+            })
+          })
+          list.forEach((item, index) => {
+            item.isroot = false
+            if (list.length > (index + 1)) {
+              if (item.grade === '1') {
+                item.isroot = item.grade === '1' && list[index + 1].grade === '2'
+              }
+              if (item.grade === '2') {
+                item.isroot = item.grade === '2' && list[index + 1].grade === '3'
+              }
+            }
+          })
+          this.commit('setProductCategory', list)
+        }
+      })
+    },
+    getNewsCategory ({commit, state}) {
+      this._vm.$http.get('/rest/api/category/news?pageSize=1000').then(res => {
+        if (res.success) {
+          let data = res.attributes.data
+          let list = []
+          // 1级
+          data.forEach(item => {
+            if (!item.belongId && item.isdisplay === '1') {
+              item._checked = true
+              item._selected = true
+              item.grade = '1'
+              list.push(item)
+            }
+          })
+          // 2级
+          data.forEach(row => {
+            row.isdisplay === '1' && list.forEach((item, index) => {
+              if (item.grade === '1' && (row.belongId === item.categoryId)) {
+                row._checked = false
+                item._selected = false
+                row.grade = '2'
+                list.splice(index + 1, 0, row)
+              }
+            })
+          })
+          // 3级
+          data.forEach(row => {
+            row.isdisplay === '1' && list.forEach((item, index) => {
+              if (item.grade === '2' && (row.belongId === item.categoryId)) {
+                row._checked = false
+                row.grade = '3'
+                list.splice(index + 1, 0, row)
+              }
+            })
+          })
+          list.forEach((item, index) => {
+            item.isroot = false
+            if (list.length > (index + 1)) {
+              if (item.grade === '1') {
+                item.isroot = item.grade === '1' && list[index + 1].grade === '2'
+              }
+              if (item.grade === '2') {
+                item.isroot = item.grade === '2' && list[index + 1].grade === '3'
+              }
+            }
+          })
+          this.commit('setNewsCategory', list)
+        }
+      })
+    },
+    getTagList ({commit, state}) {
+      this._vm.$http.get('/rest/api/tag/list?pageSize=1000').then(res => {
+        if (res.success) {
+          this.commit('setTagList', res.attributes.data)
+        }
+      })
+    },
+    staticIdChange ({dispatch, commit}, staticId) {
+      this.commit('setStaticId', staticId)
+      window.localStorage.setItem('staticId', staticId)
     },
     lanIdChange ({dispatch, commit}, lanId) {
       this.commit('setLanId', lanId)

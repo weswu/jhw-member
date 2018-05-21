@@ -1,11 +1,8 @@
 <template>
   <Layout class="j_layout ivu-layout-has-sider j_enterprise">
     <MenuBar :data="'menuEnter'" :active="'enterprise'"/>
-    <Layout class="j_layout_content j_form">
-      <JHeader :title="'基本资料'" :lan="true"/>
-      <div class="tip">
-        请完善以下信息，方便我们更好的为您服务
-      </div>
+    <Layout class="j_layout_content j_form_detail">
+      <JHeader :title="'基本资料'" :lan="true" :tip="'请完善以下信息，方便我们更好的为您服务'"/>
       <Content>
         <Form :model="user" :rules="rules" :label-width="130" ref="model">
           <span class="title" style="margin-top:0px;">基本信息：</span>
@@ -77,7 +74,7 @@
         </Form>
       </Content>
       <Footer>
-        <Button type="primary" @click="submit">保存</Button>
+        <Button type="primary" size="small" @click="submit">保存</Button>
       </Footer>
     </Layout>
   </Layout>
@@ -88,7 +85,7 @@ import qs from 'qs'
 import { mapState, mapActions } from 'vuex'
 import MenuBar from '@/components/common/menu_bar'
 import JHeader from '@/components/group/j-header'
-import JPictrue from '@/components/group/j-pictrue'
+import JPictrue from '@/components/group/j-image'
 export default {
   components: {
     MenuBar, JHeader, JPictrue
@@ -97,7 +94,7 @@ export default {
     ...mapState({
       'user': state => state.user,
       'lanId': state => state.lanId,
-      'lanList': state => state.status.lanList
+      lanList: state => state.status.lanList
     })
   },
   data () {
@@ -208,7 +205,7 @@ export default {
         if (res.success) {
           // this.$Message.success('保存成功')
         } else {
-          this.$Message.success(res.msg)
+          this.$Message.error(res.msg)
         }
       })
     },
@@ -222,7 +219,7 @@ export default {
         if (res.success) {
           this.$Message.success('保存成功')
         } else {
-          this.$Message.success(res.msg)
+          this.$Message.error(res.msg)
         }
       })
     }
@@ -232,16 +229,6 @@ export default {
 
 <style lang="less">
 .j_enterprise{
-  .j_header{
-    border-bottom:none;
-    margin-bottom: 0;
-  }
-  .tip{
-    padding: 10px 15px;
-    border: 1px solid #ddd;
-    margin-bottom: 20px;
-    background: #f9f9f9;
-  }
   .ivu-form .title{
     margin: 20px 0 0 0;
     font-size: 14px;

@@ -1,13 +1,13 @@
 <template>
   <Layout class="ivu-layout-has-sider j_company">
     <MenuBar :data="'menuEnter'" :active="'company'"/>
-    <Layout class="j_layout_content j_form">
+    <Layout class="j_layout_content j_form_detail">
       <JHeader :title="'公司简介'" :lan="true"/>
       <Content>
-        <UE :content='user.enterprise.edesc' ref='ue' style="z-index: 1;position: relative;"></UE>
+        <UE :content='user.enterprise.edesc' ref='ue'></UE>
       </Content>
       <Footer>
-        <Button type="primary" @click="submit">保存</Button>
+        <Button type="primary" size="small" @click="submit">保存</Button>
       </Footer>
     </Layout>
   </Layout>
@@ -35,7 +35,7 @@ export default {
   },
   methods: {
     submit () {
-      this.user.enterprise.edesc = this.$refs.ue.getUEContent().replace(/\uD83C[\uDF00-\uDFFF]|\uD83D[\uDC00-\uDE4F]/g, '')
+      this.user.enterprise.edesc = this.$refs.ue.getUEContent()
       let data = {
         model: JSON.stringify(this.user.enterprise),
         _method: 'put'
@@ -45,7 +45,7 @@ export default {
           this.$Message.success('保存成功')
           this.$store.commit('serUser', this.user)
         } else {
-          this.$Message.success(res.msg)
+          this.$Message.error(res.msg)
         }
       })
     }

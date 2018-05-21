@@ -36,6 +36,7 @@ export default {
 
 <style lang="less">
   .j_subscribe{
+    padding: 26px 0 20px 0;
     .subscribe{
       display: block;
       text-align: center;

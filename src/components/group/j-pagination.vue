@@ -1,30 +1,32 @@
 <template>
   <div class="">
     <div class="j_pagination fixed border" v-if="fixed && checkbox">
-      <slot name="btn"></slot>
+      <div class="btn">
+        <slot name="btn"></slot>
+      </div>
     </div>
-    <div class="j_pagination fixed" v-if="fixed" style="text-align:right">
+    <div class="j_pagination fixed" v-if="fixed" style="text-align:right" :class="{border_top: borderTop}">
       {{searchData.page}}/{{ Math.ceil(total/searchData.pageSize)}}页，共有{{total}}{{unit}}，每页显示：
       <input v-model="searchData.pageSize" type="number" class="number"/>{{unit}}
       <Page :total="total" @on-change="pageChange"></Page>
       <div class="page">
-        <Input v-model="page"></Input>
-        <Button type="primary" @click="pageChange(page)">GO</Button>
-        <Button type="primary" @click="refresh" class="refresh"><i class="iconfont icon-shuaxin"></i>刷新</Button>
+        <Input size="small" v-model="page"></Input>
+        <Button type="primary" size="small" @click="pageChange(page)">GO</Button>
+        <Button type="primary" size="small" @click="refresh" class="refresh"><i class="iconfont icon-shuaxin"></i><span>刷新</span></Button>
       </div>
     </div>
     <div class="j_pagination" v-if="!fixed">
       <!-- 分页2样式 -->
       <Row :gutter="24">
-        <Col :span="left" v-if="checkbox">
+        <Col :span="left" v-if="checkbox" class="btn">
           <slot name="btn"></slot>
         </Col>
         <Col :span="right" style="text-align:right;">
           共有{{total}}条，每页显示：{{searchData.pageSize}}条
           <Page :total="total" @on-change="pageChange"></Page>
           <div class="page">
-            <Input v-model="page"></Input>
-            <Button class="j_buttom" @click="pageChange(page)">GO</Button>
+            <Input size="small" v-model="page"></Input>
+            <Button size="small" @click="pageChange(page)" class="go" style="margin-left: 8px;">GO</Button>
           </div>
         </Col>
       </Row>
@@ -59,6 +61,10 @@ export default {
     right: {
       type: String,
       default: '18'
+    },
+    borderTop: {
+      type: Boolean,
+      default: false
     }
   },
   data () {

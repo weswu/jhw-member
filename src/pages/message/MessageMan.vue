@@ -1,22 +1,19 @@
 <template>
   <Layout class="j_layout ivu-layout-has-sider j_messageMan">
     <MenuBar :data="'menuMessage'" :active="'messageMan'"/>
-    <Content :style="{padding: '20px'}">
-      <div class="j_header">
-        <Row :gutter="24" class="account_user">
-          <Col span="10">
-            <span class="title">消息接收人管理</span>
-          </Col>
-          <Col span="14" style="text-align:right">
+    <Layout class="j_layout_content">
+      <Content>
+        <JHeader :title="'消息接收人管理'">
+          <div slot="btn">
             <Button type="primary" icon="plus" @click="add">新建消息接收人</Button>
-          </Col>
-        </Row>
-      </div>
-      <div class="j_tip">
-        提醒：以下联系人都可以设置为消息接收人，机汇网不会将这些信息对外披露或向第三方提供。
-      </div>
-      <Table :columns="columns" :data="list"></Table>
-    </Content>
+          </div>
+        </JHeader>
+        <div class="j_tip">
+          提醒：以下联系人都可以设置为消息接收人，机汇网不会将这些信息对外披露或向第三方提供。
+        </div>
+        <Table :columns="columns" :data="list"></Table>
+      </Content>
+    </Layout>
     <Detail ref="detail" @on-add="onAdd" @on-edit="onEdit"/>
   </Layout>
 </template>
@@ -25,10 +22,12 @@
 import qs from 'qs'
 import { mapState } from 'vuex'
 import MenuBar from '@/components/common/menu_bar'
+import JHeader from '@/components/group/j-header'
 import Detail from '@/pages/message/messageManDetail'
 export default {
   components: {
     MenuBar,
+    JHeader,
     Detail
   },
   computed: {
@@ -41,7 +40,7 @@ export default {
         { title: '邮箱', key: 'key', render: this.emailFilter },
         { title: '手机', key: 'cellphone', render: this.phoneFilter },
         { title: '职位', key: 'position' },
-        { title: '操作', key: 'type', align: 'right', width: 150, render: this.renderOperate }
+        { title: '操作', className: 'j_table_operate', align: 'right', width: 150, render: this.renderOperate }
       ],
       list: [
         {
@@ -93,7 +92,7 @@ export default {
           this.$Message.success('保存成功')
           this.$store.commit('serUser', this.user)
         } else {
-          this.$Message.success(res.msg)
+          this.$Message.error(res.msg)
         }
       })
     },
@@ -111,11 +110,7 @@ export default {
           }
         }, '详情'),
         h('span', {
-          style: {
-            paddingLeft: '10px',
-            paddingRight: '10px',
-            color: '#e6e1db'
-          }
+          class: { delimiter: true }
         }, '|'),
         h('a', {
           on: {

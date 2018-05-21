@@ -1,10 +1,8 @@
 <template>
-  <Row id="J_Header" type="flex" justify="space-between" >
-    <Col span="6">
-      <div class="logo">
-        <a href="http://www.jihui88.com"><img src="http://img.jihui88.com/upload/w/w5/www2/picture/2017/07/05/54b68a5c-fdd2-4842-9e1e-b88d1c403f28.png" height="30" alt=""></a>
-      </div>
-    </Col>
+  <Row id="J_Header" type="flex" justify="space-between">
+    <div class="logo">
+      <a href="http://www.jihui88.com"><img src="http://img.jihui88.com/upload/w/w5/www2/picture/2017/07/05/54b68a5c-fdd2-4842-9e1e-b88d1c403f28.png" height="30" alt=""></a>
+    </div>
     <Col span="18" class="userInfo">
       <a href="#/" class="header_link">首页</a>
       <a href="#/" class="header_link">服务反馈</a>
@@ -18,7 +16,7 @@
             </div>
             <ul>
               <li v-for="(item, index) in messageList" :key="index" v-if="index<5">
-                <div class="title">
+                <div class="title" @click="detail(item.messageId)">
                   {{item.title}}
                 </div>
                 <p>
@@ -50,7 +48,7 @@
               <Col span="8"><a href="#/cost_order"><i class="iconfont icon-price"></i>费用中心</a></Col>
             </Row>
             <Row>
-              <Col span="8"><a href="#"><i class="iconfont icon-quanyi"></i>账号权益</a></Col>
+              <Col span="8"><a href="#/point_origin"><i class="iconfont icon-quanyi"></i>积分规则</a></Col>
               <Col span="8"><a href="#/point"><i class="iconfont icon-jifen"></i>账号积分</a></Col>
               <Col span="8"><a href="#/enterprise"><i class="iconfont icon-gongsi"></i>公司信息</a></Col>
             </Row>
@@ -59,12 +57,17 @@
       </Dropdown>
       <span class="border"></span>
     </Col>
+    <Detail ref="detail"/>
   </Row>
 </template>
 
 <script>
 import { mapState, mapActions } from 'vuex'
+import Detail from '@/pages/message/Detail'
 export default {
+  components: {
+    Detail
+  },
   data () {
     return {
       visible: false
@@ -103,6 +106,9 @@ export default {
       ifr.setAttribute('src', url)
       ifr.style.display = 'none'
       document.getElementById('JHW').appendChild(ifr)
+    },
+    detail (id) {
+      this.$refs.detail.open(id)
     }
   }
 }
@@ -115,17 +121,21 @@ export default {
   line-height: 50px;
   color: #fff;
   background: #383d41;
-  img{
-    height: 50px;
-    padding: 10px;
-    border-right: 1px solid #000000;
+  .logo{
+    float:left;
+    width: 120px;
+    border-right: 1px solid #000;
+    img{
+      height: 36px;
+      margin: 4px 0 0 25px;
+    }
   }
   .userInfo{
     text-align: right;
     .header_link{
       height: 50px;
       line-height: 50px;
-      padding: 0 10px;
+      padding: 0 15px;
       display: inline-block;
       color: #fff
     }
@@ -140,10 +150,12 @@ export default {
         padding: 0;
         border-radius: 0;
         color: #5d5d5d;
+        z-index: 1000;
       }
     }
     .j_dropdown_username{
-      margin-left: 10px;background: #2a2a2a;
+      margin-left: 15px;
+      background: #2a2a2a;
       .ivu-icon-arrow-down-b{
         transition: all .3s;
       }
@@ -184,7 +196,7 @@ export default {
             margin: 5px;
             padding: 10px 0 0 0;
             &:hover{
-              background: @background-color;
+              background: @background-gray-color;
             }
           }
         }
@@ -193,7 +205,7 @@ export default {
           bottom: 0;
           width: 100%;
           left: 0;
-          background: @background-color;
+          background: @background-gray-color;
           color: #4f4e4f;
           font-size: 14px;
         }
@@ -216,20 +228,22 @@ export default {
       text-align: left;
       i{
         cursor: pointer;
+        font-size: 22px;
         .badge{
           font-size: 12px;
           background: #ff6700;
           color: #fff;
-          border-radius: 3px;
+          border-radius: 4px;
           padding: 3px 5px;
           margin-left: 5px;
+          vertical-align: top;
         }
       }
-      .ivu-select-dropdown{
-        position: fixed !important;
+      .header_link{
+        padding: 0 10px;
       }
       .ivu-dropdown-menu{
-        width: 250px;
+        width: 280px;
         max-height: 500px;
         .name{
           background: #eaedf1;
@@ -256,6 +270,7 @@ export default {
             line-height: 1.6;
             .title{
               color: #72dced;
+              cursor: pointer;
             }
             p{
               color: #595959;

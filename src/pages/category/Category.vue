@@ -5,19 +5,21 @@
       <Content>
         <JHeader :title="'分类管理'" :lan="true" @on-change="get"/>
         <div class="j_search">
-          <Button type="info" icon="plus" @click="add">添加{{$route.params.id === 'product' ?'产品':'新闻'}}分类</Button>
+          <Button type="info" icon="plus" class="w130" @click="add">添加{{$route.params.id === 'product' ?'产品':'新闻'}}分类</Button>
         </div>
         <Table ref="selection" :columns="columns" :data="list" @on-selection-change="handleSelectChange">
         </Table>
       </Content>
       <div class="j_pagination fixed border">
-        <Checkbox v-model="toggle" @on-change="handleSelectAll(toggle)"/>
-        <Button class="j_buttom" @click="delAll">删除</Button>
-        <Button class="j_buttom" @click="update">显示</Button>
-        <Button class="j_buttom" @click="update">隐藏</Button>
-        <Button class="j_buttom" @click="categoryAll">转换分类</Button>
-        <Button class="j_buttom">展开</Button>
-        <Button class="j_buttom">折叠</Button>
+        <div class="btn">
+          <Checkbox v-model="toggle" @on-change="handleSelectAll(toggle)"/>
+          <Button type="ghost" size="small" @click="delAll">删除</Button>
+          <Button type="ghost" size="small" @click="update($Message)">显示</Button>
+          <Button type="ghost" size="small" @click="update($Message)">隐藏</Button>
+          <Button type="ghost" size="small" @click="categoryAll">转换分类</Button>
+          <Button type="ghost" size="small">展开</Button>
+          <Button type="ghost" size="small">折叠</Button>
+        </div>
       </div>
     </Layout>
     <SeoDetail ref="seoDetail"/>
@@ -44,7 +46,7 @@ export default {
         { title: '分类名称', className: 'j_table_title', minWidth: 200, render: this.nameFilter },
         { title: '是否显示', width: 105, render: this.displayFilter },
         { title: '移序', className: 'j_table_sort', width: 130, render: this.sortFilter },
-        { title: '操作', align: 'left', width: 160, render: this.renderOperate }
+        { title: '操作', className: 'j_table_operate', align: 'left', width: 160, render: this.renderOperate }
       ],
       list: [],
       ids: '',
@@ -85,53 +87,39 @@ export default {
       })
     },
     init (data) {
+      var ctx = this
       // 1级
       data.forEach(item => {
         if (!item.belongId) {
           item._checked = false
-          item.sonCate = []
           item.grade = '1'
           this.list.push(item)
         }
       })
       // 2级
-      this.list.forEach(item => {
-        data.forEach(row => {
-          if (row.belongId === item.categoryId) {
+      data.forEach(row => {
+        this.list.forEach((item, index) => {
+          if (item.grade === '1' && (row.belongId === item.categoryId)) {
             row._checked = false
-            row.sonCate = []
             row.grade = '2'
-            item.sonCate.push(row)
+            ctx.list.splice(index + 1, 0, row)
           }
         })
       })
       // 3级
-      this.list.forEach(item => {
-        item.sonCate.forEach(son => {
-          data.forEach(row => {
-            if (row.belongId === son.categoryId) {
-              row._checked = false
-              row.sonCate = []
-              row.grade = '3'
-              son.sonCate.push(row)
-            }
-          })
-        })
-      })
-      // ok
-      var ctx = this
-      this.list.forEach((item, index) => {
-        item.sonCate && item.sonCate.forEach(son => {
-          ctx.list.splice(index + 1, 0, son)
+      data.forEach(row => {
+        this.list.forEach((item, index) => {
+          if (item.grade === '2' && (row.belongId === item.categoryId)) {
+            row._checked = false
+            row.grade = '3'
+            ctx.list.splice(index + 1, 0, row)
+          }
         })
       })
     },
     // 功能
     add () {
       this.$router.push({ path: '/news/add' })
-    },
-    update () {
-      this.$Message.info('update')
     },
     sortable (a, b) {
       let objA = this.list[a]
@@ -157,7 +145,7 @@ export default {
         if (res.success) {
           console.log(sort)
         } else {
-          this.$Message.success(res.msg)
+          this.$Message.error(res.msg)
         }
       })
     },
@@ -203,11 +191,15 @@ export default {
     },
     // 过滤
     indexFilter (h, params) {
+      let isroot = false
+      if (this.list.length > (params.index + 1)) {
+        isroot = params.row.grade === '1' && this.list[params.index + 1].grade !== '1'
+      }
       return h('div', [
         h('i', {
           class: {
             iconfont: true,
-            'icon-xialajiantou': !params.row.belongId && params.row.sonCate.length > 0
+            'icon-xialajiantou': isroot
           },
           style: {
             color: '#000',
@@ -218,21 +210,30 @@ export default {
     },
     nameFilter (h, params) {
       var ctx = this
-      return h('div', [
+      let isroot = false
+      if (this.list.length > (params.index + 1)) {
+        isroot = params.row.grade === '2' && this.list[params.index + 1].grade === '3'
+      }
+      return h('div', {
+        class: {
+          j_category_name: true
+        }
+      }, [
         h('span', {
           class: {
             iconfont: true,
-            'icon-xialajiantou': params.row.sonCate.length > 0
+            'icon-xialajiantou': isroot
           },
           style: {
-            padding: '0 10px',
-            display: params.row.grade !== '1' ? 'block' : 'none'
+            padding: '7px 10px',
+            color: '#000',
+            display: params.row.grade !== '1' ? 'inline-block' : 'none'
           }
         }),
         h('span', {
           style: {
             padding: '0 16px',
-            display: params.row.grade === '3' ? 'block' : 'none'
+            display: params.row.grade === '3' ? 'inline-block' : 'none'
           }
         }),
         h('Input', {
@@ -323,6 +324,7 @@ export default {
         h('span', params.row.isdisplay === '1' ? '是' : '否'),
         h('i', {
           class: {
+            'none': true,
             'iconfont': true,
             'icon-bianji2': true
           },
@@ -382,6 +384,7 @@ export default {
         h('span', params.row.sort),
         h('i', {
           class: {
+            'none': true,
             'iconfont': true,
             'icon-bianji2': true
           },
@@ -430,6 +433,7 @@ export default {
         }, [
           h('i', {
             class: {
+              'none': true,
               'iconfont': true,
               'icon-icon--': true
             },
@@ -443,12 +447,14 @@ export default {
           }),
           h('i', {
             class: {
+              'none': true,
               'iconfont': true,
               'icon-tuozhuai': true
             }
           }),
           h('i', {
             class: {
+              'none': true,
               'iconfont': true,
               'icon-icon--1': true
             },
@@ -474,11 +480,7 @@ export default {
           }
         }, '修改'),
         h('span', {
-          style: {
-            paddingLeft: '10px',
-            paddingRight: '10px',
-            color: '#e6e1db'
-          }
+          class: { delimiter: true }
         }, '|'),
         h('a', {
           on: {
@@ -488,11 +490,7 @@ export default {
           }
         }, 'SEO'),
         h('span', {
-          style: {
-            paddingLeft: '10px',
-            paddingRight: '10px',
-            color: '#e6e1db'
-          }
+          class: { delimiter: true }
         }, '|'),
         h('a', [
           h('Poptip', {
@@ -534,6 +532,12 @@ export default {
   font-size: 8px
 }
 .j_category .ivu-table td{
-   height: 50px
+   height: 55px
+ }
+ .j_category_name{
+   display: flex;
+   i{
+     line-height: 32px;
+   }
  }
 </style>

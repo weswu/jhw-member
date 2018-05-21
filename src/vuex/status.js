@@ -1,14 +1,21 @@
 // 存放各种常量
 const state = {
   lanList: [
-    { value: '1', label: '中文' },
-    { value: '2', label: '英文' }
+    { value: '1', text: '中文' },
+    { value: '2', text: '英文' }
   ],
   menuAccount: {
     title: '账号管理',
     menu: [
       { text: '安全设置', value: 'account' },
       { text: '员工账号管理', value: 'employee_account' }
+    ]
+  },
+  menuAnalysis: {
+    title: '员工推广分析',
+    menu: [
+      { text: 'PC端', value: 'pc' },
+      { text: '手机端', value: 'mobile' }
     ]
   },
   menuCost: {
@@ -23,7 +30,7 @@ const state = {
     menu: [
       { text: '积分列表', value: 'point' },
       { text: '积分兑换', value: 'point_goods' },
-      { text: '积分来源', value: 'point_origin' }
+      { text: '积分规则', value: 'point_origin' }
     ]
   },
   menuMessage: {
@@ -40,11 +47,11 @@ const state = {
     menu: [
       { text: '站点数据管理', value: 'static' },
       { text: 'SEO管理', value: 'seo' },
-      { text: '域名备案', value: '' },
-      { text: 'SiteMap生成', value: '' },
-      { text: '批量提交', value: '' },
-      { text: '第三方统计', value: '' },
-      { text: '便捷登录配置', value: '' }
+      { text: '域名备案', value: 'beian' },
+      { text: 'Sitemap生成', value: 'sitemap' },
+      { text: '批量提交', value: 'seo_batch' },
+      { text: '第三方统计', value: 'third_party_statistics' },
+      { text: '便捷登录配置', value: 'convenient' }
     ]
   },
   menuEnter: {
@@ -52,9 +59,8 @@ const state = {
     menu: [
       { text: '基本资料', value: 'enterprise' },
       { text: '公司简介', value: 'company' },
-      { text: '诚信管理', value: 'sincerity' },
-      { text: '招聘管理', value: '' },
-      { text: '友情链接', value: '' }
+      { text: '招聘管理', value: 'recruit' },
+      { text: '友情链接', value: 'link' }
     ]
   },
   menu_product: {
@@ -62,8 +68,26 @@ const state = {
     menu: [
       { text: '产品列表', value: 'product' },
       { text: '分类管理', value: 'category/product' },
-      { text: '导入', value: 'import' },
-      { text: '下载', value: 'download' }
+      { text: '导入', value: 'product_import' },
+      { text: '下载', value: 'product_download' }
+    ]
+  },
+  menu_product_detail: {
+    title: '返回',
+    menu: [
+      { text: '产品基本信息', value: '0' },
+      { text: '电脑端产品内容', value: '1' },
+      { text: '手机端产品内容', value: '2' },
+      { text: '产品描述', value: '3' },
+      { text: '产品卖点', value: '4' },
+      { text: '商城属性', value: '5' },
+      { text: '产品标签', value: '6' },
+      { text: 'SEO设置', value: '7' }
+    ]
+  },
+  menuEvaluate: {
+    menu: [
+      { text: '商品评价', value: '0' }
     ]
   },
   menu_news: {
@@ -71,6 +95,14 @@ const state = {
     menu: [
       { text: '新闻列表', value: 'news' },
       { text: '分类管理', value: 'category/news' }
+    ]
+  },
+  menu_news_detail: {
+    menu: [
+      { text: '新闻基本信息', value: '0' },
+      { text: '新闻内容', value: '1' },
+      { text: '新闻标签', value: '2' },
+      { text: 'SEO设置', value: '3' }
     ]
   },
   menuMember: {
@@ -84,9 +116,7 @@ const state = {
   }
 }
 
-const getters = {
-  lanList: state => state.lanList
-}
+const getters = {}
 
 const mutations = {}
 

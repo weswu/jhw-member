@@ -1,9 +1,10 @@
 <template>
-  <Layout class="j_layout ivu-layout-has-sider">
-    <MenuBar :data="'menuEnter'" :active="'sincerity'"/>
+  <Layout class="j_layout ivu-layout-has-sider j_static">
+    <MenuBar :data="'menuStatic'" :active="'seo_batch'"/>
     <Layout class="j_layout_content">
+      <JHeader :title="'批量提交'" :tip="aaaaa"/>
       <Content>
-        <JHeader :title="'诚信管理'"/>
+        内容
       </Content>
     </Layout>
   </Layout>

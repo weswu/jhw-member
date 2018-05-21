@@ -31,7 +31,7 @@ export default {
         { title: '商品名称', key: 'name' },
         { title: '剩余库存', key: 'store' },
         { title: '所需积分', key: 'point' },
-        { title: '操作', key: 'type', align: 'right', width: 150, render: this.renderOperate }
+        { title: '操作', className: 'j_table_operate', align: 'right', width: 150, render: this.renderOperate }
       ],
       list: [],
       searchData: {

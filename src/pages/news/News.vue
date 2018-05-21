@@ -7,12 +7,12 @@
         <div class="j_search">
           <Row :gutter="24">
             <Col span="6">
-              <Button type="info" icon="plus" @click="update">添加新闻</Button>
+              <Button type="info" icon="plus" class="w130" @click="url('/news/add')">添加新闻</Button>
             </Col>
             <Col span="18" style="text-align:right">
               <Input v-model="model.title" placeholder="请输入新闻标题" style="width:200px"></Input>
-              <Button class="j_buttom" @click="search">搜索</Button>
-              <Button class="j_btn" @click="update" style="margin-right: 0;">高级搜索</Button>
+              <Button class="search" @click="search">搜索</Button>
+              <Button class="grey w130" @click="update($Message)" style="margin-right: 0;">高级搜索</Button>
             </Col>
           </Row>
         </div>
@@ -20,11 +20,11 @@
         <JPagination :fixed="true" :checkbox="true" :total="total" :searchData='searchData' @on-change="pageChange">
           <span slot="btn">
             <Checkbox v-model="toggle" @on-change="handleSelectAll(toggle)"/>
-            <Button class="j_buttom" @click="delAll">删除</Button>
-            <Button class="j_buttom" @click="update">复制</Button>
-            <Button class="j_buttom" @click="update">上架</Button>
-            <Button class="j_buttom" @click="update">下架</Button>
-            <Button class="j_buttom" @click="categoryAll">转移分类</Button>
+            <Button type="ghost" size="small" @click="delAll">删除</Button>
+            <Button type="ghost" size="small" @click="update($Message)">复制</Button>
+            <Button type="ghost" size="small" @click="update($Message)">上架</Button>
+            <Button type="ghost" size="small" @click="update($Message)">下架</Button>
+            <Button type="ghost" size="small" @click="categoryAll">转移分类</Button>
           </span>
         </JPagination>
       </Content>
@@ -61,7 +61,7 @@ export default {
         { title: '是否上架', sortable: true, width: 105, render: this.displayFilter },
         { title: '是否置顶', width: 90, render: this.topnewsFilter },
         { title: '排序', className: 'j_table_sort', sortable: true, minWidth: 80, render: this.sortFilter },
-        { title: '操作', align: 'left', width: 160, render: this.renderOperate }
+        { title: '操作', className: 'j_table_operate', align: 'left', width: 160, render: this.renderOperate }
       ],
       list: [],
       categoryList: [],
@@ -92,6 +92,7 @@ export default {
     }, 2000)
   },
   created () {
+    this.searchData.page = this.$cookie.get('newsPage') || 1
     this.get()
     this.getCate()
   },
@@ -147,7 +148,7 @@ export default {
         if (res.success) {
           console.log(sort)
         } else {
-          this.$Message.success(res.msg)
+          this.$Message.error(res.msg)
         }
       })
     },
@@ -176,9 +177,6 @@ export default {
     },
     handleSelectAll () {
       this.$refs.selection.selectAll(this.toggle)
-    },
-    update () {
-      return this.$Message.info('更新中...')
     },
     delAll () {
       if (!this.ids) {
@@ -213,7 +211,11 @@ export default {
     },
     titleFilter (h, params) {
       var ctx = this
-      return h('div', [
+      return h('div', {
+        class: {
+          title: true
+        }
+      }, [
         h('span', {
           style: {
             color: '#5b5b5b'
@@ -221,6 +223,7 @@ export default {
         }, params.row.title),
         h('i', {
           class: {
+            'none': true,
             'iconfont': true,
             'icon-bianji2': true
           },
@@ -286,6 +289,7 @@ export default {
         }, text),
         h('i', {
           class: {
+            'none': true,
             'iconfont': true,
             'icon-shangxiajiantou': true
           },
@@ -342,6 +346,7 @@ export default {
         h('span', params.row.display === '01' ? '是' : '否'),
         h('i', {
           class: {
+            'none': true,
             'iconfont': true,
             'icon-bianji2': true
           },
@@ -401,6 +406,7 @@ export default {
         h('span', params.row.topnews === '01' ? '是' : '否'),
         h('i', {
           class: {
+            'none': true,
             'iconfont': true,
             'icon-bianji2': true
           },
@@ -460,6 +466,7 @@ export default {
         h('span', params.row.sort),
         h('i', {
           class: {
+            'none': true,
             'iconfont': true,
             'icon-bianji2': true
           },
@@ -508,6 +515,7 @@ export default {
         }, [
           h('i', {
             class: {
+              'none': true,
               'iconfont': true,
               'icon-icon--': true
             },
@@ -521,12 +529,14 @@ export default {
           }),
           h('i', {
             class: {
+              'none': true,
               'iconfont': true,
               'icon-tuozhuai': true
             }
           }),
           h('i', {
             class: {
+              'none': true,
               'iconfont': true,
               'icon-icon--1': true
             },
@@ -547,16 +557,13 @@ export default {
         h('a', {
           on: {
             click: () => {
-              this.$Message.success('更新中..')
+              this.$cookie.set('newsPage', this.searchData.page)
+              this.$router.push({path: '/news/' + params.row.newsId2})
             }
           }
         }, '修改'),
         h('span', {
-          style: {
-            paddingLeft: '10px',
-            paddingRight: '10px',
-            color: '#e6e1db'
-          }
+          class: { delimiter: true }
         }, '|'),
         h('a', {
           on: {
@@ -566,11 +573,7 @@ export default {
           }
         }, 'SEO'),
         h('span', {
-          style: {
-            paddingLeft: '10px',
-            paddingRight: '10px',
-            color: '#e6e1db'
-          }
+          class: { delimiter: true }
         }, '|'),
         h('a', [
           h('Poptip', {

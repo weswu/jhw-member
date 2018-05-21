@@ -3,7 +3,7 @@
       <MenuBar :data="'menuAccount'" :active="'account'"/>
       <Layout class="j_layout_content">
         <JHeader :title="'安全设置'"/>
-        <Content>
+        <Content class="scroll">
           <Row :gutter="24" class="account_user">
             <Col span="6" style="width:130px">
               <div @click="avatar">
@@ -17,7 +17,7 @@
                 账号昵称：<Input v-model="user.nickName" @on-blur="input" placeholder="账号昵称" style="width:130px"></Input><br>
                 会员账号ID：{{user.username}}<br>
                 注册时间： {{user.addTime | time}}<br>
-                <Badge count="正常" class-name="badge-normal" style="margin-right: 2px"></Badge>
+                <Badge :count="user.username === '未登录' ? '未登录' : '正常'" class-name="badge-normal" style="margin-right: 2px"></Badge>
                 <Badge count="VIP" :class="[user.pcSitePayTime ? 'badge-vip' : 'badge-gray']"></Badge>
               </div>
             </Col>
@@ -307,19 +307,22 @@ export default {
             },
             on: {
               input: (val) => {
-                this.user.email = val
+                this.email = val
               }
             }
           })
         },
         onOk: () => {
+          let user = this.user
+          user.email = this.email
           let data = {
-            model: JSON.stringify(this.user),
+            model: JSON.stringify(user),
             _method: 'put'
           }
-          this.$http.put('/rest/api/user/detail/' + this.user.userId, qs.stringify(data)).then((res) => {
+          this.$http.post('/rest/api/user/detail/' + this.user.userId, qs.stringify(data)).then((res) => {
             if (res.success) {
               ctx.$Message.success('修改成功')
+              ctx.user.email = ctx.email
               ctx.$store.commit('setUser', ctx.user)
             } else {
               ctx.$Message.error(res.msg)
@@ -396,6 +399,7 @@ export default {
       font-weight: bold;
       text-align: center;
       vertical-align: middle;
+      color: #000;
     }
     .flex-right{
       text-align: center;
@@ -412,6 +416,9 @@ export default {
       .error{
         color: #f29c39;
       }
+    }
+    a{
+      color: #2467c5;
     }
   }
   a:hover{

@@ -18,9 +18,8 @@ export default {
       type: String,
       default: ''
     },
-    editorWidth: {
-      type: String
-    }
+    eWidth: {},
+    eHeight: {}
   },
   data () {
     return {
@@ -58,12 +57,15 @@ export default {
   },
   mounted () {
     const ctx = this
-    if (this.editorWidth) {
-      this.config.initialFrameWidth = this.editorWidth
+    if (this.eWidth) {
+      this.config.initialFrameWidth = this.eWidth
+    }
+    if (this.eHeight) {
+      this.config.initialFrameHeight = this.eHeight
     }
     this.editor = window.UE.getEditor(this.id, this.config) // 初始化UE
     this.editor.addListener('ready', function () {
-      ctx.editor.setContent(ctx.content) // 确保UE加载完成后，放入内容。
+      ctx.editor.setContent(ctx.content || '') // 确保UE加载完成后，放入内容。
       window.UE.dom.domUtils.on(document.getElementsByClassName('edui-for-insertimage')[0], 'click', function (e) {
         // e为事件对象，this为被点击元素对戏那个
         ctx.imgUpdate = ''
@@ -94,7 +96,7 @@ export default {
   },
   methods: {
     getUEContent () { // 获取内容方法
-      return this.editor.getContent()
+      return this.editor.getContent().replace(/\uD83C[\uDF00-\uDFFF]|\uD83D[\uDC00-\uDE4F]/g, '')
     },
     setUEContent (data) { // 设置内容方法
       this.editor.setContent(data)

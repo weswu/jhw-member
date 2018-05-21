@@ -1,11 +1,11 @@
 <template>
-  <Layout class="j_layout ivu-layout-has-sider">
+  <Layout class="j_layout ivu-layout-has-sider j_point_origin">
     <MenuBar :data="'menuPoint'" :active="'point_origin'"/>
     <Layout class="j_layout_content">
       <JHeader :title="'积分来源'" :count="count"/>
       <Content>
         <div class="j_search">
-          <Button class="j_btn" @click="search(item.value)" v-for="(item, index) in btns" :key="index" :class="{primary: searchData.listType === item.value}">{{item.text}}</Button>
+          <Button class="grey" @click="search(item.value)" v-for="(item, index) in btns" :key="index" :class="{primary: searchData.listType === item.value}">{{item.text}}</Button>
         </div>
         <Table :columns="columns" :data="list"></Table>
       </Content>
@@ -85,4 +85,9 @@ export default {
 </script>
 
 <style lang="less">
+.j_point_origin {
+  .j_layout_content .ivu-layout-content .ivu-table-body{
+    max-height: calc(100vh - 218px);
+  }
+}
 </style>

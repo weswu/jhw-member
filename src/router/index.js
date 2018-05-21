@@ -24,16 +24,27 @@ export default new Router({
     // 站点管理
     { path: '/static', component: require('@/pages/static/Static').default },
     { path: '/seo', component: require('@/pages/static/Seo').default },
+    { path: '/beian', component: require('@/pages/static/Beian').default },
+    { path: '/sitemap', component: require('@/pages/static/Sitemap').default },
+    { path: '/seo_batch', component: require('@/pages/static/SeoBatch').default },
+    { path: '/third_party_statistics', component: require('@/pages/static/ThirdPartyStatistics').default },
+    { path: '/convenient', component: require('@/pages/static/Convenient').default },
     // 企业
     { path: '/enterprise', component: require('@/pages/enterprise/Enterprise').default },
     { path: '/company', component: require('@/pages/enterprise/Company').default },
-    { path: '/sincerity', component: require('@/pages/enterprise/Sincerity').default },
-    // 产品
-    { path: '/product', component: require('@/pages/product/Product').default },
-    // 新闻
-    { path: '/news', component: require('@/pages/news/News').default },
+    { path: '/recruit', component: require('@/pages/enterprise/Recruit').default },
+    { path: '/link', component: require('@/pages/enterprise/Link').default },
     // 分类
     { path: '/category/:id', component: require('@/pages/category/Category').default },
+    // 产品
+    { path: '/product', component: require('@/pages/product/Product').default },
+    { path: '/product/:id', component: require('@/pages/product/Detail').default },
+    { path: '/product_import', component: require('@/pages/product/Import').default },
+    { path: '/product_download', component: require('@/pages/product/DownLoad').default },
+    { path: '/evaluate/:id', component: require('@/pages/product/Evaluate').default },
+    // 新闻
+    { path: '/news', component: require('@/pages/news/News').default },
+    { path: '/news/:id', component: require('@/pages/news/Detail').default },
     // 相册
     { path: '/album', component: require('@/pages/album/Album').default },
     // 会员管理

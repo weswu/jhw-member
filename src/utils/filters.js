@@ -23,6 +23,7 @@ Vue.filter('price', function (v) {
  * 3.合并
 */
 Vue.filter('time', function (date, format) {
+  if (!date) return ''
   date = new Date(date)
   format = format || 'yyyy-MM-dd hh:mm:ss'
   var o = {
@@ -51,6 +52,16 @@ Vue.filter('time', function (date, format) {
 */
 Vue.filter('limitString', function (input, begin, end) {
   return input.substring(begin, input.length - end)
+})
+
+/*
+ * @author: wes
+ * @date: 2017-8-3
+ * @desc: 邮箱
+*/
+Vue.filter('limitEmail', function (str) {
+  var reg = /(.{1}).+(.{0}@.+)/g
+  return str.replace(reg, '$1****$2')
 })
 /*
  * @author: wes

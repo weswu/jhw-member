@@ -1,36 +1,34 @@
 <template>
   <Layout class="j_layout ivu-layout-has-sider j_message">
     <MenuBar :data="'menuMessage'" :active="'message'+(pageName?('/'+pageName):'')"/>
-    <Content :style="{padding: '20px'}">
-      <div class="j_header">
-        <span class="title" v-if="!pageName">全部消息</span>
-        <span class="title" v-if="pageName === '00'">未读消息</span>
-        <span class="title" v-if="pageName === '01'">已读消息</span>
-      </div>
-      <div class="j_search">
-        <Button class="j_btn" @click="search(item.value)" v-for="(item, index) in btns" :key="index" :class="{primary: searchData.type === item.value}">{{item.text}}</Button>
-      </div>
-      <div class="j_search" v-if="searchData.type === '05'" style="margint-top: 12px;">
-        <Row :gutter="24">
-          <Col span="16">
-            <Input v-model="searchData.title" style="width:140px;margin-right:5px;" placeholder="请输入标题内容"></Input>
-            <button type="button" name="button" class="j_buttom" @click="search">搜索</button>
-          </Col>
-          <Col span="8" style="text-align:right">
-            <Button class="j_buttom_info" @click="blacklist" style="width:94px;">黑名单</Button>
-          </Col>
-        </Row>
-      </div>
-      <Table :columns="columns" :data="list" @on-selection-change="handleSelectChange"></Table>
-      <JPagination :checkbox="true" :total="total" :searchData='searchData' @on-change="pageChange" :left="'10'" :right="'14'">
-        <span slot="btn">
-          <Checkbox v-model="toggle" @on-change="handleSelectAll(toggle)"/>
-          <Button class="j_buttom" @click="delAll">删除</Button>
-          <Button class="j_buttom" @click="readState">标记已读</Button>
-          <Button class="j_buttom" @click="readStateAll" style="color:#333">全部已读</Button>
-        </span>
-      </JPagination>
-    </Content>
+    <Layout class="j_layout_content">
+      <Content>
+        <JHeader :title="pageName === '00' ? '未读消息' : (pageName === '01' ? '已读消息' : '全部消息')"/>
+        <div class="j_search">
+          <Button class="grey" @click="search(item.value)" v-for="(item, index) in btns" :key="index" :class="{primary: searchData.type === item.value}">{{item.text}}</Button>
+        </div>
+        <div class="j_search" v-if="searchData.type === '05'" style="margint-top: 12px;">
+          <Row :gutter="24">
+            <Col span="16">
+              <Input v-model="searchData.title" style="width:178px;margin-right:5px;" placeholder="请输入标题内容"></Input>
+              <Button class="search" @click="search">搜索</Button>
+            </Col>
+            <Col span="8" style="text-align:right">
+              <Button class="info" @click="blacklist" style="width:94px;margin-right:0px;">黑名单</Button>
+            </Col>
+          </Row>
+        </div>
+        <Table :columns="columns" :data="list" @on-selection-change="handleSelectChange"></Table>
+        <JPagination :checkbox="true" :total="total" :searchData='searchData' @on-change="pageChange" :left="'10'" :right="'14'">
+          <span slot="btn">
+            <Checkbox v-model="toggle" @on-change="handleSelectAll(toggle)"/>
+            <Button type="ghost" size="small" @click="delAll">删除</Button>
+            <Button type="ghost" size="small" @click="readState">标记已读</Button>
+            <Button type="ghost" size="small" @click="readStateAll" style="color:#333">全部已读</Button>
+          </span>
+        </JPagination>
+      </Content>
+    </Layout>
     <Detail ref="detail"/>
     <Add ref="add"/>
     <BlackList ref="blacklist"/>
@@ -40,6 +38,7 @@
 <script>
 import qs from 'qs'
 import MenuBar from '@/components/common/menu_bar'
+import JHeader from '@/components/group/j-header'
 import JPagination from '@/components/group/j-pagination'
 import Detail from '@/pages/message/Detail'
 import Add from '@/pages/message/Add'
@@ -47,6 +46,7 @@ import BlackList from '@/pages/message/BlackList'
 export default {
   components: {
     MenuBar,
+    JHeader,
     JPagination,
     Detail,
     Add,
@@ -124,10 +124,11 @@ export default {
         { title: '类型', key: 'type', width: 150, render: this.typeFilter }
       ]
       if (this.searchData.type === '05') {
+        this.columns.splice(3, 0, { title: '来源（网站编号）', key: '', width: 100 })
         let columns2 = [
           { title: '发送人', key: 'fromName' },
           { title: '来源ip', key: 'ip' },
-          { title: '操作', width: 155, render: this.renderOperate }
+          { title: '操作', className: 'j_table_operate', width: 155, render: this.renderOperate }
         ]
         columns2.forEach(item => {
           this.columns.push(item)
@@ -198,20 +199,19 @@ export default {
       return h('span', params.index + (this.searchData.page - 1) * this.searchData.pageSize + 1)
     },
     titleFilter (h, params) {
-      // params.row.recvState
+      // 00：未读  其它已读
       return h('div', [
         h('span', {
-          'class': {
-            'state-unread': true,
-            foo: params.row.recvState === '00'
+          class: {
+            'state-unread': true
           },
-          domProps: {
-            innerHTML: params.row.recvState === '00' ? '●' : ''
+          style: {
+            color: params.row.recvState === '00' ? '#418bca' : ''
           }
-        }),
+        }, '●'),
         h('a', {
-          'style': {
-            color: params.row.recvState === '01' ? '#999' : ''
+          style: {
+            color: params.row.recvState === '00' ? '#5b5b5b' : '#a0a0a0'
           },
           domProps: {
             innerHTML: params.row.title
@@ -220,8 +220,7 @@ export default {
       ])
     },
     dataFilter (h, params) {
-      let format = this.dataFormat(params.row.addTime)
-      return h('div', format)
+      return h('div', this.dataFormat(params.row.addTime))
     },
     typeFilter (h, params) {
       let text = ''
@@ -257,11 +256,7 @@ export default {
           }
         }, '查看'),
         h('span', {
-          style: {
-            paddingLeft: '10px',
-            paddingRight: '10px',
-            color: '#e6e1db'
-          }
+          class: { delimiter: true }
         }, '|'),
         h('a', {
           on: {
@@ -275,11 +270,7 @@ export default {
           }
         }, '回复'),
         h('span', {
-          style: {
-            paddingLeft: '10px',
-            paddingRight: '10px',
-            color: '#e6e1db'
-          }
+          class: { delimiter: true }
         }, '|'),
         h('a', [
           h('Poptip', {
@@ -322,10 +313,8 @@ export default {
   .state-unread{
     width: 20px;
     display: inline-block;
-    &.foo{
-      font-size: 16px;
-      color: #428bca;
-    }
+    font-size: 16px;
+    color: #a0a0a0;
   }
   .ivu-table-row td:nth-child(2) .ivu-table-cell{
     padding-left: 0;

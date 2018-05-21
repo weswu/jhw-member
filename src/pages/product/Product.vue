@@ -7,13 +7,13 @@
         <div class="j_search">
           <Row :gutter="24">
             <Col span="6">
-              <Button type="info" icon="plus" @click="update">添加产品</Button>
+              <Button type="info" icon="plus" class="w130" @click="url('/product/add')">添加产品</Button>
             </Col>
             <Col span="18" style="text-align:right">
-              <a href="#" class="myShow">我的显示</a>
-              <Input v-model="model.title" placeholder="请输入新闻标题" style="width:200px"></Input>
-              <Button class="j_buttom" @click="search">搜索</Button>
-              <Button class="j_btn" @click="update" style="margin-right: 0;">高级搜索</Button>
+              <span class="a_underline" @click="myShow">我的显示</span>
+              <Input v-model="model.title" placeholder="请输入产品名称" style="width:200px"></Input>
+              <Button class="search" @click="search">搜索</Button>
+              <Button class="grey w130" @click="update($Message)" style="margin-right: 0;">高级搜索</Button>
             </Col>
           </Row>
         </div>
@@ -22,24 +22,38 @@
       <JPagination :fixed="true" :checkbox="true" :total="total" :searchData='searchData' @on-change="pageChange">
         <span slot="btn">
           <Checkbox v-model="toggle" @on-change="handleSelectAll(toggle)"/>
-          <Button class="j_buttom" @click="delAll">删除</Button>
-          <Button class="j_buttom" @click="update">复制</Button>
-          <Button class="j_buttom" @click="update">上架</Button>
-          <Button class="j_buttom" @click="update">下架</Button>
-          <Button class="j_buttom" @click="categoryAll">转移分类</Button>
+          <Button type="ghost" size="small" @click="delAll">删除</Button>
+          <Button type="ghost" size="small" @click="update($Message)">复制</Button>
+          <Button type="ghost" size="small" @click="update($Message)">上架</Button>
+          <Button type="ghost" size="small" @click="update($Message)">下架</Button>
+          <Button type="ghost" size="small" @click="categoryAll">转移分类</Button>
         </span>
       </JPagination>
     </Layout>
     <SeoDetail ref="seoDetail"/>
     <TransferCategory ref="transferCategory" :data="categoryList" :ids="ids" :type="'product'" @on-change="get"/>
+    <JDialog ref="dialog" :title="'我的显示'" :tip="'温馨提醒：勾选不要超过8个，以免列表显示不下。'" @on-ok="save">
+      <div slot="content">
+        <CheckboxGroup v-model="checkboxMyShow" class="j_checkout">
+          <Checkbox label="序号">序号</Checkbox><Checkbox label="产品图片">产品图片</Checkbox>
+          <Checkbox label="产品名称">产品名称</Checkbox><Checkbox label="产品型号">产品型号</Checkbox>
+          <Checkbox label="产品价格">产品价格</Checkbox><Checkbox label="产品分类">产品分类</Checkbox>
+          <Checkbox label="添加时间">添加时间</Checkbox><Checkbox label="是否上架">是否上架</Checkbox>
+          <Checkbox label="排序">排序</Checkbox><Checkbox label="二维码">二维码</Checkbox>
+        </CheckboxGroup>
+      </div>
+    </JDialog>
+
   </Layout>
 </template>
 
 <script>
 import qs from 'qs'
+import { mapState } from 'vuex'
 import MenuBar from '@/components/common/menu_bar'
 import JHeader from '@/components/group/j-header'
 import JPagination from '@/components/group/j-pagination'
+import JDialog from '@/components/group/j-dialog'
 import Sortable from 'sortablejs'
 import SeoDetail from '@/pages/static/SeoDetail'
 import TransferCategory from '@/components/group/transfer-category'
@@ -48,25 +62,15 @@ export default {
     MenuBar,
     JHeader,
     JPagination,
+    JDialog,
     SeoDetail,
     TransferCategory
   },
   data () {
     return {
-      columns: [
-        { type: 'selection', className: 'j_table_checkbox', width: 44 },
-        { type: 'index2', className: 'j_table_checkbox', title: '序号', align: 'center', width: 60, render: this.indexFilter },
-        { title: '产品图片', key: 'pic', render: this.imgFilter },
-        { title: '产品名称', className: 'j_table_title', sortable: true, width: 120, render: this.nameFilter },
-        { title: '产品型号', className: 'j_table_title', sortable: true, width: 120, render: this.prodtypeFilter },
-        { title: '产品分类', sortable: true, width: 105, ellipsis: true, render: this.categoryFilter },
-        { title: '添加时间', sortable: true, width: 105, render: this.dataFilter },
-        { title: '是否上架', sortable: true, width: 105, render: this.isdisplayFilter },
-        { title: '排序', className: 'j_table_sort', sortable: true, minWidth: 80, render: this.sortFilter },
-        { title: '操作', align: 'left', width: 160, render: this.renderOperate }
-      ],
+      checkboxMyShow: ['序号', '产品图片', '产品名称', '产品型号', '产品分类', '添加时间', '是否上架', '排序'],
+      columns: [],
       list: [],
-      categoryList: [],
       searchData: {
         page: 1,
         pageSize: 10
@@ -76,6 +80,11 @@ export default {
       toggle: false,
       ids: ''
     }
+  },
+  computed: {
+    ...mapState({
+      categoryList: state => state.productCategory
+    })
   },
   mounted () {
     var ctx = this
@@ -94,8 +103,10 @@ export default {
     }, 2000)
   },
   created () {
+    this.searchData.page = this.$cookie.get('productPage') || 1
     this.get()
-    this.getCate()
+    this.$store.dispatch('getProductCategory')
+    this.save()
   },
   methods: {
     get () {
@@ -110,20 +121,45 @@ export default {
         }
       })
     },
-    getCate () {
-      this.$http.get('/rest/api/category/product?pageSize=1000').then(res => {
-        if (res.success) {
-          this.categoryList = res.attributes.data
-        }
-      })
-    },
     // 功能
     lanRefresh () {
       this.searchData.page = 1
       this.get()
     },
-    add () {
-      this.$router.push({ path: '/product/add' })
+    myShow () {
+      this.$refs.dialog.open()
+    },
+    save () {
+      this.columns = [
+        { type: 'selection', className: 'j_table_checkbox', width: 44 }
+      ]
+      this.checkboxMyShow.forEach(val => {
+        if (val === '序号') {
+          this.columns.push({ type: 'index2', className: 'j_table_index', title: '序号', align: 'center', width: 60, render: this.indexFilter })
+        }
+        if (val === '产品图片') {
+          this.columns.push({ title: '产品图片', className: 'j_table_img', key: 'pic', width: 105, render: this.imgFilter })
+        }
+        if (val === '产品名称') {
+          this.columns.push({ title: '产品名称', className: 'j_table_title', sortable: true, width: 150, render: this.nameFilter })
+        }
+        if (val === '产品型号') {
+          this.columns.push({ title: '产品型号', className: 'j_table_title', sortable: true, width: 120, render: this.prodtypeFilter })
+        }
+        if (val === '产品分类') {
+          this.columns.push({ title: '产品分类', className: 'j_table_category', sortable: true, width: 130, ellipsis: true, render: this.categoryFilter })
+        }
+        if (val === '添加时间') {
+          this.columns.push({ title: '添加时间', sortable: true, width: 105, render: this.dataFilter })
+        }
+        if (val === '是否上架') {
+          this.columns.push({ title: '是否上架', sortable: true, width: 105, render: this.isdisplayFilter })
+        }
+        if (val === '排序') {
+          this.columns.push({ title: '排序', className: 'j_table_sort', sortable: true, minWidth: 80, render: this.sortFilter })
+        }
+      })
+      this.columns.push({ title: '操作', className: 'j_table_operate', align: 'left', width: 160, render: this.renderOperate })
     },
     sortable (a, b) {
       let objA = this.list[a]
@@ -149,7 +185,7 @@ export default {
         if (res.success) {
           console.log(sort)
         } else {
-          this.$Message.success(res.msg)
+          this.$Message.error(res.msg)
         }
       })
     },
@@ -178,9 +214,6 @@ export default {
     },
     handleSelectAll () {
       this.$refs.selection.selectAll(this.toggle)
-    },
-    update () {
-      return this.$Message.info('更新中...')
     },
     delAll () {
       if (!this.ids) {
@@ -211,22 +244,98 @@ export default {
     },
     // 过滤
     indexFilter (h, params) {
-      return h('span', params.index + (this.searchData.page - 1) * this.searchData.pageSize + 1)
+      let index = 0
+      let data = []
+      if (params.row.isBest === '01') {
+        index += 1
+      }
+      if (params.row.isNew === '01') {
+        index += 1
+      }
+      if (params.row.isHot === '01') {
+        index += 1
+      }
+      if (index > 1) {
+        if (params.row.isBest === '01') {
+          data.push(h('span', {
+            style: {
+              color: '#ff7e3e'
+            }
+          }, '精'))
+        }
+        if (params.row.isNew === '01') {
+          data.push(h('span', {
+            style: {
+              color: '#417505'
+            }
+          }, '新'))
+        }
+        if (params.row.isHot === '01') {
+          data.push(h('span', {
+            style: {
+              color: '#d0021b'
+            }
+          }, '热'))
+        }
+      } else {
+        if (params.row.isBest === '01') {
+          data.push(h('span', {
+            style: {
+              color: '#ff7e3e'
+            },
+            domProps: {
+              innerHTML: '精<br/>品'
+            }
+          }))
+        }
+        if (params.row.isNew === '01') {
+          data.push(h('span', {
+            style: {
+              color: '#417505'
+            },
+            domProps: {
+              innerHTML: '新<br/>品'
+            }
+          }))
+        }
+        if (params.row.isHot === '01') {
+          data.push(h('span', {
+            style: {
+              color: '#d0021b'
+            },
+            domProps: {
+              innerHTML: '热<br/>销'
+            }
+          }))
+        }
+      }
+      return h('div', [
+        h('div', {
+          class: {
+            proType: true
+          }
+        }, [
+          h('div', data),
+          h('i', {
+            class: {
+              'none': true,
+              'iconfont': true,
+              'icon-bianji2': true
+            },
+            on: {
+              click: () => {
+                this.$Message.info('info')
+              }
+            }
+          })
+        ]),
+        h('span', params.index + (this.searchData.page - 1) * this.searchData.pageSize + 1)
+      ])
     },
     imgFilter (h, params) {
       return h('div', {
-        style: {
-          width: '68px',
-          height: '68px',
-          lineHeight: '68px',
-          textAlign: 'center',
-          background: '#f5f6fa',
-          border: '1px solid #d5d5d5'
-        },
-        on: {
-          click: () => {
-            this.$Message.info('ok')
-          }
+        class: {
+          'product-img': true
         }
       }, [
         h('i', {
@@ -242,9 +351,7 @@ export default {
         }),
         h('img', {
           style: {
-            maxHeight: '100%',
-            margin: '0 auto',
-            display: params.row.picPath ? 'block' : 'none'
+            display: params.row.picPath ? 'inline-block' : 'none'
           },
           attrs: {
             src: 'http://img.jihui88.com/' + params.row.picPath
@@ -254,14 +361,96 @@ export default {
     },
     nameFilter (h, params) {
       var ctx = this
-      return h('div', [
-        h('span', {
+      let data = [
+        h('li', {
           style: {
-            color: '#5b5b5b'
+            background: '#e9e9e9'
           }
-        }, params.row.name),
+        }, '请选择')
+      ]
+      data.push(h('li', [
+        h('Poptip', {
+          props: {
+            placement: 'right',
+            trigger: 'hover'
+          }
+        }, [
+          h('span', '网站编号： 203'),
+          h('img', {
+            slot: 'content',
+            attrs: {
+              src: 'http://wcd.jihui88.com/rest/comm/qrbar/create?w=210&text=http://pc.jihui88.com/rest/site/203/pd?itemId=' + params.row.productId2
+            }
+          })
+        ])
+      ]))
+      data.push(h('li', [
+        h('Poptip', {
+          props: {
+            placement: 'right',
+            trigger: 'hover'
+          }
+        }, [
+          h('span', '网站编号： 203'),
+          h('img', {
+            slot: 'content',
+            attrs: {
+              src: 'http://wcd.jihui88.com/rest/comm/qrbar/create?w=210&text=http://pc.jihui88.com/rest/site/203/pd?itemId=' + params.row.productId2
+            }
+          })
+        ])
+      ]))
+      return h('div', {
+        class: {
+          title: true
+        }
+      }, [
+        h('div', [
+          h('span', {
+            style: {
+              color: '#5b5b5b',
+              height: '40px',
+              display: 'block'
+            }
+          }, params.row.name || '产品名称'),
+          h('p', [
+            h('Poptip', {
+              props: {
+                placement: 'right'
+              },
+              class: {
+                'j_poptip_ul': true
+              },
+              style: {
+                width: '120px'
+              }
+            }, [
+              h('span', {
+                style: {
+                  color: '#fff',
+                  background: '#ce3b28',
+                  padding: '3px',
+                  cursor: 'pointer'
+                }
+              }, '码'),
+              h('i', {
+                style: {
+                  paddingLeft: '2px'
+                },
+                class: {
+                  'iconfont': true,
+                  'icon-tel': true
+                }
+              }),
+              h('ul', {
+                slot: 'content'
+              }, data)
+            ])
+          ])
+        ]),
         h('i', {
           class: {
+            'none': true,
             'iconfont': true,
             'icon-bianji2': true
           },
@@ -307,7 +496,11 @@ export default {
     },
     prodtypeFilter (h, params) {
       var ctx = this
-      return h('div', [
+      return h('div', {
+        class: {
+          title: true
+        }
+      }, [
         h('span', {
           style: {
             color: '#5b5b5b'
@@ -315,6 +508,7 @@ export default {
         }, params.row.prodtype),
         h('i', {
           class: {
+            'none': true,
             'iconfont': true,
             'icon-bianji2': true
           },
@@ -380,6 +574,7 @@ export default {
         }, text),
         h('i', {
           class: {
+            'none': true,
             'iconfont': true,
             'icon-shangxiajiantou': true
           },
@@ -425,7 +620,6 @@ export default {
         })
       ])
     },
-    // 时间格式化
     dataFilter (h, params) {
       let format = this.dataFormat(params.row.addTime)
       return h('div', format)
@@ -436,6 +630,7 @@ export default {
         h('span', params.row.isdisplay === '1' ? '是' : '否'),
         h('i', {
           class: {
+            'none': true,
             'iconfont': true,
             'icon-bianji2': true
           },
@@ -495,6 +690,7 @@ export default {
         h('span', params.row.topproduct === '01' ? '是' : '否'),
         h('i', {
           class: {
+            'none': true,
             'iconfont': true,
             'icon-bianji2': true
           },
@@ -554,6 +750,7 @@ export default {
         h('span', params.row.sort),
         h('i', {
           class: {
+            'none': true,
             'iconfont': true,
             'icon-bianji2': true
           },
@@ -602,6 +799,7 @@ export default {
         }, [
           h('i', {
             class: {
+              'none': true,
               'iconfont': true,
               'icon-icon--': true
             },
@@ -615,12 +813,14 @@ export default {
           }),
           h('i', {
             class: {
+              'none': true,
               'iconfont': true,
               'icon-tuozhuai': true
             }
           }),
           h('i', {
             class: {
+              'none': true,
               'iconfont': true,
               'icon-icon--1': true
             },
@@ -641,16 +841,13 @@ export default {
         h('a', {
           on: {
             click: () => {
-              this.$Message.success('更新中..')
+              this.$cookie.set('productPage', this.searchData.page)
+              this.$router.push({path: '/product/' + params.row.productId2})
             }
           }
         }, '修改'),
         h('span', {
-          style: {
-            paddingLeft: '10px',
-            paddingRight: '10px',
-            color: '#e6e1db'
-          }
+          class: { delimiter: true }
         }, '|'),
         h('a', {
           on: {
@@ -660,11 +857,7 @@ export default {
           }
         }, 'SEO'),
         h('span', {
-          style: {
-            paddingLeft: '10px',
-            paddingRight: '10px',
-            color: '#e6e1db'
-          }
+          class: { delimiter: true }
         }, '|'),
         h('a', [
           h('Poptip', {
@@ -703,11 +896,69 @@ export default {
 </script>
 
 <style lang="less">
-.myShow{
-    text-decoration: underline;
+.j_product {
+  .j_poptip_ul .ivu-poptip-popper{
+    width: 135px;
+    .ivu-poptip-popper{
+      width: 223px;
+    }
+  }
+  .a_underline{
     margin-right: 20px;
+  }
+  .ivu-table td{
+    height: 98px
+  }
+  .ivu-table-body{
+    .j_table_checkbox{
+      vertical-align: top;
+      .ivu-table-cell{
+        padding-top: 16px;
+      }
+    }
+  }
+  .j_table_index{
+    position: relative;
+    .proType{
+      position: absolute;
+      left: -32px;
+      display: flex;
+      align-items: center;
+      line-height: 1.4;
+      div{
+        display: flex;
+        flex-direction: column;
+      }
+    }
+  }
+  .j_table_img{
+    .product-img{
+      width: 68px;
+      height: 68px;
+      line-height: 66px;
+      text-align: center;
+      background: #f5f6fa;
+      border: 1px solid #d5d5d5;
+      img{
+        margin: 0px auto;
+        display: inline-block;
+        vertical-align: middle;
+        max-height: 68px;
+        max-width: 68px;
+      }
+    }
+  }
+  .j_table_category .ivu-table-cell div{
+    span{
+     width: 80%;
+     display: inline-block;
+     white-space: nowrap;
+     overflow: hidden;
+     text-overflow: ellipsis;
+    }
+    i{
+      vertical-align: top !important;
+    }
+  }
 }
-.j_product .ivu-table td{
-   height: 98px
- }
 </style>

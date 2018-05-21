@@ -2,23 +2,18 @@
   <Layout class="ivu-layout-has-sider j_employee_account">
       <MenuBar :data="'menuAccount'" :active="'employee_account'"/>
       <Layout class="j_layout_content">
-        <Content>
-          <div class="j_header">
-            <Row :gutter="24">
-              <Col span="10">
-                <span class="title">员工账号管理</span>
-              </Col>
-              <Col span="14" style="text-align:right">
-                <Button type="primary" @click="add">新增员工</Button>
-                <Button type="primary" @click="analysis">员工推广分析</Button>
-              </Col>
-            </Row>
+        <JHeader :title="'员工账号管理'">
+          <div slot="btn">
+            <Button type="primary" @click="add">新增员工</Button>
+            <Button type="primary" @click="analysis">员工推广分析</Button>
           </div>
+        </JHeader>
+        <Content>
           <Table highlight-row :columns="columns" :data="list" @on-selection-change="handleSelectChange"></Table>
           <JPagination :checkbox="true" :total="total" :searchData='searchData' @on-change="pageChange">
             <span slot="btn">
               <Checkbox v-model="toggle" @on-change="handleSelectAll(toggle)"/>
-              <Button class="j_buttom" @click="delAll">删除</Button>
+              <Button type="ghost" size="small" @click="delAll">删除</Button>
             </span>
           </JPagination>
         </Content>
@@ -48,12 +43,14 @@
 <script>
 import qs from 'qs'
 import MenuBar from '@/components/common/menu_bar'
+import JHeader from '@/components/group/j-header'
 import JPagination from '@/components/group/j-pagination'
 import Detail from '@/pages/account/Detail'
 import Authority from '@/pages/account/Authority'
 export default {
   components: {
     MenuBar,
+    JHeader,
     JPagination,
     Detail,
     Authority
@@ -68,7 +65,7 @@ export default {
         { title: '职位', key: 'position' },
         { title: '手机号码', key: 'mobile' },
         { title: 'Email', key: 'email' },
-        { title: '操作', key: 'action', align: 'right', width: 180, render: this.renderOperate }
+        { title: '操作', className: 'j_table_operate', align: 'right', width: 202, render: this.renderOperate }
       ],
       list: [],
       searchData: {
@@ -165,11 +162,7 @@ export default {
           }
         }, '权限'),
         h('span', {
-          style: {
-            paddingLeft: '5px',
-            paddingRight: '5px',
-            color: '#e6e1db'
-          }
+          class: { delimiter: true }
         }, '|'),
         h('a', {
           on: {
@@ -179,11 +172,7 @@ export default {
           }
         }, '修改'),
         h('span', {
-          style: {
-            paddingLeft: '5px',
-            paddingRight: '5px',
-            color: '#e6e1db'
-          }
+          class: { delimiter: true }
         }, '|'),
         h('a', [
           h('Poptip', {
@@ -212,11 +201,7 @@ export default {
           }, '删除')
         ]),
         h('span', {
-          style: {
-            paddingLeft: '5px',
-            paddingRight: '5px',
-            color: '#e6e1db'
-          }
+          class: { delimiter: true }
         }, '|'),
         h('a', {
           on: {

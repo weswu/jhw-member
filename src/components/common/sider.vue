@@ -115,7 +115,10 @@ export default {
       this.$router.push({path: '/' + name})
     },
     getCps () {
-      return '/index/f45b86af-7a8d-4240-b01f-f1460282e12b'
+      if (!this.$cookie.get('sid') || this.$cookie.get('sid').length < 1) {
+        return ''
+      }
+      return '/index/' + this.$cookie.get('sid')
     }
   }
 }
@@ -142,20 +145,17 @@ export default {
       }
     }
     .menu-icon{
-      color: rgba(255, 255, 255, 0.7);
+      color: #d8d8d8;
     }
-  }
-  .ivu-menu-dark {
-    background: #3a3f51;
   }
   .ivu-menu-dark.ivu-menu-vertical .ivu-menu-opened {
     background: #2d303c;
   }
   // 选中
   .ivu-menu-dark.ivu-menu-vertical .ivu-menu-item-active:not(.ivu-menu-submenu), .ivu-menu-dark.ivu-menu-vertical .ivu-menu-submenu-title-active:not(.ivu-menu-submenu) {
+    background: #12bedb !important;
     border-right: none;
     color: #fff;
-    background: @info-color !important;
   }
   // 展开
   .ivu-icon-navicon{
