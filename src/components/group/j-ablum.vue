@@ -1,79 +1,76 @@
 <template>
-  <Modal
-    v-model="modal" width="600"
+  <Modal class-name="j_pictrue_upload"
+    v-model="modal" :width="width"
     :title="title"
+    @on-ok="ok"
     cancelText="取消">
-    <Tabs type="card">
-      <TabPane label="相册">
-        <div class="" style="padding:10px">
-          更新中..
+    <Layout class="ivu-layout-has-sider">
+    <Cateogy @on-change="cateChange"/>
+    <Content class="">
+      <div class="j_search">
+        <Row type="flex" justify="space-between">
+          <Col>
+            <Input v-model="searchData.name" style="width:160px;padding-right:5px;" placeholder="搜索图片名称"></Input>
+            <Button class="search" @click="get">搜索</Button>
+          </Col>
+          <Col>
+            <Upload :action="'commonutil/uploadUtil2?username=' + $store.state.user.username + '&replace=00&attId=&id=' + attId"
+              name="Filedata"
+              :max-size="2048"
+              :on-success="handleSuccess">
+              <Button type="info"><i class="iconfont icon-shangchuan" style="padding-right:5px;"></i>本地上传</Button>
+            </Upload>
+          </Col>
+        </Row>
+      </div>
+      <div class="admin-upload-list">
+        <div class="admin-upload-item" v-for="item in list" :key="item.url" :class="{active: item._checked}" @click="select(item)">
+          <img :src="'http://img.jihui88.com/'+item.serverPath | picUrl(5)">
+          <div class="admin-upload-list-cover">
+            {{item.filename}}
+          </div>
         </div>
-      </TabPane>
-      <TabPane label="本地上传">
-        <Upload
-          multiple
-          action="//jsonplaceholder.typicode.com/posts/" style="padding:10px">
-          <Button type="ghost" icon="ios-cloud-upload-outline">Upload files</Button>
-        </Upload>
-      </TabPane>
-    </Tabs>
+        <div v-if="list.length === 0">
+          暂无数据
+        </div>
+      </div>
+      <JPagination :total="total" :searchData='searchData' @on-change="pageChange" :left="'0'" :right="'24'"/>
+    </Content>
+  </Layout>
   </Modal>
 </template>
 
 <script>
+import qs from 'qs'
+import Cateogy from '@/pages/album/AlbumCategory'
+import JPagination from '@/components/group/j-pagination'
 export default {
   props: {
     title: {
       type: String,
       default: '上传图片'
+    },
+    width: {
+      type: String,
+      default: '800'
     }
+  },
+  components: {
+    Cateogy,
+    JPagination
   },
   data () {
     return {
       modal: false,
       list: [],
-      ablumCategory: [
-        {
-          name: '[系统]微信小程序Banner相册',
-          state: '01',
-          type: '11',
-          tag: null,
-          enterpriseId: 'Enterp_0000000000000000000000039',
-          userId: 'User_000000000000000000000000082',
-          albumId: 'Album_00000000000000000000074262',
-          parentId: null,
-          mainPic: 'upload/g/g2/ggggfj/picture/2017/08/24/9ba4b988-0cc6-4db7-b26f-184850f0fe9f.jpg',
-          belongId: 'Enterp_0000000000000000000000039',
-          attachList: null,
-          addTime: 1502171403945,
-          albumId2: '74262',
-          blongType: 'CP',
-          picCount: null,
-          flashList: null,
-          attCount: 0,
-          adesc: null
-        },
-        {
-          name: '产品批量上传',
-          state: '01',
-          type: '05',
-          tag: null,
-          enterpriseId: 'Enterp_0000000000000000000000039',
-          userId: 'User_000000000000000000000000082',
-          albumId: 'Album_00000000000000000000056104',
-          parentId: null,
-          mainPic: 'upload/g/g2/ggggfj/picture/2017/03/15/75f37c3a-4081-4bf8-8c36-1dd83113fe50.jpg',
-          belongId: 'Enterp_0000000000000000000000039',
-          attachList: null,
-          addTime: null,
-          albumId2: '56104',
-          blongType: 'AP',
-          picCount: null,
-          flashList: null,
-          attCount: 33,
-          adesc: null
-        }
-      ]
+      total: 0,
+      searchData: {
+        page: 1,
+        pageSize: 20,
+        name: ''
+      },
+      selectedPic: '',
+      attId: 'all'
     }
   },
   created () {
@@ -81,9 +78,14 @@ export default {
   },
   methods: {
     get () {
-      this.$http.get('/rest/api/album/list?pageSize=1000').then((res) => {
+      this.$http.get('/rest/api/album/attr/list/' + this.attId + '?' + qs.stringify(this.searchData)).then((res) => {
         if (res.success) {
-          this.ablumCategory = res.attributes.data
+          let data = res.attributes.data
+          data.forEach(item => {
+            item._checked = false
+          })
+          this.list = data || []
+          this.total = res.attributes.count
         } else {
           this.$Message.error(res.msg)
         }
@@ -91,10 +93,92 @@ export default {
     },
     open () {
       this.modal = true
+    },
+    // 功能
+    pageChange (page) {
+      this.searchData.page = page
+      this.get()
+    },
+    cateChange (e) {
+      this.attId = e
+      this.get()
+    },
+    handleSuccess (res, file) {
+      let pic = res.split(',')[0]
+      let src = pic.split('http://img.jihui88.com/')[1]
+      this.$emit('on-change', src.replace(/_5/g, ''))
+      this.get()
+      this.modal = false
+    },
+    // 完成
+    select (e) {
+      this.list.forEach(item => {
+        item._checked = false
+      })
+      e._checked = true
+      this.selectedPic = e.serverPath
+    },
+    ok () {
+      this.$emit('on-change', this.selectedPic)
+      this.modal = false
     }
   }
 }
 </script>
 
-<style lang="css">
+<style lang="less">
+.j_pictrue_upload{
+  .j_album_category {
+    height: 508px;
+  }
+  .ivu-layout-content{
+    margin-left: 10px
+  }
+  .admin-upload-list{
+    height: 420px;
+  }
+  .admin-upload-item {
+    display: inline-block;
+    width: 90px;
+    height: 90px;
+    line-height: 90px;
+    text-align: center;
+    border: 1px solid transparent;
+    overflow: hidden;
+    background: #fff;
+    position: relative;
+    border: 1px solid #eee;
+    margin: 5px 7px;
+    cursor: pointer;
+    padding: 1px;
+    &.active {
+      border: 2px solid #ffa000;
+      padding: 0;
+      .admin-upload-list-cover {
+        background: rgba(0, 0, 0, 0.5);
+        left: -1px;
+        bottom: -1px;
+      }
+    }
+    img {
+       max-width: 100%;
+       vertical-align: middle;
+    }
+    .admin-upload-list-cover {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      background: rgba(0, 0, 0, 0.3);
+      color: #fff;
+      height: 30px;
+      line-height: 30px;
+      text-align: left;
+      width: 90px;
+      padding: 0 6px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      cursor: text;
+    }
+  }
+}
 </style>

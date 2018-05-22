@@ -8,7 +8,7 @@
     <div class="j_pagination fixed" v-if="fixed" style="text-align:right" :class="{border_top: borderTop}">
       {{searchData.page}}/{{ Math.ceil(total/searchData.pageSize)}}页，共有{{total}}{{unit}}，每页显示：
       <input v-model="searchData.pageSize" type="number" class="number"/>{{unit}}
-      <Page :total="total" @on-change="pageChange"></Page>
+      <Page :total="total" :page-size="searchData.pageSize" @on-change="pageChange"></Page>
       <div class="page">
         <Input size="small" v-model="page"></Input>
         <Button type="primary" size="small" @click="pageChange(page)">GO</Button>
@@ -23,7 +23,7 @@
         </Col>
         <Col :span="right" style="text-align:right;">
           共有{{total}}条，每页显示：{{searchData.pageSize}}条
-          <Page :total="total" @on-change="pageChange"></Page>
+          <Page :total="total" :page-size="searchData.pageSize" @on-change="pageChange"></Page>
           <div class="page">
             <Input size="small" v-model="page"></Input>
             <Button size="small" @click="pageChange(page)" class="go" style="margin-left: 8px;">GO</Button>

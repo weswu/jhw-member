@@ -24,6 +24,13 @@ module.exports = {
         pathRewrite: {
           '^/user': '/user'
         }
+      },
+      '/commonutil': {
+        target: 'http://www.jihui88.com', // 接口的域名
+        changeOrigin: true, // 如果接口跨域，需要进行这个参数配置
+        pathRewrite: {
+          '^/commonutil': '/commonutil'
+        }
       }
     },
 

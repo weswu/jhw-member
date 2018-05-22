@@ -107,7 +107,7 @@ export default {
   data () {
     return {
       list: [],
-      total: 10,
+      total: 0,
       lan: '1',
       detail: {
         begin: '1',

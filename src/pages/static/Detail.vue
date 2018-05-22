@@ -112,10 +112,8 @@ export default {
       this.modal = false
     },
     submit (name) {
-      debugger
       this.$refs[name].validate((valid) => {
         if (valid) {
-          debugger
           this.sf.fdbk_intro1k = '姓名:' + this.detail.name + '\n手机:' + this.detail.phone +
           '\n邮寄地址:' + this.detail.address.join(' ') + '\n手机:' + this.detail.detail
           this.sf.fdbk_subject64 = this.sf.fdbk_subject64

@@ -409,8 +409,10 @@ export default {
           h('span', {
             style: {
               color: '#5b5b5b',
-              height: '40px',
-              display: 'block'
+              height: '55px',
+              display: 'block',
+              textOverflow: 'ellipsis',
+              overflow: 'hidden'
             }
           }, params.row.name || '产品名称'),
           h('p', [
@@ -939,6 +941,7 @@ export default {
       text-align: center;
       background: #f5f6fa;
       border: 1px solid #d5d5d5;
+      overflow: hidden;
       img{
         margin: 0px auto;
         display: inline-block;

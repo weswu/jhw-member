@@ -24,7 +24,7 @@
             <Checkbox v-model="toggle" @on-change="handleSelectAll(toggle)"/>
             <Button type="ghost" size="small" @click="delAll">删除</Button>
             <Button type="ghost" size="small" @click="readState">标记已读</Button>
-            <Button type="ghost" size="small" @click="readStateAll" style="color:#333">全部已读</Button>
+            <Button type="ghost" size="small" @click="readStateAll">全部已读</Button>
           </span>
         </JPagination>
       </Content>

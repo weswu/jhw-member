@@ -1,13 +1,13 @@
 <template>
-  <div class="j_album_category">
+  <div class="j_album_category j_scroll">
     <div class="title">
       图片目录
     </div>
     <div class="">
       <Input v-model="name" style="width:140px;padding-right:5px;" placeholder="搜索文件夹"></Input>
-      <Button class="search" @click="search">搜索</Button>
+      <Button class="search" @click="search" style="margin-right: 0;">搜索</Button>
     </div>
-    <Tree :data="data" @on-select-change="clickCategory"></Tree>
+    <Tree :data="data"></Tree>
   </div>
 </template>
 
@@ -113,8 +113,6 @@ export default {
         this.init()
       }
     },
-    clickCategory (e) {
-    },
     iconFilter (h, { root, node, data }) {
       return h('span', {
         class: {
@@ -132,6 +130,13 @@ export default {
           },
           on: {
             click: () => {
+              this.data.forEach(item => {
+                item.selected = false
+                item.children.forEach(item2 => {
+                  item.selected = false
+                })
+              })
+              this.$emit('on-change', data.id)
               data.selected = !data.selected
             }
           }
@@ -161,6 +166,7 @@ export default {
   flex: 0 0 227px;
   background: #ebedf1;
   height: calc(100vh - 149px);
+  overflow-y: scroll;
   padding: 10px;
   .title{
     color:#737373;padding: 10px 0;font-size:14px;

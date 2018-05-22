@@ -41,5 +41,9 @@ export default {
 </script>
 
 <style lang="less">
-
+.j_home_static{
+  .static_info {
+    overflow: hidden;
+  }
+}
 </style>

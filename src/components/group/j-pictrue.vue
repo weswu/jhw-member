@@ -18,6 +18,7 @@
     <li class="add" v-if="list">
       <i class="iconfont icon-plus-add"></i>
     </li>
+    <JAblum/>
   </ul>
 </template>
 
@@ -67,9 +68,11 @@ export default {
     cursor: pointer;
     display: table-cell;
     text-align: center;
-    margin-right: 11px;
+    margin-right: 10px;
+    margin-bottom: 10px;
     position: relative;
     background: #f5f6fa;
+    overflow: hidden;
     &:hover{
       .bom{
          opacity: 1

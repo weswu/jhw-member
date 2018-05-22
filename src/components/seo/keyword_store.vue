@@ -3,24 +3,36 @@
     <div class="j_search">
       <Input v-model="name" placeholder="请输入关键词名称" style="width:200px"></Input>
       <Button class="search" @click="add">添加</Button>
-      <Button class="search" @click="allDel">批量删除</Button>
     </div>
-    <ul>
-      <li v-for="(item, index) in list" :key="index">
-        <Checkbox v-model="item._checked">{{item.keywords}}</Checkbox>
-        <i class="iconfont icon-huishouzhan" @click='del(item.keywordsId)'></i>
-      </li>
-    </ul>
+    <JTable :title="'关键词'">
+      <ul slot="content">
+        <li v-for="(item, index) in list" :key="index">
+          <Checkbox v-model="item._checked">{{item.keywords}}</Checkbox>
+          <i class="iconfont icon-huishouzhan" @click='del(item.keywordsId)'></i>
+        </li>
+      </ul>
+    </JTable>
+    <div class="j_pagination fixed">
+      <div class="btn">
+        <Checkbox v-model="toggle" @on-change="handleSelectAll"/>
+        <Button type="ghost" size="small" @click="allDel">批量删除</Button>
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
 import qs from 'qs'
+import JTable from '@/components/group/j-table'
 export default {
+  components: {
+    JTable
+  },
   data () {
     return {
       list: [],
-      name: ''
+      name: '',
+      toggle: false
     }
   },
   created () {
@@ -72,6 +84,13 @@ export default {
         }
       })
     },
+    // 批量
+    handleSelectAll () {
+      var ctx = this
+      this.list.forEach(item => {
+        item._checked = ctx.toggle
+      })
+    },
     allDel () {
       var ctx = this
       let ids = ''
@@ -109,21 +128,26 @@ export default {
 .j_keyword_store {
   ul{
     li{
-      width: 200px;
-      float:left;
-      padding: 4px 10px;
-      margin: 1px;
+      float: left;
+      width: 14.285%;
+      color: #656565;
+      margin-right: 0;
+      padding: 15px 10px;
+      border-right: 1px solid #e9e9e9;
+      border-bottom: 1px solid #e9e9e9;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      overflow: hidden;
+      position: relative;
       .ivu-checkbox-wrapper{
-        width: 150px;
         .ivu-checkbox{
           padding-right: 5px;
         }
       }
-      &:nth-child(odd){
-        background: #f5f5f5;
-      }
       .icon-huishouzhan{
         cursor: pointer;
+        position: absolute;
+        right: 8px;
       }
     }
   }
