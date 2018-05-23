@@ -4,6 +4,14 @@ const state = {
     { value: '1', text: '中文' },
     { value: '2', text: '英文' }
   ],
+  memberAttrList: [
+    { text: '文本', value: 'text' },
+    { text: '数字', value: 'number' },
+    { text: '字母', value: 'alphaint' },
+    { text: '单选项', value: 'select' },
+    { text: '多选项', value: 'checkbox' },
+    { text: '日期', value: 'date' }
+  ],
   menuAccount: {
     title: '账号管理',
     menu: [
@@ -109,9 +117,9 @@ const state = {
     title: '客户管理',
     menu: [
       { text: '会员管理', value: 'member' },
-      { text: '会员等级配置', value: '' },
-      { text: '会员属性配置', value: '' },
-      { text: '网站会员注册', value: '' }
+      { text: '会员等级配置', value: 'member_rank' },
+      { text: '会员属性配置', value: 'member_attr' },
+      { text: '网站会员注册', value: 'member_register' }
     ]
   }
 }

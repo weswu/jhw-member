@@ -1,24 +1,24 @@
 <template>
   <ul class="j_picture">
-    <li v-if="!list">
+    <li class="j_picture_item" v-if="!list" @click="open">
       <i class="iconfont icon-plus-add" v-if="!src"></i>
-      <img :src="'http://img.jihui88.com/'+src" @click="open" v-if="src">
+      <img :src="'http://img.jihui88.com/'+src" v-if="src">
       <div class="bom">上传</div>
     </li>
-    <li v-for="(item, index) in list" :key="index" v-if="list">
+    <li class="j_picture_item" v-for="(item, index) in list" :key="index" v-if="list">
       <i class="iconfont icon-plus-add" v-if="!item.src"></i>
-      <img :src="'http://img.jihui88.com/'+item.src" @click="open" v-if="item.src">
+      <img :src="'http://img.jihui88.com/'+item.src" @click="open($event, index)" v-if="item.src">
       <div class="top" v-if="type === 'product' && index === 0">产品主图</div>
       <div class="bom">
-        <i class="iconfont icon-zuojiantou" @click="prev"></i>
-        <i class="iconfont icon-youjiantou" @click="next"></i>
-        <i class="iconfont icon-x" @click="del"></i>
+        <i class="iconfont icon-zuojiantou" @click="prev(index)"></i>
+        <i class="iconfont icon-youjiantou" @click="next(index)"></i>
+        <i class="iconfont icon-x" @click="del(index)"></i>
       </div>
     </li>
-    <li class="add" v-if="list">
-      <i class="iconfont icon-plus-add"></i>
+    <li class="j_picture_item add" v-if="list">
+      <i class="iconfont icon-plus-add" @click="open"></i>
     </li>
-    <JAblum/>
+    <JAblum ref="ablum" @on-change="picChange"/>
   </ul>
 </template>
 
@@ -38,20 +38,26 @@ export default {
     JAblum
   },
   data () {
-    return {}
+    return {
+      index: ''
+    }
   },
   methods: {
-    open () {
-      this.$emit('on-change')
+    open (e, index) {
+      this.index = index || ''
+      this.$refs.ablum.open()
     },
-    prev () {
-
+    prev (index) {
+      if (index !== 0) this.$emit('on-prev', index)
     },
-    next () {
-
+    next (index) {
+      if (index !== this.list.length) this.$emit('on-next', index)
     },
-    del () {
-
+    del (index) {
+      this.$emit('on-del', index)
+    },
+    picChange (e) {
+      this.$emit('on-change', e, this.index)
     }
   }
 }
@@ -59,7 +65,7 @@ export default {
 
 <style lang="less">
 .j_picture{
-  li{
+  .j_picture_item{
     width: 104px;
     height: 104px;
     line-height: 104px;

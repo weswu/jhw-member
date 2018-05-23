@@ -49,6 +49,11 @@ export default new Router({
     { path: '/album', component: require('@/pages/album/Album').default },
     // 会员管理
     { path: '/member', component: require('@/pages/member/Member').default },
+    { path: '/member/:id', component: require('@/pages/member/Detail').default },
+    { path: '/member_rank', component: require('@/pages/member/Rank').default },
+    { path: '/member_attr', component: require('@/pages/member/Attr').default },
+    { path: '/member_register', component: require('@/pages/member/Register').default },
+    // default
     // default
     { path: '*', redirect: '/' }
   ]

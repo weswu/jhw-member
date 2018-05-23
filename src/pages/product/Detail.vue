@@ -52,7 +52,11 @@
           <br/>
           <img src="" alt="">
           <FormItem label="产品图片：">
-            <JPictrue :list="imgList" :multiple="true" :type="'product'" @on-change="imgChange"/>
+            <JPictrue :list="imgList" :multiple="true" :type="'product'"
+            @on-change="imgChange"
+            @on-prev="prevImg"
+            @on-next="nextImg"
+            @on-del="delImg"/>
           </FormItem>
         </Form>
         <UE :content='detail.proddesc' ref='ue1' :hidden="active !== '1'"></UE>
@@ -168,7 +172,16 @@
       <Footer v-if="this.$route.params.id !== 'add'">
         <Button type="primary" size="small" @click="publish">发布</Button>
         <Button type="ghost" size="small" @click="submit">保存草稿</Button>
-        <Button type="ghost" size="small" @click="view">预览</Button>
+
+        <Poptip placement="bottom" class="j_poptip_ul">
+          <Button type="ghost" size="small">预览</Button>
+          <ul slot="content">
+            <li v-for="(item, index) in staticList" :key="index">
+              <a :href="'http://pc.jihui88.com/pc/demo.html?layoutId='+item.id" target="_blank">{{item.seoTitle}}</a>
+            </li>
+          </ul>
+        </Poptip>
+
       </Footer>
       <Footer v-if="this.$route.params.id === 'add'">
         <Button type="primary" size="small" @click="submit">保存</Button>
@@ -204,7 +217,8 @@ export default {
     ...mapState({
       menuBarList: state => state.status.menu_product_detail,
       categoryList: state => state.productCategory,
-      tagList: state => state.tagList
+      tagList: state => state.tagList,
+      staticList: state => state.staticList
     })
   },
   created () {
@@ -252,20 +266,54 @@ export default {
       })
       e.stopPropagation()
     },
-    imgChange () {
-      console.log('aaa')
+    imgChange (item, index) {
+      debugger
+      if (index) {
+        this.imgList[index] = item.src
+      } else {
+        this.imgList.push({id: item.id, src: item.src})
+      }
+    },
+    prevImg (index) {
+      debugger
+      this.imgListChange(index, index - 1)
+    },
+    nextImg (index) {
+      this.imgListChange(index, index + 1)
+    },
+    imgListChange (a, b) {
+      let objA = this.imgList[a]
+      let objB = this.imgList[b]
+      this.imgList[a] = objB
+      this.imgList[b] = objA
+    },
+    delImg (index) {
+      this.imgList.splice(index, 1)
     },
     cancel () {
       this.$Message.info('You click cancel')
     },
     // 提交
     submit () {
+      this.detail.purchaseNum = this.detail.purchaseNum + ''
+      this.detail.taglist = this.detail.taglist.join(',')
+      // 编辑器
       this.detail.proddesc = this.$refs.ue1.getUEContent()
       this.detail.mobiledesc = this.$refs.ue2.getUEContent()
       this.detail.detail1 = this.$refs.ue3.getUEContent()
       this.detail.detail2 = this.$refs.ue4.getUEContent()
-      this.detail.purchaseNum = this.detail.purchaseNum + ''
-      this.detail.taglist = this.detail.taglist.join(',')
+      // 图片
+      if (this.imgList.length === 0) return this.$Message.info('请上传图片')
+      this.detail.picPath = this.imgList[0].src
+      let imageListStore = []
+      this.imgList.forEach((item, index) => {
+        imageListStore.push({
+          id: item.id,
+          sourceProductImagePath: item.src,
+          type: index === 0 ? 'main_pic' : 'pertain_pic'
+        })
+      })
+      this.detail.productImageListStore = JSON.stringify(imageListStore)
       let data = {
         model: JSON.stringify(this.detail),
         _method: 'put'
@@ -293,9 +341,6 @@ export default {
           }
         }
       })
-    },
-    view () {
-      window.location.href = 'http://www.jihui88.com/rest/site/' + this.$store.state.user.username + '/product_detail?itemId=' + this.detail.productId
     }
   }
 }

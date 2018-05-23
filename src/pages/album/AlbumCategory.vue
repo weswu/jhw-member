@@ -37,7 +37,7 @@ export default {
       this.data = [
         {
           title: '全部图片',
-          id: '',
+          id: 'all',
           expand: true,
           selected: false,
           render: this.iconFilter,

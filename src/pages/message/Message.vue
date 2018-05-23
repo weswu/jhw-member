@@ -224,8 +224,13 @@ export default {
     },
     typeFilter (h, params) {
       let text = ''
-      if (params.row.type === '03') { text = '客户消息' }
-      if (params.row.type === '04') { text = '服务消息' }
+      if (params.row.type === '03') { text = '用户消息' }
+      if (params.row.type === '04') { text = '系统消息' }
+      if (params.row.type === '05') { text = '客户消息' }
+      if (params.row.type === '10') { text = '产品消息' }
+      if (params.row.type === '11') { text = '安全消息' }
+      if (params.row.type === '12') { text = '服务消息' }
+      if (params.row.type === '13') { text = '活动消息' }
       return h('div', text)
     },
     ipFilter (h, params) {

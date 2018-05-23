@@ -29,7 +29,7 @@
             <Checkbox v-model="topnews" @on-change="topnewsChange">置顶</Checkbox>
           </FormItem>
           <FormItem label="新闻图片：" v-if="detail.imagenews === '01'">
-            <JPictrue :src="detail.imageo" @on-change="picChange"/>
+            <JPictrue :src="detail.picPath" @on-change="picChange"/>
           </FormItem>
         </Form>
         <UE :content='detail.content' ref='ue' :hidden="active !== '1'"></UE>
@@ -145,7 +145,7 @@ export default {
       this.detail.topnews = e ? '01' : '00'
     },
     picChange (e) {
-      this.detail.picPath = e
+      this.detail.picPath = e.src
     },
     // 提交
     submit (name) {

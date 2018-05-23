@@ -1,7 +1,7 @@
 <template>
   <div class="j_static_website">
     <div class="j_tip" style="margin-top: 13px;">由于互联网信息管理法规，发布网站需要验证你的手机号信息。 <a href="#/account" class="a_underline">立即验证</a></div>
-    <Button icon="plus" class="orange" @click="update($Message)">创建新网站</Button> 你有0个网站上线了
+    <Button icon="plus" class="orange" @click="add">创建新网站</Button> 你有0个网站上线了
     <ul class="static_info j_scroll">
       <li class="item" v-for="item in list" :key="item.id">
         <p>
@@ -80,6 +80,7 @@
         </Form>
       </div>
     </JDialog>
+    <Add ref="add" @on-change="addChange"/>
   </div>
 </template>
 
@@ -88,6 +89,7 @@ import qs from 'qs'
 import { mapState } from 'vuex'
 import JPagination from '@/components/group/j-pagination'
 import JDialog from '@/components/group/j-dialog'
+import Add from '@/components/static/add'
 export default {
   props: {
     searchData: {
@@ -102,7 +104,8 @@ export default {
   },
   components: {
     JPagination,
-    JDialog
+    JDialog,
+    Add
   },
   data () {
     return {
@@ -125,7 +128,7 @@ export default {
   },
   methods: {
     get () {
-      this.$http.get('/rest/pc/baseLayout/list?' + qs.stringify(this.searchData)).then((res) => {
+      this.$http.get('/rest/pc/api/baseLayout/list?' + qs.stringify(this.searchData)).then((res) => {
         if (res.success) {
           res.attributes.data.forEach(item => {
             if (item.bind.address) {
@@ -142,6 +145,13 @@ export default {
           }
         }
       })
+    },
+    add () {
+      this.$refs.add.open()
+    },
+    addChange () {
+      this.searchData.page = 1
+      this.get()
     },
     // 分页
     pageChange (page) {

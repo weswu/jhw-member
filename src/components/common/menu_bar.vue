@@ -40,7 +40,7 @@ export default {
   },
   computed: {
     ...mapState({
-      'status': state => state.status
+      status: state => state.status
     }),
     rotateIcon () {
       return [

@@ -7,7 +7,9 @@
         <Form :model="user" :rules="rules" :label-width="130" ref="model">
           <span class="title" style="margin-top:0px;">基本信息：</span>
           <FormItem label="公司Logo：" prop="enterprise.logo">
-            <JPictrue :src="user.enterprise.logo" style="max-height:104px;" :width="104"/>
+            <div @click="pciType('1')">
+              <JPictrue :src="user.enterprise.logo" @on-change="picChange" :width="104"/>
+            </div>
           </FormItem>
           <FormItem label="公司全称：" prop="enterprise.name">
             <Input v-model="user.enterprise.name" placeholder="请输入公司全称"></Input>
@@ -28,7 +30,9 @@
           <FormItem label="ico图标：">
             <Row :gutter="24" class="ico">
               <Col span="6">
-                <JPictrue :src="user.enterprise.icon" :width="51"/>
+                <div @click="pciType('2')">
+                  <JPictrue :src="user.enterprise.icon" @on-change="picChange" :width="51"/>
+                </div>
               </Col>
               <Col span="18">
                 <p>建议图标上传尺寸：32x32像素</p>
@@ -132,7 +136,8 @@ export default {
         ]
       },
       areaList: [],
-      address: []
+      address: [],
+      type: ''
     }
   },
   created () {
@@ -187,6 +192,16 @@ export default {
           })
         }
       })
+    },
+    pciType (e) {
+      this.type = e
+    },
+    picChange (e) {
+      if (this.type === '1') {
+        this.user.enterprise.logo = e.src
+      } else {
+        this.user.enterprise.icon = e.src
+      }
     },
     submit () {
       this.$refs['model'].validate((valid) => {

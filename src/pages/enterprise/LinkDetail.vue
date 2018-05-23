@@ -62,7 +62,7 @@ export default {
       this.modal = false
     },
     change (e) {
-      console.log('image update')
+      this.detail.image = e.src
     },
     submit (name) {
       this.$refs[name].validate((valid) => {

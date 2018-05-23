@@ -69,7 +69,7 @@ export default {
         pageSize: 20,
         name: ''
       },
-      selectedPic: '',
+      detail: {},
       attId: 'all'
     }
   },
@@ -106,7 +106,11 @@ export default {
     handleSuccess (res, file) {
       let pic = res.split(',')[0]
       let src = pic.split('http://img.jihui88.com/')[1]
-      this.$emit('on-change', src.replace(/_5/g, ''))
+      let obj = {
+        id: pic[1],
+        src: src.replace(/_5/g, '')
+      }
+      this.$emit('on-change', obj)
       this.get()
       this.modal = false
     },
@@ -116,10 +120,13 @@ export default {
         item._checked = false
       })
       e._checked = true
-      this.selectedPic = e.serverPath
+      this.detail = {
+        id: e.attId,
+        src: e.serverPath
+      }
     },
     ok () {
-      this.$emit('on-change', this.selectedPic)
+      this.$emit('on-change', this.detail)
       this.modal = false
     }
   }
@@ -128,6 +135,7 @@ export default {
 
 <style lang="less">
 .j_pictrue_upload{
+  z-index: 1001;
   .j_album_category {
     height: 508px;
   }

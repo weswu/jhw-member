@@ -3,7 +3,7 @@
     <Content :style="{padding: '0 23px 0 21px'}">
       <JHeader :title="'相册管理'"/>
       <Layout class="ivu-layout-has-sider">
-        <Cateogy @change-category="changeCategory"/>
+        <Cateogy @on-change="changeCategory"/>
         <Layout class="j_album_container">
           <div class="j_search">
             <Row :gutter="24">
@@ -104,7 +104,8 @@ export default {
         sort: '00'
       },
       toggle: false,
-      ids: ''
+      ids: '',
+      attId: 'all'
     }
   },
   created () {
@@ -112,7 +113,7 @@ export default {
   },
   methods: {
     get () {
-      this.$http.get('/rest/api/album/attr/list/all?' + qs.stringify(this.searchData)).then((res) => {
+      this.$http.get('/rest/api/album/attr/list/' + this.attId + '?' + qs.stringify(this.searchData)).then((res) => {
         if (res.success) {
           this.list = res.attributes.data
           this.total = res.attributes.count
@@ -122,8 +123,9 @@ export default {
       })
     },
     upload () {},
-    changeCategory () {
-
+    changeCategory (e) {
+      this.attId = e
+      this.get()
     },
     pageChange (page) {
       this.searchData.page = page

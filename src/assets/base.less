@@ -45,6 +45,11 @@ a.primary{
 .w144{
   width: 144px
 }
+.j_empty{
+  color: #666;
+  padding: 5px 0;
+  text-align: center;
+}
 // 头像昵称
 .badge-normal{
   background: #7ed321
@@ -405,11 +410,6 @@ a.primary{
 
 
 // 弹出框表单
-.ivu-modal{
-  .ivu-input-wrapper{
-    width: 250px;
-  }
-}
 .ivu-poptip-inner{
   border-radius: 0px;
 }
@@ -459,9 +459,8 @@ a.primary{
 }
 
 // Input
-.ivu-input{
+.ivu-input,.ivu-input-number{
   border: 1px solid #c9c9c9;
-  border-radius: 0px;
   box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
 }
 //Select
@@ -601,14 +600,19 @@ a.primary{
 }
 
 //对敌框
+.ivu-modal{
+  .ivu-input-wrapper{
+    width: 250px;
+  }
+}
 .ivu-modal-mask{
   background: none;
 }
 .ivu-modal{
   top: 186px;
+  box-shadow: 0 1px 6px rgba(0, 0, 0, 0.2);
   .ivu-modal-content{
     border-radius: 0px;
-    border: 1px solid #e1e6eb;
     .ivu-modal-header{
       background: @background-gray-color;
       border-bottom: none;

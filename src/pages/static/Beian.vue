@@ -102,10 +102,10 @@
               </Poptip><span>（备注：必需上传）</span>
             </div>
             <FormItem label="负责人手持身份证照片：" v-if="type === '00'">
-              <Input v-model="detail.principal.certHandPic" placeholder="选择文件：上传负责人的手持身份证照片：" @on-focus="upload('principal.certHandPic')"></Input>
+              <Input v-model="detail.principal.certHandPic" placeholder="选择文件：负责人的手持身份证照片" @on-focus="upload('principal.certHandPic')"></Input>
             </FormItem>
             <FormItem label="法人手持身份证照片：" v-if="type === '01'">
-              <Input v-model="detail.emergency.certHandPic" placeholder="选择文件：上传法人的手持身份证照片：" @on-focus="upload('emergency.certHandPic')"></Input>
+              <Input v-model="detail.emergency.certHandPic" placeholder="选择文件：法人的手持身份证照片" @on-focus="upload('emergency.certHandPic')"></Input>
             </FormItem>
 
             <div class="j_beian_title">手机号码：<span>（备注：法人必填<em v-if="type === '00'">，如有负责人也需要</em>）</span></div>
@@ -194,7 +194,7 @@ export default {
     },
     picChange (e) {
       let obj = this.uploadText.split('.')
-      this.detail[obj[0]][obj[1]] = e
+      this.detail[obj[0]][obj[1]] = e.src
     },
     upload (e) {
       this.uploadText = e
