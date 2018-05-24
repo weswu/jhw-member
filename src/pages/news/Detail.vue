@@ -156,7 +156,7 @@ export default {
             model: JSON.stringify(this.detail)
           }
           let url = ''
-          if (this.detail.linkId) {
+          if (this.detail.newsId) {
             url = '/' + this.detail.newsId
             data._method = 'put'
           }

@@ -15,7 +15,7 @@
         <i class="iconfont icon-x" @click="del(index)"></i>
       </div>
     </li>
-    <li class="j_picture_item add" v-if="list">
+    <li class="j_picture_item add" v-if="list && list.length < 10">
       <i class="iconfont icon-plus-add" @click="open"></i>
     </li>
     <JAblum ref="ablum" @on-change="picChange"/>

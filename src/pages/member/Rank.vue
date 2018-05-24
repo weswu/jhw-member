@@ -35,7 +35,7 @@ export default {
         { title: '是否默认', render: this.isDefaultFilter },
         { title: '操作', className: 'j_table_operate', width: 120, render: this.renderOperate }
       ],
-      list: []
+      list: this.$store.state.memberRankList
     }
   },
   created () {
@@ -43,11 +43,7 @@ export default {
   },
   methods: {
     get () {
-      this.$http.get('/rest/api/member/rank/list').then(res => {
-        if (res.success) {
-          this.list = res.attributes.data
-        }
-      })
+      this.$store.dispatch('getMemberRank')
     },
     // 上
     add () {

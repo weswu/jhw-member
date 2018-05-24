@@ -30,7 +30,7 @@
               </Poptip>
               <span>（备注：填写您申请好的域名）</span></div>
             <FormItem label="域名：">
-              <Input v-model="detail.bind.address" placeholder="填写您的域名"></Input>
+              <Input v-model="bindDetail.address" placeholder="填写您的域名"></Input>
             </FormItem>
             <div class="j_beian_title">域名证书：
               <Poptip trigger="hover" placement="right">
@@ -53,7 +53,7 @@
                   请您上传有效的主办单位有效证件扫描件，证件应不大于400KB。<br/>证件扫描件，图片完整(不缺少连线、信息清晰可辨、不得做作何修改。)
                 </div>
                 <div class="certPic" slot="content">
-                  <img src="http://img.jihui88.com/upload/j/j2/jihui88/picture/2016/12/02/9a74ab1c-0a25-4c25-b67e-2c499341e41e.jpg"/>
+                  <img src="http://img.jihui88.com/upload/j/j2/jihui88/picture/2018/05/24/0aadd6ac-98ad-4cb9-9414-a0e689c12078.jpg" style="width:400px;"/>
                 </div>
               </Poptip><span>（备注：上传营业执照给我们）</span></div>
             <FormItem label="营业执照：">
@@ -83,7 +83,7 @@
             </FormItem>
             <!-- 幕布照 -->
             <div class="j_beian_title">幕布照（<em v-if="type === '01'">法</em><em v-if="type === '00'">负责</em>人）：
-              <a href="https://help.aliyun.com/knowledge_detail/36968.html?spm=a2c4g.11186623.4.1.Fl5stx#%E6%8B%8D%E7%85%A7%E8%A6%81%E6%B1%82" target="_blank" class="a_underline">查看示例</a>
+              <a href="https://help.aliyun.com/knowledge_detail/36968.html?spm=a2c4g.11186623.4.1.Fl5stx#%E6%8B%8D%E7%85%A7%E8%A6%81%E6%B1%82" target="_blank" class="a_underline">点击查看示例</a>
               <span v-if="type === '01'">（备注：必须上传）</span>
               <a href="javascript:;" class="a_underline a_underline_tow" @click="add">填写幕布照邮寄地址</a></div>
             <FormItem label="法人幕布照：" v-if="type === '01'">
@@ -127,7 +127,7 @@
               <Input v-model="detail.enterprise.phone"></Input>
             </FormItem>
             <div class="j_beian_title">核验单：
-              <a href="http://gtms02.alicdn.com/tps/i2/TB1f.iSJVXXXXXkXFXX6HFAMXXX-1240-1980.jpg" target="_blank" class="a_underline">查看示例</a>
+              <a href="http://gtms02.alicdn.com/tps/i2/TB1f.iSJVXXXXXkXFXX6HFAMXXX-1240-1980.jpg" target="_blank" class="a_underline">点击查看示例</a>
               <span>（备注：下载核验单请联系微信/手机：150-5858-6617，核验单下载打印后，盖好公章，然后拍照上传）</span>
             </div>
             <FormItem label="上传核验单：" style="margin-bottom:30px;">
@@ -173,6 +173,7 @@ export default {
         enterprise: {},
         webinfo: {}
       },
+      bindDetail: {},
       uploadText: ''
     }
   },
@@ -186,6 +187,11 @@ export default {
           this.detail = res.attributes.data
         } else {
           this.$Message.error(res.msg)
+        }
+      })
+      this.$http.get('/rest/pc/api/bind/detail/' + this.$store.state.staticId).then((res) => {
+        if (res.success) {
+          this.bindDetail = res.attributes.data
         }
       })
     },
@@ -212,6 +218,18 @@ export default {
           this.$Message.error(res.msg)
         }
       })
+      // 域名提交
+      if (this.bindDetail.id) {
+        let bindDetail = {
+          model: JSON.stringify(this.bindDetail),
+          _method: 'put'
+        }
+        this.$http.post('/rest/api/bind/detail/' + this.bindDetail.id, qs.stringify(bindDetail)).then((res) => {
+          if (res.success) {
+            console.log('域名保存成功')
+          }
+        })
+      }
     }
   }
 }
@@ -255,6 +273,7 @@ export default {
     .a_underline{
       color: #f5a623;
       margin: 0 10px 0 12px;
+      font-size: 12px;
     }
     .a_underline_tow{
       color: #0366ce;

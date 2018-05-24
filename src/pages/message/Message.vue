@@ -5,7 +5,7 @@
       <Content>
         <JHeader :title="pageName === '00' ? '未读消息' : (pageName === '01' ? '已读消息' : '全部消息')"/>
         <div class="j_search">
-          <Button class="grey" @click="search(item.value)" v-for="(item, index) in btns" :key="index" :class="{primary: searchData.type === item.value}">{{item.text}}</Button>
+          <Button class="grey" @click="search(item.value)" v-for="(item, index) in btns" :key="index" :class="{primary: searchData.type === item.value}" v-if="item.status">{{item.text}}</Button>
         </div>
         <div class="j_search" v-if="searchData.type === '05'" style="margint-top: 12px;">
           <Row :gutter="24">
@@ -55,12 +55,20 @@ export default {
   data () {
     return {
       btns: [
-        { text: '全部类型消息', value: '' },
-        { text: '客户消息', value: '05' },
-        { text: '产品消息', value: '10' },
-        { text: '安全消息', value: '11' },
-        { text: '服务消息', value: '12' },
-        { text: '活动消息', value: '13' }
+        { text: '全部类型消息', value: '', status: true },
+        { text: '客户消息', value: '03', status: true },
+        { text: '系统消息', value: '04', status: false },
+        { text: '浏览者消息', value: '05', status: false },
+        { text: '用户反馈', value: '06', status: false },
+        { text: '用户消息', value: '07', status: false },
+        { text: '开具发票', value: '08', status: false },
+        { text: '朋友介绍', value: '09', status: false },
+        { text: '产品消息', value: '10', status: true },
+        { text: '安全消息', value: '11', status: true },
+        { text: '服务消息', value: '12', status: true },
+        { text: '活动消息', value: '13', status: true },
+        { text: '机汇网留言', value: '21', status: false },
+        { text: '东方五金网留言', value: '22', status: false }
       ],
       columns: [],
       list: [],
@@ -224,13 +232,11 @@ export default {
     },
     typeFilter (h, params) {
       let text = ''
-      if (params.row.type === '03') { text = '用户消息' }
-      if (params.row.type === '04') { text = '系统消息' }
-      if (params.row.type === '05') { text = '客户消息' }
-      if (params.row.type === '10') { text = '产品消息' }
-      if (params.row.type === '11') { text = '安全消息' }
-      if (params.row.type === '12') { text = '服务消息' }
-      if (params.row.type === '13') { text = '活动消息' }
+      this.btns.forEach(item => {
+        if (params.row.type === item.value) {
+          text = item.text
+        }
+      })
       return h('div', text)
     },
     ipFilter (h, params) {

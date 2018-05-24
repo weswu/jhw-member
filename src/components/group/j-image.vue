@@ -1,7 +1,7 @@
 <template>
-  <div class="j_image" @click="open" :style="{width: width+'px', height: height+'px'}">
+  <div class="j_image" @click="open" :style="{width: width+'px', height: width+'px', lineHeight: width+'px'}">
     <img :src="'http://img.jihui88.com/'+src" alt="" v-if="!isNull" @error="setErrorImg">
-    <div class="null_pic" v-if="isNull" :style="{width: width+'px', height: width+'px', lineHeight: width+'px'}">
+    <div class="null_pic" v-if="isNull">
       上传
     </div>
     <JAblum :title="title" ref="ablum" @on-change="picChange"/>
@@ -12,16 +12,10 @@
 import JAblum from '@/components/group/j-ablum'
 export default {
   props: {
-    src: {
-      type: String,
-      default: 'upload/j/j2/jihui88/picture/2015/04/01/72041ac7-51fa-4163-906d-8b576955d29e.jpg'
-    },
+    src: {},
     width: {
       type: Number,
       default: 100
-    },
-    height: {
-      type: Number
     },
     title: {
       type: String,
@@ -42,7 +36,6 @@ export default {
     },
     setErrorImg (e) {
       this.isNull = true
-      e.target.src = 'http://img.jihui88.com/upload/j/j2/jihui88/picture/2015/04/01/72041ac7-51fa-4163-906d-8b576955d29e.jpg'
     },
     picChange (e) {
       this.$emit('on-change', e)

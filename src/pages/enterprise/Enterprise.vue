@@ -6,10 +6,8 @@
       <Content>
         <Form :model="user" :rules="rules" :label-width="130" ref="model">
           <span class="title" style="margin-top:0px;">基本信息：</span>
-          <FormItem label="公司Logo：" prop="enterprise.logo">
-            <div @click="pciType('1')">
-              <JPictrue :src="user.enterprise.logo" @on-change="picChange" :width="104"/>
-            </div>
+          <FormItem label="公司Logo：">
+            <JImage :src="user.enterprise.logo" @on-change="picChange" :width="104"/>
           </FormItem>
           <FormItem label="公司全称：" prop="enterprise.name">
             <Input v-model="user.enterprise.name" placeholder="请输入公司全称"></Input>
@@ -17,40 +15,21 @@
           <FormItem label="法人：" prop="enterprise.legalPre">
             <Input v-model="user.enterprise.legalPre" placeholder="请输入法人"></Input>
           </FormItem>
-          <FormItem label="成立时间：" prop="enterprise.regTime">
+          <FormItem label="成立时间：">
             <DatePicker type="date" placeholder="选择时间" v-model="user.enterprise.regTime" @on-change="user.enterprise.regTime=$event"></DatePicker>
-          </FormItem>
-          <span class="title">业务信息：</span>
-          <FormItem label="主营产品：" prop="enterprise.mainBusiness">
-            <Input v-model="user.enterprise.mainBusiness" placeholder="请输入主营产品"></Input>
-          </FormItem>
-          <FormItem label="网址：">
-            <Input v-model="user.url" placeholder="请输入网址"></Input>
-          </FormItem>
-          <FormItem label="ico图标：">
-            <Row :gutter="24" class="ico">
-              <Col span="6">
-                <div @click="pciType('2')">
-                  <JPictrue :src="user.enterprise.icon" @on-change="picChange" :width="51"/>
-                </div>
-              </Col>
-              <Col span="18">
-                <p>建议图标上传尺寸：32x32像素</p>
-                <a href="https://baike.baidu.com/item/ICO%E5%9B%BE%E6%A0%87" target="_blank">什么是ico图标？</a>
-              </Col>
-            </Row>
           </FormItem>
           <span class="title">联系信息：</span>
           <FormItem label="单位地址：" prop="enterprise.address">
-            <Cascader :data="areaList" v-model="address" style="width: 250px;"></Cascader>
+            <Cascader :data="areaList" v-model="address" style="width: 450px;"></Cascader>
           </FormItem>
           <FormItem label="详细地址：" prop="address">
             <Input v-model="user.address" placeholder="请输入详细地址"></Input>
+            <Button @click="map" class="submit">地图定位</Button>
           </FormItem>
           <FormItem label="联系电话：">
             <Input v-model="user.phone" placeholder="请输入联系电话"></Input>
           </FormItem>
-          <FormItem label="法人手机：" prop="enterprise.legalPersonCellphone">
+          <FormItem label="法人手机：">
             <Input v-model="user.enterprise.legalPersonCellphone" placeholder="请输入法人手机"></Input>
           </FormItem>
           <FormItem label="传真：">
@@ -81,52 +60,42 @@
         <Button type="primary" size="small" @click="submit">保存</Button>
       </Footer>
     </Layout>
+    <Map ref="map"/>
   </Layout>
 </template>
 
 <script>
 import qs from 'qs'
-import { mapState, mapActions } from 'vuex'
+import { mapState } from 'vuex'
 import MenuBar from '@/components/common/menu_bar'
 import JHeader from '@/components/group/j-header'
-import JPictrue from '@/components/group/j-image'
+import JImage from '@/components/group/j-image'
+import Map from '@/pages/enterprise/Map'
 export default {
   components: {
-    MenuBar, JHeader, JPictrue
+    MenuBar, JHeader, JImage, Map
   },
   computed: {
     ...mapState({
-      'user': state => state.user,
-      'lanId': state => state.lanId,
+      user: state => state.user,
+      lanId: state => state.lanId,
       lanList: state => state.status.lanList
     })
   },
   data () {
     return {
       rules: {
-        'enterprise.logo': [
-          { required: true, message: 'logo不能为空', trigger: 'blur' }
-        ],
         'enterprise.name': [
           { required: true, message: '公司全称不能为空', trigger: 'blur' }
         ],
         'enterprise.legalPre': [
           { required: true, message: '法人不能为空', trigger: 'blur' }
         ],
-        'enterprise.regTime': [
-          { required: true, message: '成立时间不能为空', trigger: 'change' }
-        ],
-        'enterprise.mainBusiness': [
-          { required: true, message: '主营产品不能为空', trigger: 'blur' }
-        ],
         'enterprise.address': [
           { required: true, message: '单位地址不能为空', trigger: 'blur' }
         ],
         address: [
           { required: true, message: '详细地址不能为空', trigger: 'blur' }
-        ],
-        'enterprise.legalPersonCellphone': [
-          { required: true, message: '法人手机不能为空', trigger: 'blur' }
         ],
         name: [
           { required: true, message: '姓名不能为空', trigger: 'blur' }
@@ -136,8 +105,7 @@ export default {
         ]
       },
       areaList: [],
-      address: [],
-      type: ''
+      address: []
     }
   },
   created () {
@@ -145,7 +113,6 @@ export default {
     this.address = this.user.enterprise.address && this.user.enterprise.address.split(',')
   },
   methods: {
-    ...mapActions(['lanIdChange']),
     getArea () {
       this.$http.get('/rest/api/area/list').then((res) => {
         if (res.success) {
@@ -193,19 +160,16 @@ export default {
         }
       })
     },
-    pciType (e) {
-      this.type = e
-    },
     picChange (e) {
-      if (this.type === '1') {
-        this.user.enterprise.logo = e.src
-      } else {
-        this.user.enterprise.icon = e.src
-      }
+      this.user.enterprise.logo = e.src
+    },
+    map () {
+      this.$refs.map.open()
     },
     submit () {
       this.$refs['model'].validate((valid) => {
         if (valid) {
+          this.user.enterprise.regTime = this.dataFormat(this.user.enterprise.regTime, 'yyyy-MM-dd')
           this.setUser()
           this.setEnterprise()
         }

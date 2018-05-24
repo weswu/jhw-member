@@ -19,11 +19,16 @@ const store = new Vuex.Store({
       order_unpaid: 27,
       order: 45
     },
+    lanId: '1',
+    uid: ['0', '0', '0'],
     // 列表数据
     productCategory: [],
     newsCategory: [],
     messageList: [],
+    memberRankList: [],
+    memberAttrList: [],
     tagList: [],
+    // 站点
     staticList: [
       { value: '203', text: '网站编辑：203' },
       { value: '204', text: '网站编辑：204' },
@@ -31,20 +36,22 @@ const store = new Vuex.Store({
       { value: '206', text: '网站编辑：206' },
       { value: '207', text: '网站编辑：207' }
     ],
-    staticId: '',
-    lanId: '1',
-    uid: ['0', '0', '0']
+    staticId: ''
   },
   getters: {
     user: state => state.user,
     userInfo: state => state.userInfo,
+    lanId: state => state.lanId,
+    // 列表
     productCategory: state => state.productCategory,
     newsCategory: state => state.newsCategory,
     messageList: state => state.messageList,
+    memberRankList: state => state.memberRankList,
+    memberAttrList: state => state.memberAttrList,
     tagList: state => state.tagList,
+    // 站点
     staticList: state => state.staticList,
-    staticId: state => state.staticId,
-    lanId: state => state.lanId
+    staticId: state => state.staticId
   },
   mutations: {
     setUser (state, user) {
@@ -61,6 +68,12 @@ const store = new Vuex.Store({
     },
     setMessageList (state, messageList) {
       state.messageList = messageList
+    },
+    setMemberRankList (state, memberRankList) {
+      state.memberRankList = memberRankList
+    },
+    setMemberAttrList (state, memberAttrList) {
+      state.memberAttrList = memberAttrList
     },
     setTagList (state, tagList) {
       state.tagList = tagList
@@ -232,6 +245,20 @@ const store = new Vuex.Store({
         }
       })
     },
+    getMemberRank ({commit, state}) {
+      this._vm.$http.get('/rest/api/member/rank/list').then(res => {
+        if (res.success) {
+          this.commit('setMemberRankList', res.attributes.data)
+        }
+      })
+    },
+    getMemberAttr ({commit, state}) {
+      return this._vm.$http.get('/rest/api/member/attr/list').then(res => {
+        if (res.success) {
+          this.commit('setMemberAttrList', res.attributes.data)
+        }
+      })
+    },
     staticIdChange ({dispatch, commit}, staticId) {
       this.commit('setStaticId', staticId)
       window.localStorage.setItem('staticId', staticId)
@@ -242,7 +269,6 @@ const store = new Vuex.Store({
       return this._vm.$http.get('/rest/api/user/changeLan?lanId=' + lanId).then((res) => {
         if (res.success) {
           this.dispatch('getUser')
-          console.log('操作成功')
         } else {
           this._vm.$Message.success(res.msg)
         }

@@ -95,7 +95,8 @@ const state = {
   },
   menuEvaluate: {
     menu: [
-      { text: '商品评价', value: '0' }
+      { text: '商品评价', value: '0' },
+      { text: '所有商品评价', value: '1' }
     ]
   },
   menu_news: {
@@ -120,6 +121,12 @@ const state = {
       { text: '会员等级配置', value: 'member_rank' },
       { text: '会员属性配置', value: 'member_attr' },
       { text: '网站会员注册', value: 'member_register' }
+    ]
+  },
+  menu_member_detail: {
+    menu: [
+      { text: '会员基本信息', value: '0' },
+      { text: '会员属性', value: '1' }
     ]
   }
 }

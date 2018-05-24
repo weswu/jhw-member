@@ -6,10 +6,10 @@
         <JHeader :title="'会员管理'"/>
         <div class="j_search">
           <Row :gutter="24">
-            <Col span="13">
-              <Button type="info" icon="plus" class="w130" @click="add">添加会员</Button>
+            <Col span="8">
+              <Button type="info" icon="plus" class="w130" @click="url('/member/add')">添加会员</Button>
             </Col>
-            <Col span="11" style="text-align:right">
+            <Col span="16" style="text-align:right">
               <Input v-model="searchData.name" style="width:140px;padding-right:5px;" placeholder="请输入用户名"></Input>
               <Button class="search" @click="search">搜索</Button>
               <Button class="grey w130" @click="update($Message)" style="margin-right: 0;">高级搜索</Button>
@@ -44,7 +44,7 @@ export default {
       columns: [
         { type: 'selection', className: 'j_table_checkbox', width: 44 },
         { type: 'index2', title: '序号', align: 'center', width: 60, render: this.indexFilter },
-        { title: '用户名', key: 'name', render: this.nameFilter },
+        { title: '用户名', key: 'name', ellipsis: true, render: this.nameFilter },
         { title: '会员等级', key: 'memberRank', render: this.rankFilter },
         { title: '邮箱', key: 'email' },
         { title: '注册时间', key: 'addTime' },
@@ -79,10 +79,7 @@ export default {
         }
       })
     },
-    // 上
-    add () {
-      this.$Message.success('更新中...')
-    },
+    // 功能
     search () {
       this.searchData.page = 1
       this.get()
@@ -143,7 +140,7 @@ export default {
         h('a', {
           on: {
             click: () => {
-              this.$Message.success('更新中..')
+              this.$router.push({path: '/member/' + params.row.memberId})
             }
           }
         }, '修改'),

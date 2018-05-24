@@ -42,7 +42,7 @@
           <Col span="21">
             <input id="fileUpload" type="file" style="width:440px;float:left" class="ivu-input"></input>
             <span class="select" @click="select">选择文件</span>
-            <Button type="primary" @click="submit()" class="submit">提交</Button>
+            <Button @click="submit()" class="submit" style="width:76px;">提交</Button>
           </Col>
         </Row>
       </Content>

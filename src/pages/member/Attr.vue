@@ -38,7 +38,7 @@ export default {
         { title: '移序', className: 'j_table_sort', render: this.sortFilter },
         { title: '操作', className: 'j_table_operate', width: 120, render: this.renderOperate }
       ],
-      list: []
+      list: this.$store.state.memberAttrList
     }
   },
   computed: {
@@ -67,11 +67,7 @@ export default {
   },
   methods: {
     get () {
-      this.$http.get('/rest/api/member/attr/list').then(res => {
-        if (res.success) {
-          this.list = res.attributes.data
-        }
-      })
+      this.$store.dispatch('getMemberAttr')
     },
     // 上
     add () {

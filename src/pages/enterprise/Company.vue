@@ -40,7 +40,7 @@ export default {
         model: JSON.stringify(this.user.enterprise),
         _method: 'put'
       }
-      this.$http.post('/rest/api/enterprise/detail', qs.stringify(data)).then((res) => {
+      this.$http.post('/rest/api/enterprise/detail/' + this.user.enterprise.enterpriseId, qs.stringify(data)).then((res) => {
         if (res.success) {
           this.$Message.success('保存成功')
           this.$store.commit('serUser', this.user)

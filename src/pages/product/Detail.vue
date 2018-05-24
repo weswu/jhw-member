@@ -93,7 +93,7 @@
             <DatePicker type="datetime" placeholder="秒杀开始时间" v-model="detail.publishTime" @on-change="detail.publishTime=$event"></DatePicker>
           </FormItem>
           <FormItem label="商品评价：" class="formitem_left" v-if="this.$route.params.id !== 'add'">
-            <span class="a_underline">查看评价</span>
+            <a :href="'#/evaluate/'+detail.productId" class="a_underline">查看评价</a>
           </FormItem>
           <br/>
           <FormItem label="秒杀结束：" class="formitem_left">
@@ -267,7 +267,6 @@ export default {
       e.stopPropagation()
     },
     imgChange (item, index) {
-      debugger
       if (index) {
         this.imgList[index] = item.src
       } else {
@@ -275,7 +274,6 @@ export default {
       }
     },
     prevImg (index) {
-      debugger
       this.imgListChange(index, index - 1)
     },
     nextImg (index) {
