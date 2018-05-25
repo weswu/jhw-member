@@ -274,16 +274,17 @@ export default {
       }
     },
     prevImg (index) {
-      this.imgListChange(index, index - 1)
+      this.imgListChange(index - 1, index)
     },
     nextImg (index) {
       this.imgListChange(index, index + 1)
     },
     imgListChange (a, b) {
-      let objA = this.imgList[a]
-      let objB = this.imgList[b]
-      this.imgList[a] = objB
-      this.imgList[b] = objA
+      let list = this.imgList
+      let objA = list[a]
+      let objB = list[b]
+      this.imgList.splice(a, 1, objB)
+      this.imgList.splice(b, 1, objA)
     },
     delImg (index) {
       this.imgList.splice(index, 1)

@@ -10,7 +10,7 @@
               <Button type="info" icon="plus" class="w130" @click="url('/member/add')">添加会员</Button>
             </Col>
             <Col span="16" style="text-align:right">
-              <Input v-model="searchData.name" style="width:140px;padding-right:5px;" placeholder="请输入用户名"></Input>
+              <Input v-model="searchData.name" class="w144" placeholder="请输入用户名"></Input>
               <Button class="search" @click="search">搜索</Button>
               <Button class="grey w130" @click="update($Message)" style="margin-right: 0;">高级搜索</Button>
             </Col>
@@ -44,7 +44,7 @@ export default {
       columns: [
         { type: 'selection', className: 'j_table_checkbox', width: 44 },
         { type: 'index2', title: '序号', align: 'center', width: 60, render: this.indexFilter },
-        { title: '用户名', key: 'name', ellipsis: true, render: this.nameFilter },
+        { title: '用户名', key: 'name', className: 'text-color', ellipsis: true, render: this.nameFilter },
         { title: '会员等级', key: 'memberRank', render: this.rankFilter },
         { title: '邮箱', key: 'email' },
         { title: '注册时间', key: 'addTime' },

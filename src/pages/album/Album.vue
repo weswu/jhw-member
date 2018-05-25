@@ -13,7 +13,7 @@
                 <Button class="info" @click="update($Message)"><i class="iconfont icon-huishouzhan"></i>回收站</Button>
               </Col>
               <Col span="14" style="text-align:right">
-                <Input v-model="pic" style="width:140px;padding-right:5px;" placeholder="搜索图片名称"></Input>
+                <Input v-model="pic" class="w144" placeholder="搜索图片名称"></Input>
                 <Button class="search" @click="update($Message)">搜索</Button>
                 <Button class="grey" @click="update($Message)">高级搜索</Button>
                 <Button class="info" @click="update($Message)"><i class="iconfont icon-tupian3"></i>设置水印</Button>

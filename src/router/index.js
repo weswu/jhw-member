@@ -55,7 +55,14 @@ export default new Router({
     { path: '/member_rank', component: require('@/pages/member/Rank').default },
     { path: '/member_attr', component: require('@/pages/member/Attr').default },
     { path: '/member_register', component: require('@/pages/member/Register').default },
-    // default
+    // 商城
+    { path: '/shop', component: require('@/pages/shop/Shop').default },
+    { path: '/shop_config', component: require('@/pages/shop/Config').default },
+    { path: '/shop_pay', component: require('@/pages/shop/Pay').default },
+    { path: '/shop_delivery', component: require('@/pages/shop/Delivery').default },
+    { path: '/shop_bill', component: require('@/pages/shop/Bill').default },
+    { path: '/shop_refund', component: require('@/pages/shop/Refund').default },
+    { path: '/coupon', component: require('@/pages/shop/Coupon').default },
     // default
     { path: '*', redirect: '/' }
   ]

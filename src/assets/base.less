@@ -1,6 +1,5 @@
 @import '~iview/src/styles/index.less';
 @import './variables.less';
-@import './common.less';
 
 
 li{
@@ -45,10 +44,54 @@ a.primary{
 .w144{
   width: 144px
 }
+.w180{
+  width: 180px
+}
 .j_empty{
   color: #666;
   padding: 5px 0;
   text-align: center;
+}
+.text-color{
+  color: @text-color
+}
+// 通用
+.j_product_import_download{
+  .ivu-checkbox-group-item{
+    float: left;
+    width: 14.285%;
+    color: #656565;
+    margin-right: 0;
+    padding: 15px 10px;
+    border-right: 1px solid #e9e9e9;
+    border-bottom: 1px solid #e9e9e9;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    .ivu-checkbox{
+      padding-right: 7%
+    }
+  }
+}
+
+.whether{
+  &.iconfont{
+    width: 16px;
+    height: 16px;
+    line-height: 16px;
+    background: #eee;
+    color: #fff !important;
+    padding: 0px !important;
+    font-size: 12px !important;
+    text-align: center;
+    border-radius: 3px;
+  }
+  &.icon-x{
+    background: @error-color ;
+  }
+  &.icon-gou{
+    background: @success-color;
+  }
 }
 // 头像昵称
 .badge-normal{
@@ -276,6 +319,7 @@ a.primary{
       font-weight: normal;
       height: 28px;
       background: @background-gray-color;
+      color: #a0a0a0;
     }
   }
 }
@@ -692,6 +736,7 @@ a.primary{
   // 搜索按钮
   &.search{
     background: #f7f7f7;
+    margin-left: 5px;
     &:hover{
       background: #f7f7f7;
       border-color: #dddddd;

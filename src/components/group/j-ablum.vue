@@ -10,7 +10,7 @@
       <div class="j_search">
         <Row type="flex" justify="space-between">
           <Col>
-            <Input v-model="searchData.name" style="width:160px;padding-right:5px;" placeholder="搜索图片名称"></Input>
+            <Input v-model="searchData.name" class="w144" placeholder="搜索图片名称"></Input>
             <Button class="search" @click="get">搜索</Button>
           </Col>
           <Col>

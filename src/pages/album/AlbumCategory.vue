@@ -3,8 +3,8 @@
     <div class="title">
       图片目录
     </div>
-    <div class="">
-      <Input v-model="name" style="width:140px;padding-right:5px;" placeholder="搜索文件夹"></Input>
+    <div style="width:209px;">
+      <Input v-model="name" class="w144" placeholder="搜索文件夹"></Input>
       <Button class="search" @click="search" style="margin-right: 0;">搜索</Button>
     </div>
     <Tree :data="data"></Tree>

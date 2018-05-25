@@ -4,6 +4,7 @@ const state = {
     { value: '1', text: '中文' },
     { value: '2', text: '英文' }
   ],
+  // 会员属性
   memberAttrList: [
     { text: '文本', value: 'text' },
     { text: '数字', value: 'number' },
@@ -12,6 +13,31 @@ const state = {
     { text: '多选项', value: 'checkbox' },
     { text: '日期', value: 'date' }
   ],
+  // 付款状态
+  paymentStatus: [
+    { text: '未支付', value: 'unpaid', html: '<span style="color: #d0021b;">未支付</span>' },
+    { text: '部分支付', value: 'partPayment', html: '<span style="color: #ff7e3e;">部分支付</span>' },
+    { text: '已支付', value: 'paid', html: '<span style="color: #417505;">已支付</span>' },
+    { text: '部分退款', value: 'partRefund', html: '<span style="color: #ff7e3e;">部分退款</span>' },
+    { text: '全额退款', value: 'refunded', html: '<span style="color: #000000;">全额退款</span>' }
+  ],
+  // 配送状态
+  shippingStatus: [
+    { text: '未发货', value: 'unshipped', html: '<span style="color: #d0021b;">未发货</span>' },
+    { text: '部分发贫', value: 'partShipped', html: '<span style="color: #ff7e3e;">部分发贫</span>' },
+    { text: '已发货', value: 'shipped', html: '<span style="color: #417505;">已发货</span>' },
+    { text: '部分退货', value: 'partReshiped', html: '<span>部分退货</span>' },
+    { text: '已退货', value: 'reshiped', html: '<span>已退货</span>' }
+  ],
+  // 订单状态
+  orderStatus: [
+    { text: '未处理', value: 'unprocessed', html: '<span style="color: #d0021b;">未处理</span>' },
+    { text: '已处理', value: 'processed', html: '<span style="color: #417505;">已处理</span>' },
+    { text: '已完成', value: 'completed', html: '<span style="color: #5b5b5b;">已完成</span>' },
+    { text: '已作废', value: 'invalid', html: '<span style="color: #a0a0a0;">已作废</span>' },
+    { text: '已取消', value: 'cancel', html: '<span style="color: #d0021b;">已取消</span>' }
+  ],
+  // 三级导航
   menuAccount: {
     title: '账号管理',
     menu: [
@@ -127,6 +153,18 @@ const state = {
     menu: [
       { text: '会员基本信息', value: '0' },
       { text: '会员属性', value: '1' }
+    ]
+  },
+  menuShop: {
+    title: '商城管理',
+    menu: [
+      { text: '订单管理', value: 'shop' },
+      { text: '商品相关配置', value: 'shop_config' },
+      { text: '支持方式管理', value: 'shop_pay' },
+      { text: '物流公司管理', value: 'shop_delivery' },
+      { text: '物流单据设置', value: 'shop_bill' },
+      { text: '商品退货管理', value: 'shop_refund' },
+      { text: '营销管理', value: 'coupon' }
     ]
   }
 }

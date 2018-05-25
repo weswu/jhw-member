@@ -32,18 +32,13 @@
     </Layout>
     <SeoDetail ref="seoDetail"/>
     <TransferCategory ref="transferCategory" :data="categoryList" :ids="ids" :type="'product'" @on-change="get"/>
-    <JDialog ref="dialog" :title="'我的显示'" :tip="'温馨提醒：勾选不要超过8个，以免列表显示不下。'" @on-ok="save">
+    <JDialog ref="dialog" :title="'我的显示'" :tip="'温馨提醒：勾选不要超过8个，以免列表显示不下。'" @on-ok="initCol">
       <div slot="content">
-        <CheckboxGroup v-model="checkboxMyShow" class="j_checkout">
-          <Checkbox label="序号">序号</Checkbox><Checkbox label="产品图片">产品图片</Checkbox>
-          <Checkbox label="产品名称">产品名称</Checkbox><Checkbox label="产品型号">产品型号</Checkbox>
-          <Checkbox label="产品价格">产品价格</Checkbox><Checkbox label="产品分类">产品分类</Checkbox>
-          <Checkbox label="添加时间">添加时间</Checkbox><Checkbox label="是否上架">是否上架</Checkbox>
-          <Checkbox label="排序">排序</Checkbox><Checkbox label="二维码">二维码</Checkbox>
+        <CheckboxGroup v-model="myShowSelect" class="j_checkout">
+          <Checkbox :label="item" v-for="(item, index) in myShowList">{{item}}</Checkbox>
         </CheckboxGroup>
       </div>
     </JDialog>
-
   </Layout>
 </template>
 
@@ -68,8 +63,20 @@ export default {
   },
   data () {
     return {
-      checkboxMyShow: ['序号', '产品图片', '产品名称', '产品型号', '产品分类', '添加时间', '是否上架', '排序'],
+      myShowSelect: ['序号', '产品图片', '产品名称', '产品型号', '产品分类', '添加时间', '是否上架', '排序'],
+      myShowList: ['序号', '产品图片', '产品名称', '产品型号', '产品价格', '产品分类', '添加时间', '是否上架', '排序', '二维码', 'id'],
       columns: [],
+      columns2: [
+        { type: 'index2', className: 'j_table_index', title: '序号', align: 'center', width: 60, render: this.indexFilter },
+        { title: '产品图片', className: 'j_table_img', key: 'pic', width: 105, render: this.imgFilter },
+        { title: '产品名称', className: 'j_table_title', sortable: true, width: 150, render: this.nameFilter },
+        { title: '产品型号', className: 'j_table_title', sortable: true, width: 120, render: this.prodtypeFilter },
+        { title: '产品价格', render: this.priceFilter  },
+        { title: '产品分类', className: 'j_table_category', sortable: true, width: 130, ellipsis: true, render: this.categoryFilter },
+        { title: '添加时间', sortable: true, width: 105, render: this.dataFilter },
+        { title: '是否上架', sortable: true, width: 105, render: this.isdisplayFilter },
+        { title: '排序', className: 'j_table_sort', sortable: true, minWidth: 80, render: this.sortFilter }
+      ],
       list: [],
       searchData: {
         page: 1,
@@ -106,7 +113,7 @@ export default {
     this.searchData.page = this.$cookie.get('productPage') || 1
     this.get()
     this.$store.dispatch('getProductCategory')
-    this.save()
+    this.initCol()
   },
   methods: {
     get () {
@@ -129,37 +136,19 @@ export default {
     myShow () {
       this.$refs.dialog.open()
     },
-    save () {
+    initCol () {
+      var ctx = this
       this.columns = [
         { type: 'selection', className: 'j_table_checkbox', width: 44 }
       ]
-      this.checkboxMyShow.forEach(val => {
-        if (val === '序号') {
-          this.columns.push({ type: 'index2', className: 'j_table_index', title: '序号', align: 'center', width: 60, render: this.indexFilter })
-        }
-        if (val === '产品图片') {
-          this.columns.push({ title: '产品图片', className: 'j_table_img', key: 'pic', width: 105, render: this.imgFilter })
-        }
-        if (val === '产品名称') {
-          this.columns.push({ title: '产品名称', className: 'j_table_title', sortable: true, width: 150, render: this.nameFilter })
-        }
-        if (val === '产品型号') {
-          this.columns.push({ title: '产品型号', className: 'j_table_title', sortable: true, width: 120, render: this.prodtypeFilter })
-        }
-        if (val === '产品分类') {
-          this.columns.push({ title: '产品分类', className: 'j_table_category', sortable: true, width: 130, ellipsis: true, render: this.categoryFilter })
-        }
-        if (val === '添加时间') {
-          this.columns.push({ title: '添加时间', sortable: true, width: 105, render: this.dataFilter })
-        }
-        if (val === '是否上架') {
-          this.columns.push({ title: '是否上架', sortable: true, width: 105, render: this.isdisplayFilter })
-        }
-        if (val === '排序') {
-          this.columns.push({ title: '排序', className: 'j_table_sort', sortable: true, minWidth: 80, render: this.sortFilter })
-        }
+      this.myShowSelect.forEach(item => {
+        this.columns2.forEach(col => {
+          if (item === col.title) {
+            ctx.columns.push(col)
+          }
+        })
       })
-      this.columns.push({ title: '操作', className: 'j_table_operate', align: 'left', width: 160, render: this.renderOperate })
+      this.columns.push({ title: '操作', className: 'j_table_operate', width: 120, render: this.renderOperate })
     },
     sortable (a, b) {
       let objA = this.list[a]
@@ -553,6 +542,13 @@ export default {
           }
         })
       ])
+    },
+    priceFilter (h, params) {
+      return h('span', {
+        style: {
+          color: '#ff7e3e'
+        }
+      }, '￥' + params.row.price || 0)
     },
     categoryFilter (h, params) {
       var ctx = this
