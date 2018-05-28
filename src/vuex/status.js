@@ -82,6 +82,7 @@ const state = {
       { text: '站点数据管理', value: 'static' },
       { text: 'SEO管理', value: 'seo' },
       { text: '域名备案', value: 'beian' },
+      { text: '域名绑定', value: 'bind' },
       { text: 'Sitemap生成', value: 'sitemap' },
       { text: '批量提交', value: 'seo_batch' },
       { text: '第三方统计', value: 'third_party_statistics' },

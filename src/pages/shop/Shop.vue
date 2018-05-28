@@ -22,7 +22,7 @@
     <JDialog ref="dialog" :title="'我的显示'" :tip="'温馨提醒：勾选不要超过10个，以免列表显示不下。'" @on-ok="initCol">
       <div slot="content">
         <CheckboxGroup v-model="myShowSelect" class="j_checkout">
-          <Checkbox :label="item" v-for="(item, index) in myShowList">{{item}}</Checkbox>
+          <Checkbox :label="item" v-for="(item, index) in myShowList" :key="index">{{item}}</Checkbox>
         </CheckboxGroup>
       </div>
     </JDialog>
@@ -60,7 +60,7 @@ export default {
         { title: '支付方式', key: 'paymentConfigName' },
         { title: '配送方式', render: this.deliveryFilter },
         { title: '下单时间', key: 'addTime', ellipsis: true, width: 150 },
-        { title: '来源（网站编辑）', key: 'layoutId'}
+        { title: '来源（网站编辑）', key: 'layoutId' }
       ],
       list: [],
       searchData: {
@@ -78,7 +78,7 @@ export default {
     ...mapState({
       paymentStatus: state => state.status.paymentStatus,
       shippingStatus: state => state.status.shippingStatus,
-      orderStatus: state => state.status.orderStatus,
+      orderStatus: state => state.status.orderStatus
     })
   },
   created () {
@@ -215,7 +215,7 @@ export default {
     },
     renderOperate (h, params) {
       var ctx = this
-      let del = params.row.orderStatus === 'invalid' || params.row.orderStatus === 'cancel' ? 'block' : 'none'
+      let del = params.row.orderStatus === 'invalid' || params.row.orderStatus === 'cancel' ? 'inline-block' : 'none'
       return h('div', [
         h('a', {
           on: {

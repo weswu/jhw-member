@@ -125,15 +125,23 @@
           </FormItem>
           <hr/>
           <FormItem label="产品规格：">
-            <Button type="ghost" size="small">添加产品规格</Button>
+            <Button type="ghost" size="small" @click="attrAdd">添加产品规格</Button>
           </FormItem>
+          <!-- 产品属性 -->
+          <Attr :list="attrtList"/>
           <FormItem label="属性价格：">
             <RadioGroup v-model="detail.attrState">
               <Radio label="01">开启</Radio>
               <Radio label="00">关闭</Radio>
             </RadioGroup>
           </FormItem>
+
           <hr/>
+          <FormItem label="总价格">
+            <Input v-model="detail.formula" placeholder="（如:长度*宽度*商品价格）"></Input>
+          </FormItem>
+
+            <AttrCustom :list="detail.customAttrMapStore"/>
           <FormItem label="定制规格：">
             <Button type="ghost" size="small">添加</Button>
             <a class="a_underline" href="http://sj.jihui88.com/rest/site/59//formula" target="_blank">查看使用说明</a>
@@ -187,6 +195,7 @@
         <Button type="primary" size="small" @click="submit">保存</Button>
       </Footer>
     </Layout>
+    <AttrAdd ref="attr" :categoryId="detail.category" @on-change="attrChange"/>
   </Layout>
 </template>
 
@@ -198,31 +207,51 @@ import JHeader from '@/components/group/j-header'
 import UE from '@/components/group/j-editor'
 import JPictrue from '@/components/group/j-pictrue'
 import JTag from '@/components/group/j-tag'
+import Attr from '@/components/product/attr'
+import AttrAdd from '@/components/product/attr-add'
+import AttrCustom from '@/components/product/attr-custom'
 export default {
   components: {
     MenuBar,
     JHeader,
     UE,
     JPictrue,
-    JTag
+    JTag,
+    Attr,
+    AttrAdd,
+    AttrCustom
   },
   data () {
     return {
-      active: '0',
-      detail: {},
-      imgList: []
+      active: '5',
+      detail: {
+        customAttrMapStore: [
+          {
+            madeName: '长度',
+            madeUnit: '米',
+            madeType: '01'
+          },
+          {
+            madeName: '宽度',
+            madeUnit: '米',
+            madeType: '01'
+          }
+        ]
+      },
+      imgList: [],
+      attrtList: [],
+      customAttr: []
     }
   },
   computed: {
     ...mapState({
       menuBarList: state => state.status.menu_product_detail,
       categoryList: state => state.productCategory,
-      tagList: state => state.tagList,
       staticList: state => state.staticList
     })
   },
   created () {
-    this.get()
+    // this.get()
     this.$store.dispatch('getProductCategory')
   },
   methods: {
@@ -241,6 +270,7 @@ export default {
             ctx.imgList.push({id: item.id, src: item.sourceProductImagePath})
           })
           this.detail = data
+          this.initAttr()
         }
       })
     },
@@ -251,6 +281,7 @@ export default {
         this.$store.dispatch('getTagList')
       }
     },
+    // 产品分类
     changeCateList (e, data) {
       var ctx = this
       data._selected = !data._selected
@@ -266,6 +297,7 @@ export default {
       })
       e.stopPropagation()
     },
+    // 产品图片
     imgChange (item, index) {
       if (index) {
         this.imgList[index] = item.src
@@ -289,13 +321,32 @@ export default {
     delImg (index) {
       this.imgList.splice(index, 1)
     },
-    cancel () {
-      this.$Message.info('You click cancel')
+    // 产品属性
+    attrAdd () {
+      this.$refs.attr.open()
+    },
+    attrChange (item) {
+      this.attrtList.push(item)
+    },
+    initAttr () {
+      var ctx = this
+      this.$http.get('/rest/api/attr/list/' + this.detail.category).then(res => {
+        if (res.success) {
+          this.attrtList = res.attributes.data
+          this.detail.productAttributeMapStore.forEach(item => {
+            ctx.attrtList.forEach(att => {
+              if (item.productAttribute.attId === att.attId) {
+                att.value = item.attributeOptionList
+              }
+            })
+          })
+        }
+      })
     },
     // 提交
     submit () {
+      var ctx = this
       this.detail.purchaseNum = this.detail.purchaseNum + ''
-      this.detail.taglist = this.detail.taglist.join(',')
       // 编辑器
       this.detail.proddesc = this.$refs.ue1.getUEContent()
       this.detail.mobiledesc = this.$refs.ue2.getUEContent()
@@ -313,6 +364,15 @@ export default {
         })
       })
       this.detail.productImageListStore = JSON.stringify(imageListStore)
+      // 属性
+      this.attrtList.forEach(item => {
+        if (item.isEnabled === '01') {
+          if (item.attributeType === 'checkbox') {
+            let val = item.value || []
+            ctx.detail[item.attId] = val.join()
+          }
+        }
+      })
       let data = {
         model: JSON.stringify(this.detail),
         _method: 'put'

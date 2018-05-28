@@ -2,20 +2,33 @@
   <Layout class="j_layout ivu-layout-has-sider j_beian">
     <MenuBar :data="'menuStatic'" :active="'beian'"/>
     <Layout class="j_layout_content j_form_detail">
-      <JHeader :title="'域名备案'" v-if="active === '0'"/>
-      <JHeader :title="'域名备案'" :website="true" v-if="active === '1'"/>
+      <JHeader :title="'域名备案'" :website="active === '2'"/>
       <Content>
         <div class="j_search">
           <Button class="grey" @click="active = item.value" v-for="(item, index) in btns" :key="index" :class="{primary: active === item.value}">{{item.text}}</Button>
           <div class="j_tip">
             温馨提醒：
-            <span v-if="active === '0'">备案只针对国内的空间，放国外不需要备案。</span>
-            <span v-if="active === '1'">为了更好的帮你备案，请提交以下相关资料（备案只针对国内的空间，放国外不需要备案。）</span>
-            如有问题，请咨询：QQ：260404208
+            <span v-if="active === '0'">请完善备案信息，方便网站“界面编辑”调取。备案主要是为了规范网络安全化，维护网站经营者的合法权益，保障网民的合法利益。</span>
+            <span v-if="active === '1'">备案只针对国内的空间，放国外不需要备案。如有问题，请咨询：QQ：260404208</span>
+            <span v-if="active === '2'">为了更好的帮你备案，请提交以下相关资料（备案只针对国内的空间，放国外不需要备案。）如有问题，请咨询：QQ：260404208</span>
           </div>
         </div>
-        <a href="https://beian.aliyun.com/?utm_content=se_1351982" target="_blank"><Button type="info" class="w130" v-if="active === '0'">查看教程</Button></a>
-        <div v-if="active === '1'">
+
+        <div v-if="active === '0'">
+          <Form :model="detail" :label-width="0" ref="model">
+            <FormItem>
+              <Input v-model="detail.enterprise.icp" placeholder="请填写ICP备案号" style="width:250px;"></Input>
+            </FormItem>
+            <FormItem>
+              <Input v-model="detail.enterprise.psr" placeholder="请填写网安备案号" style="width:250px;"></Input>
+            </FormItem>
+          </Form>
+          <Button type="primary" size="small" @click="submit" style="margin-top:20px;">提交</Button>
+        </div>
+
+        <a href="https://beian.aliyun.com/?utm_content=se_1351982" target="_blank"><Button type="info" class="w130" v-if="active === '1'">查看教程</Button></a>
+
+        <div v-if="active === '2'">
           <a href="http://buy.jihui88.com/#/?tab=tab1" target="_blank"><Button class="orange">前往购买“代理备案”</Button></a>
           <hr style="background:#c9c9c9;margin: 28px 0"/>
           <Form :model="detail" :label-width="150" ref="model" class="j_scroll">
@@ -136,7 +149,7 @@
           </Form>
         </div>
       </Content>
-      <Footer>
+      <Footer v-if="active === '2'">
         <Button type="primary" size="small" @click="submit">提交</Button>
       </Footer>
     </Layout>
@@ -161,10 +174,11 @@ export default {
   data () {
     return {
       btns: [
-        { text: '自动备案（备案在阿里云）', value: '0' },
-        { text: '代理备案', value: '1' }
+        { text: '基本信息', value: '0' },
+        { text: '自动备案（备案在阿里云）', value: '1' },
+        { text: '代理备案', value: '2' }
       ],
-      active: '1',
+      active: '0',
       type: '00',
       detail: {
         bind: {},
@@ -249,7 +263,7 @@ export default {
       right: 16px;
     }
   }
-  form{
+  form.j_scroll{
     height: calc(100vh - 400px);
     overflow-y: scroll;
     .ivu-input-wrapper{

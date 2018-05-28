@@ -25,6 +25,7 @@ export default new Router({
     { path: '/static', component: require('@/pages/static/Static').default },
     { path: '/seo', component: require('@/pages/static/Seo').default },
     { path: '/beian', component: require('@/pages/static/Beian').default },
+    { path: '/bind', component: require('@/pages/static/Bind').default },
     { path: '/sitemap', component: require('@/pages/static/Sitemap').default },
     { path: '/seo_batch', component: require('@/pages/static/SeoBatch').default },
     { path: '/third_party_statistics', component: require('@/pages/static/ThirdPartyStatistics').default },
