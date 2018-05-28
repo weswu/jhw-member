@@ -5,11 +5,11 @@
       <JHeader :title="'新闻列表'" :lan="true" @on-change="lanRefresh"/>
       <Content>
         <div class="j_search">
-          <Row :gutter="24">
-            <Col span="6">
+          <Row type="flex" justify="space-between">
+            <Col>
               <Button type="info" icon="plus" class="w130" @click="url('/news/add')">添加新闻</Button>
             </Col>
-            <Col span="18" style="text-align:right">
+            <Col>
               <Input v-model="model.title" placeholder="请输入新闻标题" style="width:200px"></Input>
               <Button class="search" @click="search">搜索</Button>
               <Button class="grey w130" @click="update($Message)" style="margin-right: 0;">高级搜索</Button>
@@ -613,6 +613,6 @@ export default {
 
 <style lang="less">
 .j_news .ivu-table td{
-   height: 64px
+   height: 70px
  }
 </style>

@@ -223,6 +223,11 @@ export default {
           },
           domProps: {
             innerHTML: params.row.title
+          },
+          on: {
+            click: () => {
+              this.$refs.detail.open(params.row.messageId)
+            }
           }
         })
       ])

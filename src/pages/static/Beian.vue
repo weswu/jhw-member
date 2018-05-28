@@ -17,10 +17,13 @@
         <div v-if="active === '0'">
           <Form :model="detail" :label-width="0" ref="model">
             <FormItem>
-              <Input v-model="detail.enterprise.icp" placeholder="请填写ICP备案号" style="width:250px;"></Input>
+              <Input v-model="detail.enterprise.icp" placeholder="填写ICP备案号" style="width:250px;"></Input>
             </FormItem>
             <FormItem>
-              <Input v-model="detail.enterprise.psr" placeholder="请填写网安备案号" style="width:250px;"></Input>
+              <Input v-model="detail.enterprise.psr" placeholder="填写网安备案号" style="width:250px;"></Input>
+            </FormItem>
+            <FormItem>
+              <Input v-model="detail.webinfo.seccurityLink" placeholder="填写网安备案链接地址" style="width:250px;"></Input>
             </FormItem>
           </Form>
           <Button type="primary" size="small" @click="submit" style="margin-top:20px;">提交</Button>

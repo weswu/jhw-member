@@ -60,6 +60,7 @@ export default new Router({
     { path: '/shop', component: require('@/pages/shop/Shop').default },
     { path: '/shop_config', component: require('@/pages/shop/Config').default },
     { path: '/shop_pay', component: require('@/pages/shop/Pay').default },
+    { path: '/shop_pay/:id', component: require('@/pages/shop/PayDetail').default },
     { path: '/shop_delivery', component: require('@/pages/shop/Delivery').default },
     { path: '/shop_bill', component: require('@/pages/shop/Bill').default },
     { path: '/shop_refund', component: require('@/pages/shop/Refund').default },

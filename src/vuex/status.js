@@ -167,6 +167,12 @@ const state = {
       { text: '商品退货管理', value: 'shop_refund' },
       { text: '营销管理', value: 'coupon' }
     ]
+  },
+  menu_shop_pay_detail: {
+    menu: [
+      { text: '基本信息', value: '0' },
+      { text: '介绍', value: '1' }
+    ]
   }
 }
 

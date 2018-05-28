@@ -14,6 +14,8 @@
           <div v-if="active === '3'">
             更新中
           </div>
+          <JTab v-if="active === '5'"/>
+          <Paid v-if="active === '6'"/>
         </div>
       </Content>
     </Layout>
@@ -26,13 +28,17 @@ import JHeader from '@/components/group/j-header'
 import SBase from '@/components/seo/base'
 import STemplate from '@/components/seo/template'
 import KeywordStore from '@/components/seo/keyword_store'
+import JTab from '@/components/seo/tag'
+import Paid from '@/components/seo/paid'
 export default {
   components: {
     MenuBar,
     JHeader,
     SBase,
     STemplate,
-    KeywordStore
+    KeywordStore,
+    JTab,
+    Paid
   },
   data () {
     return {
@@ -45,7 +51,7 @@ export default {
         { text: 'Tag标签管理', value: '5' },
         { text: '付费SEO推广', value: '6' }
       ],
-      active: '2'
+      active: '5'
     }
   },
   methods: {

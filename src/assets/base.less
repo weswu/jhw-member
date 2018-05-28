@@ -55,6 +55,25 @@ a.primary{
 .text-color{
   color: @text-color
 }
+.tr{
+  text-align: right;
+}
+.j_unit{
+  padding-left: 10px
+}
+.j_shop_title{
+  font-size: 14px;
+  padding: 25px 0 15px 0;
+  span{
+    color: #bababa;
+    font-size: 12px;
+  }
+  .a_underline{
+    color: #f5a623;
+    margin: 0 10px 0 12px;
+    font-size: 12px;
+  }
+}
 // 通用
 .j_product_import_download{
   .ivu-checkbox-group-item{
@@ -243,7 +262,7 @@ a.primary{
     color: #a0a0a0;
     font-weight: normal;
   }
-  td{
+  .one td{
     padding: 0;
     border-bottom: none;
     border-right: none;
@@ -251,6 +270,25 @@ a.primary{
 }
 .j_table_checkbox .ivu-table-cell{
   padding: 0 11px;
+}
+.j_table_img{
+  .product-img{
+    width: 68px;
+    height: 68px;
+    line-height: 66px;
+    text-align: center;
+    background: #f5f6fa;
+    border: 1px solid #d5d5d5;
+    overflow: hidden;
+    margin: 5px 0;
+    img{
+      margin: 0px auto;
+      display: inline-block;
+      vertical-align: middle;
+      max-height: 68px;
+      max-width: 68px;
+    }
+  }
 }
 .j_table_title .ivu-table-cell .title{
   display: flex;
@@ -277,6 +315,9 @@ a.primary{
     color: #aaa
   }
 }
+.j_sort .ivu-table td{
+   height: 64px
+ }
 .ivu-table-wrapper{
   .ivu-table {
     color: #a0a0a0;
@@ -645,8 +686,10 @@ a.primary{
 
 //对敌框
 .ivu-modal{
-  .ivu-input-wrapper{
-    width: 250px;
+  form{
+    .ivu-input-wrapper{
+      width: 250px;
+    }
   }
 }
 .ivu-modal-mask{
@@ -691,6 +734,11 @@ a.primary{
   }
   .j_tip{
     margin-top: 2px;
+  }
+  .ivu-btn{
+    &:last-child{
+      margin-right: 0;
+    }
   }
 }
 //按钮

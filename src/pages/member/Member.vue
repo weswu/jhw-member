@@ -5,11 +5,11 @@
       <Content>
         <JHeader :title="'会员管理'"/>
         <div class="j_search">
-          <Row :gutter="24">
-            <Col span="8">
+          <Row type="flex" justify="space-between">
+            <Col>
               <Button type="info" icon="plus" class="w130" @click="url('/member/add')">添加会员</Button>
             </Col>
-            <Col span="16" style="text-align:right">
+            <Col>
               <Input v-model="searchData.name" class="w144" placeholder="请输入用户名"></Input>
               <Button class="search" @click="search">搜索</Button>
               <Button class="grey w130" @click="update($Message)" style="margin-right: 0;">高级搜索</Button>

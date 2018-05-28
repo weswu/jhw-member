@@ -7,7 +7,7 @@
     </div>
     <div class="j_pagination fixed" v-if="fixed" style="text-align:right" :class="{border_top: borderTop}">
       {{searchData.page}}/{{ Math.ceil(total/searchData.pageSize)}}页，共有{{total}}{{unit}}，每页显示：
-      <input v-model="searchData.pageSize" type="number" class="number"/>{{unit}}
+      <input v-model="searchData.pageSize" type="number" class="number" @change="change"/>{{unit}}
       <Page :total="total" :page-size="searchData.pageSize" @on-change="pageChange"></Page>
       <div class="page">
         <Input size="small" v-model="page"></Input>
@@ -79,6 +79,9 @@ export default {
     },
     refresh () {
       this.$emit('get')
+    },
+    change () {
+      this.$emit('on-pagesize', this.searchData.pageSize)
     }
   }
 }

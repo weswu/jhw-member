@@ -2,8 +2,8 @@
   <Layout class="j_layout ivu-layout-has-sider j_member_attr">
     <MenuBar :data="'menuMember'" :active="'member_attr'"/>
     <Layout class="j_layout_content">
+      <JHeader :title="'会员属性配置'"/>
       <Content>
-        <JHeader :title="'会员属性配置'"/>
         <div class="j_search">
           <Button type="info" icon="plus" class="w130" @click="add">添加会员属性</Button>
         </div>

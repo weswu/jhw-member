@@ -20,13 +20,13 @@
             <tr>
               <td>
                 <CheckboxGroup v-model="col">
-                  <Checkbox :label="item.value" v-for="item in list" :key="item.value">{{item.text}}</Checkbox>
+                  <Checkbox :label="item.text === '-' ? item.value : item.text" v-for="item in list" :key="item.value">{{item.text}}</Checkbox>
                 </CheckboxGroup>
               </td>
             </tr>
           </tbody>
         </table>
-        <a href="http://www.jihui88.com/sample/productMulti.xls"><Button type="primary" style="margin-bottom:22px;">生成产品表格模板</Button></a>
+        <Button type="primary" style="margin-bottom:22px;" @click="generate">生成产品表格模板</Button>
 
         <div class="j_tip">
           <span class="red">步骤二：</span>进行批量上传产品表格前，请先把产品图片上传好
@@ -52,6 +52,7 @@
 
 <script>
 import lrz from 'lrz'
+import qs from 'qs'
 import MenuBar from '@/components/common/menu_bar'
 import JHeader from '@/components/group/j-header'
 export default {
@@ -66,7 +67,7 @@ export default {
         { value: 'name', text: '产品名称' },
         { value: 'prodtype', text: '产品型号' },
         { value: 'category', text: '产品分类' },
-        { value: 'picName', text: '图片名称' },
+        { value: 'picName', text: '产品主图名称' },
         { value: 'proddesc', text: '产品内容' },
         { value: 'detail1', text: '产品描述' },
         { value: 'detail2', text: '产品卖点' },
@@ -78,12 +79,12 @@ export default {
         { value: 'isNew', text: '新品' },
         { value: 'isBest', text: '精品' },
         { value: 'isHot', text: '热销' },
-        { value: 'picPath', text: '产品主图缩略图' },
-        { value: 'productImageListStore', text: '多方位图缩略图' },
         { value: 'tag', text: '产品标签' },
         { value: 'a', text: '-' },
         { value: 'b', text: '-' },
-        { value: 'c', text: '-' }
+        { value: 'c', text: '-' },
+        { value: 'd', text: '-' },
+        { value: 'e', text: '-' }
       ]
     }
   },
@@ -91,6 +92,16 @@ export default {
     select () {
       var btn = document.getElementById('fileUpload')
       btn.click()
+    },
+    generate () {
+      let data = {
+        fields: this.col.join()
+      }
+      this.$http.get('/rest/api/product/downloadProductExcel?' + qs.stringify(data)).then(res => {
+        if (res.success) {
+          window.open(res.attributes.data)
+        }
+      })
     },
     submit () {
       this.$Message.info('更新中')

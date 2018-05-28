@@ -18,7 +18,7 @@
             <tr>
               <td>
                 <CheckboxGroup v-model="col">
-                  <Checkbox :label="item.value" v-for="item in list" :key="item.value">{{item.text}}</Checkbox>
+                  <Checkbox :label="item.text === '-' ? item.value : item.text" v-for="item in list" :key="item.value">{{item.text}}</Checkbox>
                 </CheckboxGroup>
               </td>
             </tr>
@@ -29,8 +29,8 @@
             <tr>
               <th>
                 表格模板内容：需要的请“打勾”，再点下载。温馨提醒（如需下载下面的内容，请先选择好所属的网站编号）
-                <Select v-model="website" class="small" style="width:111px">
-                  <Option v-for="item in websiteList" :value="item.value" :key="item.value" :label="item.label">
+                <Select v-model="staticId" class="small" style="width:111px">
+                  <Option v-for="item in staticList" :value="item.value" :key="item.value" :label="item.label">
                     <span>{{ item.label }}</span>
                   </Option>
                 </Select>
@@ -40,20 +40,22 @@
           <tbody>
             <tr>
               <td>
-                <CheckboxGroup v-model="col">
-                  <Checkbox :label="item.value" v-for="item in list2" :key="item.value">{{item.text}}</Checkbox>
+                <CheckboxGroup v-model="col2">
+                  <Checkbox :label="item.text === '-' ? item.value : item.text" v-for="item in list2" :key="item.value">{{item.text}}</Checkbox>
                 </CheckboxGroup>
               </td>
             </tr>
           </tbody>
         </table>
-        <Button type="primary" @click="update($Message)" style="width:124px;">下载</Button>
+        <Button type="primary" @click="ok" style="width:124px;">下载</Button>
       </Content>
     </Layout>
   </Layout>
 </template>
 
 <script>
+import qs from 'qs'
+import { mapState } from 'vuex'
 import MenuBar from '@/components/common/menu_bar'
 import JHeader from '@/components/group/j-header'
 export default {
@@ -61,19 +63,21 @@ export default {
     MenuBar,
     JHeader
   },
+  computed: {
+    ...mapState({
+      staticId: state => state.staticId,
+      staticList: state => state.staticList
+    })
+  },
   data () {
     return {
-      website: '',
-      websiteList: [
-        { value: '203', label: '网站编号203' },
-        { value: '204', label: '网站编号204' }
-      ],
       col: [],
+      col2: [],
       list: [
         { value: 'name', text: '产品名称' },
         { value: 'prodtype', text: '产品型号' },
         { value: 'category', text: '产品分类' },
-        { value: 'picName', text: '图片名称' },
+        { value: 'picName', text: '图片主图' },
         { value: 'proddesc', text: '产品内容' },
         { value: 'detail1', text: '产品描述' },
         { value: 'detail2', text: '产品卖点' },
@@ -85,25 +89,37 @@ export default {
         { value: 'isNew', text: '新品' },
         { value: 'isBest', text: '精品' },
         { value: 'isHot', text: '热销' },
-        { value: 'picPath', text: '产品主图缩略图' },
-        { value: 'productImageListStore', text: '多方位图缩略图' },
+        { value: 'picPath', text: '产品多方位图' },
         { value: 'tag', text: '产品标签' },
         { value: 'a', text: '-' },
         { value: 'b', text: '-' },
-        { value: 'c', text: '-' }
+        { value: 'c', text: '-' },
+        { value: 'd', text: '-' }
       ],
       list2: [
         { value: 'qrcode', text: '产品二维码' },
-        { value: 'd', text: '-' },
-        { value: 'e', text: '-' },
-        { value: 'f', text: '-' },
-        { value: 'g', text: '-' },
-        { value: 'h', text: '-' },
-        { value: 'j', text: '-' }
+        { value: '1', text: '-' },
+        { value: '2', text: '-' },
+        { value: '3', text: '-' },
+        { value: '4', text: '-' },
+        { value: '5', text: '-' },
+        { value: '6', text: '-' }
       ]
     }
   },
-  methods: {}
+  methods: {
+    ok () {
+      let data = {
+        fields: this.col.join() + (this.col2.length > 0 ? ',' + this.col2.join() : ''),
+        layoutId: this.staticId
+      }
+      this.$http.get('/rest/api/product/exportProductsToExcel?' + qs.stringify(data)).then(res => {
+        if (res.success) {
+          window.open(res.attributes.data)
+        }
+      })
+    }
+  }
 }
 </script>
 

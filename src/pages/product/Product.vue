@@ -104,7 +104,7 @@ export default {
         },
         animation: 120,
         onUpdate (e) {
-          ctx.sortable(e.oldIndex, e.newIndex)
+          ctx.sortable(e.oldIndex, e.newIndex, 'product', 'productId')
         }
       })
     }, 2000)
@@ -148,35 +148,7 @@ export default {
           }
         })
       })
-      this.columns.push({ title: '操作', className: 'j_table_operate', width: 160, render: this.renderOperate })
-    },
-    sortable (a, b) {
-      let objA = this.list[a]
-      let objB = this.list[b]
-      let sortA = this.list[a].sort
-      let sortB = this.list[b].sort
-      this.sortPost(this.list[a].productId, sortB)
-      this.sortPost(this.list[b].productId, sortA)
-      objA.sort = sortB
-      objB.sort = sortA
-      this.list[a] = objB
-      this.list[b] = objA
-    },
-    sortPost (id, sort) {
-      let data = {
-        model: JSON.stringify({
-          id: id,
-          sort: sort
-        }),
-        _method: 'put'
-      }
-      this.$http.post('/rest/api/product/detail/' + id, qs.stringify(data)).then((res) => {
-        if (res.success) {
-          console.log(sort)
-        } else {
-          this.$Message.error(res.msg)
-        }
-      })
+      this.columns.push({ title: '操作', className: 'j_table_operate', width: 156, render: this.renderOperate })
     },
     // 搜索
     search (e) {
@@ -453,7 +425,8 @@ export default {
                     props: {
                       value: params.row.name,
                       autofocus: true,
-                      placeholder: '修改新闻标题'
+                      placeholder: '修改产品名称',
+                      type: 'textarea'
                     },
                     on: {
                       input: (val) => {
@@ -511,7 +484,7 @@ export default {
                     props: {
                       value: params.row.prodtype,
                       autofocus: true,
-                      placeholder: '修改新闻标题'
+                      placeholder: '修改产品型号'
                     },
                     on: {
                       input: (val) => {
@@ -804,7 +777,7 @@ export default {
             on: {
               click: () => {
                 if (params.index > 0) {
-                  this.sortable(params.index, params.index - 1)
+                  this.sortable(params.index, params.index - 1, 'product', 'productId')
                 }
               }
             }
@@ -825,7 +798,7 @@ export default {
             on: {
               click: () => {
                 if (params.index < this.searchData.pageSize - 1) {
-                  this.sortable(params.index, params.index + 1)
+                  this.sortable(params.index, params.index + 1, 'product', 'productId')
                 }
               }
             }
@@ -926,24 +899,6 @@ export default {
       div{
         display: flex;
         flex-direction: column;
-      }
-    }
-  }
-  .j_table_img{
-    .product-img{
-      width: 68px;
-      height: 68px;
-      line-height: 66px;
-      text-align: center;
-      background: #f5f6fa;
-      border: 1px solid #d5d5d5;
-      overflow: hidden;
-      img{
-        margin: 0px auto;
-        display: inline-block;
-        vertical-align: middle;
-        max-height: 68px;
-        max-width: 68px;
       }
     }
   }

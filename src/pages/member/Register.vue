@@ -1,5 +1,5 @@
 <template>
-  <Layout class="ivu-layout-has-sider j_company">
+  <Layout class="ivu-layout-has-sider">
     <MenuBar :data="'menuMember'" :active="'member_register'"/>
     <Layout class="j_layout_content j_form_detail">
       <JHeader :title="'网站会员注册'"/>

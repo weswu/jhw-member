@@ -2,16 +2,10 @@
   <table class="j_table">
     <thead>
       <tr>
-        <th>{{title}}</th>
+        <th colspan="10">{{title}}</th>
       </tr>
     </thead>
-    <tbody>
-      <tr>
-        <td>
-          <slot name="content"></slot>
-        </td>
-      </tr>
-    </tbody>
+    <slot name="tbody"></slot>
   </table>
 </template>
 

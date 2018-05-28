@@ -1,4 +1,5 @@
 import Vue from 'vue'
+import qs from 'qs'
 // 全局方法
 
 /*
@@ -84,6 +85,40 @@ Vue.prototype.url = function (e) {
 */
 Vue.prototype.url = function (e) {
   this.$router.push({ path: e })
+}
+
+/*
+ * @author: wes
+ * @date: 2018-5-18
+ * @desc: 排序
+*/
+Vue.prototype.sortable = function (a, b, url, id) {
+  let objA = this.list[a]
+  let objB = this.list[b]
+  let sortA = this.list[a].sort
+  let sortB = this.list[b].sort
+  this.sortPost(this.list[a][id], sortB, url)
+  this.sortPost(this.list[b][id], sortA, url)
+  objA.sort = sortB
+  objB.sort = sortA
+  this.list[a] = objB
+  this.list[b] = objA
+}
+Vue.prototype.sortPost = function (id, sort, url) {
+  let data = {
+    model: JSON.stringify({
+      id: id,
+      sort: sort
+    }),
+    _method: 'put'
+  }
+  this.$http.post('/rest/api/' + url + '/detail/' + id, qs.stringify(data)).then((res) => {
+    if (res.success) {
+      console.log(sort)
+    } else {
+      this.$Message.error(res.msg)
+    }
+  })
 }
 
 Vue.prototype.update = function (e) {

@@ -137,11 +137,10 @@
           </FormItem>
 
           <hr/>
-          <FormItem label="总价格">
+          <FormItem label="总价格" hidden>
             <Input v-model="detail.formula" placeholder="（如:长度*宽度*商品价格）"></Input>
           </FormItem>
-
-            <AttrCustom :list="detail.customAttrMapStore"/>
+          <AttrCustom :list="detail.customAttrMapStore" hidden/>
           <FormItem label="定制规格：">
             <Button type="ghost" size="small">添加</Button>
             <a class="a_underline" href="http://sj.jihui88.com/rest/site/59//formula" target="_blank">查看使用说明</a>
@@ -251,7 +250,7 @@ export default {
     })
   },
   created () {
-    // this.get()
+    this.get()
     this.$store.dispatch('getProductCategory')
   },
   methods: {
@@ -261,10 +260,6 @@ export default {
       this.$route.params.id !== 'add' && this.$http.get('/rest/api/product/detail/' + id).then(res => {
         if (res.success) {
           let data = res.attributes.data
-          data.taglist = []
-          data.tagMapStore.forEach(item => {
-            data.taglist.push(item.name)
-          })
           let imglist = JSON.parse(data.productImageListStore)
           imglist && imglist.forEach(item => {
             ctx.imgList.push({id: item.id, src: item.sourceProductImagePath})

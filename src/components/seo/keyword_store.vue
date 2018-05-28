@@ -5,12 +5,18 @@
       <Button class="search" @click="add">添加</Button>
     </div>
     <JTable :title="'关键词'">
-      <ul slot="content">
-        <li v-for="(item, index) in list" :key="index">
-          <Checkbox v-model="item._checked">{{item.keywords}}</Checkbox>
-          <i class="iconfont icon-huishouzhan" @click='del(item.keywordsId)'></i>
-        </li>
-      </ul>
+      <tbody slot="tbody">
+        <tr class="one">
+          <td>
+            <ul slot="content">
+              <li v-for="(item, index) in list" :key="index" :title="item.keywords">
+                <Checkbox v-model="item._checked">{{item.keywords}}</Checkbox>
+                <i class="iconfont icon-huishouzhan" @click='del(item.keywordsId)'></i>
+              </li>
+            </ul>
+          </td>
+        </tr>
+      </tbody>
     </JTable>
     <div class="j_pagination fixed">
       <div class="btn">
