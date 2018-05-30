@@ -2,7 +2,7 @@
   <Modal
     v-model="modal"
     title="属性添加">
-    <Form ref="formDynamic" :model="detail" :rules="rules" :label-width="130">
+    <Form ref="modalForm" :model="detail" :rules="rules" :label-width="130">
       <FormItem label="属性名称" prop="name">
         <Input v-model="detail.name" placeholder="请输入属性名称"></Input>
       </FormItem>
@@ -59,7 +59,7 @@ export default {
     },
     cancel () {
       this.modal = false
-      this.$refs['formDynamic'].resetFields()
+      this.$refs['modalForm'].resetFields()
     },
     handleAdd () {
       this.detail.items.push({
@@ -72,7 +72,7 @@ export default {
       }
     },
     ok () {
-      this.$refs['formDynamic'].validate((valid) => {
+      this.$refs['modalForm'].validate((valid) => {
         if (valid) {
           this.detail.categoryId = this.categoryId
           let items = []

@@ -3,12 +3,22 @@
     <li><a href="http://pc.jihui88.com/pc/index.html" target="_blank"><i class="iconfont icon-diannaoshouji01"></i>网站界面管理</a></li>
     <li><a href="http://www.jihui88.com/member/index.html" target="_blank"><i class="iconfont icon-shujuku"></i>数据管理中心</a></li>
     <li><a href="http://www.jihui88.com/member/index.html#/seo_list" target="_blank"><i class="iconfont icon-seo-marketing-business-code-validation"></i>SEO管理</a></li>
-    <li class="add"><i class="iconfont icon--jia"></i></li>
+    <li class="add" @click="add"><i class="iconfont icon--jia"></i></li>
+    <Tool ref="tool"/>
   </ul>
 </template>
 
 <script>
+import Tool from '@/components/home/j-tool'
 export default {
+  components: {
+    Tool
+  },
+  methods: {
+    add () {
+      this.$refs.tool.open()
+    }
+  }
 }
 </script>
 

@@ -4,7 +4,7 @@
       <Button class="mormal" @click="search(item.value)" v-for="(item, index) in btns" :key="index" :class="{active: active === item.value}">{{item.text}}</Button>
     </div>
     <Table :columns="columns" :data="list"/>
-    <JPagination :fixed="true" :borderTop="true" :total="total" :searchData='searchData' @on-change="pageChange"/>
+    <JPagination :fixed="true" :borderTop="true" :total="total" :searchData='searchData' @on-change="get"/>
     <Detail ref="detail"/>
   </div>
 </template>
@@ -32,7 +32,7 @@ export default {
         { type: 'index2', title: '序号', align: 'center', width: 60, render: this.indexFilter },
         { title: '导航名称', key: 'name', render: this.nameFilter },
         { title: '页面地址', key: 'page', render: this.pageFilter },
-        { title: '操作', className: 'j_table_operate', align: 'center', width: 100, render: this.renderOperate }
+        { title: '操作', className: 'j_table_operate', width: 100, render: this.renderOperate }
       ],
       list: [],
       total: 0,
@@ -60,10 +60,6 @@ export default {
     search (e) {
       this.active = e
       this.searchData.page = 1
-      this.get()
-    },
-    pageChange (e) {
-      this.searchData.page = e
       this.get()
     },
     // 过滤

@@ -1,17 +1,8 @@
 <template>
-  <Modal
+  <Modal class-name="j_homt_tools"
     v-model="modal"
-    title="标签">
-    <Form ref="modalForm" :model="detail" :label-width="130">
-      <FormItem label="分类">
-        <Select v-model="detail.categoryId" class="w144 border">
-          <Option :value="item.categoryId" v-for="item in list" :key="item.categoryId">{{item.name}}</Option>
-        </Select>
-      </FormItem>
-      <FormItem label="标签名称">
-        <Input v-model="detail.name" placeholder="请输入标签名称"></Input>
-      </FormItem>
-    </Form>
+    title="常用工具">
+
     <div slot="footer">
       <Button type="text" size="large" @click="cancel">取消</Button>
       <Button type="primary" size="large" @click="ok">确定</Button>
@@ -21,6 +12,7 @@
 
 <script>
 import qs from 'qs'
+import { mapState } from 'vuex'
 export default {
   props: {
     list: Array
@@ -31,11 +23,17 @@ export default {
       detail: {}
     }
   },
+  computed: {
+    ...mapState({
+      disputeType: state => state.status.disputeType,
+      disputeState: state => state.status.disputeState
+    })
+  },
   methods: {
     open (id) {
       this.modal = true
       if (id) {
-        this.$http.get('/rest/api/tag/detail/' + id).then(res => {
+        this.$http.get('/rest/api/orderDispute/detail/' + id).then(res => {
           if (res.success) {
             this.detail = res.attributes.data
           }
@@ -50,11 +48,11 @@ export default {
         model: JSON.stringify(this.detail)
       }
       let url = ''
-      if (this.detail.tagId) {
-        url = '/' + this.detail.tagId
+      if (this.detail.disputeId) {
+        url = '/' + this.detail.disputeId
         data._method = 'put'
       }
-      this.$http.post('/rest/api/tag/detail' + url, qs.stringify(data)).then((res) => {
+      this.$http.post('/rest/api/orderDispute/detail' + url, qs.stringify(data)).then((res) => {
         if (res.success) {
           this.$Message.success('添加成功')
           this.$emit('on-change')

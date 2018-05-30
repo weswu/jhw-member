@@ -25,7 +25,7 @@
       </div>
       <div class="admin-upload-list">
         <div class="admin-upload-item" v-for="item in list" :key="item.url" :class="{active: item._checked}" @click="select(item)">
-          <img :src="'http://img.jihui88.com/'+item.serverPath | picUrl(5)">
+          <img :src="$store.state.status.IMG_HOST+item.serverPath | picUrl(5)">
           <div class="admin-upload-list-cover">
             {{item.filename}}
           </div>
@@ -34,7 +34,7 @@
           暂无数据
         </div>
       </div>
-      <JPagination :total="total" :searchData='searchData' @on-change="pageChange" :left="'0'" :right="'24'"/>
+      <JPagination :total="total" :searchData='searchData' @on-change="get"/>
     </Content>
   </Layout>
   </Modal>
@@ -95,10 +95,6 @@ export default {
       this.modal = true
     },
     // 功能
-    pageChange (page) {
-      this.searchData.page = page
-      this.get()
-    },
     cateChange (e) {
       this.attId = e
       this.get()

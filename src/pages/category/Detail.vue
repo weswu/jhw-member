@@ -1,6 +1,6 @@
 <template>
   <JDialog ref="dialog" :title="'分类'" :tip="'<span class="red">温馨提醒</span>：未选择分类表示添加的是顶级分类'" @on-ok="initCol">
-    <Form ref="formDynamic" :model="detail" :label-width="130">
+    <Form ref="modalForm" :model="detail" :label-width="130">
       <FormItem label="上级分类">
         <Select v-model="detail.categoryId" class="w144 border">
           <Option :value="item.categoryId" v-for="item in list" :key="item.categoryId">{{item.name}}</Option>

@@ -1,7 +1,7 @@
 <template>
   <div class="j_home_website j_panel">
     <div class="img" @click="href">
-      <Avatar shape="square" :src="'http://img.jihui88.com/'+user.enterprise.logo" size="large" v-if="user.enterprise.logo" class="head_portrait"/>
+      <Avatar shape="square" :src="$store.state.status.IMG_HOST+user.enterprise.logo" size="large" v-if="user.enterprise.logo" class="head_portrait"/>
       <i class="iconfont icon-huiyuan" v-if="!user.enterprise.logo"></i>
     </div>
     <div class="name">

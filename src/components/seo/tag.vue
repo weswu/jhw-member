@@ -14,10 +14,9 @@
             <Button class="search" @click="search">搜索</Button>
           </Col>
         </Row>
-
       </div>
       <Table :columns="columns" :data="list"/>
-      <JPagination :fixed="true" :borderTop="true" :total="total" :searchData='searchData' @on-change="pageChange" @on-pagesize="pageSizeChange" @refresh="get"/>
+      <JPagination :fixed="true" :borderTop="true" :total="total" :searchData='searchData' @on-change="get"/>
     </div>
     <div class="j_sort" :hidden="active !== '1'">
       <Table ref="dragable" :columns="columns2" :data="catelist"/>
@@ -48,7 +47,7 @@ export default {
         { title: '标题名称', key: 'name' },
         { title: '所属分类', render: this.cateFilter },
         { title: '添加时间', render: this.dataFilter },
-        { title: '操作', className: 'j_table_operate', align: 'center', width: 130, render: this.renderOperate }
+        { title: '操作', className: 'j_table_operate', width: 130, render: this.renderOperate }
       ],
       list: [],
       total: 0,
@@ -143,14 +142,6 @@ export default {
       this.searchData.page = 1
       this.get()
     },
-    pageChange (e) {
-      this.searchData.page = e
-      this.get()
-    },
-    pageSizeChange (e) {
-      this.searchData.pageSize = e
-      this.get()
-    },
     // 过滤
     indexFilter (h, params) {
       return h('span', this.index2(params.index, this.searchData))
@@ -191,11 +182,11 @@ export default {
             },
             on: {
               'on-ok': () => {
-                this.$http.delete('/rest/api/member/detail/' + params.row.memberId).then((res) => {
+                this.$http.delete('/rest/api/tag/detail/' + params.row.tagId).then((res) => {
                   if (res.success) {
                     ctx.$Message.success('删除成功')
                     for (let i = 0; i < ctx.list.length; i++) {
-                      if (ctx.list[i].memberId === params.row.memberId) {
+                      if (ctx.list[i].tagId === params.row.tagId) {
                         ctx.list.splice(i, 1)
                       }
                     }

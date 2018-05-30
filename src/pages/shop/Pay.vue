@@ -99,7 +99,8 @@ export default {
                   let data = {
                     model: JSON.stringify({
                       id: params.row.paymentId,
-                      sort: params.row.sort2
+                      sort: params.row.sort2,
+                      editField: true
                     }),
                     _method: 'put'
                   }

@@ -17,7 +17,7 @@
           </Row>
         </div>
         <Table ref="selection" :columns="columns" :data="list" @on-selection-change="handleSelectChange"></Table>
-        <JPagination :fixed="true" :checkbox="true" :total="total" :searchData='searchData' @on-change="pageChange">
+        <JPagination :fixed="true" :checkbox="true" :total="total" :searchData='searchData' @on-change="get">
           <span slot="btn">
             <Checkbox v-model="toggle" @on-change="handleSelectAll(toggle)"/>
             <Button type="ghost" size="small" @click="delAll">删除</Button>
@@ -158,11 +158,6 @@ export default {
         this.searchData.model = JSON.stringify(this.model)
       }
       this.searchData.page = 1
-      this.get()
-    },
-    // 分页
-    pageChange (page) {
-      this.searchData.page = page
       this.get()
     },
     // 批量操作

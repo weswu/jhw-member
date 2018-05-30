@@ -8,18 +8,18 @@
           <Button class="grey" @click="search(item.value)" v-for="(item, index) in btns" :key="index" :class="{primary: searchData.type === item.value}" v-if="item.status">{{item.text}}</Button>
         </div>
         <div class="j_search" v-if="searchData.type === '05'" style="margint-top: 12px;">
-          <Row :gutter="24">
-            <Col span="16">
+          <Row type="flex" justify="space-between">
+            <Col>
               <Input v-model="searchData.title" style="width:178px;margin-right:5px;" placeholder="请输入标题内容"></Input>
               <Button class="search" @click="search">搜索</Button>
             </Col>
-            <Col span="8" style="text-align:right">
+            <Col>
               <Button class="info" @click="blacklist" style="width:94px;margin-right:0px;">黑名单</Button>
             </Col>
           </Row>
         </div>
         <Table :columns="columns" :data="list" @on-selection-change="handleSelectChange"></Table>
-        <JPagination :checkbox="true" :total="total" :searchData='searchData' @on-change="pageChange" :left="'10'" :right="'14'">
+        <JPagination :checkbox="true" :total="total" :searchData='searchData' @on-change="get">
           <span slot="btn">
             <Checkbox v-model="toggle" @on-change="handleSelectAll(toggle)"/>
             <Button type="ghost" size="small" @click="delAll">删除</Button>
@@ -118,10 +118,6 @@ export default {
       this.searchData.page = 1
       this.get()
       this.changeTableColumns()
-    },
-    pageChange (page) {
-      this.searchData.page = page
-      this.get()
     },
     changeTableColumns () {
       this.columns = [

@@ -1,6 +1,6 @@
 <template>
   <div class="j_image" @click="open" :style="{width: width+'px', height: width+'px', lineHeight: width+'px'}">
-    <img :src="'http://img.jihui88.com/'+src" alt="" v-if="!isNull" @error="setErrorImg">
+    <img :src="$store.state.status.IMG_HOST+src" alt="" v-if="!isNull" @error="setErrorImg">
     <div class="null_pic" v-if="isNull">
       上传
     </div>

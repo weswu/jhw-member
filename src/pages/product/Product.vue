@@ -5,11 +5,11 @@
       <Content>
         <JHeader :title="'产品列表'" :lan="true" @on-change="get"/>
         <div class="j_search">
-          <Row :gutter="24">
-            <Col span="6">
+          <Row type="flex" justify="space-between">
+            <Col>
               <Button type="info" icon="plus" class="w130" @click="url('/product/add')">添加产品</Button>
             </Col>
-            <Col span="18" style="text-align:right">
+            <Col>
               <span class="a_underline" @click="myShow">我的显示</span>
               <Input v-model="model.title" placeholder="请输入产品名称" style="width:200px"></Input>
               <Button class="search" @click="search">搜索</Button>
@@ -19,7 +19,7 @@
         </div>
         <Table ref="selection" :columns="columns" :data="list" @on-selection-change="handleSelectChange"></Table>
       </Content>
-      <JPagination :fixed="true" :checkbox="true" :total="total" :searchData='searchData' @on-change="pageChange">
+      <JPagination :fixed="true" :checkbox="true" :total="total" :searchData='searchData' @on-change="get">
         <span slot="btn">
           <Checkbox v-model="toggle" @on-change="handleSelectAll(toggle)"/>
           <Button type="ghost" size="small" @click="delAll">删除</Button>
@@ -156,11 +156,6 @@ export default {
         this.searchData.model = JSON.stringify(this.model)
       }
       this.searchData.page = 1
-      this.get()
-    },
-    // 分页
-    pageChange (page) {
-      this.searchData.page = page
       this.get()
     },
     // 批量操作
@@ -315,7 +310,7 @@ export default {
             display: params.row.picPath ? 'inline-block' : 'none'
           },
           attrs: {
-            src: 'http://img.jihui88.com/' + params.row.picPath
+            src: this.$store.state.status.IMG_HOST + params.row.picPath
           }
         })
       ])

@@ -2,12 +2,12 @@
   <ul class="j_picture">
     <li class="j_picture_item" v-if="!list" @click="open">
       <i class="iconfont icon-plus-add" v-if="!src"></i>
-      <img :src="'http://img.jihui88.com/'+src" v-if="src">
+      <img :src="$store.state.status.IMG_HOST+src" v-if="src">
       <div class="bom">上传</div>
     </li>
     <li class="j_picture_item" v-for="(item, index) in list" :key="index" v-if="list">
       <i class="iconfont icon-plus-add" v-if="!item.src"></i>
-      <img :src="'http://img.jihui88.com/'+item.src" @click="open($event, index)" v-if="item.src">
+      <img :src="$store.state.status.IMG_HOST+item.src" @click="open($event, index)" v-if="item.src">
       <div class="top" v-if="type === 'product' && index === 0">产品主图</div>
       <div class="bom">
         <i class="iconfont icon-zuojiantou" @click="prev(index)"></i>

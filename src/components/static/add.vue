@@ -20,7 +20,7 @@
         </div>
       </Card>
     </div>
-    <JPagination :fixed="true" :total="total" :searchData='searchData' @on-change="pageChange" @get="get"></JPagination>
+    <JPagination :fixed="true" :total="total" :searchData='searchData' @on-change="get"></JPagination>
   </Modal>
 </template>
 
@@ -63,10 +63,6 @@ export default {
     },
     cancel () {
       this.modal = false
-    },
-    pageChange (page) {
-      this.searchData.page = page
-      this.get()
     },
     add (item) {
       let obj = {

@@ -45,7 +45,7 @@
             <Row type="flex" justify="start" align="middle" class="picture_warpper">
               <Col span="4" :xs="12" :sm="8" :md="6" :lg="4" v-for="(item, index) in list" :key="index" class="pic_item">
                 <Card dis-hover>
-                  <img :src="'http://img.jihui88.com/' + item.serverPath" alt="">
+                  <img :src="$store.state.status.IMG_HOST + item.serverPath" alt="">
                 </Card>
                 <div class="title">
                   {{item.filename}}
@@ -53,7 +53,7 @@
               </Col>
             </Row>
           </Content>
-          <JPagination :checkbox="true" :fixed="true" :total="total" :searchData='searchData' @on-change="pageChange" :unit="'个'">
+          <JPagination :checkbox="true" :fixed="true" :total="total" :searchData='searchData' @on-change="get" :unit="'个'">
             <span slot="btn">
               <Checkbox v-model="toggle" @on-change="handleSelectAll(toggle)"/>
               <Button type="ghost" size="small">删除</Button>
@@ -125,10 +125,6 @@ export default {
     upload () {},
     changeCategory (e) {
       this.attId = e
-      this.get()
-    },
-    pageChange (page) {
-      this.searchData.page = page
       this.get()
     },
     pageVal () {

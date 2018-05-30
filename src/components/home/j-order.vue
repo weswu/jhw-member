@@ -52,6 +52,5 @@ export default {
 <style lang="less">
 .j_warpper{
   padding: 5px 28px 0 28px;
-  height: 376px;
 }
 </style>

@@ -150,7 +150,7 @@ export default {
         if (valid) {
           this.detail.description = this.$refs.ue.getUEContent()
           let data = {
-            model: JSON.stringify(this.detail)
+            model: JSON.stringify(Object.assign(this.detail, this.detail.configObject))
           }
           let url = ''
           if (this.detail.paymentId) {

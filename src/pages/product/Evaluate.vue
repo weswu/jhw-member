@@ -5,7 +5,7 @@
       <Content>
         <JHeader :title="'商品评价'"/>
         <Table :columns="columns" :data="list"/>
-        <JPagination :fixed="true" :borderTop="true" :total="total" :searchData='searchData' @on-change="pageChange"/>
+        <JPagination :fixed="true" :borderTop="true" :total="total" :searchData='searchData' @on-change="get"/>
       </Content>
     </Layout>
   </Layout>
@@ -62,10 +62,6 @@ export default {
       if (e === '1') {
         this.$router.push({path: '/evaluate'})
       }
-    },
-    pageChange (page) {
-      this.searchData.page = page
-      this.get()
     },
     // 过滤
     indexFilter (h, params) {

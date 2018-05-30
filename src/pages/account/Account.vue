@@ -7,7 +7,7 @@
           <Row :gutter="24" class="account_user">
             <Col span="6" style="width:130px">
               <div @click="avatar">
-                <Avatar shape="square" :src="'http://img.jihui88.com/'+user.enterprise.logo" size="large" v-if="user.enterprise.logo" class="head_portrait"/>
+                <Avatar shape="square" :src="$store.state.status.IMG_HOST+user.enterprise.logo" size="large" v-if="user.enterprise.logo" class="head_portrait"/>
                 <i class="iconfont icon-huiyuan" v-if="!user.enterprise.logo"></i>
               </div>
               <a href="javascript:;" @click="avatar">修改头像</a>

@@ -54,7 +54,7 @@
         </p>
       </li>
     </ul>
-    <JPagination :fixed="true" :total="total" :searchData='searchData' @on-change="pageChange" @get="get"></JPagination>
+    <JPagination :fixed="true" :total="total" :searchData='searchData' @on-change="get"></JPagination>
     <JDialog ref="lan" :title="'设置语言版本'" :tip="'温馨提醒：'"  @on-ok="save" >
       <div slot="content">
         <Select v-model="lan" style="width:144px">
@@ -151,11 +151,6 @@ export default {
     },
     addChange () {
       this.searchData.page = 1
-      this.get()
-    },
-    // 分页
-    pageChange (page) {
-      this.searchData.page = page
       this.get()
     },
     // 更多

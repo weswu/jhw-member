@@ -10,7 +10,7 @@
         </JHeader>
         <Content>
           <Table highlight-row :columns="columns" :data="list" @on-selection-change="handleSelectChange"></Table>
-          <JPagination :checkbox="true" :total="total" :searchData='searchData' @on-change="pageChange">
+          <JPagination :checkbox="true" :total="total" :searchData='searchData' @on-change="get">
             <span slot="btn">
               <Checkbox v-model="toggle" @on-change="handleSelectAll(toggle)"/>
               <Button type="ghost" size="small" @click="delAll">删除</Button>
@@ -101,11 +101,6 @@ export default {
     },
     analysis () {
       this.$router.push({path: 'employee_account_analysis'})
-    },
-    // 搜索
-    pageChange (page) {
-      this.searchData.page = page
-      this.get()
     },
     // 批量操作
     handleSelectChange (status) {

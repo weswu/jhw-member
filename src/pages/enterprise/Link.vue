@@ -240,7 +240,7 @@ export default {
             display: params.row.image ? 'inline-block' : 'none'
           },
           attrs: {
-            src: 'http://img.jihui88.com/' + this.picUrl(params.row.image, 4)
+            src: this.$store.state.status.IMG_HOST + this.picUrl(params.row.image, 4)
           }
         })
       ])

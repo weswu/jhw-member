@@ -11,7 +11,7 @@
           <span class="a_underline" style="margin-left: 20px;" @click="myShow">我的显示</span>
         </div>
         <Table ref="selection" :columns="columns" :data="list" @on-selection-change="handleSelectChange"/>
-        <JPagination :checkbox="true" :total="total" :searchData='searchData' @on-change="pageChange">
+        <JPagination :checkbox="true" :total="total" :searchData='searchData' @on-change="get">
           <span slot="btn">
             <Checkbox v-model="toggle" @on-change="handleSelectAll(toggle)"/>
             <Button type="ghost" size="small" @click="delAll">删除</Button>
@@ -101,10 +101,6 @@ export default {
     // 功能
     search () {
       this.searchData.page = 1
-      this.get()
-    },
-    pageChange (page) {
-      this.searchData.page = page
       this.get()
     },
     myShow () {

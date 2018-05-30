@@ -9,7 +9,7 @@
       <Button class="search" @click="search">搜索</Button>
     </div>
     <Table ref="selection" :columns="columns" :data="list" @on-selection-change="handleSelectChange"></Table>
-    <JPagination :total="total" :searchData='searchData' @on-change="pageChange" :right="'24'"/>
+    <JPagination :total="total" :searchData='searchData' @on-change="get"/>
     <div slot="footer">
       <Button type="text" size="large" @click="cancel">取消</Button>
       <Button type="primary" size="large" @click="ok">确定</Button>
@@ -105,11 +105,6 @@ export default {
       this.searchData.page = 1
       this.get()
     },
-    // 分页
-    pageChange (page) {
-      this.searchData.page = page
-      this.get()
-    },
     // 批量操作
     handleSelectChange (status) {
       status.forEach((item, index) => {
@@ -143,7 +138,7 @@ export default {
             display: params.row.picPath ? 'inline-block' : 'none'
           },
           attrs: {
-            src: 'http://img.jihui88.com/' + params.row.picPath
+            src: this.$store.state.status.IMG_HOST + params.row.picPath
           }
         })
       ])

@@ -29,6 +29,7 @@ Vue.prototype.dataFormat = function (date, format) {
   }
   return format
 }
+
 /**
  * 还原ID
  * @method [字符串] - decodeId ( 还原ID )
@@ -52,7 +53,7 @@ Vue.prototype.decodeId = function (id, prefix, length) {
  * @desc: 图片缩略图
 */
 Vue.prototype.picUrl = function (src, number) {
-  if (src === null || src.length === 0) return 'http://img.jihui88.com/upload/j/j2/jihui88/picture/2015/04/01/72041ac7-51fa-4163-906d-8b576955d29e.jpg'
+  if (!src || src.length === 0) return 'upload/j/j2/jihui88/picture/2015/04/01/72041ac7-51fa-4163-906d-8b576955d29e.jpg'
   if (number > 10) {
     src = src + '!' + number
   } else {
@@ -70,14 +71,7 @@ Vue.prototype.picUrl = function (src, number) {
 Vue.prototype.index2 = function (index, obj) {
   return index + (obj.page - 1) * obj.pageSize + 1
 }
-/*
- * @author: wes
- * @date: 2018-5-18
- * @desc: 路由
-*/
-Vue.prototype.url = function (e) {
-  this.$router.push({ path: e })
-}
+
 /*
  * @author: wes
  * @date: 2018-5-18
@@ -108,7 +102,8 @@ Vue.prototype.sortPost = function (id, sort, url) {
   let data = {
     model: JSON.stringify({
       id: id,
-      sort: sort
+      sort: sort,
+      editField: true
     }),
     _method: 'put'
   }

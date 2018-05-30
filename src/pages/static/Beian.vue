@@ -2,7 +2,7 @@
   <Layout class="j_layout ivu-layout-has-sider j_beian">
     <MenuBar :data="'menuStatic'" :active="'beian'"/>
     <Layout class="j_layout_content j_form_detail">
-      <JHeader :title="'域名备案'" :website="active === '2'"/>
+      <JHeader :title="'域名备案'" :lan="active === '0'" :website="active === '2'"/>
       <Content>
         <div class="j_search">
           <Button class="grey" @click="active = item.value" v-for="(item, index) in btns" :key="index" :class="{primary: active === item.value}">{{item.text}}</Button>

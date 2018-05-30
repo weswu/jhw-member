@@ -1,5 +1,6 @@
 // 存放各种常量
 const state = {
+  IMG_HOST: 'http://img.jihui88.com/',
   lanList: [
     { value: '1', text: '中文' },
     { value: '2', text: '英文' }
@@ -36,6 +37,20 @@ const state = {
     { text: '已完成', value: 'completed', html: '<span style="color: #5b5b5b;">已完成</span>' },
     { text: '已作废', value: 'invalid', html: '<span style="color: #a0a0a0;">已作废</span>' },
     { text: '已取消', value: 'cancel', html: '<span style="color: #d0021b;">已取消</span>' }
+  ],
+  // 退货类型
+  disputeType: [
+    { text: '仅退款 ', value: 'onlymoney' },
+    { text: '退款并退货 ', value: 'goodandmoney' }
+  ],
+  // 退货状态
+  disputeState: [
+    { text: '未处理 ', value: 'unprocessed', html: '<span style="color: #d0021b;">未处理</span>' },
+    { text: '处理中 ', value: 'processed', html: '<span style="color: #ff7e3e;">处理中</span>' },
+    { text: '已退款 ', value: 'returned', html: '<span style="color: #417505;">已退款</span>' },
+    { text: '已拒绝 ', value: 'invalid', html: '<span style="color: #417505;">已拒绝</span>' },
+    { text: '已完成 ', value: 'completed', html: '<span style="color: #417505;">已完成</span>' },
+    { text: '已关闭 ', value: 'closed', html: '<span style="color: #a0a0a0;">已关闭</span>' }
   ],
   // 三级导航
   menuAccount: {
@@ -168,10 +183,24 @@ const state = {
       { text: '营销管理', value: 'coupon' }
     ]
   },
+  menu_shop_detail: {
+    menu: [
+      { text: '订单信息', value: '0' },
+      { text: '商品信息', value: '1' },
+      { text: '收款记录', value: '2' },
+      { text: '收货记录', value: '3' },
+      { text: '订单日志', value: '4' }
+    ]
+  },
   menu_shop_pay_detail: {
     menu: [
       { text: '基本信息', value: '0' },
       { text: '介绍', value: '1' }
+    ]
+  },
+  menu_shop_bill_detail: {
+    menu: [
+      { text: '基本信息', value: '0' }
     ]
   }
 }

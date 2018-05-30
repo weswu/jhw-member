@@ -8,7 +8,7 @@
           <Button type="info" icon="plus" class="w130" @click="add">添加招聘</Button>
         </div>
         <Table :columns="columns" :data="list"></Table>
-        <JPagination :total="total" :searchData='searchData' @on-change="pageChange" :right="'24'"/>
+        <JPagination :total="total" :searchData='searchData' @on-change="get"/>
       </Content>
     </Layout>
     <Detail ref='detail'/>
@@ -90,10 +90,6 @@ export default {
           this.$Message.error(res.msg)
         }
       })
-    },
-    pageChange (page) {
-      this.searchData.page = page
-      this.get()
     },
     // 过滤
     indexFilter (h, params) {

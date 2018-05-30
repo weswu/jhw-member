@@ -5,7 +5,7 @@
       <JHeader :title="'积分列表'" :count="count"/>
       <Content>
         <Table :columns="columns" :data="list"></Table>
-        <JPagination :total="total" :searchData='searchData' @on-change="pageChange" :right="'24'"/>
+        <JPagination :total="total" :searchData='searchData' @on-change="get"/>
       </Content>
     </Layout>
   </Layout>
@@ -54,10 +54,6 @@ export default {
           }
         }
       })
-    },
-    pageChange (page) {
-      this.searchData.page = page
-      this.get()
     },
     indexFilter (h, params) {
       return h('span', params.index + (this.searchData.page - 1) * this.searchData.pageSize + 1)
