@@ -76,7 +76,7 @@ export default {
     },
     // 时间格式化
     dataFilter (h, params) {
-      let format = this.dataFormat(params.row.addTime)
+      let format = this.dateFormat(params.row.addTime)
       return h('div', format)
     }
   }

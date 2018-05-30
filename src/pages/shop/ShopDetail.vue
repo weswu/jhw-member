@@ -171,14 +171,14 @@ export default {
               } else if (item.attributeType === 'number') {
                 detail[item.attId] = item.value + ''
               } else if (item.attributeType === 'date') {
-                detail[item.attId] = ctx.dataFormat(item.value, 'yyyy-MM-dd')
+                detail[item.attId] = ctx.dateFormat(item.value, 'yyyy-MM-dd')
               } else {
                 detail[item.attId] = item.value
               }
             }
           })
           // 时间组件bug处理
-          detail.addTime = ctx.dataFormat(detail.addTime, 'yyyy-MM-dd hh:mm:ss')
+          detail.addTime = ctx.dateFormat(detail.addTime, 'yyyy-MM-dd hh:mm:ss')
           let data = {
             model: JSON.stringify(detail)
           }

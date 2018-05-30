@@ -8,7 +8,7 @@
           <Button class="grey primary w130">产品表格下载</Button>
           <Button class="grey w130" @click="update($Message)">产品相册下载</Button>
         </div>
-        <table class="j_table">
+        <table class="j_table j_table_li">
           <thead>
             <tr>
               <th>表格模板内容：需要的请“打勾”，再点下载。</th>
@@ -24,7 +24,7 @@
             </tr>
           </tbody>
         </table>
-        <table class="j_table" style="margin: 25px 0 35px 0">
+        <table class="j_table j_table_li" style="margin: 25px 0 35px 0">
           <thead>
             <tr>
               <th>

@@ -136,7 +136,18 @@ export default {
                   item.selected = false
                 })
               })
-              this.$emit('on-change', data.id)
+              debugger
+              let breadList = [
+                { value: 'all', text: '全部图片' }
+              ]
+              breadList.push({
+                value: data.id,
+                text: data.name
+              })
+              this.$emit('on-change', {
+                breadList: breadList,
+                id: data.id
+              })
               data.selected = !data.selected
             }
           }
@@ -196,6 +207,7 @@ export default {
     overflow: hidden;
   }
   .ivu-tree ul {
+    line-height: 1.3;
     .item{
       position: relative;
       padding: 2px 0;
@@ -246,11 +258,22 @@ export default {
           background-size: 1px;
         }
         .ivu-tree-title span{
-          overflow: hidden;
           display: inline-block;
+          overflow: hidden;
           text-overflow: ellipsis;
-          width: 80%;
+          white-space: nowrap;
+          width: 129px;
           vertical-align: text-bottom;
+        }
+        ul li{
+          .ivu-tree-title span{
+            width: 106px;
+          }
+          ul li{
+            .ivu-tree-title span{
+              width: 83px;
+            }
+          }
         }
       }
     }

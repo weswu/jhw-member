@@ -102,7 +102,7 @@ export default {
       })
     },
     dataFilter (h, params) {
-      let format = this.dataFormat(params.row.addTime || 'yyyy-MM-dd hh:mm')
+      let format = this.dateFormat(params.row.addTime || 'yyyy-MM-dd hh:mm')
       return h('div', format)
     },
     buyerReasonFilter (h, params) {

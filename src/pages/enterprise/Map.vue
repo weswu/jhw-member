@@ -66,7 +66,7 @@ export default {
     },
     submit () {
       this.user.enterprise.mapaddress = this.center.lng + ',' + this.center.lat
-      this.user.enterprise.regTime = this.dataFormat(this.user.enterprise.regTime, 'yyyy-MM-dd')
+      this.user.enterprise.regTime = this.dateFormat(this.user.enterprise.regTime, 'yyyy-MM-dd')
       let data = {
         model: JSON.stringify(this.user.enterprise),
         _method: 'put'

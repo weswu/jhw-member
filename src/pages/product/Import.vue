@@ -10,7 +10,7 @@
         <div class="j_tip">
           <span class="red">步骤一：</span>“打勾”生成产品表格模板
         </div>
-        <table class="j_table">
+        <table class="j_table j_table_li">
           <thead>
             <tr>
               <th>表格模板内容：</th>

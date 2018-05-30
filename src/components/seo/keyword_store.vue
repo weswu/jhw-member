@@ -4,9 +4,9 @@
       <Input v-model="name" placeholder="请输入关键词名称" style="width:200px"></Input>
       <Button class="search" @click="add">添加</Button>
     </div>
-    <JTable :title="'关键词'">
+    <JTable :title="'关键词'" class="j_table_li">
       <tbody slot="tbody">
-        <tr class="one">
+        <tr>
           <td>
             <ul slot="content">
               <li v-for="(item, index) in list" :key="index" :title="item.keywords">

@@ -225,7 +225,7 @@ export default {
       return h('span', params.row.point + '分')
     },
     dataFilter (h, params) {
-      let format = this.dataFormat(params.row.addTime)
+      let format = this.dateFormat(params.row.addTime)
       return h('div', format)
     },
     renderOperate (h, params) {

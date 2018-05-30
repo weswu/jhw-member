@@ -202,6 +202,12 @@ const state = {
     menu: [
       { text: '基本信息', value: '0' }
     ]
+  },
+  menu_coupon_detail: {
+    menu: [
+      { text: '基础信息', value: '0' },
+      { text: '基础规则', value: '1' }
+    ]
   }
 }
 

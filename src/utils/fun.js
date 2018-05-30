@@ -7,7 +7,7 @@ import qs from 'qs'
  * @date: 2018-5-8
  * @desc: 时间选择
 */
-Vue.prototype.dataFormat = function (date, format) {
+Vue.prototype.dateFormat = function (date, format) {
   date = new Date(date)
   format = format || 'yyyy-MM-dd hh:mm'
   var o = {

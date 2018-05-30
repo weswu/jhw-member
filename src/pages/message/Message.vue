@@ -229,7 +229,7 @@ export default {
       ])
     },
     dataFilter (h, params) {
-      return h('div', this.dataFormat(params.row.addTime))
+      return h('div', this.dateFormat(params.row.addTime))
     },
     typeFilter (h, params) {
       let text = ''

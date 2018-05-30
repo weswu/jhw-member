@@ -6,13 +6,13 @@
         <Cateogy @on-change="changeCategory"/>
         <Layout class="j_album_container">
           <div class="j_search">
-            <Row :gutter="24">
-              <Col span="10">
+            <Row type="flex" justify="space-between">
+              <Col>
                 <Button type="info" @click="upload"><i class="iconfont icon-shangchuan"></i>上传图片到当前目录</Button>
                 <Button class="info" @click="update($Message)"><i class="iconfont icon-wenjianjia"></i>新建相册</Button>
                 <Button class="info" @click="update($Message)"><i class="iconfont icon-huishouzhan"></i>回收站</Button>
               </Col>
-              <Col span="14" style="text-align:right">
+              <Col>
                 <Input v-model="pic" class="w144" placeholder="搜索图片名称"></Input>
                 <Button class="search" @click="update($Message)">搜索</Button>
                 <Button class="grey" @click="update($Message)">高级搜索</Button>
@@ -23,15 +23,15 @@
           </div>
           <Content class="picture">
             <div class="picture_header">
-              <Row :gutter="24">
-                <Col span="10">
+              <Row type="flex" justify="space-between">
+                <Col>
                   <Breadcrumb separator=">">
                     <BreadcrumbItem v-for="(item, index) in breadList" :key="item.value">
                       <i class="iconfont icon-tupian1" v-if="index === 0"></i>{{item.text}}
                     </BreadcrumbItem>
                   </Breadcrumb>
                 </Col>
-                <Col span="14" style="text-align:right">
+                <Col>
                   <Select v-model="searchData.sort" class="select_sort">
                     <Option v-for="item in sortList" :value="item.value" :key="item.value" :label="item.label">
                       <span>{{ item.label }}</span>
@@ -94,7 +94,7 @@ export default {
         { value: '01', label: '时间' }
       ],
       breadList: [
-        { value: '', text: '全部图片' }
+        { value: 'all', text: '全部图片' }
       ],
       list: [],
       total: 0,

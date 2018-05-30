@@ -54,7 +54,7 @@ export default {
         { text: 'Tag标签管理', value: '5' },
         { text: '付费SEO推广', value: '6' }
       ],
-      active: '3'
+      active: '0'
     }
   },
   methods: {

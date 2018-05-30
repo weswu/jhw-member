@@ -2,7 +2,7 @@
   <Modal
     v-model="modal"
     width="700"
-    title="选择产品">
+    :title="title">
     <div class="j_search">
       <Input v-model="searchData.name" placeholder="请输入产品名称" style="width: 144px;"></Input>
       <Input v-model="searchData.prodtype" placeholder="请输入产品型号" style="width: 144px;"></Input>
@@ -12,7 +12,7 @@
     <JPagination :total="total" :searchData='searchData' @on-change="get"/>
     <div slot="footer">
       <Button type="text" size="large" @click="cancel">取消</Button>
-      <Button type="primary" size="large" @click="ok">确定</Button>
+      <Button type="primary" size="large" @click="ok" v-if="type !== 'select'">确定</Button>
     </div>
   </Modal>
 </template>
@@ -22,7 +22,12 @@ import qs from 'qs'
 import JPagination from '@/components/group/j-pagination'
 export default {
   props: {
-    ids: {}
+    ids: {},
+    title: {
+      type: String,
+      default: '选择产品'
+    },
+    type: {}
   },
   components: {
     JPagination
@@ -31,7 +36,6 @@ export default {
     return {
       modal: false,
       columns: [
-        { type: 'selection', className: 'j_table_checkbox', width: 44 },
         { title: '产品图片', className: 'j_table_img', width: 100, render: this.imgFilter },
         { title: '产品名称【型号】', render: this.nameFilter },
         { title: '创建时间', key: 'addTime', width: 160, render: this.dataFilter }
@@ -66,6 +70,11 @@ export default {
     },
     open () {
       this.modal = true
+      if (this.type === 'select') {
+        this.columns.push({ title: '操作', className: 'j_table_operate', width: 120, render: this.renderOperate })
+      } else {
+        this.columns.splice(0, 0, { type: 'selection', className: 'j_table_checkbox', width: 44 })
+      }
       this.get()
     },
     cancel () {
@@ -147,8 +156,17 @@ export default {
       return h('div', params.row.name + (params.row.prodtype ? '[' + params.row.prodtype + ']' : ''))
     },
     dataFilter (h, params) {
-      let format = this.dataFormat(params.row.addTime)
+      let format = this.dateFormat(params.row.addTime)
       return h('div', format)
+    },
+    renderOperate (h, params) {
+      return h('a', {
+        on: {
+          click: () => {
+            this.$emit('on-select', params.row)
+          }
+        }
+      }, '选取')
     }
   }
 }

@@ -169,7 +169,7 @@ export default {
     submit () {
       this.$refs['model'].validate((valid) => {
         if (valid) {
-          this.user.enterprise.regTime = this.dataFormat(this.user.enterprise.regTime, 'yyyy-MM-dd')
+          this.user.enterprise.regTime = this.dateFormat(this.user.enterprise.regTime, 'yyyy-MM-dd')
           this.setUser()
           this.setEnterprise()
         }

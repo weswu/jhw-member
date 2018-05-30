@@ -79,7 +79,7 @@ export default {
       })
     },
     dataFilter (h, params) {
-      let format = this.dataFormat(params.row.addTime || 'yyyy-MM-dd')
+      let format = this.dateFormat(params.row.addTime || 'yyyy-MM-dd')
       return h('div', format)
     },
     renderOperate (h, params) {

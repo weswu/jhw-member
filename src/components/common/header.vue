@@ -6,7 +6,7 @@
     <Col span="18" class="userInfo">
       <a href="#/" class="header_link">首页</a>
       <a href="#/" class="header_link">服务反馈</a>
-      <Dropdown placement="bottom" class="j_dropdown_message">
+      <Dropdown placement="bottom" class="j_dropdown_message" @on-visible-change="messageChange">
           <a href="#/message" class="header_link">
               <i class="iconfont icon-tixing2"><span class="badge">{{userInfo.noReaderMsg}}</span></i>
           </a>
@@ -70,7 +70,8 @@ export default {
   },
   data () {
     return {
-      visible: false
+      visible: false,
+      message: false
     }
   },
   computed: {
@@ -80,7 +81,6 @@ export default {
     this.$store.commit('setLanId', window.localStorage.getItem('lanId') || '1')
     this.getUser()
     this.getUserInfo()
-    this.getMessage()
   },
   methods: {
     ...mapActions(['getUser', 'getUserInfo', 'getMessage']),
@@ -109,6 +109,12 @@ export default {
     },
     detail (id) {
       this.$refs.detail.open(id)
+    },
+    messageChange () {
+      if (this.messageList.length === 0 && !this.message) {
+        this.getMessage()
+        this.message = true
+      }
     }
   }
 }

@@ -67,6 +67,7 @@ export default new Router({
     { path: '/shop_bill/:id', component: require('@/pages/shop/BillDetail').default },
     { path: '/shop_refund', component: require('@/pages/shop/Refund').default },
     { path: '/coupon', component: require('@/pages/shop/Coupon').default },
+    { path: '/coupon/:id', component: require('@/pages/shop/CouponDetail').default },
     // default
     { path: '*', redirect: '/' }
   ]

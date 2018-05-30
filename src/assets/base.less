@@ -35,6 +35,11 @@ a.primary{
 .clear{
   clear: both
 }
+.ellipsis{
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
 .pl5{
   padding-left: 5px;
 }
@@ -262,7 +267,7 @@ a.primary{
     color: #a0a0a0;
     font-weight: normal;
   }
-  .one td{
+  &.j_table_li td{
     padding: 0;
     border-bottom: none;
     border-right: none;
@@ -747,8 +752,9 @@ a.primary{
   &:focus{
     box-shadow: none;
   }
-  i{
+  .iconfont{
     font-size: 12px;
+    padding-right: 5px;
   }
   &.grey{
     background: #d9dee4;

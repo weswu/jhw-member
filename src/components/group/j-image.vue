@@ -1,7 +1,7 @@
 <template>
   <div class="j_image" @click="open" :style="{width: width+'px', height: width+'px', lineHeight: width+'px'}">
-    <img :src="$store.state.status.IMG_HOST+src" alt="" v-if="!isNull" @error="setErrorImg">
-    <div class="null_pic" v-if="isNull">
+    <img :src="$store.state.status.IMG_HOST+src" alt="" v-if="src">
+    <div class="null_pic" v-if="!src">
       上传
     </div>
     <JAblum :title="title" ref="ablum" @on-change="picChange"/>
@@ -25,17 +25,9 @@ export default {
   components: {
     JAblum
   },
-  data () {
-    return {
-      isNull: false
-    }
-  },
   methods: {
     open () {
       this.$refs.ablum.open()
-    },
-    setErrorImg (e) {
-      this.isNull = true
     },
     picChange (e) {
       this.$emit('on-change', e)
@@ -47,7 +39,7 @@ export default {
 <style lang="less">
 .j_image{
   cursor: pointer;
-  display: table-cell;
+  display: inline-block;
   vertical-align: middle;
   text-align: center;
   img {

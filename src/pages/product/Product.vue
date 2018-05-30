@@ -587,7 +587,7 @@ export default {
       ])
     },
     dataFilter (h, params) {
-      let format = this.dataFormat(params.row.addTime)
+      let format = this.dateFormat(params.row.addTime)
       return h('div', format)
     },
     isdisplayFilter (h, params) {

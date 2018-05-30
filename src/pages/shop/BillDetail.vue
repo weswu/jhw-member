@@ -18,7 +18,7 @@
             <span class="a_underline" @click="selectPic">选择图片</span>
           </FormItem>
           <FormItem label="添加打印项：">
-            <Select class="w144 border" @on-change="v=>{change(v,'test')}" :label-in-value="true">
+            <Select class="w144 border" @on-change="change" :label-in-value="true">
               <Option :value="item.value" v-for="item in addItems" :key="item.value">{{item.text}}</Option>
             </Select>
           </FormItem>
