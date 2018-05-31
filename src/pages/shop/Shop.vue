@@ -216,7 +216,7 @@ export default {
         h('a', {
           on: {
             click: () => {
-              this.$router.push({path: '/order/' + params.row.orderId})
+              this.$router.push({path: '/shop/' + params.row.orderId})
             }
           }
         }, '修改'),

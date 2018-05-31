@@ -7,6 +7,12 @@
       <Input v-model="name" class="w144" placeholder="搜索文件夹"></Input>
       <Button class="search" @click="search" style="margin-right: 0;">搜索</Button>
     </div>
+    <v-contextmenu ref="contextmenub">
+      <v-contextmenu-item>菜单1</v-contextmenu-item>
+      <v-contextmenu-item>菜单2</v-contextmenu-item>
+      <v-contextmenu-item>菜单3</v-contextmenu-item>
+    </v-contextmenu>
+    <div v-contextmenu:contextmenub></div>
     <Tree :data="data"></Tree>
   </div>
 </template>
@@ -16,7 +22,16 @@ export default {
   data () {
     return {
       name: '',
-      data: [],
+      data: [
+        {
+          title: '全部图片',
+          id: 'all',
+          expand: true, // 展开节点
+          selected: false, // 选中节点
+          render: this.iconFilter,
+          children: []
+        }
+      ],
       list: []
     }
   },
@@ -38,8 +53,8 @@ export default {
         {
           title: '全部图片',
           id: 'all',
-          expand: true,
-          selected: false,
+          expand: true, // 展开节点
+          selected: false, // 选中节点
           render: this.iconFilter,
           children: []
         }
@@ -52,7 +67,8 @@ export default {
             expand: false,
             selected: false,
             render: this.iconFilter,
-            children: []
+            children: [],
+            attCount: item.attCount
           })
         }
       })
@@ -65,7 +81,8 @@ export default {
               expand: false,
               selected: false,
               render: this.iconFilter,
-              children: []
+              children: [],
+              attCount: item.attCount
             })
           }
         })
@@ -78,7 +95,8 @@ export default {
                 title: item2.name,
                 id: item2.albumId,
                 render: this.iconFilter,
-                checked: false
+                children: [],
+                attCount: item.attCount
               })
             }
           })
@@ -90,10 +108,9 @@ export default {
         this.data = [
           {
             title: '搜索结果',
-            id: '',
+            id: 'all',
             expand: true,
             selected: false,
-            render: this.iconFilter,
             children: []
           }
         ]
@@ -128,27 +145,23 @@ export default {
             'ivu-tree-title': true,
             'ivu-tree-title-selected': data.selected
           },
+          directives: [
+            {
+              name: 'contextmenu',
+              value: 'contextmenu2',
+              expression: '1 + 1',
+              arg: 'foo',
+              modifiers: {
+                bar: true
+              }
+            }
+          ],
           on: {
             click: () => {
-              this.data.forEach(item => {
-                item.selected = false
-                item.children.forEach(item2 => {
-                  item.selected = false
-                })
-              })
-              debugger
-              let breadList = [
-                { value: 'all', text: '全部图片' }
-              ]
-              breadList.push({
-                value: data.id,
-                text: data.name
-              })
-              this.$emit('on-change', {
-                breadList: breadList,
-                id: data.id
-              })
-              data.selected = !data.selected
+              this.ok(root, node, data)
+            },
+            contextmenu: () => {
+              // this.$Message.info('aa')
             }
           }
         }, [
@@ -166,6 +179,40 @@ export default {
           h('span', data.title)
         ])
       ])
+    },
+    ok (root, node, data) {
+      root.find(el => {
+        el.node.selected = false
+      })
+      data.selected = true
+      let breadList = [
+        { value: 'all', text: '全部图片' }
+      ]
+      const parentKey = root.find(el => el === node).parent
+      if (parentKey || parentKey === 0) {
+        breadList.push({
+          value: data.id,
+          text: data.title
+        })
+        const parent = root.find(el => el.nodeKey === parentKey)
+        if (parent && parent.node.id !== 'all') {
+          breadList.splice(1, 0, {
+            value: parent.node.id,
+            text: parent.node.title
+          })
+        }
+        const parent2 = root.find(el => el.nodeKey === parent.parent)
+        if (parent2 && parent2.node.id !== 'all') {
+          breadList.splice(1, 0, {
+            value: parent2.node.id,
+            text: parent2.node.title
+          })
+        }
+      }
+      this.$emit('on-change', {
+        breadList: breadList,
+        data: data
+      })
     }
   }
 }

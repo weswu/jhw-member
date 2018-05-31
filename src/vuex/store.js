@@ -28,6 +28,7 @@ const store = new Vuex.Store({
     memberRankList: [],
     memberAttrList: [],
     tagList: [],
+    areaList: [],
     // 站点
     staticList: [
       { value: '203', text: '网站编辑：203' },
@@ -49,6 +50,7 @@ const store = new Vuex.Store({
     memberRankList: state => state.memberRankList,
     memberAttrList: state => state.memberAttrList,
     tagList: state => state.tagList,
+    areaList: state => state.areaList,
     // 站点
     staticList: state => state.staticList,
     staticId: state => state.staticId
@@ -77,6 +79,9 @@ const store = new Vuex.Store({
     },
     setTagList (state, tagList) {
       state.tagList = tagList
+    },
+    setAreaList (state, areaList) {
+      state.areaList = areaList
     },
     setStaticList (state, staticList) {
       state.staticList = staticList
@@ -242,6 +247,51 @@ const store = new Vuex.Store({
       this._vm.$http.get('/rest/api/tag/list?pageSize=1000').then(res => {
         if (res.success) {
           this.commit('setTagList', res.attributes.data)
+        }
+      })
+    },
+    getAreaList ({commit, state}) {
+      this._vm.$http.get('/rest/api/area/list').then((res) => {
+        if (res.success) {
+          let area = res.attributes.data
+          let data = []
+          area.forEach(item => {
+            if (item.level === 0) {
+              data.push({
+                value: item.areaId,
+                label: item.name,
+                children: []
+              })
+            }
+          })
+          area.forEach(item => {
+            if (item.level === 1) {
+              data.forEach(row => {
+                if (row.value === item.belongId) {
+                  row.children.push({
+                    value: item.areaId,
+                    label: item.name,
+                    children: []
+                  })
+                }
+              })
+            }
+          })
+          area.forEach(item => {
+            if (item.level === 2) {
+              data.forEach(row => {
+                row.children.forEach(item2 => {
+                  if (item2.value === item.belongId) {
+                    item2.children.push({
+                      value: item.areaId,
+                      label: item.name
+                    })
+                  }
+                })
+              })
+            }
+          })
+          this.commit('setAreaList', data)
         }
       })
     },

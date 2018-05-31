@@ -40,7 +40,7 @@
             <FormItem label="支付宝密钥：">
               <Input v-model="detail.configObject.key" placeholder="请输入支付宝密钥"></Input>
             </FormItem>
-            <div class="j_shop_title">手机网站支付 - RSA(SHA1) ：
+            <div class="j_form_title">手机网站支付 - RSA(SHA1) ：
               <a href="https://openhome.alipay.com/platform/home.htm" target="_blank" class="a_underline">点击设置</a>
             </div>
             <FormItem label="应用APPID：">

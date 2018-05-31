@@ -123,8 +123,9 @@ export default {
       })
     },
     upload () {},
-    changeCategory (e) {
-      this.attId = e
+    changeCategory (res) {
+      this.attId = res.data.id
+      this.breadList = res.breadList
       this.get()
     },
     pageVal () {

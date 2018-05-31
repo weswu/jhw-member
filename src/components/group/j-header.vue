@@ -1,11 +1,11 @@
 <template>
-  <div :class="{j_head: tip}">
+  <div :class="{j_head: tip, j_head2: type}">
     <div class="j_header">
-      <Row :gutter="24">
-        <Col :span="left">
+      <Row type="flex" justify="space-between">
+        <Col>
           <span class="title">{{title}}<span v-if="count">拥有积分：{{count}}分</span></span>
         </Col>
-        <Col :span="right" style="text-align:right">
+        <Col>
           <Select v-model="lanId" class="primary" @on-change="change" style="width:106px" v-if="lan">
             <Option v-for="item in lanList" :value="item.value" :key="item.value">{{ item.text }}</Option>
           </Select>
@@ -38,14 +38,7 @@ export default {
     },
     count: {},
     tip: {},
-    left: {
-      type: String,
-      default: '10'
-    },
-    right: {
-      type: String,
-      default: '14'
-    }
+    type: {}
   },
   computed: {
     ...mapState({
@@ -81,6 +74,12 @@ export default {
   }
   .j_tip{
     margin: 0 0 20px 0;
+  }
+  &.j_head2{
+    .j_header{
+      border-bottom: 1px solid #c9c9c9;
+      margin-bottom: 21px;
+    }
   }
 }
 .j_header{

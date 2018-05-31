@@ -52,6 +52,24 @@ const state = {
     { text: '已完成 ', value: 'completed', html: '<span style="color: #417505;">已完成</span>' },
     { text: '已关闭 ', value: 'closed', html: '<span style="color: #a0a0a0;">已关闭</span>' }
   ],
+  // 支付方式(管理员自己设置的支付方式)
+  paymentType: [
+    { text: '预存款支付', value: 'deposit' },
+    { text: '在线充值', value: 'recharge' },
+    { text: '线下支付', value: 'offline' },
+    { text: '在线支付', value: 'online' }
+  ],
+  // 订单日志状态
+  orderLogType: [
+    { text: '订单创建', value: 'create' },
+    { text: '订单修改', value: 'modify' },
+    { text: '订单支付', value: 'payment' },
+    { text: '订单退款', value: 'refund' },
+    { text: '订单发货', value: 'shipping' },
+    { text: '订单退货', value: 'reship' },
+    { text: '订单完成', value: 'completed' },
+    { text: '订单作废', value: 'invlid' }
+  ],
   // 三级导航
   menuAccount: {
     title: '账号管理',
@@ -187,9 +205,11 @@ const state = {
     menu: [
       { text: '订单信息', value: '0' },
       { text: '商品信息', value: '1' },
-      { text: '收款记录', value: '2' },
-      { text: '收货记录', value: '3' },
-      { text: '订单日志', value: '4' }
+      { text: '订单支付', value: '2' },
+      { text: '订单发货', value: '3' },
+      { text: '收款记录', value: '4' },
+      { text: '收货记录', value: '5' },
+      { text: '订单日志', value: '6' }
     ]
   },
   menu_shop_pay_detail: {

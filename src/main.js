@@ -15,12 +15,16 @@ import './utils/fun'
 import './../static/ueditor1_4_3/ueditor.config.js'
 import './../static/ueditor1_4_3/ueditor.all.min.js'
 import './../static/ueditor1_4_3/lang/zh-cn/zh-cn.js'
+import contentmenu from 'v-contextmenu'
+import 'v-contextmenu/dist/index.css'
 Vue.use(iView)
 // ajax
 Vue.prototype.$http = Axios
 Vue.prototype.$cookie = Cookie
 // 复制
 Vue.use(VueClipboard)
+// 右击
+Vue.use(contentmenu)
 // vue config
 Vue.config.productionTip = false
 Vue.config.debug = true

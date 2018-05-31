@@ -78,6 +78,7 @@ export default {
   computed: {
     ...mapState({
       user: state => state.user,
+      areaList: state => state.areaList,
       lanId: state => state.lanId,
       lanList: state => state.status.lanList
     })
@@ -104,62 +105,16 @@ export default {
           { required: true, message: '手机不能为空', trigger: 'blur' }
         ]
       },
-      areaList: [],
       address: []
     }
   },
   created () {
-    this.getArea()
+    if (this.areaList.length === 0) {
+      this.$store.dispatch('getAreaList')
+    }
     this.address = this.user.enterprise.address && this.user.enterprise.address.split(',')
   },
   methods: {
-    getArea () {
-      this.$http.get('/rest/api/area/list').then((res) => {
-        if (res.success) {
-          this.initArea(res.attributes.data)
-        } else {
-          this.$Message.error(res.msg)
-        }
-      })
-    },
-    initArea (area) {
-      area.forEach(item => {
-        if (item.level === 0) {
-          this.areaList.push({
-            value: item.areaId,
-            label: item.name,
-            children: []
-          })
-        }
-      })
-      area.forEach(item => {
-        if (item.level === 1) {
-          this.areaList.forEach(row => {
-            if (row.value === item.belongId) {
-              row.children.push({
-                value: item.areaId,
-                label: item.name,
-                children: []
-              })
-            }
-          })
-        }
-      })
-      area.forEach(item => {
-        if (item.level === 2) {
-          this.areaList.forEach(row => {
-            row.children.forEach(item2 => {
-              if (item2.value === item.belongId) {
-                item2.children.push({
-                  value: item.areaId,
-                  label: item.name
-                })
-              }
-            })
-          })
-        }
-      })
-    },
     picChange (e) {
       this.user.enterprise.logo = e.src
     },

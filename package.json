@@ -16,6 +16,7 @@
     "iview": "^2.13.1",
     "lrz": "^4.9.40",
     "sortablejs": "^1.7.0",
+    "v-contextmenu": "^2.6.0",
     "vue": "^2.5.2",
     "vue-baidu-map": "^0.21.10",
     "vue-clipboard2": "^0.1.0",

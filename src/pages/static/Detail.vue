@@ -15,7 +15,7 @@
         <Input v-model="detail.phone" placeholder="请输入手机"></Input>
       </FormItem>
       <FormItem label="邮寄的地区：">
-        <Cascader :data="areaList" v-model="detail.address" style="width: 250px;"></Cascader>
+        <Cascader :data="areaList" v-model="address" style="width: 250px;"></Cascader>
       </FormItem>
       <FormItem label="邮寄的详细地址：" prop="detail">
         <Input v-model="detail.detail" placeholder="请输入详细地址"></Input>
@@ -26,18 +26,19 @@
 
 <script>
 import qs from 'qs'
+import { mapState } from 'vuex'
 export default {
   data () {
     return {
       modal: false,
       detail: {},
+      address: [],
       sf: {
         card_no: this.$store.state.user.username,
         fdbk_subject64: '幕布照邮寄',
         fdbk_intro1k: '',
         fdbk_type: '2'
       },
-      areaList: [],
       rules: {
         name: [
           { required: true, message: '姓名不能为空', trigger: 'blur' }
@@ -51,62 +52,18 @@ export default {
       }
     }
   },
+  computed: {
+    ...mapState({
+      areaList: state => state.areaList
+    })
+  },
   methods: {
     open (id) {
       this.modal = true
-      this.getArea()
+      if (this.areaList.length === 0) {
+        this.$store.dispatch('getAreaList')
+      }
       this.detail = {}
-    },
-    getArea () {
-      this.$http.get('/rest/api/area/list').then((res) => {
-        if (res.success) {
-          this.list = []
-          this.initArea(res.attributes.data)
-        } else {
-          this.$Message.error(res.msg)
-        }
-      })
-    },
-    initArea (area) {
-      area.forEach(item => {
-        if (item.level === 0) {
-          this.areaList.push({
-            areaId: item.areaId,
-            value: item.name,
-            label: item.name,
-            children: []
-          })
-        }
-      })
-      area.forEach(item => {
-        if (item.level === 1) {
-          this.areaList.forEach(row => {
-            if (row.areaId === item.belongId) {
-              row.children.push({
-                areaId: item.areaId,
-                value: item.name,
-                label: item.name,
-                children: []
-              })
-            }
-          })
-        }
-      })
-      area.forEach(item => {
-        if (item.level === 2) {
-          this.areaList.forEach(row => {
-            row.children.forEach(item2 => {
-              if (item2.areaId === item.belongId) {
-                item2.children.push({
-                  areaId: item.areaId,
-                  value: item.name,
-                  label: item.name
-                })
-              }
-            })
-          })
-        }
-      })
     },
     cancel () {
       this.modal = false
@@ -115,7 +72,7 @@ export default {
       this.$refs[name].validate((valid) => {
         if (valid) {
           this.sf.fdbk_intro1k = '姓名:' + this.detail.name + '\n手机:' + this.detail.phone +
-          '\n邮寄地址:' + this.detail.address.join(' ') + '\n手机:' + this.detail.detail
+          '\n邮寄地址:' + this.address.join(' ') + '\n手机:' + this.detail.detail
           this.sf.fdbk_subject64 = this.sf.fdbk_subject64
           this.$http.post('http://crmyun.jihui88.com:9500/api/jihuifeedback.php', qs.stringify(this.sf)).then((res) => {
             window.alert('发送成功')

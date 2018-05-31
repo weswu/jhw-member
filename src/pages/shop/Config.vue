@@ -6,7 +6,7 @@
       <Content>
         <Form :model="detail" :label-width="130">
           <!-- 1 -->
-          <div class="j_shop_title" style="padding-top: 20px;">产品价格登录后可见：</div>
+          <div class="j_form_title" style="padding-top: 20px;">产品价格登录后可见：</div>
           <FormItem label="PC网站：">
             <RadioGroup v-model="detail.priceDisplayAfterLoginPc">
               <Radio label="01">启用</Radio>
@@ -20,7 +20,7 @@
             </RadioGroup>
           </FormItem>
           <!-- 2 -->
-          <div class="j_shop_title">产品价格登隐藏：</div>
+          <div class="j_form_title">产品价格登隐藏：</div>
           <FormItem label="PC网站：">
             <RadioGroup v-model="detail.priceDisplayPc">
               <Radio label="01">显示</Radio>
@@ -34,7 +34,7 @@
             </RadioGroup>
           </FormItem>
           <!-- 3 -->
-          <div class="j_shop_title">市场价格登隐藏：</div>
+          <div class="j_form_title">市场价格登隐藏：</div>
           <FormItem label="PC网站：">
             <RadioGroup v-model="detail.marketPriceDisplayPc">
               <Radio label="01">显示</Radio>
@@ -48,7 +48,7 @@
             </RadioGroup>
           </FormItem>
           <!-- 4 -->
-          <div class="j_shop_title">产品隐藏：</div>
+          <div class="j_form_title">产品隐藏：</div>
           <FormItem label="PC网站：">
             已选择{{productHidePcCont}}件商品 <span class="a_underline" @click="selectProduct('1')">选择商品</span>
           </FormItem>
@@ -56,7 +56,7 @@
             已选择{{productHideMobileCont}}件商品 <span class="a_underline" @click="selectProduct('2')">选择商品</span>
           </FormItem>
           <!-- 5 -->
-          <div class="j_shop_title">开具发票：</div>
+          <div class="j_form_title">开具发票：</div>
           <FormItem label="PC网站：">
             <RadioGroup v-model="detail.billState">
               <Radio label="01">显示</Radio>
@@ -67,7 +67,7 @@
             </FormItem>
           </FormItem>
           <!-- 6 -->
-          <div class="j_shop_title">满多少包邮：</div>
+          <div class="j_form_title">满多少包邮：</div>
           <FormItem label="是否启用：">
             <RadioGroup v-model="detail.pinkageState">
               <Radio label="01">开启</Radio>
