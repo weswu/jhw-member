@@ -20,7 +20,7 @@
       <Select class="primary" placeholder="升级购买" @on-change="change" style="width:123px">
         <Option class="head" value="0" label="升级购买"> 网站 </Option>
         <Option v-for="item in staticList" :value="item.value" :key="item.value" label="升级购买">
-          {{ item.text }}
+          网站编号：{{ item.layoutId }}
         </Option>
         <Option class="head" v-for="item in list" :value="item.value" :key="item.value" label="升级购买">
           {{ item.text }}

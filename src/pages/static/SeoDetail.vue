@@ -2,6 +2,7 @@
   <Modal
     v-model="modal"
     title="SEO编辑"
+    :width="600"
     @on-cancel="cancel">
     <div slot="footer">
       <Button type="text" size="large" @click="cancel">取消</Button>

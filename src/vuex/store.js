@@ -5,19 +5,9 @@ Vue.use(Vuex)
 
 const store = new Vuex.Store({
   state: {
-    user: {
-      name: '未登录',
-      username: '未登录',
-      addTime: 1272102123858,
-      enterprise: {}
-    },
+    user: {},
     userInfo: {
-      news: 7,
-      product: 214,
-      order_unshipped: 33,
-      noReaderMsg: 1,
-      order_unpaid: 27,
-      order: 45
+      noReaderMsg: 1
     },
     lanId: '1',
     uid: ['0', '0', '0'],
@@ -31,13 +21,13 @@ const store = new Vuex.Store({
     areaList: [],
     // 站点
     staticList: [
-      { value: '203', text: '网站编辑：203' },
-      { value: '204', text: '网站编辑：204' },
-      { value: '205', text: '网站编辑：205' },
-      { value: '206', text: '网站编辑：206' },
-      { value: '207', text: '网站编辑：207' }
+      { layoutId: '203', title: '网站编号：203' },
+      { layoutId: '204', title: '网站编号：204' },
+      { layoutId: '205', title: '网站编号：205' },
+      { layoutId: '206', title: '网站编号：206' },
+      { layoutId: '207', title: '网站编号：207' }
     ],
-    staticId: ''
+    layoutId: '0'
   },
   getters: {
     user: state => state.user,
@@ -53,7 +43,7 @@ const store = new Vuex.Store({
     areaList: state => state.areaList,
     // 站点
     staticList: state => state.staticList,
-    staticId: state => state.staticId
+    layoutId: state => state.layoutId
   },
   mutations: {
     setUser (state, user) {
@@ -86,8 +76,8 @@ const store = new Vuex.Store({
     setStaticList (state, staticList) {
       state.staticList = staticList
     },
-    setStaticId (state, staticId) {
-      state.staticId = staticId
+    setLayoutId (state, layoutId) {
+      state.layoutId = layoutId
     },
     setLanId (state, lanId) {
       state.lanId = lanId
@@ -119,9 +109,14 @@ const store = new Vuex.Store({
     getUser ({commit, state}) {
       this._vm.$http.get('/rest/api/user/detail').then((res) => {
         if (res.success) {
-          this.commit('setUser', res.attributes.data || {
+          let data = res.attributes.data
+          if (data) {
+            data.enterprise.addresslist = data.enterprise.address && data.enterprise.address.split(',')
+          }
+          this.commit('setUser', data || {
             name: '未登录',
             username: '未登录',
+            addTime: 1272102123858,
             enterprise: {}
           })
         } else {
@@ -309,9 +304,19 @@ const store = new Vuex.Store({
         }
       })
     },
-    staticIdChange ({dispatch, commit}, staticId) {
-      this.commit('setStaticId', staticId)
-      window.localStorage.setItem('staticId', staticId)
+    getStaticList ({commit, state}) {
+      return this._vm.$http.get('/rest/pc/api/baseLayout/list?page=1&pageSize=50').then(res => {
+        if (res.success) {
+          this.commit('setStaticList', res.attributes.data)
+          if (res.attributes.data.length > 0) {
+            this.commit('setLayoutId', res.attributes.data[0].layoutId)
+          }
+        }
+      })
+    },
+    layoutIdChange ({dispatch, commit}, layoutId) {
+      this.commit('setLayoutId', layoutId)
+      window.localStorage.setItem('layoutId', layoutId)
     },
     lanIdChange ({dispatch, commit}, lanId) {
       this.commit('setLanId', lanId)

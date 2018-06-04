@@ -2,7 +2,7 @@
   <div class="j_seo_template">
     <div class="j_search">
       <Button class="mormal" @click="activeChange(item.value)" v-for="(item, index) in btns" :key="index" :class="{active: active === item.value}">{{item.text}}</Button>
-      <div class="j_tip">
+      <div class="j_tip" style="margin-top: 2px;">
         温馨提醒：此项设置包括（首页、产品展示页、新闻展示页、自定义页等导航页面的设置），“基本栏目模板配置”一旦保存，会覆盖所有的页面，请慎用。
       </div>
     </div>

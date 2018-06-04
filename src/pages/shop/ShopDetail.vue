@@ -161,7 +161,7 @@
                 <Input v-model="shippingSet.deliverySn"></Input>
               </FormItem>
               <FormItem label="收货地区:">
-                <Cascader :data="areaList" v-model="address" style="width: 450px;"></Cascader>
+                <Cascader :data="areaList" v-model="address"></Cascader>
               </FormItem>
               <FormItem label="邮编:">
                 <Input v-model="shippingSet.shipZipCode"></Input>
@@ -180,7 +180,7 @@
           <OrderLogSet :data="detail.orderLogSet" :hidden="active !== '6'"/>
         </Form>
       </Content>
-      <Footer>
+      <Footer v-if="active === '0'||active === '2'||active === '3'">
         <Button type="primary" size="small" v-if="active === '0'">打印</Button>
         <Button type="primary" size="small" v-if="active === '0'">打印(小)</Button>
         <Button type="primary" size="small" @click="shippingSave" v-if="active === '2'">保存</Button>

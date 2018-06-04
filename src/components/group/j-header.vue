@@ -6,11 +6,11 @@
           <span class="title">{{title}}<span v-if="count">拥有积分：{{count}}分</span></span>
         </Col>
         <Col>
-          <Select v-model="lanId" class="primary" @on-change="change" style="width:106px" v-if="lan">
+          <Select v-model="$store.state.lanId" class="primary" @on-change="change" style="width:106px" v-if="lan">
             <Option v-for="item in lanList" :value="item.value" :key="item.value">{{ item.text }}</Option>
           </Select>
-          <Select v-model="staticId" class="primary" @on-change="staticChange" style="width:167px" v-if="website">
-            <Option v-for="item in staticList" :value="item.value" :key="item.value">{{ item.text }}</Option>
+          <Select v-model="$store.state.layoutId" class="primary" @on-change="staticChange" style="width:167px" v-if="website">
+            <Option v-for="item in staticList" :value="item.layoutId" :key="item.layoutId">网站编号：{{ item.layoutId }}</Option>
           </Select>
           <slot name="btn"></slot>
         </Col>
@@ -42,8 +42,6 @@ export default {
   },
   computed: {
     ...mapState({
-      lanId: state => state.lanId,
-      staticId: state => state.staticId,
       lanList: state => state.status.lanList,
       staticList: state => state.staticList
     })
@@ -57,8 +55,8 @@ export default {
     },
     staticChange (e) {
       var ctx = this
-      this.$store.dispatch('staticIdChange', e).then((res) => {
-        ctx.$emit('on-static')
+      this.$store.dispatch('layoutIdChange', e).then((res) => {
+        ctx.$emit('on-layout')
       })
     }
   }

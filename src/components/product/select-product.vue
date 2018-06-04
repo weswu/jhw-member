@@ -4,11 +4,11 @@
     width="700"
     :title="title">
     <div class="j_search">
-      <Input v-model="searchData.name" placeholder="请输入产品名称" style="width: 144px;"></Input>
-      <Input v-model="searchData.prodtype" placeholder="请输入产品型号" style="width: 144px;"></Input>
+      <Input v-model="searchData.name" placeholder="请输入产品名称" clearable class="w144"></Input>
+      <Input v-model="searchData.prodtype" placeholder="请输入产品型号" clearable class="w144" style="margin-left:3px"></Input>
       <Button class="search" @click="search">搜索</Button>
     </div>
-    <Table ref="selection" :columns="columns" :data="list" @on-selection-change="handleSelectChange"></Table>
+    <Table :columns="columns" :data="list" @on-select="selected" @on-select-cancel="selectCancel" @on-select-all="selectAll"></Table>
     <JPagination :total="total" :searchData='searchData' @on-change="get"/>
     <div slot="footer">
       <Button type="text" size="large" @click="cancel">取消</Button>
@@ -22,7 +22,6 @@ import qs from 'qs'
 import JPagination from '@/components/group/j-pagination'
 export default {
   props: {
-    ids: {},
     title: {
       type: String,
       default: '选择产品'
@@ -35,18 +34,35 @@ export default {
   data () {
     return {
       modal: false,
-      columns: [
-        { title: '产品图片', className: 'j_table_img', width: 100, render: this.imgFilter },
-        { title: '产品名称【型号】', render: this.nameFilter },
-        { title: '创建时间', key: 'addTime', width: 160, render: this.dataFilter }
+      columns: [],
+      list: [
+        {
+          name: '商量aaaaaaaaaa',
+          productId: 'Product_000000000000000000581124',
+          _checked: false
+        },
+        {
+          name: 'aaabc',
+          productId: 'Product_000000000000000000567121',
+          _checked: false
+        },
+        {
+          name: '测试积分1',
+          productId: 'Product_000000000000000000567119',
+          _checked: false
+        },
+        {
+          name: '测试产品积分',
+          productId: 'Product_000000000000000000567118',
+          _checked: false
+        }
       ],
-      list: [],
       searchData: {
         page: 1,
         pageSize: 5
       },
       total: 0,
-      ids2: ''
+      ids: ''
     }
   },
   methods: {
@@ -64,49 +80,30 @@ export default {
               }
             })
           })
-          this.list = data || []
+          this.list = data
         }
       })
     },
-    open () {
+    open (ids) {
       this.modal = true
+      this.columns = [
+        { title: '产品图片', className: 'j_table_img', width: 100, render: this.imgFilter },
+        { title: '产品名称【型号】', render: this.nameFilter },
+        { title: '创建时间', key: 'addTime', width: 160, render: this.dataFilter }
+      ]
       if (this.type === 'select') {
         this.columns.push({ title: '操作', className: 'j_table_operate', width: 120, render: this.renderOperate })
       } else {
         this.columns.splice(0, 0, { type: 'selection', className: 'j_table_checkbox', width: 44 })
       }
+      this.ids = ids
       this.get()
     },
     cancel () {
       this.modal = false
     },
     ok () {
-      if (this.ids) {
-        var ctx = this
-        let ids = this.ids
-        this.list.forEach(item => {
-          if (item._checked) {
-            if (ctx.ids.match(item.productId).length === 0) {
-              ctx.$emit('on-change', this.ids + ',' + item.productId)
-            }
-          } else {
-            if (ctx.ids.match(item.productId) > 0) {
-              if (ids) {
-                let idsList = ids.split(',')
-                idsList.forEach((id, index) => {
-                  if (id === item.productId) {
-                    idsList.splice(index, 1)
-                  }
-                })
-                ids = idsList.join()
-                ctx.$emit('on-change', ids)
-              }
-            }
-          }
-        })
-      } else {
-        this.$emit('on-change', this.ids2)
-      }
+      this.$emit('on-change', this.ids)
       this.cancel()
     },
     // 搜索
@@ -115,14 +112,31 @@ export default {
       this.get()
     },
     // 批量操作
-    handleSelectChange (status) {
-      status.forEach((item, index) => {
-        if (index === 0) {
-          this.ids2 = item.productId
-        } else {
-          this.ids2 += ',' + item.productId
+    selectAll (status) {
+      status.forEach(row => {
+        this.addIds(row)
+      })
+    },
+    selected (status, row) {
+      this.addIds(row)
+    },
+    addIds (row) {
+      if (this.ids) {
+        if (this.ids.indexOf(row.productId) === -1) {
+          this.ids += ',' + row.productId
+        }
+      } else {
+        this.ids = row.productId
+      }
+    },
+    selectCancel (status, row) {
+      let idsList = this.ids.split(',')
+      idsList.forEach((id, index) => {
+        if (id === row.productId) {
+          idsList.splice(index, 1)
         }
       })
+      this.ids = idsList.join()
     },
     // 过滤
     imgFilter (h, params) {

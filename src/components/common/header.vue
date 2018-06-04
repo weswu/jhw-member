@@ -81,9 +81,10 @@ export default {
     this.$store.commit('setLanId', window.localStorage.getItem('lanId') || '1')
     this.getUser()
     this.getUserInfo()
+    this.getStaticList()
   },
   methods: {
-    ...mapActions(['getUser', 'getUserInfo', 'getMessage']),
+    ...mapActions(['getUser', 'getUserInfo', 'getMessage', 'getStaticList']),
     signout () {
       let ctx = this
       // 新版PC注销操作

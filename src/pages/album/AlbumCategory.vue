@@ -12,8 +12,9 @@
       <v-contextmenu-item>菜单2</v-contextmenu-item>
       <v-contextmenu-item>菜单3</v-contextmenu-item>
     </v-contextmenu>
-    <div v-contextmenu:contextmenub></div>
-    <Tree :data="data"></Tree>
+    <div v-contextmenu:contextmenub>
+    </div>
+      <Tree :data="data"></Tree>
   </div>
 </template>
 
@@ -145,23 +146,9 @@ export default {
             'ivu-tree-title': true,
             'ivu-tree-title-selected': data.selected
           },
-          directives: [
-            {
-              name: 'contextmenu',
-              value: 'contextmenu2',
-              expression: '1 + 1',
-              arg: 'foo',
-              modifiers: {
-                bar: true
-              }
-            }
-          ],
           on: {
             click: () => {
               this.ok(root, node, data)
-            },
-            contextmenu: () => {
-              // this.$Message.info('aa')
             }
           }
         }, [
@@ -176,7 +163,11 @@ export default {
               color: '#79d3fb'
             }
           }),
-          h('span', data.title)
+          h('span', {
+            domProps: {
+              innerHTML: '<span v-contextmenu:contextmenub>' + data.title + '</span>'
+            }
+          })
         ])
       ])
     },

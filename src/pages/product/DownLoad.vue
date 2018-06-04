@@ -29,9 +29,9 @@
             <tr>
               <th>
                 表格模板内容：需要的请“打勾”，再点下载。温馨提醒（如需下载下面的内容，请先选择好所属的网站编号）
-                <Select v-model="staticId" class="small" style="width:111px">
-                  <Option v-for="item in staticList" :value="item.value" :key="item.value" :label="item.label">
-                    <span>{{ item.label }}</span>
+                <Select v-model="layoutId" class="small" style="width:111px">
+                  <Option v-for="item in staticList" :value="item.layoutId" :key="item.layoutId" :label="item.label">
+                    <span>网站编号：{{ item.layoutId }}</span>
                   </Option>
                 </Select>
               </th>
@@ -65,7 +65,7 @@ export default {
   },
   computed: {
     ...mapState({
-      staticId: state => state.staticId,
+      layoutId: state => state.layoutId,
       staticList: state => state.staticList
     })
   },
@@ -111,7 +111,7 @@ export default {
     ok () {
       let data = {
         fields: this.col.join() + (this.col2.length > 0 ? ',' + this.col2.join() : ''),
-        layoutId: this.staticId
+        layoutId: this.layoutId
       }
       this.$http.get('/rest/api/product/exportProductsToExcel?' + qs.stringify(data)).then(res => {
         if (res.success) {

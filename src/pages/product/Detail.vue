@@ -184,7 +184,7 @@
           <Button type="ghost" size="small">预览</Button>
           <ul slot="content">
             <li v-for="(item, index) in staticList" :key="index">
-              <a :href="'http://pc.jihui88.com/pc/demo.html?layoutId='+item.id" target="_blank">{{item.seoTitle}}</a>
+              <a :href="'http://pc.jihui88.com/pc/demo.html?layoutId='+item.layoutId" target="_blank">{{item.seoTitle}}</a>
             </li>
           </ul>
         </Poptip>
@@ -371,7 +371,7 @@ export default {
       let data = {
         model: JSON.stringify(this.detail),
         _method: 'put'
-      }
+      } // http://pc.jihui88.com/rest/site/96/pd?itemId=581124
       this.$http.post('/rest/api/product/detail/' + this.detail.productId, qs.stringify(data)).then((res) => {
         if (res.success) {
           this.$Message.success('保存成功')

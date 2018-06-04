@@ -20,7 +20,7 @@
           </FormItem>
           <span class="title">联系信息：</span>
           <FormItem label="单位地址：" prop="enterprise.address">
-            <Cascader :data="areaList" v-model="address" style="width: 450px;"></Cascader>
+            <Cascader :data="areaList" v-model="user.enterprise.addresslist" style="width: 450px;"></Cascader>
           </FormItem>
           <FormItem label="详细地址：" prop="address">
             <Input v-model="user.address" placeholder="请输入详细地址"></Input>
@@ -105,14 +105,13 @@ export default {
           { required: true, message: '手机不能为空', trigger: 'blur' }
         ]
       },
-      address: []
+      address: ['8a9e457e63a5e4c00163a5fa47ca0008']
     }
   },
   created () {
     if (this.areaList.length === 0) {
       this.$store.dispatch('getAreaList')
     }
-    this.address = this.user.enterprise.address && this.user.enterprise.address.split(',')
   },
   methods: {
     picChange (e) {
@@ -144,7 +143,7 @@ export default {
       })
     },
     setEnterprise () {
-      this.user.enterprise.address = this.address.join()
+      this.user.enterprise.address = this.user.enterprise.addresslist.join()
       let data = {
         model: JSON.stringify(this.user.enterprise),
         _method: 'put'

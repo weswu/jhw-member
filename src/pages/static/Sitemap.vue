@@ -151,7 +151,7 @@ export default {
           domain: ctx.detail.domain.trim(),
           freq: ctx.selectDate,
           lastmod: ctx.dateme(null),
-          layoutId: ctx.$store.state.staticId
+          layoutId: ctx.$store.state.layoutId
         })).then((res) => {
           ctx.$Message.success('生成成功!')
         })
@@ -172,7 +172,7 @@ export default {
         content: robots,
         type: 'robots',
         robotsurl: domain,
-        layoutId: this.$store.state.staticId
+        layoutId: this.$store.state.layoutId
       })).then((res) => {
         this.$Message.success('生成成功!')
       })

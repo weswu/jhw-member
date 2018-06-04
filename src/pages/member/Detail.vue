@@ -34,7 +34,7 @@
                   {{item.name}}
                 </Option>
               </Select>
-              <a class="a_normal" href="#/member_rank" style="padding-left:10px;">编辑会员等级</a>
+              <a href="#/member_rank" style="padding-left:10px;">编辑会员等级</a>
             </FormItem>
             <FormItem label="是否启用：">
               <RadioGroup v-model="detail.isAccountEnabled">

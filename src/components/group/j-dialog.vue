@@ -34,6 +34,9 @@ export default {
 <style lang="less">
 .j_dialog{
   z-index: 1060;
+  .ivu-modal {
+    top: 186px;
+  }
   .ivu-modal-body{
     padding: 22px 54px 45px 54px;
   }

@@ -2,7 +2,7 @@
   <Layout class="j_layout ivu-layout-has-sider j_beian">
     <MenuBar :data="'menuStatic'" :active="'beian'"/>
     <Layout class="j_layout_content j_form_detail">
-      <JHeader :title="'域名备案'" :lan="active === '0'" :website="active === '2'"/>
+      <JHeader :title="'域名备案'" :website="active === '0' || active === '2'"/>
       <Content>
         <div class="j_search">
           <Button class="grey" @click="active = item.value" v-for="(item, index) in btns" :key="index" :class="{primary: active === item.value}">{{item.text}}</Button>
@@ -206,7 +206,7 @@ export default {
           this.$Message.error(res.msg)
         }
       })
-      this.$http.get('/rest/pc/api/bind/detail/' + this.$store.state.staticId).then((res) => {
+      this.$http.get('/rest/pc/api/bind/detail/' + this.$store.state.layoutId).then((res) => {
         if (res.success) {
           this.bindDetail = res.attributes.data
         }
@@ -254,9 +254,6 @@ export default {
 
 <style lang="less">
 .j_beian {
-  .j_tip{
-    margin-top: 9px;
-  }
   .w144{
     text-align: center;
     .ivu-select-selection{

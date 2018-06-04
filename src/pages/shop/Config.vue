@@ -50,10 +50,10 @@
           <!-- 4 -->
           <div class="j_form_title">产品隐藏：</div>
           <FormItem label="PC网站：">
-            已选择{{productHidePcCont}}件商品 <span class="a_underline" @click="selectProduct('1')">选择商品</span>
+            已选择{{pcCont}}件商品 <span class="a_underline" @click="selectProduct('1')">选择商品</span>
           </FormItem>
           <FormItem label="手机网站：">
-            已选择{{productHideMobileCont}}件商品 <span class="a_underline" @click="selectProduct('2')">选择商品</span>
+            已选择{{mobileCont}}件商品 <span class="a_underline" @click="selectProduct('2')">选择商品</span>
           </FormItem>
           <!-- 5 -->
           <div class="j_form_title">开具发票：</div>
@@ -83,7 +83,7 @@
         <Button type="primary" size="small" @click="submit">保存</Button>
       </Footer>
     </Layout>
-    <SelectProduct ref="select" :ids="ids" @on-change="idsChange"/>
+    <SelectProduct ref="select" @on-change="idsChange"/>
   </Layout>
 </template>
 
@@ -100,40 +100,41 @@ export default {
   },
   data () {
     return {
-      detail: {},
+      detail: {
+        productHidePc: 'Product_000000000000000000581124'
+      },
       type: '',
-      ids: ''
+      pcCont: '',
+      mobileCont: ''
     }
   },
   created () {
     this.get()
-  },
-  computed: {
-    productHidePcCont () {
-      return !this.detail.productHidePc ? 0 : this.detail.productHidePc.split(',').length
-    },
-    productHideMobileCont () {
-      return !this.detail.productHideMobile ? 0 : this.detail.productHideMobile.split(',').length
-    }
   },
   methods: {
     get () {
       this.$http.get('/rest/api/webinfo/detail/id').then(res => {
         if (res.success) {
           this.detail = res.attributes.data
+          this.count()
         } else {
           this.$Message.error(res.msg)
         }
       })
     },
+    count () {
+      this.pcCont = !this.detail.productHidePc ? 0 : this.detail.productHidePc.split(',').length
+      this.mobileCont = !this.detail.productHideMobile ? 0 : this.detail.productHideMobile.split(',').length
+    },
     selectProduct (type) {
       this.type = type
+      let ids = ''
       if (type === '1') {
-        this.ids = this.detail.productHidePc
+        ids = this.detail.productHidePc
       } else {
-        this.ids = this.detail.productHideMobile
+        ids = this.detail.productHideMobile
       }
-      this.$refs.select.open()
+      this.$refs.select.open(ids)
     },
     idsChange (ids) {
       if (this.type === '1') {
@@ -141,15 +142,11 @@ export default {
       } else {
         this.detail.productHideMobile = ids
       }
+      this.count()
     },
     submit () {
       let data = {
-        model: JSON.stringify({
-          webinfoId: this.detail.webinfoId,
-          enterpriseId: this.detail.enterpriseId,
-          memberRegisterPcDisplay: this.detail.memberRegisterPcDisplay,
-          memberRegisterMobileDisplay: this.detail.memberRegisterMobileDisplay
-        }),
+        model: JSON.stringify(this.detail),
         _method: 'put'
       }
       this.$http.post('/rest/api/webinfo/detail/' + this.detail.webinfoId, qs.stringify(data)).then((res) => {
