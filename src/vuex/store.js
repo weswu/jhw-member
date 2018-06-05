@@ -33,21 +33,24 @@ const store = new Vuex.Store({
       { layoutId: '206', title: '网站编号：206' },
       { layoutId: '207', title: '网站编号：207' }
     ],
-    layoutId: '0',
+    layoutId: '',
     customData: {
       isCollapsed: true,
       linkList: [
-        { value: '#/static', text: '站点数据管理', icon: 'icon-shuju' },
-        { value: '#/member', text: '会员管理', icon: 'icon-Group' },
-        { value: '#/shop', text: '订单管理', icon: 'icon-dingdandaifukuan' }
+        { value: 'static', text: '站点数据管理', icon: 'icon-shuju' },
+        { value: 'member', text: '会员管理', icon: 'icon-Group' },
+        { value: 'shop', text: '订单管理', icon: 'icon-dingdandaifukuan' }
       ],
       productShow: ['序号', '产品图片', '产品名称', '产品型号', '产品分类', '添加时间', '是否上架', '排序'],
       shopShow: ['序号', '订单编号', '用户名', '订单总额', '订单状态', '付款状态', '配送状态', '支付方式', '配送方式', '下单时间'],
       homeSort: [
         { value: 'static', text: '我的网站', status: '01' },
         { value: 'link', text: '链接', status: '01' },
-        { value: 'order', text: '订单管理', status: '01' }
-      ]
+        { value: 'order', text: '订单', status: '01' },
+        { value: 'message', text: '留言', status: '00' },
+        { value: 'service', text: '服务', status: '00' }
+      ],
+      homeShow: ['static', 'order']
     }
   },
   getters: {
@@ -345,10 +348,6 @@ const store = new Vuex.Store({
           this.commit('setCustomData', JSON.parse(res.attributes.data.content))
         }
       })
-    },
-    layoutIdChange ({dispatch, commit}, layoutId) {
-      this.commit('setLayoutId', layoutId)
-      window.localStorage.setItem('layoutId', layoutId)
     },
     lanIdChange ({dispatch, commit}, lanId) {
       this.commit('setLanId', lanId)

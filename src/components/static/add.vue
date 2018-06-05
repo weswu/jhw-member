@@ -1,5 +1,5 @@
 <template>
-  <Modal class-name="j_static_add" width="600"
+  <Modal class-name="j_static_add" width="576"
     v-model="modal"
     title="创建网站"
     @on-cancel="cancel">
@@ -20,7 +20,7 @@
         </div>
       </Card>
     </div>
-    <JPagination :total="total" :searchData='searchData' @on-change="get"></JPagination>
+    <JPagination :total="total" :searchData='searchData' @on-change="get" style="border-top: 1px solid #e9e9e9;"></JPagination>
   </Modal>
 </template>
 

@@ -1,21 +1,21 @@
 <template>
   <div class="j_panel">
     <Tabs :value="tabActive">
-        <TabPane label="消费记录" name="1">
-          <div class="j_warpper">
-            <iframe src="http://buy.jihui88.com/#/member/order?size=5" class="j_buy_iframe"/>
-          </div>
-        </TabPane>
-        <TabPane label="已购产品" name="2">
-          <div style="padding: 0 28px;">
-            已购产品
-          </div>
-        </TabPane>
-        <TabPane label="我的积分" name="3">
-          <div style="padding: 0 28px;">
-            我的积分和权益
-          </div>
-        </TabPane>
+      <TabPane label="消费记录" name="1">
+        <div class="j_warpper">
+          <iframe src="http://buy.jihui88.com/#/member/order?size=5" class="j_buy_iframe"/>
+        </div>
+      </TabPane>
+      <TabPane label="已购产品" name="2">
+        <div class="j_warpper">
+          <iframe src="http://buy.jihui88.com/#/member/purchased?size=5" class="j_buy_iframe"/>
+        </div>
+      </TabPane>
+      <TabPane label="我的积分" name="3">
+        <div class="j_warpper">
+          <PointTable :searchData="searchData"/>
+        </div>
+      </TabPane>
     </Tabs>
     <JCostOrderDetail ref="order"/>
   </div>
@@ -23,13 +23,19 @@
 
 <script>
 import JCostOrderDetail from '@/components/group/j-cost-order-detail'
+import PointTable from '@/pages/point/PointTable'
 export default {
   components: {
-    JCostOrderDetail
+    JCostOrderDetail,
+    PointTable
   },
   data () {
     return {
-      tabActive: '1'
+      tabActive: '1',
+      searchData: {
+        page: 1,
+        pageSize: 3
+      }
     }
   },
   mounted () {
@@ -50,7 +56,4 @@ export default {
 </script>
 
 <style lang="less">
-.j_warpper{
-  padding: 5px 28px 0 28px;
-}
 </style>

@@ -7,21 +7,30 @@
     <Card class="j_consult_content" v-if="display">
       <i class="iconfont icon-x" @click="close"></i>
       <Row>
-        <a href="http://wpa.qq.com/msgrd?v=3&uin=260404208site=qq&menu=yes" target="_blank">
+        <a href="http://wpa.qq.com/msgrd?v=3&uin=1220328180&site=qq&menu=yes" target="_blank" style="color: #595959">
           <Col span="4"> <i class="iconfont icon-shezhizaixianzixun"></i> </Col>
           <Col span="20">智能顾问<p>智能诊断，秒级解答</p></Col>
         </a>
       </Row>
       <Row>
         <Col span="4"> <i class="iconfont icon-dkw_tianxie"></i> </Col>
-        <Col span="20">聆听.建议反馈<p>机汇网不是完美的，我们渴望您的建议</p></Col>
+        <Col span="20" style="cursor: pointer">
+          <div @click="open">
+            聆听.建议反馈<p>机汇网不是完美的，我们渴望您的建议</p>
+          </div>
+        </Col>
       </Row>
     </Card>
+    <Feedback ref="feedback"/>
   </div>
 </template>
 
 <script>
+import Feedback from '@/components/home/j-feedback'
 export default {
+  components: {
+    Feedback
+  },
   data () {
     return {
       display: false
@@ -33,6 +42,9 @@ export default {
     },
     close () {
       this.display = false
+    },
+    open () {
+      this.$refs.feedback.open()
     }
   }
 }

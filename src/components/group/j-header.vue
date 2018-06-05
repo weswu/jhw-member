@@ -50,14 +50,11 @@ export default {
     change (e) {
       var ctx = this
       this.$store.dispatch('lanIdChange', e).then((res) => {
-        ctx.$emit('on-change')
+        ctx.$emit('on-change', e)
       })
     },
     staticChange (e) {
-      var ctx = this
-      this.$store.dispatch('layoutIdChange', e).then((res) => {
-        ctx.$emit('on-layout')
-      })
+      this.$emit('on-layout', e)
     }
   }
 }

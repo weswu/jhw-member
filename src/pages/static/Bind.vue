@@ -7,7 +7,7 @@
         <div class="j_search">
           <Button class="grey" @click="active = item.value" v-for="(item, index) in btns" :key="index" :class="{primary: active === item.value}">{{item.text}}</Button>
         </div>
-        <div v-if="active === '0'">
+        <div v-if="active === '0'" style="margin-bottom:20px">
           <div class="j_tip" style="margin-top: 9px;">
             温馨提醒：还没有域名? <a :href="'http://buy.jihui88.com/#/?layoutId='+$store.state.layoutId" target="_blank" class="a_underline" style="padding: 0 5px;">点击前往购买</a>
             进入页面后点击基础类里的申请域名。
@@ -54,26 +54,32 @@
                 <tr>
                   <td>www.</td>
                   <td>CNAME</td>
-                  <td>gn1.dns.jihui88.com</td>
+                  <td>gn<span v-if="detail.country === 'hc'">2</span>
+                  <span v-else>1</span>.dns.jihui88.com</td>
                 </tr>
                 <tr>
                   <td></td>
                   <td>CNAME</td>
-                  <td>gn1.dns.jihui88.com</td>
+                  <td>gn<span v-if="detail.country === 'hc'">2</span>
+                  <span v-else>1</span>.dns.jihui88.com</td>
                 </tr>
               </tbody>
             </table>
-            <a class="a_underline" target="_blank" href="https://docs.qq.com/doc/B7xfV62RQmDe1BK74W0ZxtAr2dXdPL4Egymw2">查看阿里云备案教程</a>
-            <div class="j_tip">
-              <span class="red">第<span class="count">4</span>步：</span>
-              <span class="grey">网安备案配置</span>
+            <a class="a_underline" target="_blank" href="https://3203104478.docs.qq.com/09kMYXbP3WX">查看教程-阿里云万网</a>
+            <div v-if="detail.country === 'cn'">
+              <div class="j_tip">
+                <span class="red">第<span class="count">4</span>步：</span>
+                <span class="grey">网安备案配置</span>
+              </div>
+              <FormItem>
+                <Input v-model="detail.psr" placeholder="填写网安备案号"></Input> <Button class="submit" @click="savePsr">提交</Button>
+              </FormItem>
+              <FormItem>
+                <Input v-model="detail.seccurityLink" placeholder="填写网安备案链接地址"></Input> <Button class="submit" @click="saveSeccurityLink">提交</Button>
+              </FormItem>
+              <a class="a_underline" target="_blank" href="https://docs.qq.com/doc/B7xfV62RQmDe1mclWr0lzVOU0CnQYE2DAa9O3">查看网安备案教程</a>
+              <a class="a_underline" target="_blank" :href="'http://buy.jihui88.com/#/?layoutId='+$store.state.layoutId">前往购买 "代理备案"</a>
             </div>
-            <FormItem>
-              <Input v-model="detail.psr" placeholder="填写网安备案号"></Input> <Button class="submit" @click="savePsr">提交</Button>
-            </FormItem>
-            <FormItem>
-              <Input v-model="detail.seccurityLink" placeholder="填写网安备案链接地址"></Input> <Button class="submit" @click="saveSeccurityLink">提交</Button>
-            </FormItem>
           </Form>
         </div>
         <div v-if="active === '1'">
@@ -139,7 +145,7 @@ export default {
       })
     },
     saveSeccurityLink () {
-      this.$http.post('/rest/api/bind/saveSeccurityLink', qs.stringify({seccurityLink: this.detail.seccurityLink})).then((res) => {
+      this.$http.post('/rest/pc/api/bind/saveSeccurityLink', qs.stringify({seccurityLink: this.detail.seccurityLink})).then((res) => {
         if (res.success) {
           this.$Message.success('保存成功')
         } else {

@@ -152,6 +152,9 @@
           </Form>
         </div>
       </Content>
+      <Footer v-if="active === '0'">
+        <Button type="primary" size="small" @click="submit1">提交</Button>
+      </Footer>
       <Footer v-if="active === '2'">
         <Button type="primary" size="small" @click="submit">提交</Button>
       </Footer>
@@ -223,18 +226,7 @@ export default {
       this.uploadText = e
       this.$refs.ablum.open()
     },
-    submit () {
-      let data = {
-        model: JSON.stringify(this.detail),
-        _method: 'put'
-      }
-      this.$http.post('/rest/api/profile/detail/all', qs.stringify(data)).then((res) => {
-        if (res.success) {
-          this.$Message.success('保存成功')
-        } else {
-          this.$Message.error(res.msg)
-        }
-      })
+    submit1 () {
       // 域名提交
       if (this.bindDetail.id) {
         let bindDetail = {
@@ -247,6 +239,20 @@ export default {
           }
         })
       }
+    },
+    submit () {
+      let data = {
+        model: JSON.stringify(this.detail),
+        _method: 'put'
+      }
+      this.$http.post('/rest/api/profile/detail/all', qs.stringify(data)).then((res) => {
+        if (res.success) {
+          this.$Message.success('保存成功')
+        } else {
+          this.$Message.error(res.msg)
+        }
+      })
+      this.submit1()
     }
   }
 }

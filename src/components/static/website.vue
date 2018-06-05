@@ -1,7 +1,7 @@
 <template>
   <div class="j_static_website">
     <div class="j_tip" style="margin-top: 13px;">由于互联网信息管理法规，发布网站需要验证你的手机号信息。 <a href="#/account" class="a_underline">立即验证</a></div>
-    <Button icon="plus" class="orange" @click="add">创建新网站</Button> 你有0个网站上线了
+    <Button icon="plus" class="orange" @click="add">创建新网站</Button> 你有{{onlineCount}}个网站上线了
     <ul class="static_info j_scroll">
       <li class="item" v-for="item in list" :key="item.id">
         <p>
@@ -29,11 +29,11 @@
               <li><a :href="'http://buy.jihui88.com/#/?tab=tab2&layoutId=' + item.id" target="_blank">定制设计</a></li>
             </ul>
           </Poptip>
-          <a href="javascript:;" class="buy" v-if="item.endTime">续费</a>
+          <a href="javascript:;" class="buy" v-if="item.endTime" @click="again">续费</a>
           <a :href="'http://buy.jihui88.com/#/?layoutId=' + item.id" class="buy" target="_blank" v-if="item.endTime">升级</a>
         </p>
         <p class="more">
-          <a :href="'http://pc.jihui88.com/rest/site/' + item.id + '/index'" target="_blank" class="a_underline">进入编辑</a>
+          <a :href="'http://pc.jihui88.com/pc/design.html?layoutId=' + item.id" target="_blank" class="a_underline">进入编辑</a>
           <Poptip placement="top" class="j_poptip_ul">
             <span class="a_underline">更多选项</span>
             <ul slot="content">
@@ -42,11 +42,11 @@
               <Poptip placement="right" width="200"
                 confirm
                 title="是否删除?"
-                @on-ok="del">
+                @on-ok="del(item.id)">
                 <li> 删除网站 </li>
               </Poptip>
 
-              <li @click="update($Message)"> 网站上线 </li>
+              <li @click="bind(item.id)"> 网站上线 </li>
               <li @click="lanSetting(item)"> 语言设置 </li>
               <li @click="data"> 同步数据 </li>
             </ul>
@@ -62,17 +62,17 @@
         </Select>
       </div>
     </JDialog>
-    <JDialog ref="data" :title="'同步数据'" :width="715" :okText="'确定'" :tip="'温馨提醒：同步数据包含（新闻和产品数据），请完善总站的数据后再导数据，导入后“文字内容”需自行修改'"  @on-ok="save" >
+    <JDialog ref="data" :title="'同步数据'" :width="715" :okText="'确定'" :tip="'温馨提醒：同步数据包含（新闻和产品数据），请完善总站的数据后再导数据，导入后“文字内容”需自行修改'"  @on-ok="saveData" >
       <div slot="content">
         <Form :model="detail" :label-width="120">
           <FormItem label="来源语言版本：">
-            <Select v-model="detail.begin" class="border" style="width:144px">
+            <Select v-model="detail.begin" class="border w144">
               <Option value="1">中文版</Option>
               <Option value="2">英文版</Option>
             </Select>
           </FormItem>
           <FormItem label="目标语言版本：">
-            <Select v-model="detail.end" class="border" style="width:144px">
+            <Select v-model="detail.end" class="border w144">
               <Option value="1">中文版</Option>
               <Option value="2">英文版</Option>
             </Select>
@@ -115,7 +115,8 @@ export default {
       detail: {
         begin: '1',
         end: '2'
-      }
+      },
+      onlineCount: 0
     }
   },
   computed: {
@@ -138,6 +139,7 @@ export default {
           })
           this.list = res.attributes.data
           this.total = res.attributes.count
+          this.onlineCount = res.attributes.onlineCount
         } else {
           this.$Message.error(res.msg)
           if (res.msg === '未登录') {
@@ -153,15 +155,35 @@ export default {
       this.searchData.page = 1
       this.get()
     },
+    again (id) {
+      this.$Modal.confirm({
+        width: 770,
+        render: (h) => {
+          return h('iframe', {
+            attrs: {
+              src: 'http://buy.jihui88.com/#/qrcode?height=250&layoutId=' + id,
+              frameborder: '0',
+              scrolling: 'no'
+            }
+          })
+        }
+      })
+    },
+    // 网站上线
+    bind (e) {
+      this.$store.commit('setLayoutId', parseInt(e))
+      this.$router.push({path: '/bind'})
+    },
     // 更多
     edit (item) {
       let data = {
         model: JSON.stringify({
           id: item.id,
           seoTitle: item.seoTitle2
-        })
+        }),
+        methods: 'put'
       }
-      this.$http.post('/rest/pc/baseLayout/detail/' + item.id, qs.stringify(data)).then((res) => {
+      this.$http.post('/rest/pc/api/baseLayout/detail/' + item.id, qs.stringify(data)).then((res) => {
         if (res.success) {
           this.$Message.success('修改成功')
           item.seoTitle = item.seoTitle2
@@ -185,7 +207,7 @@ export default {
           copyId: item.id
         })
       }
-      this.$http.post('/rest/pc/baseLayout/detail', qs.stringify(data)).then((res) => {
+      this.$http.post('/rest/pc/api/baseLayout/detail', qs.stringify(data)).then((res) => {
         if (res.success) {
           this.$Message.success('复制成功')
           this.list.splice(0, 0, res.attributes.data)
@@ -195,7 +217,7 @@ export default {
       })
     },
     del (id) {
-      this.$http.delete('/rest/pc/baseLayout/detail/' + id).then((res) => {
+      this.$http.delete('/rest/pc/api/baseLayout/detail/' + id).then((res) => {
         if (res.success) {
           this.$Message.success('删除成功')
           for (let i = 0; i < this.list.length; i++) {
@@ -223,7 +245,7 @@ export default {
         }),
         methods: 'put'
       }
-      this.$http.post('/rest/pc/baseLayout/languageLayout/' + this.id, qs.stringify(data)).then((res) => {
+      this.$http.post('/rest/pc/api/baseLayout/languageLayout/' + this.id, qs.stringify(data)).then((res) => {
         if (res.success) {
           this.$Message.success('修改成功')
           this.list.forEach(item => {
@@ -238,6 +260,21 @@ export default {
     },
     data () {
       this.$refs.data.open()
+    },
+    saveData () {
+      let data = {
+        model: JSON.stringify({
+          originLanId: this.detail.begin,
+          targetLanId: this.detail.end
+        })
+      }
+      this.$http.post('/rest/api/import/synchronousData', qs.stringify(data)).then((res) => {
+        if (res.success) {
+          this.$Message.success('同步成功')
+        } else {
+          this.$Message.error(res.msg)
+        }
+      })
     }
   }
 }

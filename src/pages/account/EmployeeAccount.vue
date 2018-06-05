@@ -9,7 +9,7 @@
           </div>
         </JHeader>
         <Content>
-          <Table highlight-row :columns="columns" :data="list" @on-selection-change="handleSelectChange"></Table>
+          <Table ref="selection" :columns="columns" :data="list" @on-selection-change="handleSelectChange"></Table>
           <JPagination :checkbox="true" :total="total" :searchData='searchData' @on-change="get">
             <span slot="btn">
               <Checkbox v-model="toggle" @on-change="handleSelectAll(toggle)"/>

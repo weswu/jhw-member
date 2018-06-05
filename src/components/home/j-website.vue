@@ -61,7 +61,7 @@ export default {
       } else if (e === '5') {
         window.location.href = 'http://buy.jihui88.com/#/'
       } else {
-        this.$Message.info('更新中...' + e)
+        window.location.href = 'http://buy.jihui88.com/#/?layoutId=' + e
       }
     }
   }

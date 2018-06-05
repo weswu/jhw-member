@@ -2,10 +2,10 @@
   <ul class="j_nav_link j_panel ivu-tabs-bar">
     <li v-for="item in customData.linkList" :key="item.value">
       <a href="javascript:;" @click="nav(item.value)"><i :class="'iconfont ' + item.icon"></i>{{item.text}}</a>
+      <JAblum ref="ablum" v-if="item.value === 'shangchuanPic'"/>
     </li>
     <li class="add" @click="add"><i class="iconfont icon--jia"></i></li>
     <Tool ref="tool" :selected="customData.linkList"/>
-    <JAblum ref="ablum"/>
   </ul>
 </template>
 

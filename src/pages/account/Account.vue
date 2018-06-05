@@ -30,7 +30,7 @@
               <span v-if="percent === 60" style="color:#e7ae5f">中</span>
               <span v-if="percent > 60" style="color:#e7ae5f">高</span>
             </span>
-            <span v-if="percent < 100" style="padding-left: 40px">断续努力</span>
+            <span v-if="percent < 100" style="padding-left: 40px">继续努力</span>
             <span v-if="percent === 100" style="padding-left: 40px">继续保持</span>
           </div>
           <div class="account_bind_edit">
@@ -313,6 +313,7 @@ export default {
           })
         },
         onOk: () => {
+          if (!this.email) return this.$Message.info('邮箱不能为空')
           let user = this.user
           user.email = this.email
           let data = {

@@ -5,7 +5,9 @@
       <Content>
         <JHeader :title="pageName === '00' ? '未读消息' : (pageName === '01' ? '已读消息' : '全部消息')"/>
         <div class="j_search">
-          <Button class="grey" @click="search(item.value)" v-for="(item, index) in btns" :key="index" :class="{primary: searchData.type === item.value}" v-if="item.status">{{item.text}}</Button>
+          <Button class="grey" @click="search(item.value)"
+            v-for="(item, index) in btns" :key="index" :class="{primary: searchData.type === item.value}"
+            v-if="item.status">{{item.text}}<span v-if="item.count !== ''">({{item.count}})</span></Button>
         </div>
         <div class="j_search" v-if="searchData.type === '05'" style="margint-top: 12px;">
           <Row type="flex" justify="space-between">
@@ -55,18 +57,18 @@ export default {
   data () {
     return {
       btns: [
-        { text: '全部类型消息', value: '', status: true },
-        { text: '客户消息', value: '03', status: true },
+        { text: '全部类型消息', value: '', status: true, count: '' },
+        { text: '客户消息', value: '03', status: true, count: '' },
         { text: '系统消息', value: '04', status: false },
         { text: '浏览者消息', value: '05', status: false },
         { text: '用户反馈', value: '06', status: false },
         { text: '用户消息', value: '07', status: false },
         { text: '开具发票', value: '08', status: false },
         { text: '朋友介绍', value: '09', status: false },
-        { text: '产品消息', value: '10', status: true },
-        { text: '安全消息', value: '11', status: true },
-        { text: '服务消息', value: '12', status: true },
-        { text: '活动消息', value: '13', status: true },
+        { text: '产品消息', value: '10', status: true, count: '' },
+        { text: '安全消息', value: '11', status: true, count: '' },
+        { text: '服务消息', value: '12', status: true, count: '' },
+        { text: '活动消息', value: '13', status: true, count: '' },
         { text: '机汇网留言', value: '21', status: false },
         { text: '东方五金网留言', value: '22', status: false }
       ],
@@ -108,6 +110,12 @@ export default {
           let data = res.attributes.data
           data.forEach(item => {
             item._checked = false
+          })
+          this.btns.forEach(item => {
+            if (item.value === '10') { item.count = res.attributes.count10 }
+            if (item.value === '11') { item.count = res.attributes.count11 }
+            if (item.value === '12') { item.count = res.attributes.count12 }
+            if (item.value === '13') { item.count = res.attributes.count13 }
           })
           this.list = data || []
         }
