@@ -1,11 +1,17 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import status from './status'
+import qs from 'qs'
 Vue.use(Vuex)
 
 const store = new Vuex.Store({
   state: {
-    user: {},
+    user: {
+      name: '未登录',
+      username: '未登录',
+      addTime: 1272102123858,
+      enterprise: {}
+    },
     userInfo: {
       noReaderMsg: 1
     },
@@ -27,7 +33,22 @@ const store = new Vuex.Store({
       { layoutId: '206', title: '网站编号：206' },
       { layoutId: '207', title: '网站编号：207' }
     ],
-    layoutId: '0'
+    layoutId: '0',
+    customData: {
+      isCollapsed: true,
+      linkList: [
+        { value: '#/static', text: '站点数据管理', icon: 'icon-shuju' },
+        { value: '#/member', text: '会员管理', icon: 'icon-Group' },
+        { value: '#/shop', text: '订单管理', icon: 'icon-dingdandaifukuan' }
+      ],
+      productShow: ['序号', '产品图片', '产品名称', '产品型号', '产品分类', '添加时间', '是否上架', '排序'],
+      shopShow: ['序号', '订单编号', '用户名', '订单总额', '订单状态', '付款状态', '配送状态', '支付方式', '配送方式', '下单时间'],
+      homeSort: [
+        { value: 'static', text: '我的网站', status: '01' },
+        { value: 'link', text: '链接', status: '01' },
+        { value: 'order', text: '订单管理', status: '01' }
+      ]
+    }
   },
   getters: {
     user: state => state.user,
@@ -43,7 +64,8 @@ const store = new Vuex.Store({
     areaList: state => state.areaList,
     // 站点
     staticList: state => state.staticList,
-    layoutId: state => state.layoutId
+    layoutId: state => state.layoutId,
+    customData: state => state.customData
   },
   mutations: {
     setUser (state, user) {
@@ -81,6 +103,9 @@ const store = new Vuex.Store({
     },
     setLanId (state, lanId) {
       state.lanId = lanId
+    },
+    setCustomData (state, customData) {
+      state.customData = customData
     },
     // 全局唯一标识
     nextUid (state) {
@@ -314,6 +339,13 @@ const store = new Vuex.Store({
         }
       })
     },
+    getCustomData ({commit, state}) {
+      this._vm.$http.get('/rest/api/custom/detail').then(res => {
+        if (res.success) {
+          this.commit('setCustomData', JSON.parse(res.attributes.data.content))
+        }
+      })
+    },
     layoutIdChange ({dispatch, commit}, layoutId) {
       this.commit('setLayoutId', layoutId)
       window.localStorage.setItem('layoutId', layoutId)
@@ -324,6 +356,15 @@ const store = new Vuex.Store({
       return this._vm.$http.get('/rest/api/user/changeLan?lanId=' + lanId).then((res) => {
         if (res.success) {
           this.dispatch('getUser')
+        } else {
+          this._vm.$Message.success(res.msg)
+        }
+      })
+    },
+    SAVE_CUSTOM_DATA  ({commit, state}) {
+      this._vm.$http.post('/rest/api/custom/update', qs.stringify({content: JSON.stringify(state.customData)})).then(res => {
+        if (res.success) {
+          console.log('自定义数据保存成功')
         } else {
           this._vm.$Message.success(res.msg)
         }

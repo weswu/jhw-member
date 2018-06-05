@@ -173,7 +173,7 @@
                 <Input v-model="shippingSet.memo"></Input>
               </FormItem>
             </div>
-            <Table :columns="columns" :data="shipping.orderItemSet"/>
+            <Table :columns="columns" :data="shipping.orderItemSet" class="clear"/>
           </div>
           <PaymentSet :data="detail.paymentSet" :hidden="active !== '4'"/>
           <ShippingSet :data="detail.shippingSet" :hidden="active !== '5'"/>

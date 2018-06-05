@@ -73,9 +73,6 @@ export default {
       attId: 'all'
     }
   },
-  created () {
-    this.get()
-  },
   methods: {
     get () {
       this.$http.get('/rest/api/album/attr/list/' + this.attId + '?' + qs.stringify(this.searchData)).then((res) => {
@@ -93,6 +90,7 @@ export default {
     },
     open () {
       this.modal = true
+      this.get()
     },
     // 功能
     cateChange (e) {

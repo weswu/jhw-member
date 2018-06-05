@@ -1,22 +1,39 @@
 <template>
-  <ul class="j_nav_link j_panel">
-    <li><a href="http://pc.jihui88.com/pc/index.html" target="_blank"><i class="iconfont icon-diannaoshouji01"></i>网站界面管理</a></li>
-    <li><a href="http://www.jihui88.com/member/index.html" target="_blank"><i class="iconfont icon-shujuku"></i>数据管理中心</a></li>
-    <li><a href="http://www.jihui88.com/member/index.html#/seo_list" target="_blank"><i class="iconfont icon-seo-marketing-business-code-validation"></i>SEO管理</a></li>
+  <ul class="j_nav_link j_panel ivu-tabs-bar">
+    <li v-for="item in customData.linkList" :key="item.value">
+      <a href="javascript:;" @click="nav(item.value)"><i :class="'iconfont ' + item.icon"></i>{{item.text}}</a>
+    </li>
     <li class="add" @click="add"><i class="iconfont icon--jia"></i></li>
-    <Tool ref="tool"/>
+    <Tool ref="tool" :selected="customData.linkList"/>
+    <JAblum ref="ablum"/>
   </ul>
 </template>
 
 <script>
+import { mapState } from 'vuex'
 import Tool from '@/components/home/j-tool'
+import JAblum from '@/components/group/j-ablum'
 export default {
   components: {
-    Tool
+    Tool,
+    JAblum
+  },
+  computed: {
+    ...mapState(['customData'])
   },
   methods: {
     add () {
       this.$refs.tool.open()
+    },
+    nav (name) {
+      if (name === 'shangchuanPic') {
+        this.open()
+      } else {
+        this.$router.push({path: '/' + name})
+      }
+    },
+    open () {
+      this.$refs.ablum.open()
     }
   }
 }
@@ -32,26 +49,28 @@ export default {
     text-align: center;
     list-style-type: none;
     color: #9c9c9c;
-    width: 100px;
-    height: 100px;
-    margin-right: 10px;
+    width: 80px;
+    height: 70px;
+    margin: 14px 28px 14px 0;
     a{
       color: #9c9c9c;
     }
     i{
       display: block;
-      font-size: 42px;
-      color: #bfcace;
+      font-size: 28px;
+      color: #12bedb;
+      cursor: pointer;
     }
   }
   .add{
     border: 1px solid #e9e9e9;
+    margin-top: 17px;
     width: 61px;
     height: 61px;
-    margin-top: 15px;
     i{
       font-size: 28px;
       line-height: 61px;
+      color: #bfcace;
     }
   }
   .ivu-badge-count{

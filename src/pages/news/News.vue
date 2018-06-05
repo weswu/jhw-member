@@ -16,7 +16,12 @@
             </Col>
           </Row>
         </div>
-        <Table ref="selection" :columns="columns" :data="list" @on-selection-change="handleSelectChange"></Table>
+        <DragableTable
+          ref="selection"
+          v-model="list"
+          :columns="columns"
+          @on-update="tableUpdate"
+          @on-selection-change="handleSelectChange"/>
         <JPagination :fixed="true" :checkbox="true" :total="total" :searchData='searchData' @on-change="get">
           <span slot="btn">
             <Checkbox v-model="toggle" @on-change="handleSelectAll(toggle)"/>
@@ -39,7 +44,7 @@ import qs from 'qs'
 import MenuBar from '@/components/common/menu_bar'
 import JHeader from '@/components/group/j-header'
 import JPagination from '@/components/group/j-pagination'
-import Sortable from 'sortablejs'
+import DragableTable from '@/components/group/j-dragable-table'
 import SeoDetail from '@/pages/static/SeoDetail'
 import TransferCategory from '@/components/group/transfer-category'
 export default {
@@ -47,6 +52,7 @@ export default {
     MenuBar,
     JHeader,
     JPagination,
+    DragableTable,
     SeoDetail,
     TransferCategory
   },
@@ -74,22 +80,6 @@ export default {
       toggle: false,
       ids: ''
     }
-  },
-  mounted () {
-    var ctx = this
-    setTimeout(function () {
-      let el = document.getElementsByClassName('ivu-table-tbody')[0]
-      Sortable.create(el, {
-        group: {
-          name: 'list',
-          pull: true
-        },
-        animation: 120,
-        onUpdate (e) {
-          ctx.sortable(e.oldIndex, e.newIndex)
-        }
-      })
-    }, 2000)
   },
   created () {
     this.searchData.page = this.$cookie.get('newsPage') || 1
@@ -124,33 +114,8 @@ export default {
     add () {
       this.$router.push({ path: '/news/add' })
     },
-    sortable (a, b) {
-      let objA = this.list[a]
-      let objB = this.list[b]
-      let sortA = this.list[a].sort
-      let sortB = this.list[b].sort
-      this.sortPost(this.list[a].newsId, sortB)
-      this.sortPost(this.list[b].newsId, sortA)
-      objA.sort = sortB
-      objB.sort = sortA
-      this.list[a] = objB
-      this.list[b] = objA
-    },
-    sortPost (id, sort) {
-      let data = {
-        model: JSON.stringify({
-          id: id,
-          sort: sort
-        }),
-        _method: 'put'
-      }
-      this.$http.post('/rest/api/news/detail/' + id, qs.stringify(data)).then((res) => {
-        if (res.success) {
-          console.log(sort)
-        } else {
-          this.$Message.error(res.msg)
-        }
-      })
+    tableUpdate (a, b) {
+      this.sortable(a, b, 'news', 'newsId')
     },
     // 搜索
     search (e) {
@@ -171,7 +136,7 @@ export default {
       })
     },
     handleSelectAll () {
-      this.$refs.selection.selectAll(this.toggle)
+      this.$refs.selection.$refs.dragable.selectAll(this.toggle)
     },
     delAll () {
       if (!this.ids) {
@@ -517,7 +482,7 @@ export default {
             on: {
               click: () => {
                 if (params.index > 0) {
-                  this.sortable(params.index, params.index - 1)
+                  this.sortable(params.index, params.index - 1, 'news', 'newsId')
                 }
               }
             }
@@ -538,7 +503,7 @@ export default {
             on: {
               click: () => {
                 if (params.index < this.searchData.pageSize - 1) {
-                  this.sortable(params.index, params.index + 1)
+                  this.sortable(params.index, params.index + 1, 'news', 'newsId')
                 }
               }
             }

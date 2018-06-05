@@ -4,7 +4,7 @@
     title="创建网站"
     @on-cancel="cancel">
     <div class="static_list">
-      <Card dis-hover v-if="searchData.page === 1 && list.length > 0">
+      <Card dis-hover v-if="searchData.page === 1 && list.length < 9">
         <div class="text" @click="add">
           新建空白网站
         </div>
@@ -20,7 +20,7 @@
         </div>
       </Card>
     </div>
-    <JPagination :fixed="true" :total="total" :searchData='searchData' @on-change="get"></JPagination>
+    <JPagination :total="total" :searchData='searchData' @on-change="get"></JPagination>
   </Modal>
 </template>
 

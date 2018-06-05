@@ -71,6 +71,9 @@
             <FormItem>
               <Input v-model="detail.psr" placeholder="填写网安备案号"></Input> <Button class="submit" @click="savePsr">提交</Button>
             </FormItem>
+            <FormItem>
+              <Input v-model="detail.seccurityLink" placeholder="填写网安备案链接地址"></Input> <Button class="submit" @click="saveSeccurityLink">提交</Button>
+            </FormItem>
           </Form>
         </div>
         <div v-if="active === '1'">
@@ -128,6 +131,15 @@ export default {
     },
     savePsr () {
       this.$http.post('/rest/pc/api/bind/savePsr', qs.stringify({psr: this.detail.psr})).then((res) => {
+        if (res.success) {
+          this.$Message.success('保存成功')
+        } else {
+          this.$Message.error(res.msg)
+        }
+      })
+    },
+    saveSeccurityLink () {
+      this.$http.post('/rest/api/bind/saveSeccurityLink', qs.stringify({seccurityLink: this.detail.seccurityLink})).then((res) => {
         if (res.success) {
           this.$Message.success('保存成功')
         } else {

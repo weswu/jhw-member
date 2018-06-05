@@ -17,7 +17,12 @@
             </Col>
           </Row>
         </div>
-        <Table ref="selection" :columns="columns" :data="list" @on-selection-change="handleSelectChange"></Table>
+        <DragableTable
+          ref="selection"
+          v-model="list"
+          :columns="columns"
+          @on-update="tableUpdate"
+          @on-selection-change="handleSelectChange"/>
       </Content>
       <JPagination :fixed="true" :checkbox="true" :total="total" :searchData='searchData' @on-change="get">
         <span slot="btn">
@@ -49,7 +54,7 @@ import MenuBar from '@/components/common/menu_bar'
 import JHeader from '@/components/group/j-header'
 import JPagination from '@/components/group/j-pagination'
 import JDialog from '@/components/group/j-dialog'
-import Sortable from 'sortablejs'
+import DragableTable from '@/components/group/j-dragable-table'
 import SeoDetail from '@/pages/static/SeoDetail'
 import TransferCategory from '@/components/group/transfer-category'
 export default {
@@ -58,13 +63,14 @@ export default {
     JHeader,
     JPagination,
     JDialog,
+    DragableTable,
     SeoDetail,
     TransferCategory
   },
   data () {
     return {
-      myShowSelect: ['序号', '产品图片', '产品名称', '产品型号', '产品分类', '添加时间', '是否上架', '排序'],
-      myShowList: ['序号', '产品图片', '产品名称', '产品型号', '产品价格', '产品分类', '添加时间', '是否上架', '排序', '二维码', 'id'],
+      myShowSelect: this.$store.state.customData.productShow,
+      myShowList: ['序号', '产品图片', '产品名称', '产品型号', '产品价格', '产品分类', '添加时间', '是否上架', '排序', '二维码'],
       columns: [],
       columns2: [
         { type: 'index2', className: 'j_table_index', title: '序号', align: 'center', width: 60, render: this.indexFilter },
@@ -93,22 +99,6 @@ export default {
       categoryList: state => state.productCategory
     })
   },
-  mounted () {
-    var ctx = this
-    setTimeout(function () {
-      let el = document.getElementsByClassName('ivu-table-tbody')[0]
-      Sortable.create(el, {
-        group: {
-          name: 'list',
-          pull: true
-        },
-        animation: 120,
-        onUpdate (e) {
-          ctx.sortable(e.oldIndex, e.newIndex, 'product', 'productId')
-        }
-      })
-    }, 2000)
-  },
   created () {
     this.searchData.page = this.$cookie.get('productPage') || 1
     this.get()
@@ -129,6 +119,9 @@ export default {
       })
     },
     // 功能
+    tableUpdate (a, b) {
+      this.sortable(a, b, 'product', 'productId')
+    },
     lanRefresh () {
       this.searchData.page = 1
       this.get()
@@ -149,6 +142,8 @@ export default {
         })
       })
       this.columns.push({ title: '操作', className: 'j_table_operate', width: 156, render: this.renderOperate })
+      this.$store.state.customData.productShow = this.myShowSelect
+      this.$store.dispatch('SAVE_CUSTOM_DATA')
     },
     // 搜索
     search (e) {
@@ -169,7 +164,7 @@ export default {
       })
     },
     handleSelectAll () {
-      this.$refs.selection.selectAll(this.toggle)
+      this.$refs.selection.$refs.dragable.selectAll(this.toggle)
     },
     delAll () {
       if (!this.ids) {

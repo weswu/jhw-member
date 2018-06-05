@@ -46,7 +46,7 @@ export default {
   data () {
     return {
       // 我的显示
-      myShowSelect: ['序号', '订单编号', '用户名', '订单总额', '订单状态', '付款状态', '配送状态', '支付方式', '配送方式', '下单时间'],
+      myShowSelect: this.$store.state.customData.shopShow,
       myShowList: ['序号', '订单编号', '用户名', '订单总额', '订单状态', '付款状态', '配送状态', '支付方式', '配送方式', '下单时间', '来源（网站编辑）'],
       columns: [],
       columns2: [
@@ -119,6 +119,8 @@ export default {
         })
       })
       this.columns.push({ title: '操作', className: 'j_table_operate', width: 120, render: this.renderOperate })
+      this.$store.state.customData.shopShow = this.myShowSelect
+      this.$store.dispatch('SAVE_CUSTOM_DATA')
     },
     // 批量操作
     handleSelectAll () {

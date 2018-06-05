@@ -7,7 +7,7 @@
         <div class="j_search">
           <Button type="info" icon="plus" class="w130" @click="add">添加会员属性</Button>
         </div>
-        <Table :columns="columns" :data="list"/>
+        <DragableTable v-model="list" :columns="columns" @on-update="tableUpdate"/>
       </Content>
     </Layout>
     <Detail ref='detail' @on-change="get"/>
@@ -20,12 +20,13 @@ import { mapState } from 'vuex'
 import MenuBar from '@/components/common/menu_bar'
 import JHeader from '@/components/group/j-header'
 import Detail from '@/pages/member/AttrDetail'
-import Sortable from 'sortablejs'
+import DragableTable from '@/components/group/j-dragable-table'
 export default {
   components: {
     MenuBar,
     JHeader,
-    Detail
+    Detail,
+    DragableTable
   },
   data () {
     return {
@@ -46,22 +47,6 @@ export default {
       memberAttrList: state => state.status.memberAttrList
     })
   },
-  mounted () {
-    var ctx = this
-    setTimeout(function () {
-      let el = document.getElementsByClassName('ivu-table-tbody')[0]
-      Sortable.create(el, {
-        group: {
-          name: 'list',
-          pull: true
-        },
-        animation: 120,
-        onUpdate (e) {
-          ctx.sortable(e.oldIndex, e.newIndex)
-        }
-      })
-    }, 2000)
-  },
   created () {
     this.get()
   },
@@ -73,33 +58,8 @@ export default {
     add () {
       this.$refs.detail.open()
     },
-    sortable (a, b) {
-      let objA = this.list[a]
-      let objB = this.list[b]
-      let sortA = this.list[a].sort
-      let sortB = this.list[b].sort
-      this.sortPost(this.list[a].attId, sortB)
-      this.sortPost(this.list[b].attId, sortA)
-      objA.sort = sortB
-      objB.sort = sortA
-      this.list[a] = objB
-      this.list[b] = objA
-    },
-    sortPost (id, sort) {
-      let data = {
-        model: JSON.stringify({
-          id: id,
-          sort: sort
-        }),
-        _method: 'put'
-      }
-      this.$http.post('/rest/api/member/attr/detail/' + id, qs.stringify(data)).then((res) => {
-        if (res.success) {
-          console.log(sort)
-        } else {
-          this.$Message.error(res.msg)
-        }
-      })
+    tableUpdate (a, b) {
+      this.sortable(a, b, 'member/attr', 'attId')
     },
     // 过滤
     typeFilter (h, params) {

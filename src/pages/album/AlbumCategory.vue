@@ -149,6 +149,9 @@ export default {
           on: {
             click: () => {
               this.ok(root, node, data)
+            },
+            dblclick: () => {
+              this.$Message.info('aaa')
             }
           }
         }, [

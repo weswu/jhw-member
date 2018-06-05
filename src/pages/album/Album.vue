@@ -59,7 +59,6 @@
               <Button type="ghost" size="small">删除</Button>
               <Button type="ghost" size="small">复制</Button>
               <Button type="ghost" size="small">移动</Button>
-              <Button type="ghost" size="small">重命名</Button>
               <Button type="ghost" size="small">一键删除非引用</Button>
             </span>
           </JPagination>

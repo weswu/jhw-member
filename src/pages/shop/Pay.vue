@@ -3,11 +3,11 @@
     <MenuBar :data="'menuShop'" :active="'shop_pay'"/>
     <Layout class="j_layout_content j_sort">
       <JHeader :title="'支付方式管理'"/>
-      <Content>
+      <Content class="sort">
         <div class="j_search">
           <Button type="info" icon="plus" class="w130" @click="url('/shop_pay/add')">添加支付方式</Button>
         </div>
-        <Table :columns="columns" :data="list" class="sort"/>
+        <DragableTable v-model="list" :columns="columns" @on-update="tableUpdate"/>
       </Content>
     </Layout>
   </Layout>
@@ -17,11 +17,12 @@
 import qs from 'qs'
 import MenuBar from '@/components/common/menu_bar'
 import JHeader from '@/components/group/j-header'
-import Sortable from 'sortablejs'
+import DragableTable from '@/components/group/j-dragable-table'
 export default {
   components: {
     MenuBar,
-    JHeader
+    JHeader,
+    DragableTable
   },
   data () {
     return {
@@ -33,22 +34,6 @@ export default {
       ],
       list: []
     }
-  },
-  mounted () {
-    var ctx = this
-    setTimeout(function () {
-      let el = document.getElementsByClassName('ivu-table-tbody')[0]
-      Sortable.create(el, {
-        group: {
-          name: 'list',
-          pull: true
-        },
-        animation: 120,
-        onUpdate (e) {
-          ctx.sortable(e.oldIndex, e.newIndex, 'paymentconfig', 'paymentId')
-        }
-      })
-    }, 2000)
   },
   created () {
     this.get()
@@ -66,6 +51,9 @@ export default {
     // 上
     add () {
       this.$refs.detail.open()
+    },
+    tableUpdate (a, b) {
+      this.sortable(a, b, 'paymentconfig', 'paymentId')
     },
     // 过滤
     sortFilter (h, params) {

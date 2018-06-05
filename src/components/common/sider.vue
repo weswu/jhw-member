@@ -40,7 +40,7 @@
 export default {
   data () {
     return {
-      isCollapsed: true,
+      isCollapsed: this.$store.state.customData.isCollapsed,
       transfer: true,
       disabled: false,
       activeName: 'index',
@@ -110,6 +110,8 @@ export default {
     collapsedSider () {
       this.$refs.side1.toggleCollapse()
       this.disabled = !this.isCollapsed
+      this.$store.state.customData.isCollapsed = this.isCollapsed
+      this.$store.dispatch('SAVE_CUSTOM_DATA')
     },
     mrouter (name) {
       this.$router.push({path: '/' + name})

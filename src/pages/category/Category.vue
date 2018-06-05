@@ -7,8 +7,12 @@
         <div class="j_search">
           <Button type="info" icon="plus" class="w130" @click="add">添加{{$route.params.id === 'product' ?'产品':'新闻'}}分类</Button>
         </div>
-        <Table ref="selection" :columns="columns" :data="list" @on-selection-change="handleSelectChange">
-        </Table>
+        <DragableTable
+          ref="selection"
+          v-model="list"
+          :columns="columns"
+          @on-update="tableUpdate"
+          @on-selection-change="handleSelectChange"/>
       </Content>
       <div class="j_pagination fixed border">
         <div class="btn">
@@ -30,12 +34,13 @@
 import qs from 'qs'
 import MenuBar from '@/components/common/menu_bar'
 import JHeader from '@/components/group/j-header'
-import Sortable from 'sortablejs'
+import DragableTable from '@/components/group/j-dragable-table'
 import SeoDetail from '@/pages/static/SeoDetail'
 export default {
   components: {
     MenuBar,
     JHeader,
+    DragableTable,
     SeoDetail
   },
   data () {
@@ -52,22 +57,6 @@ export default {
       ids: '',
       toggle: false
     }
-  },
-  mounted () {
-    var ctx = this
-    setTimeout(function () {
-      let el = document.getElementsByClassName('ivu-table-tbody')[0]
-      Sortable.create(el, {
-        group: {
-          name: 'list',
-          pull: true
-        },
-        animation: 120,
-        onUpdate (e) {
-          ctx.sortable(e.oldIndex, e.newIndex)
-        }
-      })
-    }, 2000)
   },
   created () {
     this.get()
@@ -121,33 +110,8 @@ export default {
     add () {
       this.$router.push({ path: '/news/add' })
     },
-    sortable (a, b) {
-      let objA = this.list[a]
-      let objB = this.list[b]
-      let sortA = this.list[a].sort
-      let sortB = this.list[b].sort
-      this.sortPost(this.list[a].categoryId, sortB)
-      this.sortPost(this.list[b].categoryId, sortA)
-      objA.sort = sortB
-      objB.sort = sortA
-      this.list[a] = objB
-      this.list[b] = objA
-    },
-    sortPost (id, sort) {
-      let data = {
-        model: JSON.stringify({
-          id: id,
-          sort: sort
-        }),
-        _method: 'put'
-      }
-      this.$http.post('/rest/api/category/detail/' + id, qs.stringify(data)).then((res) => {
-        if (res.success) {
-          console.log(sort)
-        } else {
-          this.$Message.error(res.msg)
-        }
-      })
+    tableUpdate (a, b) {
+      this.sortable(a, b, 'category', 'categoryId')
     },
     // 批量操作
     handleSelectChange (status) {
@@ -160,7 +124,7 @@ export default {
       })
     },
     handleSelectAll () {
-      this.$refs.selection.selectAll(this.toggle)
+      this.$refs.selection.$refs.dragable.selectAll(this.toggle)
     },
     delAll () {
       if (!this.ids) {
