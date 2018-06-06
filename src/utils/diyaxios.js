@@ -5,6 +5,9 @@ axios.interceptors.response.use((res) => {
   if (res.status === 654) { // 百度云请求超时检测
     window.alert('请求超时！')
   }
+  if (res.config.url === '/rest/api/user/detail' && res.data.success) {
+    res.data.attributes.data && (res.data.attributes.data.token = res.headers['x-csrf-token'])
+  }
   if (typeof res.data === 'string') {
     return res.data
   }

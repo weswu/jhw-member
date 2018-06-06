@@ -135,7 +135,7 @@ const state = {
     title: '产品管理',
     menu: [
       { text: '产品列表', value: 'product' },
-      { text: '分类管理', value: 'category/product' },
+      { text: '产品分类', value: 'category/product' },
       { text: '导入', value: 'product_import' },
       { text: '下载', value: 'product_download' }
     ]
@@ -163,7 +163,7 @@ const state = {
     title: '新闻管理',
     menu: [
       { text: '新闻列表', value: 'news' },
-      { text: '分类管理', value: 'category/news' }
+      { text: '新闻分类', value: 'category/news' }
     ]
   },
   menu_news_detail: {

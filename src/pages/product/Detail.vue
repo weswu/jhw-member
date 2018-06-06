@@ -9,13 +9,7 @@
             <Input v-model="detail.name" placeholder="请输入产品名称"></Input>
           </FormItem>
           <FormItem label="产品分类：">
-            <Select v-model="detail.category" class="product_category_list">
-              <Option v-for="item in categoryList" :value="item.categoryId" :key="item.categoryId" v-if="item._checked" :class="'item' + item.grade">
-                <span>{{item.name}}</span>
-                <i class="iconfont icon-xialajiantou" v-if="item.isroot && !item._selected" @click.stop="changeCateList($event, item)"></i>
-                <i class="iconfont icon-xialajiantou rotate" v-if="item.isroot && item._selected" @click.stop="changeCateList($event, item)"></i>
-              </Option>
-            </Select>
+            <CategorySelect :categoryId="detail.category" :type="'productCategory'" @on-change="categoryChange"/>
             <span class="a_normal" style="padding-left:10px;">新增分类</span>
             <div class="j_tip j_tip_category">
               <div style="position: absolute;">注意: </div>
@@ -209,6 +203,7 @@ import JTag from '@/components/group/j-tag'
 import Attr from '@/components/product/attr'
 import AttrAdd from '@/components/product/attr-add'
 import AttrCustom from '@/components/product/attr-custom'
+import CategorySelect from '@/components/group/j-category-select'
 export default {
   components: {
     MenuBar,
@@ -218,12 +213,14 @@ export default {
     JTag,
     Attr,
     AttrAdd,
-    AttrCustom
+    AttrCustom,
+    CategorySelect
   },
   data () {
     return {
-      active: '5',
+      active: '0',
       detail: {
+        category: 'Category_00000000000000000275428',
         customAttrMapStore: [
           {
             madeName: '长度',
@@ -245,13 +242,12 @@ export default {
   computed: {
     ...mapState({
       menuBarList: state => state.status.menu_product_detail,
-      categoryList: state => state.productCategory,
       staticList: state => state.staticList
     })
   },
   created () {
     this.get()
-    this.$store.dispatch('getProductCategory')
+    if (this.$store.state.productCategory.length === 0) this.$store.dispatch('getProductCategory')
   },
   methods: {
     get () {
@@ -269,28 +265,15 @@ export default {
         }
       })
     },
+    categoryChange (e) {
+      this.detail.category = e
+    },
     // 功能
     activeChange (e) {
       this.active = e
       if (e === '6') {
         this.$store.dispatch('getTagList')
       }
-    },
-    // 产品分类
-    changeCateList (e, data) {
-      var ctx = this
-      data._selected = !data._selected
-      this.categoryList.forEach(item => {
-        if (item.belongId === data.categoryId) {
-          item._checked = !item._checked
-          ctx.categoryList.forEach(row => {
-            if (row.belongId === item.categoryId) {
-              row._checked = !row._checked
-            }
-          })
-        }
-      })
-      e.stopPropagation()
     },
     // 产品图片
     imgChange (item, index) {
@@ -401,40 +384,6 @@ export default {
 </script>
 
 <style lang="less">
-.product_category_list{
-  .ivu-select-dropdown{
-    max-height: 340px;
-  }
-  .icon-xialajiantou{
-    float: right;
-    color: #797979;
-    font-size: 14px;
-    padding: 0px 5px;
-    &.rotate{
-      transform: rotate(180deg);
-    }
-  }
-  .item2{
-    padding: 7px 16px 7px 36px;
-  }
-  .item3{
-    padding: 7px 16px 7px 66px;
-  }
-  .ivu-select-item-selected{
-    &.item1{
-      background: #14a4ff;
-    }
-    &.item2{
-      background: #4ebbff;
-    }
-    &.item3{
-      background: #9dd9ff;
-    }
-    .icon-xialajiantou{
-      color: #fff;
-    }
-  }
-}
 .j_product_detail{
   .j_tip_category{
     position: absolute;

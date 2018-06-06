@@ -40,6 +40,9 @@ a.primary{
   text-overflow: ellipsis;
   overflow: hidden;
 }
+.price{
+  color: @price-color;
+}
 .red{
   color: @error-color;
 }
@@ -456,8 +459,8 @@ a.primary{
   }
   &.fixed{
     border-top: 1px solid #e9e9e9;
-    .page{
-      padding-left: 6px;
+    .ivu-page{
+      padding-right: 6px;
     }
   }
   &.border_top{
@@ -489,11 +492,11 @@ a.primary{
   }
   .ivu-page{
     padding-left: 18px;
+    padding-right: 20px;
   }
   .page{
     display:inline-block;
     padding-right: 15px;
-    padding-left: 20px;
     .ivu-input-wrapper{
       width: 35px;
       float: left;
@@ -702,6 +705,25 @@ a.primary{
 }
 
 //对敌框
+.j_dialog{
+  z-index: 1060;
+  .ivu-modal {
+    top: 186px;
+  }
+  .ivu-modal-body{
+    padding: 22px 54px 45px 54px;
+  }
+  .ivu-modal-close{
+    right: 25px;
+    top: 25px;
+  }
+  .icon-x{
+    color: #c7c7c7
+  }
+  .ivu-modal-footer{
+    display: none
+  }
+}
 .ivu-modal{
   form{
     .ivu-input-wrapper,.ivu-select{

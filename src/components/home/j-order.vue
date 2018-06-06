@@ -3,12 +3,12 @@
     <Tabs :value="tabActive">
       <TabPane label="消费记录" name="1">
         <div class="j_warpper">
-          <iframe src="http://buy.jihui88.com/#/member/order?size=5" class="j_buy_iframe"/>
+          <OrderItem :searchData="{ page: 1, pageSize: 3 }"/>
         </div>
       </TabPane>
       <TabPane label="已购产品" name="2">
         <div class="j_warpper">
-          <iframe src="http://buy.jihui88.com/#/member/purchased?size=5" class="j_buy_iframe"/>
+          <iframe src="http://buy.jihui88.com/#/member/purchased?size=3" class="j_buy_iframe"/>
         </div>
       </TabPane>
       <TabPane label="我的积分" name="3">
@@ -24,10 +24,12 @@
 <script>
 import JCostOrderDetail from '@/components/group/j-cost-order-detail'
 import PointTable from '@/pages/point/PointTable'
+import OrderItem from '@/pages/cost/OrderItem'
 export default {
   components: {
     JCostOrderDetail,
-    PointTable
+    PointTable,
+    OrderItem
   },
   data () {
     return {

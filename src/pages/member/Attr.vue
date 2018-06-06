@@ -7,7 +7,7 @@
         <div class="j_search">
           <Button type="info" icon="plus" class="w130" @click="add">添加会员属性</Button>
         </div>
-        <DragableTable v-model="list" :columns="columns" @on-update="tableUpdate"/>
+        <DragableTable :list="list" :columns="columns" @on-update="tableUpdate"/>
       </Content>
     </Layout>
     <Detail ref='detail' @on-change="get"/>

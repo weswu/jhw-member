@@ -20,6 +20,7 @@ const store = new Vuex.Store({
     // 列表数据
     productCategory: [],
     newsCategory: [],
+    albumCategory: [],
     messageList: [],
     memberRankList: [],
     memberAttrList: [],
@@ -57,9 +58,11 @@ const store = new Vuex.Store({
     user: state => state.user,
     userInfo: state => state.userInfo,
     lanId: state => state.lanId,
-    // 列表
+    // 分类
     productCategory: state => state.productCategory,
     newsCategory: state => state.newsCategory,
+    albumCategory: state => state.albumCategory,
+    // 列表
     messageList: state => state.messageList,
     memberRankList: state => state.memberRankList,
     memberAttrList: state => state.memberAttrList,
@@ -82,6 +85,9 @@ const store = new Vuex.Store({
     },
     setNewsCategory (state, newsCategory) {
       state.newsCategory = newsCategory
+    },
+    setAlbumCategory (state, albumCategory) {
+      state.albumCategory = albumCategory
     },
     setMessageList (state, messageList) {
       state.messageList = messageList
@@ -167,6 +173,456 @@ const store = new Vuex.Store({
       })
     },
     getProductCategory ({commit, state}) {
+      var data = [
+        {
+          name: '惠厨系列',
+          key: null,
+          state: '01',
+          type: '10',
+          sort: 12,
+          enterpriseId: 'Enterp_0000000000000000000051118',
+          grade: '01',
+          sonCate: null,
+          categoryId: 'Category_00000000000000000275428',
+          adduserId: 'User_000000000000000000000052415',
+          belongId: null,
+          addTime: 1407119519756,
+          cdesc: null,
+          lanId: 1,
+          image: null,
+          isdisplay: '0',
+          c_url: null,
+          alias: null,
+          image2: null,
+          categoryId2: '275428',
+          isroot: '01',
+          hunkDisplay: null,
+          ifLeaf: false,
+          newsList: null,
+          tagList: null
+        },
+        {
+          name: '威龙系列',
+          key: null,
+          state: '01',
+          type: '10',
+          sort: 17,
+          enterpriseId: 'Enterp_0000000000000000000051118',
+          grade: '01',
+          sonCate: null,
+          categoryId: 'Category_00000000000000000275430',
+          adduserId: 'User_000000000000000000000052415',
+          belongId: null,
+          addTime: 1407119549657,
+          cdesc: null,
+          lanId: 1,
+          image: null,
+          isdisplay: '0',
+          c_url: null,
+          alias: null,
+          image2: null,
+          categoryId2: '275430',
+          isroot: '01',
+          hunkDisplay: null,
+          ifLeaf: false,
+          newsList: null,
+          tagList: null
+        },
+        {
+          name: '燃气灶专区',
+          key: null,
+          state: '01',
+          type: '10',
+          sort: 18,
+          enterpriseId: 'Enterp_0000000000000000000051118',
+          grade: '00',
+          sonCate: null,
+          categoryId: 'Category_00000000000000000285700',
+          adduserId: 'User_000000000000000000000052415',
+          belongId: null,
+          addTime: 1419383968988,
+          cdesc: null,
+          lanId: 1,
+          image: null,
+          isdisplay: '1',
+          c_url: null,
+          alias: null,
+          image2: null,
+          categoryId2: '285700',
+          isroot: '01',
+          hunkDisplay: null,
+          ifLeaf: false,
+          newsList: null,
+          tagList: null
+        },
+        {
+          name: '海鲜蒸柜专区',
+          key: null,
+          state: '01',
+          type: '10',
+          sort: 19,
+          enterpriseId: 'Enterp_0000000000000000000051118',
+          grade: '01',
+          sonCate: null,
+          categoryId: 'Category_00000000000000000285701',
+          adduserId: 'User_000000000000000000000052415',
+          belongId: null,
+          addTime: 1419383994542,
+          cdesc: null,
+          lanId: 1,
+          image: null,
+          isdisplay: '1',
+          c_url: null,
+          alias: null,
+          image2: null,
+          categoryId2: '285701',
+          isroot: '01',
+          hunkDisplay: null,
+          ifLeaf: false,
+          newsList: null,
+          tagList: null
+        },
+        {
+          name: '开水器专区',
+          key: null,
+          state: '01',
+          type: '10',
+          sort: 20,
+          enterpriseId: 'Enterp_0000000000000000000051118',
+          grade: '01',
+          sonCate: null,
+          categoryId: 'Category_00000000000000000285702',
+          adduserId: 'User_000000000000000000000052415',
+          belongId: null,
+          addTime: 1419384008430,
+          cdesc: null,
+          lanId: 1,
+          image: null,
+          isdisplay: '1',
+          c_url: null,
+          alias: null,
+          image2: null,
+          categoryId2: '285702',
+          isroot: '01',
+          hunkDisplay: null,
+          ifLeaf: false,
+          newsList: null,
+          tagList: null
+        },
+        {
+          name: '御龙系列 - 星级酒店工程配套',
+          key: null,
+          state: '01',
+          type: '10',
+          sort: 21,
+          enterpriseId: 'Enterp_0000000000000000000051118',
+          grade: '02',
+          sonCate: null,
+          categoryId: 'Category_00000000000000000277978',
+          adduserId: 'User_000000000000000000000052415',
+          belongId: 'Category_00000000000000000285700',
+          addTime: 1409189207276,
+          cdesc: null,
+          lanId: 1,
+          image: null,
+          isdisplay: '1',
+          c_url: null,
+          alias: null,
+          image2: null,
+          categoryId2: '277978',
+          isroot: '00',
+          hunkDisplay: null,
+          ifLeaf: false,
+          newsList: null,
+          tagList: null
+        },
+        {
+          name: '腾龙系列 - 大型饭店及工程配套',
+          key: null,
+          state: '01',
+          type: '10',
+          sort: 22,
+          enterpriseId: 'Enterp_0000000000000000000051118',
+          grade: '02',
+          sonCate: null,
+          categoryId: 'Category_00000000000000000275423',
+          adduserId: 'User_000000000000000000000052415',
+          belongId: 'Category_00000000000000000285700',
+          addTime: 1407115866016,
+          cdesc: '安全、防护 > 头盔 > 凯芙拉头盔 > ',
+          lanId: 1,
+          image: null,
+          isdisplay: '1',
+          c_url: null,
+          alias: null,
+          image2: null,
+          categoryId2: '275423',
+          isroot: '00',
+          hunkDisplay: null,
+          ifLeaf: false,
+          newsList: null,
+          tagList: null
+        },
+        {
+          name: '金太阳系列 - 企事业单位',
+          key: null,
+          state: '01',
+          type: '10',
+          sort: 23,
+          enterpriseId: 'Enterp_0000000000000000000051118',
+          grade: '02',
+          sonCate: null,
+          categoryId: 'Category_00000000000000000275427',
+          adduserId: 'User_000000000000000000000052415',
+          belongId: 'Category_00000000000000000285700',
+          addTime: 1407119499913,
+          cdesc: null,
+          lanId: 1,
+          image: null,
+          isdisplay: '1',
+          c_url: null,
+          alias: null,
+          image2: null,
+          categoryId2: '275427',
+          isroot: '00',
+          hunkDisplay: null,
+          ifLeaf: false,
+          newsList: null,
+          tagList: null
+        },
+        {
+          name: '金龙系列 - 适用于中大型饭店',
+          key: null,
+          state: '01',
+          type: '10',
+          sort: 24,
+          enterpriseId: 'Enterp_0000000000000000000051118',
+          grade: '02',
+          sonCate: null,
+          categoryId: 'Category_00000000000000000284820',
+          adduserId: 'User_000000000000000000000052415',
+          belongId: 'Category_00000000000000000285700',
+          addTime: 1417840672316,
+          cdesc: null,
+          lanId: 1,
+          image: null,
+          isdisplay: '1',
+          c_url: null,
+          alias: null,
+          image2: null,
+          categoryId2: '284820',
+          isroot: '00',
+          hunkDisplay: null,
+          ifLeaf: false,
+          newsList: null,
+          tagList: null
+        },
+        {
+          name: '新飞龙系列 - 适用于中小型饭店',
+          key: null,
+          state: '01',
+          type: '10',
+          sort: 25,
+          enterpriseId: 'Enterp_0000000000000000000051118',
+          grade: '02',
+          sonCate: null,
+          categoryId: 'Category_00000000000000000275429',
+          adduserId: 'User_000000000000000000000052415',
+          belongId: 'Category_00000000000000000285700',
+          addTime: 1407119537884,
+          cdesc: null,
+          lanId: 1,
+          image: null,
+          isdisplay: '1',
+          c_url: null,
+          alias: null,
+          image2: null,
+          categoryId2: '275429',
+          isroot: '00',
+          hunkDisplay: null,
+          ifLeaf: false,
+          newsList: null,
+          tagList: null
+        },
+        {
+          name: '新乘龙系列 - 适用于中小型饭店',
+          key: null,
+          state: '01',
+          type: '10',
+          sort: 26,
+          enterpriseId: 'Enterp_0000000000000000000051118',
+          grade: '02',
+          sonCate: null,
+          categoryId: 'Category_00000000000000000275431',
+          adduserId: 'User_000000000000000000000052415',
+          belongId: 'Category_00000000000000000285700',
+          addTime: 1407119572213,
+          cdesc: null,
+          lanId: 1,
+          image: null,
+          isdisplay: '1',
+          c_url: null,
+          alias: null,
+          image2: null,
+          categoryId2: '275431',
+          isroot: '00',
+          hunkDisplay: null,
+          ifLeaf: false,
+          newsList: null,
+          tagList: null
+        },
+        {
+          name: '猛火炉',
+          key: null,
+          state: '01',
+          type: '10',
+          sort: 27,
+          enterpriseId: 'Enterp_0000000000000000000051118',
+          grade: '02',
+          sonCate: null,
+          categoryId: 'Category_00000000000000000275432',
+          adduserId: 'User_000000000000000000000052415',
+          belongId: 'Category_00000000000000000285700',
+          addTime: 1407119590747,
+          cdesc: null,
+          lanId: 1,
+          image: null,
+          isdisplay: '1',
+          c_url: null,
+          alias: null,
+          image2: null,
+          categoryId2: '275432',
+          isroot: '00',
+          hunkDisplay: null,
+          ifLeaf: false,
+          newsList: null,
+          tagList: null
+        },
+        {
+          name: '矮汤炉系列',
+          key: null,
+          state: '01',
+          type: '10',
+          sort: 28,
+          enterpriseId: 'Enterp_0000000000000000000051118',
+          grade: '02',
+          sonCate: null,
+          categoryId: 'Category_00000000000000000275993',
+          adduserId: 'User_000000000000000000000052415',
+          belongId: 'Category_00000000000000000285700',
+          addTime: 1407494221721,
+          cdesc: null,
+          lanId: 1,
+          image: null,
+          isdisplay: '1',
+          c_url: null,
+          alias: null,
+          image2: null,
+          categoryId2: '275993',
+          isroot: '00',
+          hunkDisplay: null,
+          ifLeaf: false,
+          newsList: null,
+          tagList: null
+        },
+        {
+          name: '简易炉架',
+          key: null,
+          state: '01',
+          type: '10',
+          sort: 29,
+          enterpriseId: 'Enterp_0000000000000000000051118',
+          grade: '02',
+          sonCate: null,
+          categoryId: 'Category_00000000000000000275994',
+          adduserId: 'User_000000000000000000000052415',
+          belongId: 'Category_00000000000000000285700',
+          addTime: 1407494244535,
+          cdesc: null,
+          lanId: 1,
+          image: null,
+          isdisplay: '1',
+          c_url: null,
+          alias: null,
+          image2: null,
+          categoryId2: '275994',
+          isroot: '00',
+          hunkDisplay: null,
+          ifLeaf: false,
+          newsList: null,
+          tagList: null
+        },
+        {
+          name: '精工调理系列',
+          key: null,
+          state: '01',
+          type: '10',
+          sort: 30,
+          enterpriseId: 'Enterp_0000000000000000000051118',
+          grade: '02',
+          sonCate: null,
+          categoryId: 'Category_00000000000000000275995',
+          adduserId: 'User_000000000000000000000052415',
+          belongId: 'Category_00000000000000000285700',
+          addTime: 1407494257593,
+          cdesc: null,
+          lanId: 1,
+          image: null,
+          isdisplay: '1',
+          c_url: null,
+          alias: null,
+          image2: null,
+          categoryId2: '275995',
+          isroot: '00',
+          hunkDisplay: null,
+          ifLeaf: false,
+          newsList: null,
+          tagList: null
+        }
+      ]
+      let list = []
+      // 1级
+      data.forEach(item => {
+        if (!item.belongId) {
+          item._checked = false
+          item._open = true
+          item.grade = '1'
+          list.push(item)
+        }
+      })
+      // 2级
+      data.forEach(row => {
+        list.forEach((item, index) => {
+          if (item.grade === '1' && (row.belongId === item.categoryId)) {
+            row._checked = false
+            item._open = false
+            row.grade = '2'
+            list.splice(index + 1, 0, row)
+          }
+        })
+      })
+      // 3级
+      data.forEach(row => {
+        list.forEach((item, index) => {
+          if (item.grade === '2' && (row.belongId === item.categoryId)) {
+            row._checked = false
+            row.grade = '3'
+            list.splice(index + 1, 0, row)
+          }
+        })
+      })
+      list.forEach((item, index) => {
+        item.isroot = false
+        if (list.length > (index + 1)) {
+          if (item.grade === '1') {
+            item.isroot = item.grade === '1' && list[index + 1].grade === '2'
+          }
+          if (item.grade === '2') {
+            item.isroot = item.grade === '2' && list[index + 1].grade === '3'
+          }
+        }
+      })
+      // this.commit('setProductCategory', list)
       this._vm.$http.get('/rest/api/category/product?pageSize=1000').then(res => {
         if (res.success) {
           let data = res.attributes.data
@@ -175,7 +631,7 @@ const store = new Vuex.Store({
           data.forEach(item => {
             if (!item.belongId && item.isdisplay === '1') {
               item._checked = true
-              item._selected = true
+              item._open = true
               item.grade = '1'
               list.push(item)
             }
@@ -185,7 +641,7 @@ const store = new Vuex.Store({
             row.isdisplay === '1' && list.forEach((item, index) => {
               if (item.grade === '1' && (row.belongId === item.categoryId)) {
                 row._checked = false
-                item._selected = false
+                item._open = false
                 row.grade = '2'
                 list.splice(index + 1, 0, row)
               }
@@ -225,7 +681,7 @@ const store = new Vuex.Store({
           data.forEach(item => {
             if (!item.belongId && item.isdisplay === '1') {
               item._checked = true
-              item._selected = true
+              item._open = true
               item.grade = '1'
               list.push(item)
             }
@@ -235,7 +691,7 @@ const store = new Vuex.Store({
             row.isdisplay === '1' && list.forEach((item, index) => {
               if (item.grade === '1' && (row.belongId === item.categoryId)) {
                 row._checked = false
-                item._selected = false
+                item._open = false
                 row.grade = '2'
                 list.splice(index + 1, 0, row)
               }
@@ -263,6 +719,13 @@ const store = new Vuex.Store({
             }
           })
           this.commit('setNewsCategory', list)
+        }
+      })
+    },
+    getAlbumCategory ({commit, state}) {
+      return this._vm.$http.get('/rest/api/album/list?page=1&pageSize=1000').then(res => {
+        if (res.success) {
+          this.commit('setAlbumCategory', res.attributes.data)
         }
       })
     },

@@ -18,7 +18,7 @@
         </div>
         <DragableTable
           ref="selection"
-          v-model="list"
+          :list="list"
           :columns="columns"
           @on-update="tableUpdate"
           @on-selection-change="handleSelectChange"/>

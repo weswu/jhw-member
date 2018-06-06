@@ -3,18 +3,25 @@
     <Content :style="{padding: '0 23px 0 21px'}">
       <JHeader :title="'相册管理'"/>
       <Layout class="ivu-layout-has-sider">
-        <Cateogy @on-change="changeCategory"/>
+        <Cateogy ref="category" @on-change="changeCategory"/>
         <Layout class="j_album_container">
           <div class="j_search">
             <Row type="flex" justify="space-between">
               <Col>
-                <Button type="info" @click="upload"><i class="iconfont icon-shangchuan"></i>上传图片到当前目录</Button>
-                <Button class="info" @click="update($Message)"><i class="iconfont icon-wenjianjia"></i>新建相册</Button>
-                <Button class="info" @click="update($Message)"><i class="iconfont icon-huishouzhan"></i>回收站</Button>
+                <Upload ref="upload" :action="'commonutil/uploadUtil2?username=' + $store.state.user.username + '&replace=00&attId=&id=' + attId"
+                  name="Filedata"
+                  multiple
+                  :max-size="2048"
+                  :on-success="handleSuccess"
+                  style="display: inline-block;margin-right: 5px;">
+                  <Button type="info"><i class="iconfont icon-shangchuan"></i>上传图片到当前目录</Button>
+                </Upload>
+                <Button class="info" @click="add"><i class="iconfont icon-wenjianjia"></i>新建相册</Button>
+                <Button class="info" @click="recycle"><i class="iconfont icon-huishouzhan"></i>回收站</Button>
               </Col>
               <Col>
                 <Input v-model="pic" class="w144" placeholder="搜索图片名称"></Input>
-                <Button class="search" @click="update($Message)">搜索</Button>
+                <Button class="search" @click="search">搜索</Button>
                 <Button class="grey" @click="update($Message)">高级搜索</Button>
                 <Button class="info" @click="update($Message)"><i class="iconfont icon-tupian3"></i>设置水印</Button>
                 <Button class="info" @click="update($Message)" style="padding: 6px 5px;margin-right:0px;">一键载入产品分类名称</Button>
@@ -26,13 +33,13 @@
               <Row type="flex" justify="space-between">
                 <Col>
                   <Breadcrumb separator=">">
-                    <BreadcrumbItem v-for="(item, index) in breadList" :key="item.value">
+                    <BreadcrumbItem v-for="(item, index) in breadList" :key="item.value" @click="breadClick(item, index)">
                       <i class="iconfont icon-tupian1" v-if="index === 0"></i>{{item.text}}
                     </BreadcrumbItem>
                   </Breadcrumb>
                 </Col>
                 <Col>
-                  <Select v-model="searchData.sort" class="select_sort">
+                  <Select v-model="searchData.sortType" class="select_sort">
                     <Option v-for="item in sortList" :value="item.value" :key="item.value" :label="item.label">
                       <span>{{ item.label }}</span>
                       <i :class="{iconfont: true, 'icon-jiantou': item.value === '00', 'icon-jiantou-copy-copy': item.value === '01'}"></i>
@@ -43,8 +50,8 @@
               </Row>
             </div>
             <Row type="flex" justify="start" align="middle" class="picture_warpper">
-              <Col span="4" :xs="12" :sm="8" :md="6" :lg="4" v-for="(item, index) in list" :key="index" class="pic_item">
-                <Card dis-hover>
+              <Col span="4" :xs="12" :sm="8" :md="6" :lg="4" v-for="(item, index) in list" :key="index" class="pic_item checked">
+                <Card dis-hover @click="item._checked = !item._checked">
                   <img :src="$store.state.status.IMG_HOST + item.serverPath" alt="">
                 </Card>
                 <div class="title">
@@ -55,16 +62,17 @@
           </Content>
           <JPagination :checkbox="true" :fixed="true" :total="total" :searchData='searchData' @on-change="get" :unit="'个'">
             <span slot="btn">
-              <Checkbox v-model="toggle" @on-change="handleSelectAll(toggle)"/>
+              <Checkbox v-model="toggle" @on-change="handleSelectAll()"/>
               <Button type="ghost" size="small">删除</Button>
               <Button type="ghost" size="small">复制</Button>
               <Button type="ghost" size="small">移动</Button>
-              <Button type="ghost" size="small">一键删除非引用</Button>
             </span>
           </JPagination>
         </Layout>
       </Layout>
     </Content>
+    <Add ref="add" @on-change="categoryChange"/>
+    <Recycle ref="recycle"/>
   </Layout>
 </template>
 
@@ -74,11 +82,15 @@ import { mapState } from 'vuex'
 import JHeader from '@/components/group/j-header'
 import Cateogy from '@/pages/album/AlbumCategory'
 import JPagination from '@/components/group/j-pagination'
+import Add from '@/pages/album/Add'
+import Recycle from '@/pages/album/Recycle'
 export default {
   components: {
     JHeader,
     Cateogy,
-    JPagination
+    JPagination,
+    Add,
+    Recycle
   },
   computed: {
     ...mapState({
@@ -89,8 +101,8 @@ export default {
     return {
       pic: '',
       sortList: [
-        { value: '00', label: '时间' },
-        { value: '01', label: '时间' }
+        { value: 'desc', label: '时间' },
+        { value: 'asc', label: '时间' }
       ],
       breadList: [
         { value: 'all', text: '全部图片' }
@@ -100,7 +112,9 @@ export default {
       searchData: {
         page: 1,
         pageSize: 18,
-        sort: '00'
+        filename: '',
+        sortField: 'uploadTime',
+        sortType: 'desc'
       },
       toggle: false,
       ids: '',
@@ -114,23 +128,57 @@ export default {
     get () {
       this.$http.get('/rest/api/album/attr/list/' + this.attId + '?' + qs.stringify(this.searchData)).then((res) => {
         if (res.success) {
-          this.list = res.attributes.data
           this.total = res.attributes.count
+          let data = res.attributes.data
+          data.forEach(item => {
+            item._checked = false
+          })
+          this.list = data
         } else {
           this.$Message.error(res.msg)
         }
       })
     },
-    upload () {},
+    // 相册分类
     changeCategory (res) {
       this.attId = res.data.id
       this.breadList = res.breadList
       this.get()
     },
-    pageVal () {
-      this.searchData.page = this.page
-      this.page = ''
+    breadClick (item, index) {
+      this.attId = item.value
       this.get()
+      this.breadList.splice(index + 2, 1)
+      this.breadList.splice(index + 1, 1)
+      this.$refs.category.bread(item.value)
+    },
+    // 左
+    add () {
+      this.$refs.add.open()
+    },
+    categoryChange () {
+      this.$refs.category.init()
+    },
+    handleSuccess (res, file) {
+      var ctx = this
+      setTimeout(function () {
+        ctx.$refs.upload.clearFiles()
+      }, 1000)
+      this.get()
+    },
+    recycle () {
+      this.$refs.recycle.open(this.attId)
+    },
+    // 右
+    search () {
+      this.get()
+    },
+    // 批量
+    handleSelectAll () {
+      this.toggle = !this.toggle
+      this.list.forEach(item => {
+        this.item._checked = this.toggle
+      })
     }
   }
 }
@@ -142,6 +190,13 @@ export default {
 .picture_warpper::-webkit-scrollbar-thumb{background-color: #dedee4;}
 .picture_warpper::-webkit-scrollbar-corner {background-color: transparent;}
 .j_album{
+  // 上传
+  .ivu-upload-list{
+    position: absolute;
+    z-index: 99;
+    background: #fff;
+    border: 1px solid #f0f0f0;
+  }
   .ivu-layout-footer{
     height: auto;
     line-height: normal;
@@ -155,6 +210,7 @@ export default {
       max-width: 160px;
       display:flex;flex-flow: column;
       padding: 15px;
+      &.checked{}
       .ivu-card{
         flex: 1;
         border: none;
@@ -200,6 +256,7 @@ export default {
           font-weight: normal;
           color: #bfbfc0;
           margin: 0 3px;
+          cursor: pointer;
         }
         a{
           font-size: 12px;
@@ -230,8 +287,8 @@ export default {
       .ivu-select-selected-value{
         height: 22px;
         line-height: 22px;
-        padding-right: 40px;
         color: #727272;
+        text-align: center;
       }
       .ivu-icon-arrow-down-b{
         &::before{
@@ -253,6 +310,7 @@ export default {
   .iconfont_active{
     position: absolute;
     right: 60px;
+    top: 0;
     font-size: 12px;
     color: #7a7a7a;
   }

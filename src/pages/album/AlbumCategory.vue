@@ -1,5 +1,5 @@
 <template>
-  <div class="j_album_category j_scroll">
+  <div class="j_album_category">
     <div class="title">
       图片目录
     </div>
@@ -7,19 +7,26 @@
       <Input v-model="name" class="w144" placeholder="搜索文件夹"></Input>
       <Button class="search" @click="search" style="margin-right: 0;">搜索</Button>
     </div>
-    <v-contextmenu ref="contextmenub">
-      <v-contextmenu-item>菜单1</v-contextmenu-item>
-      <v-contextmenu-item>菜单2</v-contextmenu-item>
-      <v-contextmenu-item>菜单3</v-contextmenu-item>
-    </v-contextmenu>
-    <div v-contextmenu:contextmenub>
+    <div style="position:relative">
+      <ul ref="menu" class="menu j_panel">
+        <li @click="add">新建</li>
+        <li>移动</li>
+        <li @click="edit">重命名</li>
+        <li @click="del">删除</li>
+      </ul>
     </div>
-      <Tree :data="data"></Tree>
+    <Tree :data="data" class="j_scroll"></Tree>
+    <Add ref="add"/>
   </div>
 </template>
 
 <script>
+import qs from 'qs'
+import Add from '@/pages/album/Add'
 export default {
+  components: {
+    Add
+  },
   data () {
     return {
       name: '',
@@ -33,23 +40,34 @@ export default {
           children: []
         }
       ],
-      list: []
+      list: this.$store.state.albumCategory,
+      item: {}
     }
   },
   created () {
-    this.get()
+    if (this.list.length < 2) {
+      this.$store.dispatch('getAlbumCategory').then(res => {
+        this.initData()
+      })
+    } else {
+      this.initData()
+    }
+  },
+  mounted () {
+    var ctx = this
+    window.document.addEventListener('click', function (e) {
+      ctx.$refs.menu.style.display = 'none'
+    })
   },
   methods: {
-    get () {
-      this.$http.get('/rest/api/album/list?page=1&pageSize=9000').then(res => {
-        if (res.success) {
-          this.list = res.attributes.data
-          this.init()
-        }
+    init () {
+      this.$store.dispatch('getAlbumCategory').then(res => {
+        this.initData()
       })
     },
-    init () {
+    initData () {
       var ctx = this
+      this.list = this.$store.state.albumCategory
       this.data = [
         {
           title: '全部图片',
@@ -68,8 +86,7 @@ export default {
             expand: false,
             selected: false,
             render: this.iconFilter,
-            children: [],
-            attCount: item.attCount
+            children: []
           })
         }
       })
@@ -128,10 +145,11 @@ export default {
           }
         })
       } else {
-        this.init()
+        this.initData()
       }
     },
     iconFilter (h, { root, node, data }) {
+      var ctx = this
       return h('span', {
         class: {
           'item': true
@@ -150,8 +168,12 @@ export default {
             click: () => {
               this.ok(root, node, data)
             },
-            dblclick: () => {
-              this.$Message.info('aaa')
+            contextmenu: (e) => {
+              ctx.$refs.menu.style.display = 'block'
+              ctx.$refs.menu.style.left = (e.offsetX + 20) + 'px'
+              ctx.$refs.menu.style.top = (e.offsetY + 10) + 'px'
+              ctx.item = data
+              e.preventDefault()
             }
           }
         }, [
@@ -166,11 +188,7 @@ export default {
               color: '#79d3fb'
             }
           }),
-          h('span', {
-            domProps: {
-              innerHTML: '<span v-contextmenu:contextmenub>' + data.title + '</span>'
-            }
-          })
+          h('span', data.title)
         ])
       ])
     },
@@ -207,6 +225,69 @@ export default {
         breadList: breadList,
         data: data
       })
+    },
+    // 文件
+    bread (value) {
+      this.data.forEach(item => {
+        item.selected = false
+        if (item.id === value) {
+          item.selected = true
+        }
+      })
+    },
+    // 右击
+    add () {
+      this.$refs.add.open()
+    },
+    edit () {
+      var ctx = this
+      if (this.item.id !== 'all') {
+        this.$Modal.confirm({
+          width: 280,
+          render: (h) => {
+            return h('Input', {
+              props: {
+                value: this.item.title,
+                autofocus: true,
+                placeholder: '修改相册'
+              },
+              on: {
+                input: (val) => {
+                  this.item.title = val
+                }
+              }
+            })
+          },
+          onOk: () => {
+            if (!this.item.title) return this.$Message.info('相册名称不能为空')
+            let data = {
+              model: JSON.stringify(this.item),
+              _method: 'put'
+            }
+            this.$http.post('/rest/api/album/detail/' + this.item.id, qs.stringify(data)).then((res) => {
+              if (res.success) {
+                ctx.$Message.success('修改成功')
+                ctx.initData()
+              } else {
+                ctx.$Message.error(res.msg)
+              }
+            })
+          }
+        })
+      }
+    },
+    del () {
+      let data = {
+        _method: 'delete'
+      }
+      this.$http.post('/rest/api/album/detail/' + this.item.id, qs.stringify(data)).then((res) => {
+        if (res.success) {
+          this.$Message.success('删除成功')
+          this.initData()
+        } else {
+          this.$Message.success(res.msg)
+        }
+      })
     }
   }
 }
@@ -217,8 +298,6 @@ export default {
   width: 227px;
   flex: 0 0 227px;
   background: #ebedf1;
-  height: calc(100vh - 149px);
-  overflow-y: scroll;
   padding: 10px;
   .title{
     color:#737373;padding: 10px 0;font-size:14px;
@@ -245,7 +324,9 @@ export default {
     }
   }
   .ivu-tree{
-    overflow: hidden;
+    height: calc(100vh - 238px);
+    overflow: auto;
+    overflow-x: hidden;
   }
   .ivu-tree ul {
     line-height: 1.3;
@@ -317,6 +398,28 @@ export default {
           }
         }
       }
+    }
+  }
+  .menu{
+    display: none;
+    position: absolute;
+    left: 0;
+    top: 0;
+    z-index: 99;
+    width: 159px;
+    border: 1px solid #e0e0e0;
+    background: #f0f0f0;
+    border-radius: 5px;
+    li{
+      border-bottom: 1px solid #dfdfdf;
+      color: #4c4a46;padding: 4px 0 4px 15px;
+      cursor: pointer;
+      &:last-child{
+        border:none;
+      }
+    }
+    .ivu-poptip,.ivu-poptip-rel{
+      width: 100%
     }
   }
 }

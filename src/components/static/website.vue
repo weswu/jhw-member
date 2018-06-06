@@ -22,15 +22,15 @@
           <span v-if="!item.url">http://pc.jihui88.com/rest/site/{{item.id}}/index</span>
           <span v-else>item.url</span>
           <span class="time" v-if="item.endTime">(到期时间：{{item.endTime | time}})</span>
-          <Poptip trigger="hover" placement="top" class="j_poptip_ul" v-if="!item.endTime">
+          <Poptip trigger="hover" placement="top" class="j_poptip_ul" v-if="!item.new">
             <a href="javascript:;" class="buy">购买</a>
             <ul slot="content">
               <li><a :href="'http://buy.jihui88.com/#/?tab=tab1&layoutId=' + item.id" target="_blank">自选模板</a></li>
               <li><a :href="'http://buy.jihui88.com/#/?tab=tab2&layoutId=' + item.id" target="_blank">定制设计</a></li>
             </ul>
           </Poptip>
-          <a href="javascript:;" class="buy" v-if="item.endTime" @click="again">续费</a>
-          <a :href="'http://buy.jihui88.com/#/?layoutId=' + item.id" class="buy" target="_blank" v-if="item.endTime">升级</a>
+          <a href="javascript:;" class="buy" v-if="item.new" @click="again">续费</a>
+          <a :href="'http://buy.jihui88.com/#/?layoutId=' + item.id" class="buy" target="_blank" v-if="item.new">升级</a>
         </p>
         <p class="more">
           <a :href="'http://pc.jihui88.com/pc/design.html?layoutId=' + item.id" target="_blank" class="a_underline">进入编辑</a>
@@ -135,6 +135,12 @@ export default {
             if (item.bind.address) {
               item.url = item.bind.address
             }
+            item.new = false
+            if (item.endTime) {
+              if (item.endTime - (new Date().getTime() + 60 * 60 * 24 * 30 * 1000) > 0) {
+                item.new = true
+              }
+            }
             item.seoTitle2 = item.seoTitle
           })
           this.list = res.attributes.data
@@ -161,7 +167,7 @@ export default {
         render: (h) => {
           return h('iframe', {
             attrs: {
-              src: 'http://buy.jihui88.com/#/qrcode?height=250&layoutId=' + id,
+              src: 'http://buy.jihui88.com/#/qrcode?layoutId=' + id,
               frameborder: '0',
               scrolling: 'no'
             }

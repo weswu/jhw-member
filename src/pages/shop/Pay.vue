@@ -7,7 +7,7 @@
         <div class="j_search">
           <Button type="info" icon="plus" class="w130" @click="url('/shop_pay/add')">添加支付方式</Button>
         </div>
-        <DragableTable v-model="list" :columns="columns" @on-update="tableUpdate"/>
+        <DragableTable :list="list" :columns="columns" @on-update="tableUpdate"/>
       </Content>
     </Layout>
   </Layout>

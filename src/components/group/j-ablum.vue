@@ -14,11 +14,11 @@
             <Button class="search" @click="get">搜索</Button>
           </Col>
           <Col>
-            <Upload :action="'commonutil/uploadUtil2?username=' + $store.state.user.username + '&replace=00&attId=&id=' + attId"
+            <Upload ref="upload" :action="'commonutil/uploadUtil2?username=' + $store.state.user.username + '&replace=00&attId=&id=' + attId"
               name="Filedata"
               :max-size="2048"
               :on-success="handleSuccess">
-              <Button type="info"><i class="iconfont icon-shangchuan" style="padding-right:5px;"></i>本地上传</Button>
+              <Button type="info"><i class="iconfont icon-shangchuan"></i>本地上传</Button>
             </Upload>
           </Col>
         </Row>
@@ -107,6 +107,10 @@ export default {
       this.$emit('on-change', obj)
       this.get()
       this.modal = false
+      var ctx = this
+      setTimeout(function () {
+        ctx.$refs.upload.clearFiles()
+      }, 1000)
     },
     // 完成
     select (e) {

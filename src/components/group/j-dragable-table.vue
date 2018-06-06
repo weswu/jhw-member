@@ -2,7 +2,7 @@
   <Table
     ref="dragable"
     :columns="columns"
-    :data="value"
+    :data="list"
     @on-selection-change="selectChange"
   ></Table>
 </template>
@@ -12,7 +12,7 @@ import Sortable from 'sortablejs'
 export default {
   props: {
     columns: Array,
-    value: Array
+    list: Array
   },
   mounted () {
     var el = this.$refs.dragable.$children[1].$el.children[1]

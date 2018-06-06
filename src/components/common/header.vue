@@ -91,6 +91,7 @@ export default {
       this.ilogout('iframepclogout', 'http://pc.jihui88.com/rest/api/user/logout')
       // 订购系统注销操作
       this.ilogout('iframeorderlogout', 'http://buy.jihui88.com/api/user/logout')
+      this.ilogout('iframebuylogout', 'http://www.jihui88.com/rest/buy/api/user/logout')
       this.$http.get('/rest/api/user/logout').then((res) => {
         if (res.success) {
           ctx.$store.commit('setUser', {})

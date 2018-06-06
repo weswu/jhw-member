@@ -32,23 +32,4 @@ export default {
 </script>
 
 <style lang="less">
-.j_dialog{
-  z-index: 1060;
-  .ivu-modal {
-    top: 186px;
-  }
-  .ivu-modal-body{
-    padding: 22px 54px 45px 54px;
-  }
-  .ivu-modal-close{
-    right: 25px;
-    top: 25px;
-  }
-  .icon-x{
-    color: #c7c7c7
-  }
-  .ivu-modal-footer{
-    display: none
-  }
-}
 </style>

@@ -135,6 +135,12 @@ export default {
         .ivu-tabs-nav .ivu-tabs-tab:after{
           left: -8px;
         }
+        .ivu-tabs-nav-scrollable {
+          padding: 0;
+        }
+        .ivu-tabs-nav-prev,.ivu-tabs-nav-next{
+          display: none
+        }
       }
       .j_null{
         text-align: center;

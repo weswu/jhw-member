@@ -9,7 +9,7 @@
         </div>
         <DragableTable
           ref="selection"
-          v-model="list"
+          :list="$route.params.id === 'product' ? $store.state.productCategory : $store.state.newsCategory"
           :columns="columns"
           @on-update="tableUpdate"
           @on-selection-change="handleSelectChange"/>
@@ -27,6 +27,7 @@
       </div>
     </Layout>
     <SeoDetail ref="seoDetail"/>
+    <Detail ref="detail"/>
   </Layout>
 </template>
 
@@ -36,12 +37,14 @@ import MenuBar from '@/components/common/menu_bar'
 import JHeader from '@/components/group/j-header'
 import DragableTable from '@/components/group/j-dragable-table'
 import SeoDetail from '@/pages/static/SeoDetail'
+import Detail from '@/pages/category/Detail'
 export default {
   components: {
     MenuBar,
     JHeader,
     DragableTable,
-    SeoDetail
+    SeoDetail,
+    Detail
   },
   data () {
     return {
@@ -53,7 +56,6 @@ export default {
         { title: '移序', className: 'j_table_sort', width: 130, render: this.sortFilter },
         { title: '操作', className: 'j_table_operate', align: 'left', width: 160, render: this.renderOperate }
       ],
-      list: [],
       ids: '',
       toggle: false
     }
@@ -69,46 +71,15 @@ export default {
   },
   methods: {
     get () {
-      this.$http.get('/rest/api/category/' + this.$route.params.id + '?pageSize=1000').then(res => {
-        if (res.success) {
-          this.init(res.attributes.data)
-        }
-      })
-    },
-    init (data) {
-      var ctx = this
-      // 1级
-      data.forEach(item => {
-        if (!item.belongId) {
-          item._checked = false
-          item.grade = '1'
-          this.list.push(item)
-        }
-      })
-      // 2级
-      data.forEach(row => {
-        this.list.forEach((item, index) => {
-          if (item.grade === '1' && (row.belongId === item.categoryId)) {
-            row._checked = false
-            row.grade = '2'
-            ctx.list.splice(index + 1, 0, row)
-          }
-        })
-      })
-      // 3级
-      data.forEach(row => {
-        this.list.forEach((item, index) => {
-          if (item.grade === '2' && (row.belongId === item.categoryId)) {
-            row._checked = false
-            row.grade = '3'
-            ctx.list.splice(index + 1, 0, row)
-          }
-        })
-      })
+      if (this.$route.params.id === 'product') {
+        this.$store.dispatch('getProductCategory')
+      } else if (this.$route.params.id === 'news') {
+        this.$store.dispatch('getNewsCategory')
+      }
     },
     // 功能
     add () {
-      this.$router.push({ path: '/news/add' })
+      this.$refs.detail.open()
     },
     tableUpdate (a, b) {
       this.sortable(a, b, 'category', 'categoryId')
@@ -156,8 +127,9 @@ export default {
     // 过滤
     indexFilter (h, params) {
       let isroot = false
-      if (this.list.length > (params.index + 1)) {
-        isroot = params.row.grade === '1' && this.list[params.index + 1].grade !== '1'
+      let list = this.$route.params.id === 'product' ? this.$store.state.productCategory : this.$store.state.newsCategory
+      if (list.length > (params.index + 1)) {
+        isroot = params.row.grade === '1' && list[params.index + 1].grade !== '1'
       }
       return h('div', [
         h('i', {
@@ -175,8 +147,9 @@ export default {
     nameFilter (h, params) {
       var ctx = this
       let isroot = false
-      if (this.list.length > (params.index + 1)) {
-        isroot = params.row.grade === '2' && this.list[params.index + 1].grade === '3'
+      let list = this.$route.params.id === 'product' ? this.$store.state.productCategory : this.$store.state.newsCategory
+      if (list.length > (params.index + 1)) {
+        isroot = params.row.grade === '2' && list[params.index + 1].grade === '3'
       }
       return h('div', {
         class: {
@@ -344,6 +317,7 @@ export default {
     },
     sortFilter (h, params) {
       var ctx = this
+      let list = this.$route.params.id === 'product' ? this.$store.state.productCategory : this.$store.state.newsCategory
       return h('div', [
         h('span', params.row.sort),
         h('i', {
@@ -424,7 +398,7 @@ export default {
             },
             on: {
               click: () => {
-                if (params.index < this.list.length - 1) {
+                if (params.index < list.length - 1) {
                   this.sortable(params.index, params.index + 1)
                 }
               }
@@ -439,7 +413,7 @@ export default {
         h('a', {
           on: {
             click: () => {
-              this.$Message.success('更新中..')
+              this.$refs.detail.open(params.row.categoryId)
             }
           }
         }, '修改'),
