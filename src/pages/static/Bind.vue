@@ -9,7 +9,7 @@
         </div>
         <div v-if="active === '0'" style="margin-bottom:20px">
           <div class="j_tip" style="margin-top: 9px;">
-            温馨提醒：还没有域名? <a :href="'http://buy.jihui88.com/#/?layoutId='+$store.state.layoutId" target="_blank" class="a_underline" style="padding: 0 5px;">点击前往购买</a>
+            温馨提醒：还没有域名? <a :href="'http://buy.jihui88.com/#/?tab=tab1&layoutId='+$store.state.layoutId" target="_blank" class="a_underline" style="padding: 0 5px;">点击前往购买</a>
             进入页面后点击基础类里的申请域名。
           </div>
           <div class="j_form_title" style="padding: 10px 0 0 0;">主域名绑定的步骤<span>（请求帮助QQ：260404208）</span></div>
@@ -30,7 +30,7 @@
               </FormItem>
               <a class="a_underline" target="_blank" href="https://help.aliyun.com/knowledge_detail/36922.html?spm=a2c4g.11186623.6.545.txarXU">查看阿里云备案教程</a>
               <a class="a_underline" target="_blank" href="https://beian.aliyun.com/?spm=5176.8006371.388261.5.5d907e630O5Nkf">视频教程</a>
-              <a class="a_underline" target="_blank" :href="'http://buy.jihui88.com/#/?layoutId='+$store.state.layoutId">前往购买“代理备案”</a>
+              <a class="a_underline" target="_blank" :href="'http://buy.jihui88.com/#/?tab=tab1&layoutId='+$store.state.layoutId">前往购买“代理备案”</a>
               <span>(备案遇到麻烦？请联系QQ：260404208)</span>
             </div>
             <div class="j_tip">
@@ -78,7 +78,7 @@
                 <Input v-model="detail.seccurityLink" placeholder="填写网安备案链接地址"></Input> <Button class="submit" @click="saveSeccurityLink">提交</Button>
               </FormItem>
               <a class="a_underline" target="_blank" href="https://docs.qq.com/doc/B7xfV62RQmDe1mclWr0lzVOU0CnQYE2DAa9O3">查看网安备案教程</a>
-              <a class="a_underline" target="_blank" :href="'http://buy.jihui88.com/#/?layoutId='+$store.state.layoutId">前往购买 "代理备案"</a>
+              <a class="a_underline" target="_blank" :href="'http://buy.jihui88.com/#/?tab=tab1&layoutId='+$store.state.layoutId">前往购买 "代理备案"</a>
             </div>
           </Form>
         </div>

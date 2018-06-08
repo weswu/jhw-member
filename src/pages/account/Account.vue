@@ -100,7 +100,7 @@
         </div>
       </div>
       <Password ref="password"/>
-      <JAblum :title="'替换头像'" ref="ablum"/>
+      <JAblum :title="'修改头像'" ref="ablum"/>
   </Layout>
 </template>
 

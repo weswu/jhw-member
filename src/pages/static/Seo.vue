@@ -2,7 +2,7 @@
   <Layout class="j_layout ivu-layout-has-sider j_seo">
     <MenuBar :data="'menuStatic'" :active="'seo'"/>
     <Layout class="j_layout_content">
-      <JHeader :title="'SEO管理'" :website="active === '0' || active === '4'" @on-layout="staticChange"></JHeader>
+      <JHeader :title="'SEO管理'" :website="active === '0' || active === '4'" @on-layout="staticChange" :lan="active === '1'" @on-change="get"></JHeader>
       <Content>
         <div class="j_search">
           <Button class="grey" @click="active = item.value" v-for="(item, index) in btns" :key="index" :class="{primary: active === item.value}">{{item.text}}</Button>

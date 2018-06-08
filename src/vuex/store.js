@@ -42,16 +42,15 @@ const store = new Vuex.Store({
         { value: 'member', text: '会员管理', icon: 'icon-Group' },
         { value: 'shop', text: '订单管理', icon: 'icon-dingdandaifukuan' }
       ],
-      productShow: ['序号', '产品图片', '产品名称', '产品型号', '产品分类', '添加时间', '是否上架', '排序'],
+      productShow: ['序号', '产品图片', '产品名称', '产品型号', '产品分类', '添加时间', '是否上架', '排序', '二维码'],
       shopShow: ['序号', '订单编号', '用户名', '订单总额', '订单状态', '付款状态', '配送状态', '支付方式', '配送方式', '下单时间'],
       homeSort: [
-        { value: 'static', text: '我的网站', status: '01' },
-        { value: 'link', text: '链接', status: '01' },
-        { value: 'order', text: '订单', status: '01' },
-        { value: 'message', text: '留言', status: '00' },
-        { value: 'service', text: '服务', status: '00' }
-      ],
-      homeShow: ['static', 'order']
+        { value: 'static', text: '我的网站', status: '01', type: '01' },
+        { value: 'link', text: '链接', status: '01', type: '00' },
+        { value: 'order', text: '订单', status: '01', type: '01' },
+        { value: 'message', text: '留言', status: '00', type: '01' },
+        { value: 'service', text: '服务', status: '00', type: '01' }
+      ]
     }
   },
   getters: {
@@ -630,7 +629,7 @@ const store = new Vuex.Store({
           // 1级
           data.forEach(item => {
             if (!item.belongId && item.isdisplay === '1') {
-              item._checked = true
+              item._checked = false
               item._open = true
               item.grade = '1'
               list.push(item)

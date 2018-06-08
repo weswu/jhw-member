@@ -8,7 +8,7 @@
       </TabPane>
       <TabPane label="已购产品" name="2">
         <div class="j_warpper">
-          <iframe src="http://buy.jihui88.com/#/member/purchased?size=3" class="j_buy_iframe"/>
+          <PurchasedItem :searchData="{ page: 1, pageSize: 3 }"/>
         </div>
       </TabPane>
       <TabPane label="我的积分" name="3">
@@ -17,19 +17,18 @@
         </div>
       </TabPane>
     </Tabs>
-    <JCostOrderDetail ref="order"/>
   </div>
 </template>
 
 <script>
-import JCostOrderDetail from '@/components/group/j-cost-order-detail'
 import PointTable from '@/pages/point/PointTable'
 import OrderItem from '@/pages/cost/OrderItem'
+import PurchasedItem from '@/pages/cost/PurchasedItem'
 export default {
   components: {
-    JCostOrderDetail,
     PointTable,
-    OrderItem
+    OrderItem,
+    PurchasedItem
   },
   data () {
     return {

@@ -9,7 +9,7 @@
             v-for="(item, index) in btns" :key="index" :class="{primary: searchData.type === item.value}"
             v-if="item.status">{{item.text}}<span v-if="item.count !== ''">({{item.count}})</span></Button>
         </div>
-        <div class="j_search" v-if="searchData.type === '05'" style="margint-top: 12px;">
+        <div class="j_search" v-if="searchData.type === '03'" style="margint-top: 12px;">
           <Row type="flex" justify="space-between">
             <Col>
               <Input v-model="searchData.title" style="width:178px;margin-right:5px;" placeholder="请输入标题内容"></Input>
@@ -90,6 +90,7 @@ export default {
     this.pageName = this.$route.params.id
     this.searchData.recvState = this.pageName || ''
     this.searchData.page = 1
+    this.searchData.type = this.$route.query.type || ''
     this.get()
     this.changeTableColumns()
   },
@@ -135,7 +136,7 @@ export default {
         { title: '提交时间', key: 'addTime', width: 150, render: this.dataFilter },
         { title: '类型', key: 'type', width: 150, render: this.typeFilter }
       ]
-      if (this.searchData.type === '05') {
+      if (this.searchData.type === '03') {
         this.columns.splice(3, 0, { title: '来源（网站编号）', key: '', width: 100 })
         let columns2 = [
           { title: '发送人', key: 'fromName' },

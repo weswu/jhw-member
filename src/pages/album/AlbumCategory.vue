@@ -7,14 +7,12 @@
       <Input v-model="name" class="w144" placeholder="搜索文件夹"></Input>
       <Button class="search" @click="search" style="margin-right: 0;">搜索</Button>
     </div>
-    <div style="position:relative">
-      <ul ref="menu" class="menu j_panel">
-        <li @click="add">新建</li>
-        <li>移动</li>
-        <li @click="edit">重命名</li>
-        <li @click="del">删除</li>
-      </ul>
-    </div>
+    <ul ref="menu" class="menu j_panel">
+      <li @click="add">新建</li>
+      <li>移动</li>
+      <li @click="edit">重命名</li>
+      <li @click="del">删除</li>
+    </ul>
     <Tree :data="data" class="j_scroll"></Tree>
     <Add ref="add"/>
   </div>
@@ -56,7 +54,7 @@ export default {
   mounted () {
     var ctx = this
     window.document.addEventListener('click', function (e) {
-      ctx.$refs.menu.style.display = 'none'
+      if (ctx.$refs.menu) ctx.$refs.menu.style.display = 'none'
     })
   },
   methods: {
@@ -170,8 +168,8 @@ export default {
             },
             contextmenu: (e) => {
               ctx.$refs.menu.style.display = 'block'
-              ctx.$refs.menu.style.left = (e.offsetX + 20) + 'px'
-              ctx.$refs.menu.style.top = (e.offsetY + 10) + 'px'
+              ctx.$refs.menu.style.left = e.target.getBoundingClientRect().left + 'px'
+              ctx.$refs.menu.style.top = e.target.getBoundingClientRect().top + 'px'
               ctx.item = data
               e.preventDefault()
             }
@@ -261,13 +259,33 @@ export default {
           onOk: () => {
             if (!this.item.title) return this.$Message.info('相册名称不能为空')
             let data = {
-              model: JSON.stringify(this.item),
+              model: JSON.stringify({
+                id: this.item.id,
+                name: this.item.title
+              }),
               _method: 'put'
             }
             this.$http.post('/rest/api/album/detail/' + this.item.id, qs.stringify(data)).then((res) => {
               if (res.success) {
                 ctx.$Message.success('修改成功')
-                ctx.initData()
+                this.data.forEach(root => {
+                  root.children.forEach((item1, idx) => {
+                    if (item1.id === ctx.item.id) {
+                      item1.title = ctx.item.title
+                    }
+                    item1.children.forEach((item2, idx2) => {
+                      if (item2.id === ctx.item.id) {
+                        item2.title = ctx.item.title
+                      }
+                      item2.children.forEach((item3, idx2) => {
+                        if (item3.id === ctx.item.id) {
+                          item3.title = ctx.item.title
+                        }
+                      })
+                    })
+                  })
+                })
+                ctx.$store.dispatch('getAlbumCategory')
               } else {
                 ctx.$Message.error(res.msg)
               }
@@ -277,13 +295,30 @@ export default {
       }
     },
     del () {
+      var ctx = this
       let data = {
         _method: 'delete'
       }
       this.$http.post('/rest/api/album/detail/' + this.item.id, qs.stringify(data)).then((res) => {
         if (res.success) {
           this.$Message.success('删除成功')
-          this.initData()
+          this.data.forEach(root => {
+            root.children.forEach((item1, idx) => {
+              if (item1.id === ctx.item.id) {
+                root.splice(idx, 1)
+              }
+              item1.children.forEach((item2, idx2) => {
+                if (item2.id === ctx.item.id) {
+                  item1.splice(idx, 1)
+                }
+                item2.children.forEach((item3, idx2) => {
+                  if (item3.id === ctx.item.id) {
+                    item2.splice(idx, 1)
+                  }
+                })
+              })
+            })
+          })
         } else {
           this.$Message.success(res.msg)
         }
@@ -398,28 +433,6 @@ export default {
           }
         }
       }
-    }
-  }
-  .menu{
-    display: none;
-    position: absolute;
-    left: 0;
-    top: 0;
-    z-index: 99;
-    width: 159px;
-    border: 1px solid #e0e0e0;
-    background: #f0f0f0;
-    border-radius: 5px;
-    li{
-      border-bottom: 1px solid #dfdfdf;
-      color: #4c4a46;padding: 4px 0 4px 15px;
-      cursor: pointer;
-      &:last-child{
-        border:none;
-      }
-    }
-    .ivu-poptip,.ivu-poptip-rel{
-      width: 100%
     }
   }
 }

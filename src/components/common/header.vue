@@ -81,7 +81,10 @@ export default {
     this.$store.commit('setLanId', window.localStorage.getItem('lanId') || '1')
     this.getUser()
     this.getUserInfo()
-    this.getStaticList()
+    var ctx = this
+    setTimeout(function () {
+      ctx.getStaticList()
+    }, 1000)
   },
   methods: {
     ...mapActions(['getUser', 'getUserInfo', 'getMessage', 'getStaticList']),

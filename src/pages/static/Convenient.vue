@@ -37,16 +37,16 @@
             使用条件：1.需绑定过域名<a href="#/bind">[点击查看]</a> 。2.需在微信开放平台申请一个登录应用<a href="https://connect.qq.com/manage.html" target="_blank">[前往申请]</a>
           </FormItem>
           <FormItem label="是否开启：">
-            <RadioGroup v-model="detail.oauthQQState">
+            <RadioGroup v-model="detail.oauthQqState">
               <Radio label="01">是</Radio>
               <Radio label="00">否</Radio>
             </RadioGroup>
           </FormItem>
-          <FormItem label="微信登录应用AppId：" :label-width="130" v-if="detail.oauthQQState === '01'">
-            <Input v-model="detail.oauthQQAppId" class="w244"></Input>
+          <FormItem label="微信登录应用AppId：" :label-width="130" v-if="detail.oauthQqState === '01'">
+            <Input v-model="detail.oauthQqAppId" class="w244"></Input>
           </FormItem>
-          <FormItem label="微信登录应用密钥：" :label-width="130" v-if="detail.oauthQQState === '01'">
-            <Input v-model="detail.oauthQQSecret" class="w244"></Input>
+          <FormItem label="微信登录应用密钥：" :label-width="130" v-if="detail.oauthQqState === '01'">
+            <Input v-model="detail.oauthQqSecret" class="w244"></Input>
           </FormItem>
           <FormItem class="submit" :label-width="1">
             <Button type="primary" @click="submit">保存</Button>
@@ -70,7 +70,7 @@ export default {
     return {
       detail: {
         oauthWeixinState: '00',
-        oauthQQState: '00'
+        oauthQqState: '00'
       }
     }
   },
@@ -79,6 +79,14 @@ export default {
   },
   methods: {
     get () {
+      this.$http.get('/rest/pc/api/authLogin/detail?layoutId=' + this.$store.state.layoutId).then((res) => {
+        if (res.success) {
+          this.detail = res.attributes.data
+          if (!this.detail.oauthWeixinState) this.detail.oauthWeixinState = '00'
+          if (!this.detail.oauthQqState) this.detail.oauthQqState = '00'
+        }
+      })
+
       this.$http.get('/rest/api/webinfo/detail/id').then(res => {
         if (res.success) {
           this.detail = res.attributes.data
@@ -88,19 +96,7 @@ export default {
       })
     },
     submit () {
-      let data = {
-        model: JSON.stringify({
-          webinfoId: this.detail.webinfoId,
-          oauthWeixinState: this.detail.oauthWeixinState,
-          oauthWeixinAppId: this.detail.oauthWeixinAppId,
-          oauthWeixinSecret: this.detail.oauthWeixinSecret,
-          oauthQQState: this.detail.oauthQQState,
-          oauthQQAppId: this.detail.oauthQQAppId,
-          oauthQQSecret: this.detail.oauthQQSecret
-        }),
-        _method: 'put'
-      }
-      this.$http.post('/rest/api/webinfo/detail/' + this.detail.webinfoId, qs.stringify(data)).then((res) => {
+      this.$http.post('/rest/pc/api/authLogin/detail', qs.stringify(this.detail)).then((res) => {
         if (res.success) {
           this.$Message.success('保存成功')
         } else {

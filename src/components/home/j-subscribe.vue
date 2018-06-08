@@ -41,7 +41,7 @@ export default {
   data () {
     return {
       modal: false,
-      mySelected: this.$store.state.customData.homeShow,
+      mySelected: [],
       list: [
         {
           name0: '我的网站',
@@ -58,7 +58,7 @@ export default {
         },
         {
           name0: '公告',
-          name1: '网站询盘',
+          name1: '客户消息',
           value: 'message',
           active: '1'
 
@@ -72,24 +72,23 @@ export default {
       ]
     }
   },
+  created () {
+    this.mySelected = []
+    this.$store.state.customData.homeSort.forEach(item => {
+      if (item.type === '01' && item.status === '01') {
+        this.mySelected.push(item.value)
+      }
+    })
+  },
   methods: {
     ok () {
-      this.$store.state.customData.homeSort[0].status = '00'
-      this.$store.state.customData.homeSort[2].status = '00'
-      this.$store.state.customData.homeSort[3].status = '00'
-      this.$store.state.customData.homeSort[4].status = '00'
-      this.mySelected.forEach(sel => {
-        if (sel === 'static') {
-          this.$store.state.customData.homeSort[0].status = '01'
-        }
-        if (sel === 'order') {
-          this.$store.state.customData.homeSort[2].status = '01'
-        }
-        if (sel === 'message') {
-          this.$store.state.customData.homeSort[3].status = '01'
-        }
-        if (sel === 'service') {
-          this.$store.state.customData.homeSort[4].status = '01'
+      var ctx = this
+      this.$store.state.customData.homeSort.forEach(item => {
+        if (item.type === '01') {
+          item.status = '00'
+          if (ctx.mySelected.join().indexOf(item.value) > -1) {
+            item.status = '01'
+          }
         }
       })
       this.$store.dispatch('SAVE_CUSTOM_DATA')

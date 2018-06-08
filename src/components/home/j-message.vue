@@ -2,13 +2,13 @@
   <div class="j_home_message j_panel">
     <Tabs :value="tabActive">
         <TabPane label="公告" name="0">
-          <div style="padding: 0 28px 28px 28px;">
+          <div class="j_warpper">
             <div class="j_null">暂无公告</div>
           </div>
         </TabPane>
-        <TabPane label="网站询盘" name="1">
+        <TabPane label="客户消息" name="1">
           <ul>
-            <li v-for="(item, index) in list" :key="index" v-if="index<5">
+            <li v-for="(item, index) in list" :key="index">
               <div class="title">
                 {{item.title}}
               </div>
@@ -17,8 +17,8 @@
               </p>
             </li>
           </ul>
-          <div class="j_null" style="padding: 0 28px 28px 28px;" v-if="list.length>0">暂无数据</div>
-          <a href="#/message" class="j_more">查看更多</a>
+          <div class="j_null j_warpper" v-if="list.length===0">暂无数据</div>
+          <a href="#/message?type=03" class="j_more">查看更多</a>
         </TabPane>
     </Tabs>
   </div>
@@ -34,7 +34,7 @@ export default {
   },
   data () {
     return {
-      tabActive: '0',
+      tabActive: '1',
       list: []
     }
   },
@@ -43,7 +43,7 @@ export default {
   },
   methods: {
     get () {
-      this.$http.get('/rest/api/message/list?pageSize=3').then(res => {
+      this.$http.get('/rest/api/message/list?pageSize=3&type=03').then(res => {
         if (res.success) {
           this.list = res.attributes.data
         }

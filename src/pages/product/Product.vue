@@ -57,6 +57,7 @@ import JDialog from '@/components/group/j-dialog'
 import DragableTable from '@/components/group/j-dragable-table'
 import SeoDetail from '@/pages/static/SeoDetail'
 import TransferCategory from '@/components/group/transfer-category'
+import categorySelect from '@/components/group/j-category-select'
 export default {
   components: {
     MenuBar,
@@ -65,7 +66,8 @@ export default {
     JDialog,
     DragableTable,
     SeoDetail,
-    TransferCategory
+    TransferCategory,
+    categorySelect
   },
   data () {
     return {
@@ -83,7 +85,9 @@ export default {
         { title: '是否上架', sortable: true, width: 105, render: this.isdisplayFilter },
         { title: '排序', className: 'j_table_sort', sortable: true, minWidth: 80, render: this.sortFilter }
       ],
-      list: [],
+      list: [
+        {}
+      ],
       searchData: {
         page: 1,
         pageSize: 10
@@ -96,7 +100,8 @@ export default {
   },
   computed: {
     ...mapState({
-      categoryList: state => state.productCategory
+      categoryList: state => state.productCategory,
+      staticList: state => state.staticList
     })
   },
   created () {
@@ -319,54 +324,38 @@ export default {
           }
         }, '请选择')
       ]
-      data.push(h('li', [
-        h('Poptip', {
-          props: {
-            placement: 'right',
-            trigger: 'hover'
+      this.staticList.forEach(item => {
+        data.push(h('li', [
+          h('Poptip', {
+            props: {
+              placement: 'right',
+              trigger: 'hover'
+            }
+          }, [
+            h('span', '网站编号： ' + item.layoutId),
+            h('img', {
+              slot: 'content',
+              attrs: {
+                src: 'http://wcd.jihui88.com/rest/comm/qrbar/create?w=210&text=http://pc.jihui88.com/rest/site/' + item.layoutId + '/pd?itemId=' + params.row.productId2
+              }
+            })
+          ])
+        ]))
+      })
+      let div = [
+        h('span', {
+          style: {
+            color: '#5b5b5b',
+            height: '55px',
+            display: 'block',
+            textOverflow: 'ellipsis',
+            overflow: 'hidden'
           }
-        }, [
-          h('span', '网站编号： 203'),
-          h('img', {
-            slot: 'content',
-            attrs: {
-              src: 'http://wcd.jihui88.com/rest/comm/qrbar/create?w=210&text=http://pc.jihui88.com/rest/site/203/pd?itemId=' + params.row.productId2
-            }
-          })
-        ])
-      ]))
-      data.push(h('li', [
-        h('Poptip', {
-          props: {
-            placement: 'right',
-            trigger: 'hover'
-          }
-        }, [
-          h('span', '网站编号： 203'),
-          h('img', {
-            slot: 'content',
-            attrs: {
-              src: 'http://wcd.jihui88.com/rest/comm/qrbar/create?w=210&text=http://pc.jihui88.com/rest/site/203/pd?itemId=' + params.row.productId2
-            }
-          })
-        ])
-      ]))
-      return h('div', {
-        class: {
-          title: true
-        }
-      }, [
-        h('div', [
-          h('span', {
-            style: {
-              color: '#5b5b5b',
-              height: '55px',
-              display: 'block',
-              textOverflow: 'ellipsis',
-              overflow: 'hidden'
-            }
-          }, params.row.name || '产品名称'),
-          h('p', [
+        }, params.row.name || '产品名称')
+      ]
+      this.myShowSelect.forEach(item => {
+        if (item === '二维码') {
+          div.push(h('p', [
             h('Poptip', {
               props: {
                 placement: 'right'
@@ -396,11 +385,21 @@ export default {
                 }
               }),
               h('ul', {
-                slot: 'content'
+                slot: 'content',
+                style: {
+                  height: '250px'
+                }
               }, data)
             ])
-          ])
-        ]),
+          ]))
+        }
+      })
+      return h('div', {
+        class: {
+          title: true
+        }
+      }, [
+        h('div', div),
         h('i', {
           class: {
             'none': true,
@@ -547,16 +546,18 @@ export default {
             click: () => {
               this.$Modal.confirm({
                 render: (h) => {
-                  return h('Select', {
+                  return h(categorySelect, {
                     props: {
-                      value: params.row.category
+                      list: this.categoryList,
+                      categoryId: params.row.category,
+                      type: 'productCategory'
                     },
                     on: {
                       'on-change': (val) => {
                         params.row.category2 = val
                       }
                     }
-                  }, option)
+                  })
                 },
                 onOk: () => {
                   let data = {
@@ -569,7 +570,7 @@ export default {
                   ctx.$http.post('/rest/api/product/detail/' + params.row.productId, qs.stringify(data)).then((res) => {
                     if (res.success) {
                       ctx.$Message.success('修改成功')
-                      ctx.list[params.index].category = params.row.category2
+                      params.row.category = params.row.category2
                     } else {
                       ctx.$Message.error(res.msg)
                     }

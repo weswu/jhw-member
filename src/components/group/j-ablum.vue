@@ -137,6 +137,9 @@ export default {
   .j_album_category {
     height: 508px;
   }
+  .ivu-tree{
+    height: 416px;
+  }
   .ivu-layout-content{
     margin-left: 10px
   }

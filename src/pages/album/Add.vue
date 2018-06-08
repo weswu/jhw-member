@@ -3,7 +3,7 @@
     <Form ref="modalForm" :model="detail" :label-width="120" slot="content">
       <FormItem label="上级分类：">
         <Select v-model="detail.parentId">
-          <Option :value="item.albumId" v-for="item in $store.state.albumCategory" :key="item.albumId">{{item.name}}</Option>
+          <Option :value="item.albumId" v-for="item in $store.state.albumCategory" :key="item.albumId" :class="{item: !!item.parentId}">{{item.name}}</Option>
         </Select>
       </FormItem>
       <FormItem label="相册名称：">

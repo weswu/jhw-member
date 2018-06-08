@@ -1,10 +1,8 @@
 <template>
   <JDialog ref="dialog" :title="'分类'" :width="620" :tip="tip" @on-ok="ok" :okText="'提交'">
-    <Form ref="modalForm" :model="detail" :label-width="80" slot="content">
+    <Form ref="modalForm" :model="detail" :label-width="80" slot="content" class="j_category_detail">
       <FormItem label="上级分类：">
-        <Select v-model="detail.belongId" style="width: 100%;">
-          <Option :value="item.categoryId" v-for="item in list" :key="item.categoryId">{{item.name}}</Option>
-        </Select>
+        <CategorySelect :categoryId="detail.belongId" :type="$route.params.id" @on-change="categoryChange"/>
       </FormItem>
       <FormItem label="分类名称：">
         <Input v-model="detail.name" placeholder="请输入分类名称" style="width: 100%;"></Input>
@@ -16,12 +14,14 @@
 <script>
 import qs from 'qs'
 import JDialog from '@/components/group/j-dialog'
+import CategorySelect from '@/components/group/j-category-select'
 export default {
   props: {
     list: Array
   },
   components: {
-    JDialog
+    JDialog,
+    CategorySelect
   },
   data () {
     return {
@@ -40,6 +40,9 @@ export default {
           }
         })
       }
+    },
+    categoryChange (e) {
+      this.detail.belongId = e
     },
     ok () {
       let data = {
@@ -64,4 +67,9 @@ export default {
 </script>
 
 <style lang="less">
+.ivu-modal .j_category_detail{
+  .ivu-input-wrapper{
+    width: 432px
+  }
+}
 </style>

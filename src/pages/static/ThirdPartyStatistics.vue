@@ -52,27 +52,16 @@ export default {
   },
   methods: {
     get () {
-      this.$http.get('/rest/api/webinfo/detail/id').then(res => {
+      this.$http.get('/rest/pc/api/analysis/detail?layoutId=' + this.$store.state.layoutId).then((res) => {
         if (res.success) {
           this.detail = res.attributes.data
-        } else {
-          this.$Message.error(res.msg)
+          if (!this.detail.analysisHeadState) this.detail.analysisHeadState = '00'
+          if (!this.detail.analysisTailState) this.detail.analysisTailState = '00'
         }
       })
     },
     submit () {
-      let data = {
-        model: JSON.stringify({
-          webinfoId: this.detail.webinfoId,
-          enterpriseId: this.detail.enterpriseId,
-          analysisHeadState: this.detail.analysisHeadState,
-          analysisHeadContent: this.detail.analysisHeadContent,
-          analysisTailState: this.detail.analysisTailState,
-          analysisTailContent: this.detail.analysisTailContent
-        }),
-        _method: 'put'
-      }
-      this.$http.post('/rest/api/webinfo/detail/' + this.detail.webinfoId, qs.stringify(data)).then((res) => {
+      this.$http.post('/rest/pc/api/analysis/detail', qs.stringify(this.detail)).then((res) => {
         if (res.success) {
           this.$Message.success('保存成功')
         } else {

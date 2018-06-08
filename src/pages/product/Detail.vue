@@ -385,6 +385,9 @@ export default {
 
 <style lang="less">
 .j_product_detail{
+  .j_category_select{
+    width: 450px;
+  }
   .j_tip_category{
     position: absolute;
     left: 533px;
