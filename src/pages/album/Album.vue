@@ -7,12 +7,19 @@
           <li @click="edit">重命名</li>
           <li @click="itemModel = true">编辑</li>
           <li v-clipboard:copy="item.url3" v-clipboard:success="copy">复制</li>
-          <li >移动</li>
+          <li @click="move">移动</li>
           <li @click="del">删除</li>
-          <li >替换图片</li>
+          <Upload ref="upload" :action="'commonutil/uploadUtil2?username=' + $store.state.user.username + '&replace=01&attId=&id=' + attId"
+            name="Filedata"
+            multiple
+            :max-size="2048"
+            :on-success="handleSuccess"
+            style="display: inline-block;margin-right: 5px;">
+            <li >替换图片</li>
+          </Upload>
           <li @click="refurbish">刷新</li>
           <li v-clipboard:copy="item.url2" v-clipboard:success="copy">复制图片的代码</li>
-          <li v-clipboard:copy="item.url3" v-clipboard:success="copy">复制链接的代码</li>
+          <li v-clipboard:copy="item.url3" v-clipboard:success="copy" style="border:none;">复制链接的代码</li>
         </ul>
         <Cateogy ref="category" @on-change="changeCategory"/>
         <Layout class="j_album_container">
@@ -31,7 +38,7 @@
                 <Button class="info" @click="recycle"><i class="iconfont icon-huishouzhan"></i>回收站</Button>
               </Col>
               <Col>
-                <Input v-model="searchData.filename" class="w144" placeholder="搜索图片名称"></Input>
+                <Input v-model="searchData.filename" class="w144" clearable placeholder="搜索图片名称"></Input>
                 <Button class="search" @click="search">搜索</Button>
                 <Poptip placement="bottom" class="j_poptip_confirm_edit"
                   confirm
@@ -55,7 +62,7 @@
               <Row type="flex" justify="space-between">
                 <Col>
                   <Breadcrumb separator=">">
-                    <BreadcrumbItem v-for="(item, index) in breadList" :key="item.value" @click="breadClick(item, index)">
+                    <BreadcrumbItem v-for="(item, index) in breadList" :key="index" @click="breadClick(item, index)">
                       <i class="iconfont icon-tupian1" v-if="index === 0"></i>{{item.text}}
                     </BreadcrumbItem>
                   </Breadcrumb>
@@ -72,18 +79,19 @@
               </Row>
             </div>
             <Row type="flex" justify="start" class="picture_warpper">
-              <Col :xs="12" :sm="8" :md="6" :lg="4" v-for="(item, index) in fileList.children" :key="index" class="pic_item hover">
-                <Card dis-hover @click="item._checked = !item._checked">
-                  <i class="iconfont icon-weibiaoti5"></i>
-                </Card>
-                <div class="title">
-                  {{item.name}}
+              <Col :xs="12" :sm="8" :md="6" :lg="4" v-for="(item, index) in fileList.children" :key="index" class="pic_item">
+                <div class="box" @click="fileClick(item)">
+                  <div class="file">
+                    <i class="iconfont icon-weibiaoti5"></i>
+                  </div>
+                  <div class="title" :class="{hover: item._checked}">{{item.title}}</div>
+                  <div class="size">{{item.attCount}}&nbsp;项</div>
                 </div>
               </Col>
               <Col :xs="12" :sm="8" :md="6" :lg="4"  v-for="(item, index) in list" :key="index" class="pic_item">
                 <div class="box" @click="selected(item)" @contextmenu.prevent="more($event, item)">
                   <Card dis-hover :class="{hover: item._checked}">
-                    <img :src="$store.state.status.IMG_HOST + item.serverPath | picUrl(5)" alt="">
+                    <img :src="$store.state.status.IMG_HOST + item.serverPath | picUrl(5)" :alt="item.filename">
                   </Card>
                   <div class="title" :class="{hover: item._checked}">{{item.filename}}</div>
                 </div>
@@ -406,12 +414,22 @@ export default {
       this.breadList.splice(index + 1, 1)
       this.$refs.category.bread(item.value)
     },
+    fileClick () {},
+    fileClick2 (item) {
+      this.attId = item.id
+      this.get()
+      this.breadList.push({
+        value: item.id,
+        text: item.title
+      })
+      this.$refs.category.bread(item.id)
+    },
     // 左
     add () {
       this.$refs.add.open()
     },
     categoryChange () {
-      this.$refs.category.init()
+      this.$refs.category.get()
     },
     handleSuccess (res, file) {
       var ctx = this
@@ -497,6 +515,18 @@ export default {
         }
       })
     },
+    move () {
+      this.belongModel = true
+      this.$http.post('/rest/api/album/attr/img/move?attIds=' + this.item.attId + '&belongId=' + this.belongId).then((res) => {
+        if (res.success) {
+          this.$Message.success('移动成功')
+          this.get()
+          this.belongModel = false
+        } else {
+          this.$Message.error(res.msg)
+        }
+      })
+    },
     del () {
       let data = {
         _method: 'delete'
@@ -543,9 +573,8 @@ export default {
       })
     },
     handleSelectAll () {
-      this.toggle = !this.toggle
       this.list.forEach(item => {
-        this.item._checked = this.toggle
+        item._checked = this.toggle
       })
     },
     delAll () {
@@ -615,9 +644,7 @@ export default {
       border-bottom: 1px solid #dfdfdf;
       color: #4c4a46;padding: 4px 0 4px 15px;
       cursor: pointer;
-      &:last-child{
-        border:none;
-      }
+      width: 157px;
     }
     .ivu-poptip,.ivu-poptip-rel{
       width: 100%
@@ -650,6 +677,22 @@ export default {
         display: flex;
         flex-flow: column;
         height: 100%;
+        // 文件
+        .file{
+          flex: 1;
+          align-items: center;
+          display: flex;
+        }
+        .icon-weibiaoti5{
+          color: #79d3fb;
+          font-size: 71px;
+          margin: 0 auto;
+        }
+        .size{
+          color: #77a0d9;
+          font-size: 8px;
+          text-align: center;
+        }
       }
       .ivu-card{
         padding: 10px;

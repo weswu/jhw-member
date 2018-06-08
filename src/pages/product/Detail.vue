@@ -147,9 +147,7 @@
         </Form>
         <div v-if="active === '6'">
           <Form :model="detail" :label-width="130" ref="model3">
-            <FormItem label="产品标签：">
-              <JTag :tagMapStore="detail.tagMapStore" :id="detail.pruductId" :type="'product'"/>
-            </FormItem>
+            <JTag :tagMapStore="detail.tagMapStore" :id="detail.pruductId" :type="'product'"/>
           </Form>
           <div class="j_tip" style="width: 560px;margin-left: 130px;">
             小提示: <br>
@@ -394,9 +392,6 @@ export default {
     top: -23px;
     line-height: 2;
     color: #999;
-  }
-  .formitem_left{
-    display: inline-block;
   }
   // 商城属性
   .shop{

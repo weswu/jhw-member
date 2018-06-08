@@ -9,21 +9,24 @@
     </div>
     <ul ref="menu" class="menu j_panel">
       <li @click="add">新建</li>
-      <li>移动</li>
+      <li @click="move">移动</li>
       <li @click="edit">重命名</li>
       <li @click="del">删除</li>
     </ul>
     <Tree :data="data" class="j_scroll"></Tree>
     <Add ref="add"/>
+    <TransferAlbum ref="TransferAlbum" :item="item" @on-change="get"/>
   </div>
 </template>
 
 <script>
 import qs from 'qs'
 import Add from '@/pages/album/Add'
+import TransferAlbum from '@/pages/album/transfer-album'
 export default {
   components: {
-    Add
+    Add,
+    TransferAlbum
   },
   data () {
     return {
@@ -58,7 +61,7 @@ export default {
     })
   },
   methods: {
-    init () {
+    get () {
       this.$store.dispatch('getAlbumCategory').then(res => {
         this.initData()
       })
@@ -73,7 +76,26 @@ export default {
           expand: true, // 展开节点
           selected: false, // 选中节点
           render: this.iconFilter,
-          children: []
+          children: [
+            {
+              title: '图片1',
+              id: 'all1',
+              expand: false,
+              selected: false,
+              render: this.iconFilter,
+              attCount: '10',
+              children: [
+                {
+                  title: '图片2',
+                  id: 'all2',
+                  expand: false,
+                  selected: false,
+                  render: this.iconFilter,
+                  attCount: 20
+                }
+              ]
+            }
+          ]
         }
       ]
       this.list.forEach(item => {
@@ -236,6 +258,9 @@ export default {
     // 右击
     add () {
       this.$refs.add.open()
+    },
+    move () {
+      this.$refs.TransferAlbum.open()
     },
     edit () {
       var ctx = this

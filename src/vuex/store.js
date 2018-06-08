@@ -19,12 +19,26 @@ const store = new Vuex.Store({
     uid: ['0', '0', '0'],
     // 列表数据
     productCategory: [],
-    newsCategory: [],
+    newsCategory: [
+      {
+        categoryId: 'ccc'
+      }
+    ],
     albumCategory: [],
     messageList: [],
     memberRankList: [],
     memberAttrList: [],
-    tagList: [],
+    tagList: [
+      {
+        name: '新闻标签2',
+        state: '01',
+        type: 'news',
+        categoryId: null,
+        addTime: 1528434276359,
+        tagId: '8a9e457e63d989a20163ddc838070086',
+        _checked: false
+      }
+    ],
     areaList: [],
     // 站点
     staticList: [
@@ -584,8 +598,9 @@ const store = new Vuex.Store({
       data.forEach(item => {
         if (!item.belongId) {
           item._checked = false
-          item._open = true
+          item.expand = true
           item.grade = '1'
+          item.children = []
           list.push(item)
         }
       })
@@ -594,8 +609,9 @@ const store = new Vuex.Store({
         list.forEach((item, index) => {
           if (item.grade === '1' && (row.belongId === item.categoryId)) {
             row._checked = false
-            item._open = false
+            item.expand = true
             row.grade = '2'
+            item.children.push(row)
             list.splice(index + 1, 0, row)
           }
         })
@@ -621,7 +637,7 @@ const store = new Vuex.Store({
           }
         }
       })
-      // this.commit('setProductCategory', list)
+      this.commit('setProductCategory', list)
       this._vm.$http.get('/rest/api/category/product?pageSize=1000').then(res => {
         if (res.success) {
           let data = res.attributes.data
@@ -630,7 +646,7 @@ const store = new Vuex.Store({
           data.forEach(item => {
             if (!item.belongId && item.isdisplay === '1') {
               item._checked = false
-              item._open = true
+              item.expand = true
               item.grade = '1'
               list.push(item)
             }
@@ -640,7 +656,7 @@ const store = new Vuex.Store({
             row.isdisplay === '1' && list.forEach((item, index) => {
               if (item.grade === '1' && (row.belongId === item.categoryId)) {
                 row._checked = false
-                item._open = false
+                item.expand = false
                 row.grade = '2'
                 list.splice(index + 1, 0, row)
               }
@@ -680,7 +696,7 @@ const store = new Vuex.Store({
           data.forEach(item => {
             if (!item.belongId && item.isdisplay === '1') {
               item._checked = true
-              item._open = true
+              item.expand = true
               item.grade = '1'
               list.push(item)
             }
@@ -690,7 +706,7 @@ const store = new Vuex.Store({
             row.isdisplay === '1' && list.forEach((item, index) => {
               if (item.grade === '1' && (row.belongId === item.categoryId)) {
                 row._checked = false
-                item._open = false
+                item.expand = false
                 row.grade = '2'
                 list.splice(index + 1, 0, row)
               }
@@ -731,7 +747,11 @@ const store = new Vuex.Store({
     getTagList ({commit, state}) {
       this._vm.$http.get('/rest/api/tag/list?pageSize=1000').then(res => {
         if (res.success) {
-          this.commit('setTagList', res.attributes.data)
+          let data = res.attributes.data
+          data.forEach(item => {
+            item._checked = false
+          })
+          this.commit('setTagList', data)
         }
       })
     },

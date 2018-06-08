@@ -37,7 +37,7 @@
     </Layout>
     <SeoDetail ref="seoDetail"/>
     <TransferCategory ref="transferCategory" :data="categoryList" :ids="ids" :type="'product'" @on-change="get"/>
-    <JDialog ref="dialog" :title="'我的显示'" :tip="'温馨提醒：勾选不要超过8个，以免列表显示不下。'" @on-ok="initCol">
+    <JDialog ref="dialog" :title="'我的显示'" :tip="'温馨提醒：勾选不要超过9个，以免列表显示不下。'" @on-ok="initCol">
       <div slot="content">
         <CheckboxGroup v-model="myShowSelect" class="j_checkout">
           <Checkbox :label="item" v-for="(item, index) in myShowList" :key="index">{{item}}</Checkbox>

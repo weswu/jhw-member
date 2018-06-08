@@ -9,7 +9,7 @@
             <Input v-model="detail.title" placeholder="请输入新闻标题"></Input>
           </FormItem>
           <FormItem label="新闻分类：" prop="category">
-            <CategorySelect :model="detail.category" :categoryList="$store.state.newsCategory" :type="'news'"/>
+            <CategorySelect :categoryId="detail.category" :type="'news'" @on-change="categoryChange"/>
             <span class="a_normal" style="padding-left:10px;">新增分类</span>
           </FormItem>
           <FormItem label="延时发布：">
@@ -35,9 +35,7 @@
         <UE :content='detail.content' ref='ue' :hidden="active !== '1'"></UE>
         <div v-if="active === '2'">
           <Form :model="detail" :label-width="130">
-            <FormItem label="新闻标签：">
-              <JTag :tagMapStore="detail.tagMapStore" :id="detail.newsId" :type="'news'"/>
-            </FormItem>
+            <JTag :tagMapStore="detail.tagMapStore" :id="detail.newsId" :type="'news'"/>
           </Form>
           <div class="j_tip" style="width: 560px;margin-left: 130px;">
             小提示: <br>
@@ -134,6 +132,9 @@ export default {
     // 功能
     activeChange (e) {
       this.active = e
+    },
+    categoryChange (e) {
+      this.detail.category = e
     },
     dataChange (e) {
       this.detail.addTime = new Date(this.addTime.getTime() + 24 * 60 * 60 * 1000 * (e - 1))

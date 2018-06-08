@@ -19,7 +19,7 @@
               <Button type="info" icon="plus" class="w130" @click="url('/coupon/add')">添加优惠券</Button>
             </Col>
             <Col>
-              <Input v-model="searchData.name" class="w144" placeholder="请输入优惠券名称"></Input>
+              <Input v-model="searchData.name" class="w144" clearable placeholder="请输入优惠券名称"></Input>
               <Button class="search" @click="search">搜索</Button>
               <a :href="'http://www.jihui88.com/member/mem_s.html#/coupon_ent_list/'+$store.state.user.enterpriseId" target="_blank">
                 <Button class="info">领取优惠卷网址</Button>

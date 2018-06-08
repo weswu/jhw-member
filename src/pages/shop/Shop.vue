@@ -5,9 +5,51 @@
       <JHeader :title="'订单列表'"/>
       <Content>
         <div class="j_search">
-          <Input v-model="searchData.orderSn" class="w180" placeholder="请输入订单编号"></Input>
+          <Input v-model="searchData.orderSn" class="w180" clearable placeholder="请输入订单编号"></Input>
           <Button class="search" @click="search">搜索</Button>
-          <Button class="grey w130" @click="update($Message)" style="margin-left: 10px;">高级搜索</Button>
+          <Poptip placement="bottom" class="j_poptip_confirm_edit"
+            confirm
+            width="600"
+            @on-ok="advancedSearch">
+            <Button class="grey w130">高级搜索</Button>
+            <div slot="title">
+              <Form :model="searchData" :label-width="90">
+                <FormItem label="订单编号：" class="formitem_left">
+                  <Input v-model="searchData.name" class="w180" clearable></Input>
+                </FormItem>
+                <FormItem label="用户名：" class="formitem_left">
+                  <Input v-model="searchData.username" class="w180" clearable></Input>
+                </FormItem>
+                <FormItem label="收货人：" class="formitem_left">
+                  <Input v-model="searchData.shipName" class="w180" clearable></Input>
+                </FormItem>
+                <FormItem label="手机号码：" class="formitem_left">
+                  <Input v-model="searchData.shipMobile" class="w180" clearable></Input>
+                </FormItem>
+                <FormItem label="收货地址：" class="formitem_left">
+                  <Input v-model="searchData.shipArea" class="w180" clearable></Input>
+                </FormItem>
+                <FormItem label="配送状态：" class="formitem_left">
+                  <Select v-model="searchData.shippingStatus" class="w180">
+                    <Option value="">请选择</Option>
+                    <Option :value="item.value" v-for="item in shippingStatus" :key="item.value">{{item.text}}</Option>
+                  </Select>
+                </FormItem>
+                <FormItem label="付款状态：" class="formitem_left">
+                  <Select v-model="searchData.paymentStatus" class="w180">
+                    <Option value="">请选择</Option>
+                    <Option :value="item.value" v-for="item in paymentStatus" :key="item.value">{{item.text}}</Option>
+                  </Select>
+                </FormItem>
+                <FormItem label="订单状态：" class="formitem_left">
+                  <Select v-model="searchData.orderStatus" class="w180">
+                    <Option value="">请选择</Option>
+                    <Option :value="item.value" v-for="item in orderStatus" :key="item.value">{{item.text}}</Option>
+                  </Select>
+                </FormItem>
+              </Form>
+            </div>
+          </Poptip>
           <span class="a_underline" style="margin-left: 20px;" @click="myShow">我的显示</span>
         </div>
         <Table ref="selection" :columns="columns" :data="list" @on-selection-change="handleSelectChange"/>
@@ -100,6 +142,14 @@ export default {
     },
     // 功能
     search () {
+      this.searchData = {
+        page: 1,
+        pageSize: this.searchData.pageSize,
+        orderSn: this.searchData.orderSn
+      }
+      this.get()
+    },
+    advancedSearch () {
       this.searchData.page = 1
       this.get()
     },
@@ -209,7 +259,7 @@ export default {
       })
     },
     deliveryFilter (h, params) {
-      return h('span', params.row.shippingSet && params.row.shippingSet[0].deliveryTypeName)
+      return h('span', params.row.shippingSet[0] && params.row.shippingSet[0].deliveryTypeName)
     },
     renderOperate (h, params) {
       var ctx = this

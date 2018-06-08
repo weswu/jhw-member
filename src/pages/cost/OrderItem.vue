@@ -17,7 +17,8 @@ export default {
       default () {
         return {
           page: 1,
-          pageSize: 10
+          pageSize: 10,
+          sort: 'addTime,desc'
         }
       }
     }

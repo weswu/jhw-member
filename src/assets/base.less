@@ -190,7 +190,7 @@ a.primary{
   }
 }
 // 表格调试
-.j_news .ivu-table-body,.j_product .ivu-table-body{
+.j_product .ivu-table-body{
   height: calc(100vh - 297px);
 }
 
@@ -454,11 +454,7 @@ a.primary{
   border-top: none;
   color: #a0a0a0;
   font-size: 12px;
-  &.border{
-    border-bottom: none;
-  }
   &.fixed{
-    border-top: 1px solid #e9e9e9;
     .ivu-page{
       padding-right: 6px;
     }
@@ -552,6 +548,9 @@ a.primary{
 }
 
 .j_poptip_confirm_edit{
+  .ivu-poptip-popper{
+    max-width: max-content;
+  }
   .ivu-poptip-body {
     .ivu-icon-help-circled{
       display: none
@@ -559,9 +558,15 @@ a.primary{
     .ivu-icon{
       color: #000
     }
+    .ivu-input-wrapper .ivu-icon{
+      line-height: 32px;
+    }
     .ivu-poptip-body-message{
       padding-left: 0;
     }
+  }
+  .ivu-form input{
+    margin-bottom: 0;
   }
 }
 
@@ -655,6 +660,9 @@ a.primary{
     .ivu-select-selection{
       border: 1px solid #c9c9c9;
     }
+  }
+  .formitem_left{
+    display: inline-block;
   }
 }
 // 标签切换

@@ -1,7 +1,8 @@
 <template>
   <Modal
     v-model="modal"
-    title="批量转移分类"
+    width="430"
+    title="移动相册"
     @on-cancel="cancel">
     <div slot="footer">
       <Button type="text" @click="cancel">取消</Button>
@@ -9,8 +10,8 @@
     </div>
     <Form :model="detail" :label-width="90">
       <FormItem label="请选择：">
-        <Select v-model="detail.categoryId" style="width:250px">
-          <Option :value="item.categoryId" v-for="item in data" :key="item.categoryId">{{item.name}}</Option>
+        <Select v-model="detail.parentId">
+          <Option :value="item.albumId" v-for="item in $store.state.albumCategory" :key="item.albumId" :class="{item: !!item.parentId}">{{item.name}}</Option>
         </Select>
       </FormItem>
     </Form>
@@ -21,11 +22,7 @@
 import qs from 'qs'
 export default {
   props: {
-    data: {
-      type: Array
-    },
-    ids: {},
-    type: {}
+    item: {}
   },
   data () {
     return {
@@ -41,15 +38,16 @@ export default {
       this.modal = false
     },
     submit () {
-      if (this.ids === this.detail.categoryId) {
-        return this.$Message.info('相同分类不能转移')
+      let data = {
+        model: JSON.stringify({
+          parentId: this.detail.parentId
+        }),
+        _method: 'put'
       }
-      this.detail.ids = this.ids
-      this.$http.post('/rest/api/' + this.type + '/batch/transfer', qs.stringify(this.detail)).then((res) => {
+      this.$http.post('/rest/api/album/detail/' + this.item.id, qs.stringify(data)).then((res) => {
         if (res.success) {
-          this.$Message.success(res.msg || '转移成功')
+          this.$Message.success('转移成功')
           this.$emit('on-change')
-          this.modal = false
         } else {
           this.$Message.error(res.msg)
         }

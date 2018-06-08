@@ -10,9 +10,55 @@
               <Button type="info" icon="plus" class="w130" @click="url('/news/add')">添加新闻</Button>
             </Col>
             <Col>
-              <Input v-model="model.title" placeholder="请输入新闻标题" style="width:200px"></Input>
+              <Input v-model="searchData.title" clearable placeholder="请输入新闻标题" class="w180"></Input>
               <Button class="search" @click="search">搜索</Button>
-              <Button class="grey w130" @click="update($Message)" style="margin-right: 0;">高级搜索</Button>
+              <Poptip placement="bottom-end" class="j_poptip_confirm_edit"
+                confirm
+                width="600"
+                @on-ok="advancedSearch">
+                <Button class="grey w130">高级搜索</Button>
+                <div slot="title">
+                  <Form :model="searchData" :label-width="85">
+                    <FormItem label="名称：" class="formitem_left">
+                      <Input v-model="searchData.title" class="w180" clearable></Input>
+                    </FormItem>
+                    <FormItem label="分类：" class="formitem_left">
+                      <Select v-model="searchData.category" class="w180">
+                        <Option value="">请选择</Option>
+                        <Option :value="item.categoryId" v-for="item in categoryList" :key="item.categoryId">{{item.name}}</Option>
+                      </Select>
+                    </FormItem>
+                    <FormItem label="图片新闻：" class="formitem_left">
+                      <Select v-model="searchData.imagenews" class="w180" placeholder="全部">
+                        <Option value="">全部</Option>
+                        <Option value="01">是</Option>
+                        <Option value="00">否</Option>
+                      </Select>
+                    </FormItem>
+                    <FormItem label="滚动新闻：" class="formitem_left">
+                      <Select v-model="searchData.rollingnews" class="w180" placeholder="全部">
+                        <Option value="">全部</Option>
+                        <Option value="01">是</Option>
+                        <Option value="00">否</Option>
+                      </Select>
+                    </FormItem>
+                    <FormItem label="置顶新闻：" class="formitem_left">
+                      <Select v-model="searchData.topnews" class="w180" placeholder="全部">
+                        <Option value="">全部</Option>
+                        <Option value="01">是</Option>
+                        <Option value="00">否</Option>
+                      </Select>
+                    </FormItem>
+                    <FormItem label="显示/隐藏：" class="formitem_left">
+                      <Select v-model="searchData.display" class="w180" placeholder="全部">
+                        <Option value="">全部</Option>
+                        <Option value="01">显示</Option>
+                        <Option value="00">隐藏</Option>
+                      </Select>
+                    </FormItem>
+                  </Form>
+                </div>
+              </Poptip>
             </Col>
           </Row>
         </div>
@@ -26,9 +72,9 @@
           <span slot="btn">
             <Checkbox v-model="toggle" @on-change="handleSelectAll(toggle)"/>
             <Button type="ghost" size="small" @click="delAll">删除</Button>
-            <Button type="ghost" size="small" @click="update($Message)">复制</Button>
-            <Button type="ghost" size="small" @click="update($Message)">上架</Button>
-            <Button type="ghost" size="small" @click="update($Message)">下架</Button>
+            <Button type="ghost" size="small" @click="copyAll">复制</Button>
+            <Button type="ghost" size="small" @click="displayAll('01')">上架</Button>
+            <Button type="ghost" size="small" @click="displayAll('00')">下架</Button>
             <Button type="ghost" size="small" @click="categoryAll">转移分类</Button>
           </span>
         </JPagination>
@@ -75,7 +121,6 @@ export default {
         page: 1,
         pageSize: 10
       },
-      model: {},
       total: 0,
       toggle: false,
       ids: ''
@@ -118,10 +163,15 @@ export default {
       this.sortable(a, b, 'news', 'newsId')
     },
     // 搜索
-    search (e) {
-      if (this.model.title) {
-        this.searchData.model = JSON.stringify(this.model)
+    search () {
+      this.searchData = {
+        page: 1,
+        pageSize: this.searchData.pageSize,
+        title: this.searchData.title
       }
+      this.get()
+    },
+    advancedSearch () {
       this.searchData.page = 1
       this.get()
     },
@@ -145,7 +195,7 @@ export default {
       var ctx = this
       this.$http.post('/rest/api/news/batch/del', qs.stringify({ids: this.ids})).then((res) => {
         if (res.success) {
-          this.$Message.success('删除成功')
+          this.$Message.success(res.msg || '删除成功')
           this.ids.split(',').forEach(id => {
             ctx.list.forEach((item, index) => {
               if (id === item.newsId) {
@@ -153,6 +203,33 @@ export default {
               }
             })
           })
+          this.ids = ''
+        } else {
+          this.$Message.error(res.msg)
+        }
+      })
+    },
+    copyAll () {
+      if (!this.ids) {
+        return this.$Message.error('未选择')
+      }
+      this.$http.post('/rest/api/news/copy', qs.stringify({newsIds: this.ids})).then((res) => {
+        if (res.success) {
+          this.$Message.success(res.msg || '复制成功')
+          this.get()
+          this.ids = ''
+        } else {
+          this.$Message.error(res.msg)
+        }
+      })
+    },
+    displayAll (display) {
+      if (!this.ids) {
+        return this.$Message.error('未选择')
+      }
+      this.$http.post('/rest/api/news/display', qs.stringify({newsIds: this.ids, display: display})).then((res) => {
+        if (res.success) {
+          this.$Message.success(display === '01' ? '上架成功' : '下架成功')
           this.ids = ''
         } else {
           this.$Message.error(res.msg)
@@ -572,7 +649,13 @@ export default {
 </script>
 
 <style lang="less">
-.j_news .ivu-table td{
-   height: 70px
- }
+.j_news .ivu-table{
+  .ivu-table-tip,.ivu-table-body {
+    height: calc(100vh - 293px);
+    border-bottom: 1px solid #e9e9e9;
+  }
+  td{
+    height: 70px
+  }
+}
 </style>

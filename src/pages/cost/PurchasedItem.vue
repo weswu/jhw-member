@@ -17,7 +17,8 @@ export default {
       default () {
         return {
           page: 1,
-          pageSize: 10
+          pageSize: 10,
+          sort: 'addTime,desc'
         }
       }
     }
@@ -29,7 +30,6 @@ export default {
   data () {
     return {
       columns: [
-        { title: '网站编号', key: 'layoutId', width: 85 },
         { title: '产品名称', key: 'name', ellipsis: true },
         { title: '原价', render: this.totalPriceFilter, width: 85 },
         { title: '应付金额', render: this.paidPriceFilter, width: 85 },
@@ -91,7 +91,7 @@ export default {
       return h('span', this.dateFormat(params.row.addTime))
     },
     endFilter (h, params) {
-      return h('span', this.dateFormat(params.row.endTime))
+      return h('span', params.row.endTime ? this.dateFormat(params.row.endTime) : '-')
     },
     renderOperate (h, params) {
       return h('span', [

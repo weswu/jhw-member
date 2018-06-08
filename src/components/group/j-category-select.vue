@@ -9,8 +9,8 @@
         :class="{'ivu-select-item-selected': item.categoryId === categoryId, 'ivu-select-item': true, 'item1': item.grade == '1', 'item2': item.grade == '2', 'item3': item.grade == '3'}"
         @click="select(item)">
         <span>{{item.name}}</span>
-        <i class="iconfont icon-xialajiantou" v-if="item.isroot && !item._open" @click.stop="changeCateList(item)"></i>
-        <i class="iconfont icon-xialajiantou rotate" v-if="item.isroot && item._open" @click.stop="changeCateList(item)"></i>
+        <i class="iconfont icon-xialajiantou" v-if="item.isroot && !item.expand" @click.stop="changeCateList(item)"></i>
+        <i class="iconfont icon-xialajiantou rotate" v-if="item.isroot && item.expand" @click.stop="changeCateList(item)"></i>
       </li>
     </ul>
   </Dropdown>
@@ -54,7 +54,7 @@ export default {
     },
     changeCateList (data) {
       var ctx = this
-      data._open = !data._open
+      data.expand = !data.expand
       this.data.forEach(item => {
         if (item.belongId === data.categoryId) {
           item._checked = !item._checked

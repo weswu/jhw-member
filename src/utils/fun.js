@@ -8,6 +8,7 @@ import qs from 'qs'
  * @desc: 时间选择
 */
 Vue.prototype.dateFormat = function (date, format) {
+  if (!date) return ''
   date = new Date(date)
   format = format || 'yyyy-MM-dd hh:mm'
   var o = {

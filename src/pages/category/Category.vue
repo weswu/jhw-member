@@ -18,8 +18,8 @@
         <div class="btn">
           <Checkbox v-model="toggle" @on-change="handleSelectAll(toggle)"/>
           <Button type="ghost" size="small" @click="delAll">删除</Button>
-          <Button type="ghost" size="small" @click="update($Message)">显示</Button>
-          <Button type="ghost" size="small" @click="update($Message)">隐藏</Button>
+          <Button type="ghost" size="small" @click="displayAll('1')">显示</Button>
+          <Button type="ghost" size="small" @click="displayAll('0')">隐藏</Button>
           <Button type="ghost" size="small" @click="categoryAll">转换分类</Button>
           <Button type="ghost" size="small">展开</Button>
           <Button type="ghost" size="small">折叠</Button>
@@ -28,6 +28,12 @@
     </Layout>
     <SeoDetail ref="seoDetail"/>
     <Detail ref="detail"/>
+    <TransferCategory
+      ref="transferCategory"
+      :data="$route.params.id === 'product' ? $store.state.productCategory : $store.state.newsCategory"
+      :ids="ids"
+      :type="'category/'+$route.params.id"
+      @on-change="get"/>
   </Layout>
 </template>
 
@@ -38,13 +44,15 @@ import JHeader from '@/components/group/j-header'
 import DragableTable from '@/components/group/j-dragable-table'
 import SeoDetail from '@/pages/static/SeoDetail'
 import Detail from '@/pages/category/Detail'
+import TransferCategory from '@/components/group/transfer-category'
 export default {
   components: {
     MenuBar,
     JHeader,
     DragableTable,
     SeoDetail,
-    Detail
+    Detail,
+    TransferCategory
   },
   data () {
     return {
@@ -101,17 +109,24 @@ export default {
       if (!this.ids) {
         return this.$Message.error('未选择')
       }
-      var ctx = this
       this.$http.post('/rest/api/news/batch/del', qs.stringify({ids: this.ids})).then((res) => {
         if (res.success) {
-          this.$Message.success('删除成功')
-          this.ids.split(',').forEach(id => {
-            ctx.list.forEach((item, index) => {
-              if (id === item.newsId) {
-                ctx.list.splice(index, 1)
-              }
-            })
-          })
+          this.$Message.success(res.msg || '删除成功')
+          this.get()
+          this.ids = ''
+        } else {
+          this.$Message.error(res.msg)
+        }
+      })
+    },
+    displayAll (display) {
+      if (!this.ids) {
+        return this.$Message.error('未选择')
+      }
+      this.$http.post('/rest/api/category/display', qs.stringify({categoryIds: this.ids, isdisplay: display})).then((res) => {
+        if (res.success) {
+          this.$Message.success(display === '1' ? '显示成功' : '隐藏成功')
+          this.get()
           this.ids = ''
         } else {
           this.$Message.error(res.msg)
@@ -139,7 +154,13 @@ export default {
           },
           style: {
             color: '#000',
-            display: 'block'
+            display: 'block',
+            transform: params.row.expand ? 'rotate(0deg)' : 'rotate(-90deg)'
+          },
+          on: {
+            click: () => {
+              params.row.expand = !params.row.expand
+            }
           }
         })
       ])
@@ -179,26 +200,23 @@ export default {
           },
           on: {
             input: (val) => {
-              params.row.name2 = val
+              params.row.name = val
             },
-            'on-blur': () => {
-              if (params.row.name2 !== '' && params.row.name2 !== params.row.name) {
-                params.row.name = params.row.name2
-                let data = {
-                  model: JSON.stringify({
-                    id: params.row.categoryId,
-                    name: params.row.name
-                  }),
-                  _method: 'put'
-                }
-                this.$http.post('/rest/api/category/detail/' + params.row.categoryId, qs.stringify(data)).then((res) => {
-                  if (res.success) {
-                    ctx.$Message.success('修改成功')
-                  } else {
-                    ctx.$Message.error(res.msg)
-                  }
-                })
+            'on-change': () => {
+              let data = {
+                model: JSON.stringify({
+                  id: params.row.categoryId,
+                  name: params.row.name
+                }),
+                _method: 'put'
               }
+              this.$http.post('/rest/api/category/detail/' + params.row.categoryId, qs.stringify(data)).then((res) => {
+                if (res.success) {
+                  // ctx.$Message.success('修改成功')
+                } else {
+                  ctx.$Message.error(res.msg)
+                }
+              })
             }
           }
         }, [
@@ -267,47 +285,21 @@ export default {
           },
           on: {
             click: () => {
-              this.$Modal.confirm({
-                render: (h) => {
-                  return h('Select', {
-                    props: {
-                      value: params.row.isdisplay,
-                      placeholder: '是否上架'
-                    },
-                    on: {
-                      'on-change': (val) => {
-                        params.row.isdisplay2 = val
-                      }
-                    }
-                  }, [
-                    h('Option', {
-                      props: {
-                        value: '1'
-                      }
-                    }, '是'),
-                    h('Option', {
-                      props: {
-                        value: '0'
-                      }
-                    }, '否')
-                  ])
-                },
-                onOk: () => {
-                  let data = {
-                    model: JSON.stringify({
-                      id: params.row.categoryId,
-                      display: params.row.isdisplay2
-                    }),
-                    _method: 'put'
-                  }
-                  ctx.$http.post('/rest/api/news/detail/' + params.row.categoryId, qs.stringify(data)).then((res) => {
-                    if (res.success) {
-                      ctx.$Message.success('修改成功')
-                      ctx.list[params.index].display = params.row.isdisplay2
-                    } else {
-                      ctx.$Message.error(res.msg)
-                    }
-                  })
+              let display = params.row.isdisplay === '1' ? '0' : '1'
+              let data = {
+                model: JSON.stringify({
+                  id: params.row.categoryId,
+                  display: display,
+                  editField: true
+                }),
+                _method: 'put'
+              }
+              this.$http.post('/rest/api/category/detail/' + params.row.categoryId, qs.stringify(data)).then((res) => {
+                if (res.success) {
+                  ctx.$Message.success('修改成功')
+                  params.row.isdisplay = display
+                } else {
+                  ctx.$Message.error(res.msg)
                 }
               })
             }
@@ -375,6 +367,9 @@ export default {
               'iconfont': true,
               'icon-icon--': true
             },
+            style: {
+              fontSize: '8px'
+            },
             on: {
               click: () => {
                 if (params.index > 0) {
@@ -388,6 +383,9 @@ export default {
               'none': true,
               'iconfont': true,
               'icon-tuozhuai': true
+            },
+            style: {
+              fontSize: '8px'
             }
           }),
           h('i', {
@@ -395,6 +393,9 @@ export default {
               'none': true,
               'iconfont': true,
               'icon-icon--1': true
+            },
+            style: {
+              fontSize: '8px'
             },
             on: {
               click: () => {
@@ -463,19 +464,22 @@ export default {
 </script>
 
 <style lang="less">
-.j_category .ivu-table-body{
-  height: calc(100vh - 251px);
+.j_category .ivu-table{
+  .ivu-table-tip,.ivu-table-body {
+    height: calc(100vh - 251px);
+    border-bottom: 1px solid #e9e9e9;
+    .iconfont{
+      font-size: 8px
+    }
+  }
+  td{
+    height: 55px
+  }
+  .j_category_name{
+    display: flex;
+    i{
+      line-height: 32px;
+    }
+  }
 }
-.j_category .ivu-table-wrapper .ivu-table .ivu-table-body .ivu-table-row .ivu-table-cell .iconfont{
-  font-size: 8px
-}
-.j_category .ivu-table td{
-   height: 55px
- }
- .j_category_name{
-   display: flex;
-   i{
-     line-height: 32px;
-   }
- }
 </style>
