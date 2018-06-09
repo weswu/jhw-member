@@ -31,7 +31,14 @@
         <div class="j_tip">
           <span class="red">步骤二：</span>进行批量上传产品表格前，请先把产品图片上传好
         </div>
-        <Button type="primary" @click="update($Message)" style="margin-bottom:16px;">上传产品图片</Button>
+        <Button type="primary" @click="uploadPic" style="margin-bottom:16px;">上传产品图片</Button>
+        <Upload ref="upload" :action="'/commonutil/uploadUtil2?username=' + $store.state.user.username + '&replace=00&attId=&id=' + attId" style="display:none"
+          name="Filedata"
+          multiple
+          :max-size="2048"
+          :on-success="handleSuccess">
+          <div id="upload">上传</div>
+        </Upload>
         <div class="j_tip">
           <span class="red">步骤三：</span>提交填写好的产品表格
         </div>
@@ -40,18 +47,39 @@
             <span class="star">*</span>上传表格:
           </Col>
           <Col span="21">
-            <input id="fileUpload" type="file" style="width:440px;float:left" class="ivu-input"></input>
-            <span class="select" @click="select">选择文件</span>
-            <Button @click="submit()" class="submit" style="width:76px;">提交</Button>
+            <Upload ref="upload2" :action="'/commonutil/uploadUtil2?username=' + $store.state.user.username + ''"
+              name="Filedata"
+              :max-size="2048"
+              :on-success="handleSuccess2">
+              <div id="fileUpload" >
+                <span class="select">选择文件</span>{{name}}
+              </div>
+            </Upload>
           </Col>
         </Row>
       </Content>
     </Layout>
+    <Modal
+      v-model="modal"
+      width="430"
+      title="选择相册"
+      @on-cancel="modal = false">
+      <div slot="footer">
+        <Button type="text" @click="modal = false">取消</Button>
+        <Button type="primary" @click="submitAlbumId">确定</Button>
+      </div>
+      <Form :label-width="90">
+        <FormItem label="请选择：">
+          <Select v-model="attId">
+            <Option :value="item.albumId" v-for="item in $store.state.albumCategory" :key="item.albumId">{{item.name}}</Option>
+          </Select>
+        </FormItem>
+      </Form>
+    </Modal>
   </Layout>
 </template>
 
 <script>
-import lrz from 'lrz'
 import qs from 'qs'
 import MenuBar from '@/components/common/menu_bar'
 import JHeader from '@/components/group/j-header'
@@ -85,10 +113,41 @@ export default {
         { value: 'c', text: '-' },
         { value: 'd', text: '-' },
         { value: 'e', text: '-' }
-      ]
+      ],
+      modal: false,
+      attId: 'all',
+      name: '未选择任何文件'
     }
   },
+  create () {
+    this.initAlbum()
+  },
   methods: {
+    initAlbum () {
+      if (this.$store.state.albumCategory.length < 2) {
+        this.$store.dispatch('getAlbumCategory')
+      }
+    },
+    uploadPic () {
+      this.modal = true
+    },
+    submitAlbumId () {
+      this.modal = false
+      document.getElementById('upload').click()
+    },
+    handleSuccess (res, file) {
+      var ctx = this
+      setTimeout(function () {
+        ctx.$refs.upload.clearFiles()
+      }, 1000)
+    },
+    handleSuccess2 (res, file) {
+      var ctx = this
+      this.name = file.name
+      setTimeout(function () {
+        ctx.$refs.upload2.clearFiles()
+      }, 1000)
+    },
     select () {
       var btn = document.getElementById('fileUpload')
       btn.click()
@@ -97,60 +156,11 @@ export default {
       let data = {
         fields: this.col.join()
       }
-      this.$http.get('/rest/api/product/downloadProductExcel?' + qs.stringify(data)).then(res => {
+      this.$http.post('/rest/api/product/downloadProductExcel?' + qs.stringify(data)).then(res => {
         if (res.success) {
           window.open(res.attributes.data)
         }
       })
-    },
-    submit () {
-      this.$Message.info('更新中')
-      let _this = this
-      var e = document.getElementById('fileUpload')
-      lrz(e.files[0], {fieldName: 'Filedata'})
-        .then(function (rst) {
-          // 这里该上传给后端啦
-          /* ==================================================== */
-          // 原生ajax上传代码，所以看起来特别多 ╮(╯_╰)╭，但绝对能用
-          // 其他框架，例如jQuery处理formData略有不同，请自行google，baidu。
-          let xhr = new XMLHttpRequest()
-          xhr.open('POST', '/user_v2/product/uploadProducts')
-          xhr.onload = function () {
-            _this.isloading = false
-            if (xhr.status === 200) {
-              // 上传成功
-              let result = JSON.parse(xhr.response).attributes
-              console.log(result)
-              _this.result = result
-              _this.$emit('result', result)
-            } else {
-              // 处理其他情况
-              console.log(xhr.statusText)
-            }
-          }
-          xhr.onerror = function () {
-            // 处理错误
-          }
-          xhr.upload.onprogress = function (e) {
-            // 上传进度
-            _this.isloading = true
-            // var percentComplete = ((e.loaded / e.total) || 0) * 100
-          }
-          // 添加参数
-          rst.formData.append('fileLen', rst.fileLen)
-          // 触发上传
-          xhr.send(rst.formData)
-          /* ==================================================== */
-          return rst
-        })
-        .catch(function (err) {
-          console.log(err)
-          // 处理失败会执行
-        })
-        .always(function () {
-          _this.isloading = false
-          // 不管是成功失败，都会执行
-        })
     }
   }
 }
@@ -203,15 +213,15 @@ export default {
     #fileUpload{
       color: #aaa;
       cursor: pointer;
+      border: 1px solid #c9c9c9;
+      box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+      max-width: 440px;
     }
     .select{
-      position: absolute;
-      left: 22px;
-      top: 5px;
       background: #fff;
       color: #aaa;
       text-decoration: underline;
-      padding: 0 9px;
+      padding: 0 9px 0 20px;
       line-height: 26px;
       cursor: pointer;
     }

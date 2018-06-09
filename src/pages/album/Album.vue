@@ -9,12 +9,10 @@
           <li v-clipboard:copy="item.url3" v-clipboard:success="copy">复制</li>
           <li @click="move">移动</li>
           <li @click="del">删除</li>
-          <Upload ref="upload" :action="'commonutil/uploadUtil2?username=' + $store.state.user.username + '&replace=01&attId=&id=' + attId"
+          <Upload ref="upload" :action="'/commonutil/uploadUtil2?username=' + $store.state.user.username + '&replace=01&attId=' + item.attId + '&id=' + attId"
             name="Filedata"
-            multiple
             :max-size="2048"
-            :on-success="handleSuccess"
-            style="display: inline-block;margin-right: 5px;">
+            :on-success="handleSuccess">
             <li >替换图片</li>
           </Upload>
           <li @click="refurbish">刷新</li>
@@ -26,7 +24,7 @@
           <div class="j_search">
             <Row type="flex" justify="space-between">
               <Col>
-                <Upload ref="upload" :action="'commonutil/uploadUtil2?username=' + $store.state.user.username + '&replace=00&attId=&id=' + attId"
+                <Upload ref="upload" :action="'/commonutil/uploadUtil2?username=' + $store.state.user.username + '&replace=00&attId=&id=' + attId"
                   name="Filedata"
                   multiple
                   :max-size="2048"
@@ -42,7 +40,7 @@
                 <Button class="search" @click="search">搜索</Button>
                 <Poptip placement="bottom" class="j_poptip_confirm_edit"
                   confirm
-                  @on-ok="get">
+                  @on-ok="advancedSearch">
                   <Button class="grey">高级搜索</Button>
                   <div slot="title">
                     <Input v-model="searchData.filename" class="w244" placeholder="搜索图片"></Input><br/>
@@ -53,7 +51,7 @@
                   </div>
                 </Poptip>
                 <Button class="info" @click="update($Message)"><i class="iconfont icon-tupian3"></i>设置水印</Button>
-                <Button class="info" @click="update($Message)" style="padding: 6px 5px;margin-right:0px;">一键载入产品分类名称</Button>
+                <Button class="info" @click="importProductCategory" style="padding: 6px 5px;margin-right:0px;">一键载入产品分类名称</Button>
               </Col>
             </Row>
           </div>
@@ -165,7 +163,8 @@ export default {
       breadList: [
         { value: 'all', text: '全部图片' }
       ],
-      list: [
+      list: [],
+      listTest: [
         {
           state: '01',
           type: '01',
@@ -443,8 +442,27 @@ export default {
     },
     // 右
     search () {
-      this.searchData.searchType = '1'
+      this.searchData = {
+        page: 1,
+        pageSize: this.searchData.pageSize,
+        filename: this.searchData.filename,
+        searchType: '1'
+      }
       this.get()
+    },
+    advancedSearch () {
+      this.searchData.page = 1
+      this.get()
+    },
+    importProductCategory () {
+      this.$http.get('/api/album/importProductCate2Album').then((res) => {
+        if (res.success) {
+          this.$Message.success('导入成功')
+          this.$refs.category.get()
+        } else {
+          this.$Message.error(res.msg)
+        }
+      })
     },
     // 图片中
     more (e, item) {
@@ -517,15 +535,7 @@ export default {
     },
     move () {
       this.belongModel = true
-      this.$http.post('/rest/api/album/attr/img/move?attIds=' + this.item.attId + '&belongId=' + this.belongId).then((res) => {
-        if (res.success) {
-          this.$Message.success('移动成功')
-          this.get()
-          this.belongModel = false
-        } else {
-          this.$Message.error(res.msg)
-        }
-      })
+      this.ids = this.item.attId
     },
     del () {
       let data = {
@@ -573,8 +583,18 @@ export default {
       })
     },
     handleSelectAll () {
-      this.list.forEach(item => {
+      if (!this.toggle) {
+        this.ids = ''
+      }
+      this.list.forEach((item, index) => {
         item._checked = this.toggle
+        if (this.toggle) {
+          if (index === 0) {
+            this.ids = item.attId
+          } else {
+            this.ids = this.ids + ',' + item.attId
+          }
+        }
       })
     },
     delAll () {
@@ -714,7 +734,7 @@ export default {
           margin: 0 auto;
           img{
             width: 100%;
-            max-height: 160px;
+            max-height: 140px;
             border: 1px solid #b3b3b3;
             vertical-align: middle;
           }

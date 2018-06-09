@@ -189,10 +189,6 @@ a.primary{
     display: inline-block;
   }
 }
-// 表格调试
-.j_product .ivu-table-body{
-  height: calc(100vh - 297px);
-}
 
 // 其它高度
 .j_company #edui1_iframeholder{
@@ -208,7 +204,7 @@ a.primary{
     height: calc(100vh - 145px);
     .ivu-layout-content{
       .picture_warpper{
-        height: calc(100vh - 300px);
+        height: calc(100vh - 301px);
       }
     }
   }
@@ -877,6 +873,54 @@ a.primary{
     &:hover{
       border-color: @btn-default-border;
       color: @text-color;
+    }
+  }
+}
+
+// 相册弹出
+.modal-upload-list{
+  height: 420px;
+  .modal-upload-item {
+    display: inline-block;
+    width: 90px;
+    height: 90px;
+    line-height: 90px;
+    text-align: center;
+    border: 1px solid transparent;
+    overflow: hidden;
+    background: #fff;
+    position: relative;
+    border: 1px solid #eee;
+    margin: 5px 7px;
+    cursor: pointer;
+    padding: 1px;
+    &.active {
+      border: 2px solid #ffa000;
+      padding: 0;
+      .modal-upload-item-cover {
+        background: rgba(0, 0, 0, 0.5);
+        left: -1px;
+        bottom: -1px;
+      }
+    }
+    img {
+       max-width: 100%;
+       vertical-align: middle;
+    }
+    .modal-upload-item-cover {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      background: rgba(0, 0, 0, 0.3);
+      color: #fff;
+      height: 30px;
+      line-height: 30px;
+      text-align: left;
+      width: 90px;
+      padding: 0 6px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      cursor: text;
     }
   }
 }

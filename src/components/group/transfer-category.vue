@@ -9,7 +9,7 @@
     </div>
     <Form :model="detail" :label-width="90">
       <FormItem label="请选择：">
-        <Select v-model="detail.categoryId" style="width:250px">
+        <Select v-model="detail.category" style="width:250px">
           <Option :value="item.categoryId" v-for="item in data" :key="item.categoryId">{{item.name}}</Option>
         </Select>
       </FormItem>

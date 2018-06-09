@@ -8,6 +8,12 @@
           <Row type="flex" justify="space-between">
             <Col>
               <Button type="info" icon="plus" class="w130" @click="url('/news/add')">添加新闻</Button>
+              <Upload ref="upload" :action="'/commonutil/uploadUtil2?username=' + $store.state.user.username + '&replace=00&attId=&id=all'" style="display:none"
+                name="Filedata"
+                :max-size="2048"
+                :on-success="handleSuccess">
+                <div id="upload">上传</div>
+              </Upload>
             </Col>
             <Col>
               <Input v-model="searchData.title" clearable placeholder="请输入新闻标题" class="w180"></Input>
@@ -107,15 +113,87 @@ export default {
       columns: [
         { type: 'selection', className: 'j_table_checkbox', width: 44 },
         { type: 'index2', className: 'j_table_checkbox', title: '序号', align: 'center', width: 60, render: this.indexFilter },
-        { title: '新闻标题', className: 'j_table_title', sortable: true, width: 120, render: this.titleFilter },
-        { title: '新闻分类', sortable: true, width: 105, ellipsis: true, render: this.categoryFilter },
-        { title: '添加时间', sortable: true, width: 105, render: this.dataFilter },
-        { title: '是否上架', sortable: true, width: 105, render: this.displayFilter },
+        { title: '新闻标题', className: 'j_table_title', sortable: true, key: 'title', width: 120, render: this.titleFilter },
+        { title: '新闻分类', sortable: true, key: 'category', width: 105, ellipsis: true, render: this.categoryFilter },
+        { title: '添加时间', sortable: true, key: 'addTime', width: 105, render: this.dataFilter },
+        { title: '是否上架', sortable: true, key: 'display', width: 105, render: this.displayFilter },
         { title: '是否置顶', width: 90, render: this.topnewsFilter },
-        { title: '排序', className: 'j_table_sort', sortable: true, minWidth: 80, render: this.sortFilter },
+        { title: '排序', className: 'j_table_sort', sortable: true, key: 'sort', minWidth: 80, render: this.sortFilter },
         { title: '操作', className: 'j_table_operate', align: 'left', width: 160, render: this.renderOperate }
       ],
       list: [],
+      list2: [
+        {
+          state: '01',
+          content: null,
+          domain: null,
+          origin: null,
+          category: 'Category_00000000000000000314414',
+          sort: 21,
+          enterpriseId: 'Enterp_0000000000000000000000039',
+          title: '大师傅',
+          adduserId: null,
+          newsId: 'News_000000000000000000000101939',
+          addTime: 1489718280218,
+          newsType: '11',
+          imagenews: '00',
+          rollingnews: null,
+          topnews: '01',
+          staticed: null,
+          staticpath: null,
+          pageKey: null,
+          tarurl: null,
+          display: '00',
+          picPath: null,
+          lanId: null,
+          auditTime: null,
+          seoDescription: null,
+          viewsum: null,
+          seoTitle: null,
+          tagMapStore: null,
+          c_url: null,
+          auditId: null,
+          author: null,
+          newsId2: '101939',
+          nkey: null,
+          _checked: false
+        },
+        {
+          state: '01',
+          content: null,
+          domain: null,
+          origin: null,
+          category: 'Category_00000000000000000335347',
+          sort: 19,
+          enterpriseId: 'Enterp_0000000000000000000000039',
+          title: 'aa中客户',
+          adduserId: null,
+          newsId: 'News_000000000000000000000109030',
+          addTime: 1501750591038,
+          newsType: '11',
+          imagenews: '01',
+          rollingnews: null,
+          topnews: '01',
+          staticed: null,
+          staticpath: null,
+          pageKey: null,
+          tarurl: null,
+          display: '01',
+          picPath: '',
+          lanId: null,
+          auditTime: null,
+          seoDescription: null,
+          viewsum: null,
+          seoTitle: null,
+          tagMapStore: null,
+          c_url: null,
+          auditId: null,
+          author: null,
+          newsId2: '109030',
+          nkey: null,
+          _checked: false
+        }
+      ],
       categoryList: [],
       searchData: {
         page: 1,
@@ -192,18 +270,10 @@ export default {
       if (!this.ids) {
         return this.$Message.error('未选择')
       }
-      var ctx = this
       this.$http.post('/rest/api/news/batch/del', qs.stringify({ids: this.ids})).then((res) => {
         if (res.success) {
           this.$Message.success(res.msg || '删除成功')
-          this.ids.split(',').forEach(id => {
-            ctx.list.forEach((item, index) => {
-              if (id === item.newsId) {
-                ctx.list.splice(index, 1)
-              }
-            })
-          })
-          this.ids = ''
+          this.get()
         } else {
           this.$Message.error(res.msg)
         }
@@ -217,7 +287,6 @@ export default {
         if (res.success) {
           this.$Message.success(res.msg || '复制成功')
           this.get()
-          this.ids = ''
         } else {
           this.$Message.error(res.msg)
         }
@@ -230,7 +299,7 @@ export default {
       this.$http.post('/rest/api/news/display', qs.stringify({newsIds: this.ids, display: display})).then((res) => {
         if (res.success) {
           this.$Message.success(display === '01' ? '上架成功' : '下架成功')
-          this.ids = ''
+          this.get()
         } else {
           this.$Message.error(res.msg)
         }
@@ -389,47 +458,19 @@ export default {
           },
           on: {
             click: () => {
-              this.$Modal.confirm({
-                render: (h) => {
-                  return h('Select', {
-                    props: {
-                      value: params.row.display,
-                      placeholder: '是否上架'
-                    },
-                    on: {
-                      'on-change': (val) => {
-                        params.row.display2 = val
-                      }
-                    }
-                  }, [
-                    h('Option', {
-                      props: {
-                        value: '01'
-                      }
-                    }, '是'),
-                    h('Option', {
-                      props: {
-                        value: '00'
-                      }
-                    }, '否')
-                  ])
-                },
-                onOk: () => {
-                  let data = {
-                    model: JSON.stringify({
-                      id: params.row.newsId,
-                      display: params.row.display2
-                    }),
-                    _method: 'put'
-                  }
-                  ctx.$http.post('/rest/api/news/detail/' + params.row.newsId, qs.stringify(data)).then((res) => {
-                    if (res.success) {
-                      ctx.$Message.success('修改成功')
-                      ctx.list[params.index].display = params.row.display2
-                    } else {
-                      ctx.$Message.error(res.msg)
-                    }
-                  })
+              params.row.display = params.row.display === '01' ? '00' : '01'
+              let data = {
+                model: JSON.stringify({
+                  id: params.row.newsId,
+                  display: params.row.display
+                }),
+                _method: 'put'
+              }
+              this.$http.post('/rest/api/news/detail/' + params.row.newsId, qs.stringify(data)).then((res) => {
+                if (res.success) {
+                  ctx.$Message.success('修改成功')
+                } else {
+                  ctx.$Message.error(res.msg)
                 }
               })
             }
@@ -449,47 +490,19 @@ export default {
           },
           on: {
             click: () => {
-              this.$Modal.confirm({
-                render: (h) => {
-                  return h('Select', {
-                    props: {
-                      value: params.row.topnews,
-                      placeholder: '是否置顶'
-                    },
-                    on: {
-                      'on-change': (val) => {
-                        params.row.topnews2 = val
-                      }
-                    }
-                  }, [
-                    h('Option', {
-                      props: {
-                        value: '01'
-                      }
-                    }, '是'),
-                    h('Option', {
-                      props: {
-                        value: '00'
-                      }
-                    }, '否')
-                  ])
-                },
-                onOk: () => {
-                  let data = {
-                    model: JSON.stringify({
-                      id: params.row.newsId,
-                      topnews: params.row.topnews2
-                    }),
-                    _method: 'put'
-                  }
-                  ctx.$http.post('/rest/api/news/detail/' + params.row.newsId, qs.stringify(data)).then((res) => {
-                    if (res.success) {
-                      ctx.$Message.success('修改成功')
-                      ctx.list[params.index].topnews = params.row.topnews2
-                    } else {
-                      ctx.$Message.error(res.msg)
-                    }
-                  })
+              params.row.topnews = params.row.topnews === '01' ? '00' : '01'
+              let data = {
+                model: JSON.stringify({
+                  id: params.row.newsId,
+                  topnews: params.row.topnews
+                }),
+                _method: 'put'
+              }
+              this.$http.post('/rest/api/news/detail/' + params.row.newsId, qs.stringify(data)).then((res) => {
+                if (res.success) {
+                  ctx.$Message.success('修改成功')
+                } else {
+                  ctx.$Message.error(res.msg)
                 }
               })
             }

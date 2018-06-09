@@ -18,10 +18,16 @@ const store = new Vuex.Store({
     lanId: '1',
     uid: ['0', '0', '0'],
     // 列表数据
-    productCategory: [],
+    productCategory: [
+      {
+        categoryId: 'ccc',
+        isdisplay: '1'
+      }
+    ],
     newsCategory: [
       {
-        categoryId: 'ccc'
+        categoryId: 'ccc',
+        isdisplay: '1'
       }
     ],
     albumCategory: [],
@@ -801,7 +807,7 @@ const store = new Vuex.Store({
       })
     },
     getMemberRank ({commit, state}) {
-      this._vm.$http.get('/rest/api/member/rank/list').then(res => {
+      return this._vm.$http.get('/rest/api/member/rank/list').then(res => {
         if (res.success) {
           this.commit('setMemberRankList', res.attributes.data)
         }

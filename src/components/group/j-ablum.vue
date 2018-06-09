@@ -14,7 +14,7 @@
             <Button class="search" @click="get">搜索</Button>
           </Col>
           <Col>
-            <Upload ref="upload" :action="'commonutil/uploadUtil2?username=' + $store.state.user.username + '&replace=00&attId=&id=' + attId"
+            <Upload ref="upload" :action="'/commonutil/uploadUtil2?username=' + $store.state.user.username + '&replace=00&attId=&id=' + attId"
               name="Filedata"
               :max-size="2048"
               :on-success="handleSuccess">
@@ -23,10 +23,10 @@
           </Col>
         </Row>
       </div>
-      <div class="admin-upload-list">
-        <div class="admin-upload-item" v-for="item in list" :key="item.url" :class="{active: item._checked}" @click="select(item)">
+      <div class="modal-upload-list">
+        <div class="modal-upload-item" v-for="item in list" :key="item.url" :class="{active: item._checked}" @click="select(item)">
           <img :src="$store.state.status.IMG_HOST+item.serverPath | picUrl(5)">
-          <div class="admin-upload-list-cover">
+          <div class="modal-upload-item-cover">
             {{item.filename}}
           </div>
         </div>
@@ -138,56 +138,10 @@ export default {
     height: 508px;
   }
   .ivu-tree{
-    height: 416px;
+    height: 416px !important;
   }
   .ivu-layout-content{
     margin-left: 10px
-  }
-  .admin-upload-list{
-    height: 420px;
-  }
-  .admin-upload-item {
-    display: inline-block;
-    width: 90px;
-    height: 90px;
-    line-height: 90px;
-    text-align: center;
-    border: 1px solid transparent;
-    overflow: hidden;
-    background: #fff;
-    position: relative;
-    border: 1px solid #eee;
-    margin: 5px 7px;
-    cursor: pointer;
-    padding: 1px;
-    &.active {
-      border: 2px solid #ffa000;
-      padding: 0;
-      .admin-upload-list-cover {
-        background: rgba(0, 0, 0, 0.5);
-        left: -1px;
-        bottom: -1px;
-      }
-    }
-    img {
-       max-width: 100%;
-       vertical-align: middle;
-    }
-    .admin-upload-list-cover {
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      background: rgba(0, 0, 0, 0.3);
-      color: #fff;
-      height: 30px;
-      line-height: 30px;
-      text-align: left;
-      width: 90px;
-      padding: 0 6px;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      cursor: text;
-    }
   }
 }
 </style>

@@ -6,7 +6,7 @@
         <JHeader :title="'下载'" :lan="true"/>
         <div class="j_search">
           <Button class="grey primary w130">产品表格下载</Button>
-          <Button class="grey w130" @click="update($Message)">产品相册下载</Button>
+          <Button class="grey w130" @click="exportProductImg">产品相册下载</Button>
         </div>
         <table class="j_table j_table_li">
           <thead>
@@ -113,7 +113,14 @@ export default {
         fields: this.col.join() + (this.col2.length > 0 ? ',' + this.col2.join() : ''),
         layoutId: this.layoutId
       }
-      this.$http.get('/rest/api/product/exportProductsToExcel?' + qs.stringify(data)).then(res => {
+      this.$http.post('/rest/api/product/exportProductsToExcel?' + qs.stringify(data)).then(res => {
+        if (res.success) {
+          window.open(res.attributes.data)
+        }
+      })
+    },
+    exportProductImg () {
+      this.$http.get('/api/product/exportProductImg').then(res => {
         if (res.success) {
           window.open(res.attributes.data)
         }

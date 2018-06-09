@@ -11,9 +11,50 @@
             </Col>
             <Col>
               <span class="a_underline" @click="myShow">我的显示</span>
-              <Input v-model="model.title" placeholder="请输入产品名称" style="width:200px"></Input>
+              <Input v-model="model.title" clearable placeholder="请输入产品名称" class="w180"></Input>
               <Button class="search" @click="search">搜索</Button>
-              <Button class="grey w130" @click="update($Message)" style="margin-right: 0;">高级搜索</Button>
+              <Poptip placement="bottom-end" class="j_poptip_confirm_edit"
+                confirm
+                width="630"
+                @on-ok="advancedSearch">
+                <Button class="grey w130">高级搜索</Button>
+                <div slot="title">
+                  <Form :model="searchData" :label-width="110">
+                    <FormItem label="名称：" class="formitem_left">
+                      <Input v-model="searchData.name" class="w180" clearable></Input>
+                    </FormItem>
+                    <FormItem label="型号：" class="formitem_left">
+                      <Input v-model="searchData.prodtype" class="w180" clearable></Input>
+                    </FormItem>
+                    <FormItem label="分类：" class="formitem_left">
+                      <Select v-model="searchData.category" class="w180">
+                        <Option value="">请选择</Option>
+                        <Option :value="item.categoryId" v-for="item in categoryList" :key="item.categoryId">{{item.name}}</Option>
+                      </Select>
+                    </FormItem>
+                    <FormItem label="产品属性：" class="formitem_left">
+                      <Select v-model="searchData.productType" class="w180" placeholder="请选择">
+                        <Option value="">请选择</Option>
+                        <Option value="NW">新品</Option>
+                        <Option value="CP">精品</Option>
+                      </Select>
+                    </FormItem>
+                    <FormItem label="是否登录可见：" class="formitem_left">
+                      <Select v-model="searchData.loginView" class="w180" placeholder="访问者可见">
+                        <Option value="0">访问者可见</Option>
+                        <Option value="1">登录后可见</Option>
+                      </Select>
+                    </FormItem>
+                    <FormItem label="是否广告产品：" class="formitem_left">
+                      <Select v-model="searchData.ads" class="w180" placeholder="是否广告产品">
+                        <Option value="">是否广告产品?</Option>
+                        <Option value="1">是</Option>
+                        <Option value="0">否</Option>
+                      </Select>
+                    </FormItem>
+                  </Form>
+                </div>
+              </Poptip>
             </Col>
           </Row>
         </div>
@@ -58,6 +99,61 @@ import DragableTable from '@/components/group/j-dragable-table'
 import SeoDetail from '@/pages/static/SeoDetail'
 import TransferCategory from '@/components/group/transfer-category'
 import categorySelect from '@/components/group/j-category-select'
+const cellInput = (vm, h, params) => {
+  return h('Input', {
+    props: {
+      type: 'text',
+      value: params.row[params.column.key]
+    },
+    on: {
+      input: (val) => {
+        params.row[params.column.key] = val
+      }
+    }
+  })
+}
+const incellEditBtn = (vm, h, params) => {
+  return h('i', {
+    class: {
+      'none': true,
+      'iconfont': true,
+      'icon-bianji2': true
+    },
+    on: {
+      click: (event) => {
+        params.row.edittingCell[params.column.key] = true
+      }
+    }
+  })
+}
+const saveIncellEditBtn = (vm, h, params) => {
+  return h('Button', {
+    props: {
+      type: 'text',
+      icon: 'checkmark'
+    },
+    on: {
+      click: (event) => {
+        params.row.edittingCell[params.column.key] = false
+        let model = {
+          id: params.row.productId
+        }
+        model[params.column.key] = params.row[params.column.key]
+        let data = {
+          model: JSON.stringify(model),
+          _method: 'put'
+        }
+        vm.$http.post('/rest/api/product/detail/' + params.row.productId, qs.stringify(data)).then((res) => {
+          if (res.success) {
+            vm.$Message.success('修改成功')
+          } else {
+            vm.$Message.error(res.msg)
+          }
+        })
+      }
+    }
+  })
+}
 export default {
   components: {
     MenuBar,
@@ -77,16 +173,22 @@ export default {
       columns2: [
         { type: 'index2', className: 'j_table_index', title: '序号', align: 'center', width: 60, render: this.indexFilter },
         { title: '产品图片', className: 'j_table_img', key: 'pic', width: 105, render: this.imgFilter },
-        { title: '产品名称', className: 'j_table_title', sortable: true, width: 150, render: this.nameFilter },
-        { title: '产品型号', className: 'j_table_title', sortable: true, width: 120, render: this.prodtypeFilter },
+        { title: '产品名称', className: 'j_table_title', sortable: true, key: 'name', width: 150, render: this.nameFilter },
+        { title: '产品型号', className: 'j_table_title', sortable: true, key: 'prodtype', width: 130, render: this.prodtypeFilter },
         { title: '产品价格', render: this.priceFilter },
-        { title: '产品分类', className: 'j_table_category', sortable: true, width: 130, ellipsis: true, render: this.categoryFilter },
-        { title: '添加时间', sortable: true, width: 105, render: this.dataFilter },
-        { title: '是否上架', sortable: true, width: 105, render: this.isdisplayFilter },
-        { title: '排序', className: 'j_table_sort', sortable: true, minWidth: 80, render: this.sortFilter }
+        { title: '产品分类', className: 'j_table_category', sortable: true, key: 'category', width: 130, ellipsis: true, render: this.categoryFilter },
+        { title: '添加时间', sortable: true, key: 'addTime', width: 105, render: this.dataFilter },
+        { title: '是否上架', sortable: true, key: 'isdisplay', width: 105, render: this.isdisplayFilter },
+        { title: '排序', className: 'j_table_sort', sortable: true, key: 'sort', minWidth: 80, render: this.sortFilter }
       ],
       list: [
-        {}
+        {
+          prodtype: '22',
+          edittingCell: {
+            name: false,
+            prodtype: false
+          }
+        }
       ],
       searchData: {
         page: 1,
@@ -118,6 +220,10 @@ export default {
           let data = res.attributes.data
           data.forEach(item => {
             item._checked = false
+            item.edittingCell = {
+              name: false,
+              prodtype: false
+            }
           })
           this.list = data || []
         }
@@ -151,10 +257,15 @@ export default {
       this.$store.dispatch('SAVE_CUSTOM_DATA')
     },
     // 搜索
-    search (e) {
-      if (this.model.title) {
-        this.searchData.model = JSON.stringify(this.model)
+    search () {
+      this.searchData = {
+        page: 1,
+        pageSize: this.searchData.pageSize,
+        name: this.searchData.name
       }
+      this.get()
+    },
+    advancedSearch () {
       this.searchData.page = 1
       this.get()
     },
@@ -448,61 +559,27 @@ export default {
       ])
     },
     prodtypeFilter (h, params) {
-      var ctx = this
-      return h('div', {
-        class: {
-          title: true
+      return h('Row', {
+        props: {
+          type: 'flex',
+          align: 'middle',
+          justify: 'center'
         }
       }, [
-        h('span', {
-          style: {
-            color: '#5b5b5b'
+        h('Col', {
+          props: {
+            span: '22'
           }
-        }, params.row.prodtype),
-        h('i', {
-          class: {
-            'none': true,
-            'iconfont': true,
-            'icon-bianji2': true
-          },
-          on: {
-            click: () => {
-              this.$Modal.confirm({
-                render: (h) => {
-                  return h('Input', {
-                    props: {
-                      value: params.row.prodtype,
-                      autofocus: true,
-                      placeholder: '修改产品型号'
-                    },
-                    on: {
-                      input: (val) => {
-                        params.row.prodtype2 = val
-                      }
-                    }
-                  })
-                },
-                onOk: () => {
-                  let data = {
-                    model: JSON.stringify({
-                      id: params.row.productId,
-                      prodtype: params.row.prodtype2
-                    }),
-                    _method: 'put'
-                  }
-                  ctx.$http.post('/rest/api/product/detail/' + params.row.productId, qs.stringify(data)).then((res) => {
-                    if (res.success) {
-                      ctx.$Message.success('修改成功')
-                      ctx.list[params.index].prodtype = params.row.prodtype2
-                    } else {
-                      ctx.$Message.error(res.msg)
-                    }
-                  })
-                }
-              })
-            }
+        }, [
+          !params.row.edittingCell[params.column.key] ? h('span', params.row[params.column.key]) : cellInput(this, h, params)
+        ]),
+        h('Col', {
+          props: {
+            span: '2'
           }
-        })
+        }, [
+          params.row.edittingCell[params.column.key] ? saveIncellEditBtn(this, h, params) : incellEditBtn(this, h, params)
+        ])
       ])
     },
     priceFilter (h, params) {
@@ -598,47 +675,18 @@ export default {
           },
           on: {
             click: () => {
-              this.$Modal.confirm({
-                render: (h) => {
-                  return h('Select', {
-                    props: {
-                      value: params.row.isdisplay,
-                      placeholder: '是否上架'
-                    },
-                    on: {
-                      'on-change': (val) => {
-                        params.row.isdisplay2 = val
-                      }
-                    }
-                  }, [
-                    h('Option', {
-                      props: {
-                        value: '1'
-                      }
-                    }, '是'),
-                    h('Option', {
-                      props: {
-                        value: '0'
-                      }
-                    }, '否')
-                  ])
-                },
-                onOk: () => {
-                  let data = {
-                    model: JSON.stringify({
-                      id: params.row.productId,
-                      isdisplay: params.row.isdisplay2
-                    }),
-                    _method: 'put'
-                  }
-                  ctx.$http.post('/rest/api/product/detail/' + params.row.productId, qs.stringify(data)).then((res) => {
-                    if (res.success) {
-                      ctx.$Message.success('修改成功')
-                      ctx.list[params.index].isdisplay = params.row.isdisplay2
-                    } else {
-                      ctx.$Message.error(res.msg)
-                    }
-                  })
+              params.row.isdisplay = params.row.isdisplay === '1' ? '0' : '1'
+              let data = {
+                model: JSON.stringify({
+                  id: params.row.productId,
+                  isdisplay: params.row.isdisplay
+                }),
+                _method: 'put'
+              }
+              ctx.$http.post('/rest/api/product/detail/' + params.row.productId, qs.stringify(data)).then((res) => {
+                if (res.success) {
+                } else {
+                  ctx.$Message.error(res.msg)
                 }
               })
             }
@@ -858,6 +906,15 @@ export default {
 </script>
 
 <style lang="less">
+.j_product .ivu-table{
+  .ivu-table-tip,.ivu-table-body {
+    height: calc(100vh - 293px);
+    border-bottom: 1px solid #e9e9e9;
+  }
+  td{
+    height: 98px
+  }
+}
 .j_product {
   .j_poptip_ul .ivu-poptip-popper{
     width: 135px;
@@ -867,9 +924,6 @@ export default {
   }
   .a_underline{
     margin-right: 20px;
-  }
-  .ivu-table td{
-    height: 98px
   }
   .ivu-table-body{
     .j_table_checkbox{

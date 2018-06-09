@@ -9,6 +9,7 @@
     </div>
     <ul ref="menu" class="menu j_panel">
       <li @click="add">新建</li>
+      <li @click="copy">复制</li>
       <li @click="move">移动</li>
       <li @click="edit">重命名</li>
       <li @click="del">删除</li>
@@ -70,6 +71,16 @@ export default {
       var ctx = this
       this.list = this.$store.state.albumCategory
       this.data = [
+        {
+          title: '全部图片',
+          id: 'all',
+          expand: true, // 展开节点
+          selected: false, // 选中节点
+          render: this.iconFilter,
+          children: []
+        }
+      ]
+      ctx.data2 = [
         {
           title: '全部图片',
           id: 'all',
@@ -261,6 +272,9 @@ export default {
     },
     move () {
       this.$refs.TransferAlbum.open()
+    },
+    copy () {
+      this.$refs.TransferAlbum.open('copy', '复制相册')
     },
     edit () {
       var ctx = this

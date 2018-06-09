@@ -3,10 +3,10 @@
     v-model="modal"
     title="回收站"
     @on-cancel="cancel">
-    <div class="admin-upload-list">
-      <div class="admin-upload-item" v-for="item in list" :key="item.url" :class="{active: item._checked}" @click="select(item)">
+    <div class="modal-upload-list">
+      <div class="modal-upload-item" v-for="item in list" :key="item.url" :class="{active: item._checked}" @click="select(item)">
         <img :src="$store.state.status.IMG_HOST+item.serverPath | picUrl(5)">
-        <div class="admin-upload-list-cover">
+        <div class="modal-upload-item-cover">
           {{item.filename}}
         </div>
       </div>
@@ -28,7 +28,9 @@ export default {
   data () {
     return {
       modal: false,
-      list: [],
+      list: [
+        {}
+      ],
       total: 0,
       searchData: {
         page: 1,
@@ -61,5 +63,4 @@ export default {
 </script>
 
 <style lang="less">
-
 </style>

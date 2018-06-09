@@ -65,6 +65,7 @@ export default {
         { title: '操作', className: 'j_table_operate', align: 'left', width: 160, render: this.renderOperate }
       ],
       ids: '',
+      item: {},
       toggle: false
     }
   },
@@ -139,6 +140,27 @@ export default {
       }
       this.$refs.transferCategory.open()
     },
+    handleSuccess (res, file) {
+      var ctx = this
+      let data = {
+        model: JSON.stringify({
+          id: this.item.categoryId,
+          image: file.src,
+          editField: true
+        }),
+        _method: 'put'
+      }
+      this.$http.post('/rest/api/category/detail/' + this.item.categoryId, qs.stringify(data)).then((res) => {
+        if (res.success) {
+          this.$Message.success('修改成功')
+        } else {
+          this.$Message.error(res.msg)
+        }
+      })
+      setTimeout(function () {
+        ctx.$refs.upload.clearFiles()
+      }, 1000)
+    },
     // 过滤
     indexFilter (h, params) {
       let isroot = false
@@ -159,7 +181,7 @@ export default {
           },
           on: {
             click: () => {
-              params.row.expand = !params.row.expand
+              // params.row.expand = !params.row.expand
             }
           }
         })
@@ -241,7 +263,8 @@ export default {
         },
         on: {
           click: () => {
-            this.$Message.info('更新中')
+            this.item = params.row
+            document.getElementById('upload').click()
           }
         }
       }, [
@@ -258,6 +281,7 @@ export default {
       ])
     },
     descFilter (h, params) {
+      var ctx = this
       return h('i', {
         class: {
           'iconfont': true,
@@ -268,7 +292,40 @@ export default {
         },
         on: {
           click: () => {
-            this.$Message.info('更新中')
+            this.$Modal.confirm({
+              render: (h) => {
+                return h('Input', {
+                  props: {
+                    value: params.row.cdesc,
+                    type: 'textarea',
+                    autofocus: true,
+                    placeholder: '描述'
+                  },
+                  on: {
+                    input: (val) => {
+                      params.row.cdesc = val
+                    }
+                  }
+                })
+              },
+              onOk: () => {
+                let data = {
+                  model: JSON.stringify({
+                    id: params.row.categoryId,
+                    cdesc: params.row.cdesc,
+                    editField: true
+                  }),
+                  _method: 'put'
+                }
+                ctx.$http.post('/rest/api/category/detail/' + params.row.categoryId, qs.stringify(data)).then((res) => {
+                  if (res.success) {
+                    ctx.$Message.success('修改成功')
+                  } else {
+                    ctx.$Message.error(res.msg)
+                  }
+                })
+              }
+            })
           }
         }
       })
@@ -285,19 +342,18 @@ export default {
           },
           on: {
             click: () => {
-              let display = params.row.isdisplay === '1' ? '0' : '1'
+              params.row.isdisplay = params.row.isdisplay === '1' ? '0' : '1'
               let data = {
                 model: JSON.stringify({
                   id: params.row.categoryId,
-                  display: display,
+                  isdisplay: params.row.isdisplay,
                   editField: true
                 }),
                 _method: 'put'
               }
               this.$http.post('/rest/api/category/detail/' + params.row.categoryId, qs.stringify(data)).then((res) => {
                 if (res.success) {
-                  ctx.$Message.success('修改成功')
-                  params.row.isdisplay = display
+                  // ctx.$Message.success('修改成功')
                 } else {
                   ctx.$Message.error(res.msg)
                 }

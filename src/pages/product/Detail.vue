@@ -129,20 +129,13 @@
               <Radio label="00">关闭</Radio>
             </RadioGroup>
           </FormItem>
-
+          <AttrPanel :attrtList="attrtList" :data="detail.attrItems" :hidden="detail.attrState !== '01'"/>
           <hr/>
-          <FormItem label="总价格" hidden>
-            <Input v-model="detail.formula" placeholder="（如:长度*宽度*商品价格）"></Input>
+          <FormItem label="总价格：" v-if="detail.customAttrMapStore.length > 0">
+            <Input v-model="detail.formula" placeholder="（如:长度*宽度*商品价格）" style="width:279px;"></Input>
           </FormItem>
-          <AttrCustom :list="detail.customAttrMapStore" hidden/>
           <FormItem label="定制规格：">
-            <Button type="ghost" size="small">添加</Button>
-            <a class="a_underline" href="http://sj.jihui88.com/rest/site/59//formula" target="_blank">查看使用说明</a>
-            <div class="j_tip j_tip_category" style="left: 140px;">
-              总价格 = （如:长度*宽度*商品价格）<br>
-              说明：固定值对买家不可见，只参与表达式的计算。<br>
-              商品价格可移到表达式中，如：总价格 = （长度*宽度*商品价格+开启价格*开启扇数）
-            </div>
+            <AttrCustom ref="attrCustom" :data="detail.customAttrMapStore" @on-change="customAttrChange"/>
           </FormItem>
         </Form>
         <div v-if="active === '6'">
@@ -171,16 +164,14 @@
       <Footer v-if="this.$route.params.id !== 'add'">
         <Button type="primary" size="small" @click="publish">发布</Button>
         <Button type="ghost" size="small" @click="submit">保存草稿</Button>
-
         <Poptip placement="bottom" class="j_poptip_ul">
           <Button type="ghost" size="small">预览</Button>
           <ul slot="content">
             <li v-for="(item, index) in staticList" :key="index">
-              <a :href="'http://pc.jihui88.com/pc/demo.html?layoutId='+item.layoutId" target="_blank">{{item.seoTitle}}</a>
+              <a :href="'http://pc.jihui88.com/rest/site/'+item.layoutId+'/pd?itemId='+$route.params.id" target="_blank">网站编号：{{item.layoutId}}</a>
             </li>
           </ul>
         </Poptip>
-
       </Footer>
       <Footer v-if="this.$route.params.id === 'add'">
         <Button type="primary" size="small" @click="submit">保存</Button>
@@ -196,45 +187,70 @@ import { mapState } from 'vuex'
 import MenuBar from '@/components/common/menu_bar'
 import JHeader from '@/components/group/j-header'
 import UE from '@/components/group/j-editor'
+import CategorySelect from '@/components/group/j-category-select'
 import JPictrue from '@/components/group/j-pictrue'
 import JTag from '@/components/group/j-tag'
 import Attr from '@/components/product/attr'
 import AttrAdd from '@/components/product/attr-add'
 import AttrCustom from '@/components/product/attr-custom'
-import CategorySelect from '@/components/group/j-category-select'
+import AttrPanel from '@/components/product/attr-panel'
 export default {
   components: {
     MenuBar,
     JHeader,
     UE,
+    CategorySelect,
     JPictrue,
     JTag,
     Attr,
     AttrAdd,
     AttrCustom,
-    CategorySelect
+    AttrPanel
   },
   data () {
     return {
-      active: '0',
+      active: '5',
       detail: {
         category: 'Category_00000000000000000275428',
-        customAttrMapStore: [
+        customAttrMapStore: [],
+        productAttributeMapStore: [],
+        attrItemsTest: [
           {
-            madeName: '长度',
-            madeUnit: '米',
-            madeType: '01'
-          },
-          {
-            madeName: '宽度',
-            madeUnit: '米',
-            madeType: '01'
+            addTime: {
+              date: 9,
+              day: 6,
+              hours: 11,
+              minutes: 29,
+              month: 5,
+              nanos: 535000000,
+              seconds: 26,
+              time: 1528514966535,
+              timezoneOffset: -480,
+              year: 118
+            },
+            barCode: '',
+            costPrice: '1.00',
+            groupNum: 0,
+            groupPrice: '',
+            id: '8a9e457e63dec73f0163e29774070072',
+            memberPrice: [ ],
+            memberPriceState: '00',
+            pic: '',
+            productId: 'Product_000000000000000000567121',
+            propertyNames: '颜色:白色',
+            skuCode: '白色',
+            soldNum: 0,
+            status: '01',
+            stockNum: 2
           }
         ]
       },
-      imgList: [],
-      attrtList: [],
-      customAttr: []
+      imgList: [
+        {
+          src: '/upload/g/g2/ggggfj/picture/2018/05/23/b7e30dee-599f-4867-b821-75e6b7b0d755_5.png?v=1527073768068'
+        }
+      ],
+      attrtList: []
     }
   },
   computed: {
@@ -262,9 +278,14 @@ export default {
           this.initAttr()
         }
       })
+      // del
+      this.initAttr()
     },
     categoryChange (e) {
       this.detail.category = e
+    },
+    customAttrChange () {
+      this.detail.customAttrMapStore.push({})
     },
     // 功能
     activeChange (e) {
@@ -306,6 +327,88 @@ export default {
     },
     initAttr () {
       var ctx = this
+      let data = [
+        {
+        name: 'aaaa',
+        state: '01',
+        attributeType: 'checkbox',
+        enterpriseId: 'Enterp_0000000000000000000000039',
+        categoryId: 'Category_00000000000000000087647',
+        attId: '8a9e457e638c1f5801639639c4cd020b',
+        orderList: 21,
+        formula: null,
+        addTime: 1527233758410,
+        updateTime: 1527233758410,
+        isRequired: '00',
+        isEnabled: '01',
+        attributeOptionList: [
+          'bbbb'
+        ],
+        value: ['bbbb']
+        },
+        {
+        name: 'ac',
+        state: '01',
+        attributeType: 'checkbox',
+        enterpriseId: 'Enterp_0000000000000000000000039',
+        categoryId: 'Category_00000000000000000087647',
+        attId: '8a9e457e638c1f580163966e9ef30259',
+        orderList: 22,
+        formula: null,
+        addTime: 1527237222078,
+        updateTime: 1527237222078,
+        isRequired: '00',
+        isEnabled: '01',
+        attributeOptionList: [
+        'ddd',
+        'eee'
+        ]
+        },
+        {
+        name: 'dd',
+        state: '01',
+        attributeType: 'checkbox',
+        enterpriseId: 'Enterp_0000000000000000000000039',
+        categoryId: 'Category_00000000000000000087647',
+        attId: '8a9e457e638c1f580163968d011d0264',
+        orderList: 23,
+        formula: null,
+        addTime: 1527239213316,
+        updateTime: 1527239213316,
+        isRequired: '00',
+        isEnabled: '01',
+        attributeOptionList: [
+        'cc'
+        ]
+        },
+        {
+        name: '属性',
+        state: '01',
+        attributeType: 'checkbox',
+        enterpriseId: 'Enterp_0000000000000000000000039',
+        categoryId: 'Category_00000000000000000087647',
+        attId: '8a9e457e638c1f5801639694e4010268',
+        orderList: 24,
+        formula: null,
+        addTime: 1527239730174,
+        updateTime: 1527239730174,
+        isRequired: '00',
+        isEnabled: '01',
+        attributeOptionList: [
+        'a',
+        'b',
+        'c'
+        ]
+        }
+      ]
+      this.attrtListTest = data
+      this.detail.productAttributeMapStore.forEach(item => {
+        ctx.attrtList.forEach(att => {
+          if (item.productAttribute.attId === att.attId) {
+            att.value = item.attributeOptionList
+          }
+        })
+      })
       this.$http.get('/rest/api/attr/list/' + this.detail.category).then(res => {
         if (res.success) {
           this.attrtList = res.attributes.data
@@ -349,6 +452,18 @@ export default {
           }
         }
       })
+      // 定制规格
+      var customAttrList = []
+      this.$refs.attrCustom.list.forEach(item => {
+        if (item.madeName && item.madeUnit) {
+          customAttrList.push({
+            madeName: item.madeName,
+            madeUnit: item.madeUnit,
+            madeType: item.unitBol ? '00' : '01'
+          })
+        }
+      })
+      this.detaill.customAttr = JSON.stringify(customAttrList)
       let data = {
         model: JSON.stringify(this.detail),
         _method: 'put'
@@ -401,6 +516,14 @@ export default {
     }
     .ivu-input-wrapper{
       width: 155px;
+    }
+  }
+  .j_poptip_ul .ivu-poptip-body li{
+    padding: 0;
+    a{
+      color: #595959;
+      padding: 8px 15px;
+      display: block;
     }
   }
 }
