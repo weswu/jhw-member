@@ -43,7 +43,6 @@ export default {
       },
       handle: '.icon-tuozhuai',
       onEnd (e) {
-        debugger
         let movedRow = vm.list[e.oldIndex]
         vm.list.splice(e.oldIndex, 1)
         vm.list.splice(e.newIndex, 0, movedRow)

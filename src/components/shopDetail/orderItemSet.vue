@@ -5,12 +5,12 @@
 <script>
 export default {
   props: {
+    print: {},
     data: {}
   },
   data () {
     return {
       columns: [
-        { title: '货号', key: 'productSn' },
         {
           title: '产品图片',
           render: (h, params) => {
@@ -40,6 +40,11 @@ export default {
         },
         { title: '购买数量', key: 'productQuantity' }
       ]
+    }
+  },
+  created () {
+    if (!this.print) {
+      this.columns.splice(0, 0, { title: '货号', key: 'productSn' })
     }
   }
 }

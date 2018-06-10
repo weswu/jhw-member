@@ -46,9 +46,7 @@ export default {
         this.init()
       })
     },
-    init () {
-      debugger
-    },
+    init () {},
     cancel () {
       this.modal = false
     },

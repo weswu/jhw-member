@@ -104,7 +104,9 @@ export default {
         { title: '下单时间', key: 'addTime', ellipsis: true, width: 150 },
         { title: '来源（网站编辑）', key: 'layoutId' }
       ],
-      list: [],
+      list: [
+        {}
+      ],
       searchData: {
         page: 1,
         pageSize: 10,
@@ -168,7 +170,7 @@ export default {
           }
         })
       })
-      this.columns.push({ title: '操作', className: 'j_table_operate', width: 120, render: this.renderOperate })
+      this.columns.push({ title: '操作', className: 'j_table_operate', width: 135, render: this.renderOperate })
       this.$store.state.customData.shopShow = this.myShowSelect
       this.$store.dispatch('SAVE_CUSTOM_DATA')
     },
@@ -263,36 +265,31 @@ export default {
     },
     renderOperate (h, params) {
       var ctx = this
-      let del = params.row.orderStatus === 'invalid' || params.row.orderStatus === 'cancel' ? 'inline-block' : 'none'
-      return h('div', [
+      let data = [
         h('a', {
           on: {
             click: () => {
               this.$router.push({path: '/shop/' + params.row.orderId})
             }
           }
-        }, '修改'),
-        h('span', {
-          class: { delimiter: true },
-          style: {
-            display: del
-          }
-        }, '|'),
-        h('a', {
-          style: {
-            display: del
-          }
-        }, [
+        }, params.row.orderStatus !== 'completed' && params.row.orderStatus !== 'invalid' && params.row.paymentStatus === 'unpaid' && params.row.shippingStatus === 'unshipped' ? '修改' : '查看')
+      ]
+      // 删除
+      if (params.row.orderStatus === 'invalid' || params.row.orderStatus === 'cancel') {
+        data.push(h('span', {
+          class: { delimiter: true }
+        }, '|'))
+        data.push(h('a', [
           h('Poptip', {
             props: {
               confirm: true,
-              title: '确定要删除吗！',
+              title: '删除后不能恢复，是否删除？',
               width: '170',
               placement: 'top-end'
             },
             on: {
               'on-ok': () => {
-                this.$http.delete('/rest/api/order/detail/' + params.row.orderId).then((res) => {
+                this.$http.post('/rest/api/order/batch/del', qs.stringify({ids: params.row.orderId})).then((res) => {
                   if (res.success) {
                     ctx.$Message.success('删除成功')
                     for (let i = 0; i < ctx.list.length; i++) {
@@ -311,8 +308,28 @@ export default {
               }
             }
           }, '删除')
-        ])
-      ])
+        ]))
+      }
+      // 取消订单
+      if (params.row.orderStatus !== 'cancel' && params.row.orderStatus !== 'invalid' && params.row.orderStatus !== 'completed') {
+        data.push(h('span', {
+          class: { delimiter: true }
+        }, '|'))
+        data.push(h('a', {
+          on: {
+            click: () => {
+              this.$http.post('/rest/api/order/cancel/' + params.row.orderId).then((res) => {
+                if (res.success) {
+                  params.row.orderStatus = 'cancel'
+                } else {
+                  ctx.$Message.success(res.msg)
+                }
+              })
+            }
+          }
+        }, '取消订单'))
+      }
+      return h('div', data)
     }
   }
 }
