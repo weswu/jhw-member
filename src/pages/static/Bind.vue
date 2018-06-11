@@ -120,14 +120,22 @@ export default {
   },
   methods: {
     get () {
-      this.$http.get('/rest/pc/api/bind/detail/' + this.$store.state.layoutId).then((res) => {
+      this.$http.get('/rest/pc/api/bind/detail/' + this.$store.state.layoutId, {
+        headers: {
+          'X-CSRF-Token': this.$store.state.user.token
+        }
+      }).then((res) => {
         if (res.success) {
           this.detail = res.attributes.data
         }
       })
     },
     saveIcp () {
-      this.$http.post('/rest/pc/api/bind/saveIcp', qs.stringify({icp: this.detail.icp})).then((res) => {
+      this.$http.post('/rest/pc/api/bind/saveIcp', qs.stringify({icp: this.detail.icp}), {
+        headers: {
+          'X-CSRF-Token': this.$store.state.user.token
+        }
+      }).then((res) => {
         if (res.success) {
           this.$Message.success('保存成功')
         } else {
@@ -136,7 +144,11 @@ export default {
       })
     },
     savePsr () {
-      this.$http.post('/rest/pc/api/bind/savePsr', qs.stringify({psr: this.detail.psr})).then((res) => {
+      this.$http.post('/rest/pc/api/bind/savePsr', qs.stringify({psr: this.detail.psr}), {
+        headers: {
+          'X-CSRF-Token': this.$store.state.user.token
+        }
+      }).then((res) => {
         if (res.success) {
           this.$Message.success('保存成功')
         } else {
@@ -145,7 +157,11 @@ export default {
       })
     },
     saveSeccurityLink () {
-      this.$http.post('/rest/pc/api/bind/saveSeccurityLink', qs.stringify({seccurityLink: this.detail.seccurityLink})).then((res) => {
+      this.$http.post('/rest/pc/api/bind/saveSeccurityLink', qs.stringify({seccurityLink: this.detail.seccurityLink}), {
+        headers: {
+          'X-CSRF-Token': this.$store.state.user.token
+        }
+      }).then((res) => {
         if (res.success) {
           this.$Message.success('保存成功')
         } else {
@@ -165,7 +181,11 @@ export default {
         }),
         _method: 'put'
       }
-      this.$http.post('/rest/pc/api/bind/detail/' + this.$store.state.layoutId, qs.stringify(data)).then((res) => {
+      this.$http.post('/rest/pc/api/bind/detail/' + this.$store.state.layoutId, qs.stringify(data), {
+        headers: {
+          'X-CSRF-Token': this.$store.state.user.token
+        }
+      }).then((res) => {
         if (res.success) {
           this.$Message.success('保存成功')
         } else {

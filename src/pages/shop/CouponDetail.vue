@@ -192,7 +192,7 @@ export default {
             data.endTime = new Date(data.endTime)
             this.detail = data
             if (data.scopeType === '03' || this.categoryList.length === 0) {
-              this.$store.dispatch('getProductCategory')
+              this.$store.dispatch('getCategory', 'product')
             }
           }
         })
@@ -231,7 +231,7 @@ export default {
     typeChange (e) {
       if (e === '03') {
         if (this.categoryList.length === 0) {
-          this.$store.dispatch('getProductCategory')
+          this.$store.dispatch('getCategory', 'product')
         }
       }
     },

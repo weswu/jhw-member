@@ -7,7 +7,6 @@
             <router-view/>
         </Layout>
     </Layout>
-    <iframe src="http://pc.jihui88.com/pc/index.html" style="width:0;height:0;display: none;"></iframe>
   </div>
 </template>
 

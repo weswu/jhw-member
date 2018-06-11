@@ -6,6 +6,12 @@
         <JHeader :title="'分类管理'" :lan="true" @on-change="get"/>
         <div class="j_search">
           <Button type="info" icon="plus" class="w130" @click="add">添加{{$route.params.id === 'product' ?'产品':'新闻'}}分类</Button>
+          <Upload ref="upload" :action="'/commonutil/uploadUtil2?username=' + $store.state.user.username + '&replace=00&attId=&id=all'" style="display:none"
+            name="Filedata"
+            :max-size="2048"
+            :on-success="handleSuccess">
+            <div id="upload">上传</div>
+          </Upload>
         </div>
         <DragableTable
           ref="selection"
@@ -21,8 +27,8 @@
           <Button type="ghost" size="small" @click="displayAll('1')">显示</Button>
           <Button type="ghost" size="small" @click="displayAll('0')">隐藏</Button>
           <Button type="ghost" size="small" @click="categoryAll">转换分类</Button>
-          <Button type="ghost" size="small">展开</Button>
-          <Button type="ghost" size="small">折叠</Button>
+          <Button type="ghost" size="small" @click="hiddenAll(false)">展开</Button>
+          <Button type="ghost" size="small" @click="hiddenAll(true)">折叠</Button>
         </div>
       </div>
     </Layout>
@@ -30,7 +36,7 @@
     <Detail ref="detail"/>
     <TransferCategory
       ref="transferCategory"
-      :data="$route.params.id === 'product' ? $store.state.productCategory : $store.state.newsCategory"
+      :data="$store.state[$route.params.id+'Category']"
       :ids="ids"
       :type="'category/'+$route.params.id"
       @on-change="get"/>
@@ -39,6 +45,7 @@
 
 <script>
 import qs from 'qs'
+import { mapState } from 'vuex'
 import MenuBar from '@/components/common/menu_bar'
 import JHeader from '@/components/group/j-header'
 import DragableTable from '@/components/group/j-dragable-table'
@@ -65,9 +72,16 @@ export default {
         { title: '操作', className: 'j_table_operate', align: 'left', width: 160, render: this.renderOperate }
       ],
       ids: '',
+      type: 'product',
+      list: this.$route.params.id === 'product' ? this.$store.state.productCategory : this.$store.state.newsCategory,
       item: {},
       toggle: false
     }
+  },
+  computed: {
+    ...mapState({
+      categoryList: state => state.newsCategory
+    })
   },
   created () {
     this.get()
@@ -80,11 +94,7 @@ export default {
   },
   methods: {
     get () {
-      if (this.$route.params.id === 'product') {
-        this.$store.dispatch('getProductCategory')
-      } else if (this.$route.params.id === 'news') {
-        this.$store.dispatch('getNewsCategory')
-      }
+      this.$store.dispatch('getCategory', this.$route.params.id)
     },
     // 功能
     add () {
@@ -140,6 +150,18 @@ export default {
       }
       this.$refs.transferCategory.open()
     },
+    hiddenAll (bool) {
+      this.list.forEach(item => {
+        item.children.forEach(item1 => {
+          item1.hidden = bool
+          item1.children.forEach(item2 => {
+            item2.hidden = bool
+          })
+        })
+      })
+      if (this.$route.params.id === 'product') this.$store.commit('setProductCategory', this.list)
+      if (this.$route.params.id === 'news') this.$store.commit('setNewsCategory', this.list)
+    },
     handleSuccess (res, file) {
       var ctx = this
       let data = {
@@ -164,9 +186,8 @@ export default {
     // 过滤
     indexFilter (h, params) {
       let isroot = false
-      let list = this.$route.params.id === 'product' ? this.$store.state.productCategory : this.$store.state.newsCategory
-      if (list.length > (params.index + 1)) {
-        isroot = params.row.grade === '1' && list[params.index + 1].grade !== '1'
+      if (this.list.length > (params.index + 1)) {
+        isroot = params.row.grade === '1' && this.list[params.index + 1].grade !== '1'
       }
       return h('div', [
         h('i', {
@@ -190,9 +211,8 @@ export default {
     nameFilter (h, params) {
       var ctx = this
       let isroot = false
-      let list = this.$route.params.id === 'product' ? this.$store.state.productCategory : this.$store.state.newsCategory
-      if (list.length > (params.index + 1)) {
-        isroot = params.row.grade === '2' && list[params.index + 1].grade === '3'
+      if (this.list.length > (params.index + 1)) {
+        isroot = params.row.grade === '2' && this.list[params.index + 1].grade === '3'
       }
       return h('div', {
         class: {
@@ -536,6 +556,9 @@ export default {
     i{
       line-height: 32px;
     }
+  }
+  .j-table-row-hidden{
+    display: none;
   }
 }
 </style>

@@ -209,7 +209,11 @@ export default {
           this.$Message.error(res.msg)
         }
       })
-      this.$http.get('/rest/pc/api/bind/detail/' + this.$store.state.layoutId).then((res) => {
+      this.$http.get('/rest/pc/api/bind/detail/' + this.$store.state.layoutId, {
+        headers: {
+          'X-CSRF-Token': this.$store.state.user.token
+        }
+      }).then((res) => {
         if (res.success) {
           this.bindDetail = res.attributes.data
         }

@@ -5,7 +5,7 @@
       <li
         v-for="item in data"
         :key="item.categoryId"
-        v-if="item._checked"
+        v-if="item.isdisplay === '1' && !item.hidden"
         :class="{'ivu-select-item-selected': item.categoryId === categoryId, 'ivu-select-item': true, 'item1': item.grade == '1', 'item2': item.grade == '2', 'item3': item.grade == '3'}"
         @click="select(item)">
         <span>{{item.name}}</span>
@@ -21,8 +21,7 @@ export default {
   name: 'categorySelect',
   props: {
     list: Array,
-    categoryId: {},
-    type: {}
+    categoryId: {}
   },
   data () {
     return {
@@ -32,21 +31,20 @@ export default {
     }
   },
   created () {
-    var ctx = this
-    if (this.list && this.list.length > 0) {
-      this.data = this.list
-    } else {
-      this.data = this.$store.state[this.type]
-    }
-    setTimeout(function () {
-      ctx.data.forEach(item => {
-        if (item.categoryId === ctx.categoryId) {
-          ctx.name = item.name
-        }
-      })
-    }, 200)
+    this.init()
   },
   methods: {
+    init () {
+      var ctx = this
+      setTimeout(function () {
+        ctx.list.forEach(item => {
+          if (item.categoryId === ctx.categoryId) {
+            ctx.name = item.name
+          }
+        })
+        ctx.data = ctx.list
+      }, 200)
+    },
     select (item) {
       this.name = item.name
       this.visible = false
@@ -57,10 +55,10 @@ export default {
       data.expand = !data.expand
       this.data.forEach(item => {
         if (item.belongId === data.categoryId) {
-          item._checked = !item._checked
+          item.hidden = !item.hidden
           ctx.data.forEach(row => {
             if (row.belongId === item.categoryId) {
-              row._checked = !row._checked
+              row.hidden = !row.hidden
             }
           })
         }
@@ -72,6 +70,7 @@ export default {
 
 <style lang="less">
 .j_category_select{
+  position: relative;
   width: 100%;
   max-width: 450px;
   .ivu-select-dropdown{

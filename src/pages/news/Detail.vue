@@ -8,10 +8,7 @@
           <FormItem label="新闻标题：" prop="title">
             <Input v-model="detail.title" placeholder="请输入新闻标题"></Input>
           </FormItem>
-          <FormItem label="新闻分类：" prop="category">
-            <CategorySelect :categoryId="detail.category" :type="'news'" @on-change="categoryChange"/>
-            <span class="a_normal" style="padding-left:10px;">新增分类</span>
-          </FormItem>
+          <CategoryList ref="category" :categorySelect="newsCategory" :category="detail.category" :type="'news'"/>
           <FormItem label="延时发布：">
             <Select v-model="dateselect" class="border" style="width: 100px;" @on-change="dataChange">
               <Option :value="i" v-for="i in 11" :key="i">{{i-1}}</Option>
@@ -69,7 +66,7 @@ import { mapState } from 'vuex'
 import MenuBar from '@/components/common/menu_bar'
 import JHeader from '@/components/group/j-header'
 import UE from '@/components/group/j-editor'
-import CategorySelect from '@/components/group/j-category-select'
+import CategoryList from '@/components/product/category-list'
 import JPictrue from '@/components/group/j-pictrue'
 import JTag from '@/components/group/j-tag'
 export default {
@@ -77,7 +74,7 @@ export default {
     MenuBar,
     JHeader,
     UE,
-    CategorySelect,
+    CategoryList,
     JPictrue,
     JTag
   },
@@ -103,12 +100,13 @@ export default {
   },
   computed: {
     ...mapState({
-      menuBarList: state => state.status.menu_news_detail
+      menuBarList: state => state.status.menu_news_detail,
+      newsCategory: state => state.newsCategory
     })
   },
   created () {
     this.get()
-    this.$store.dispatch('getNewsCategory')
+    if (this.newsCategory.length === 0) this.$store.dispatch('getCategory', 'news')
   },
   methods: {
     get () {
@@ -153,6 +151,8 @@ export default {
       this.$refs[name].validate((valid) => {
         if (valid) {
           this.detail.content = this.$refs.ue.getUEContent()
+          // 多分类
+          this.detail.category = this.$refs.category.list.join()
           let data = {
             model: JSON.stringify(this.detail)
           }

@@ -8,14 +8,7 @@
           <FormItem label="产品名称：">
             <Input v-model="detail.name" placeholder="请输入产品名称"></Input>
           </FormItem>
-          <FormItem label="产品分类：">
-            <CategorySelect :categoryId="detail.category" :type="'productCategory'" @on-change="categoryChange"/>
-            <span class="a_normal" style="padding-left:10px;">新增分类</span>
-            <div class="j_tip j_tip_category">
-              <div style="position: absolute;">注意: </div>
-              <div style="padding-left: 35px;">产品分类修改后商城属性规格将会相应改变，建议先选择好分类后再设置商城属性规格。</div>
-            </div>
-          </FormItem>
+          <CategoryList ref="category" :categorySelect="productCategory" :category="detail.category"/>
           <FormItem label="产品型号：">
             <Input v-model="detail.legalPre" placeholder="请输入产品型号"></Input>
           </FormItem>
@@ -58,7 +51,7 @@
         <UE :content='detail.detail1' ref='ue3' :hidden="active !== '3'"></UE>
         <UE :content='detail.detail2' ref='ue4' :hidden="active !== '4'"></UE>
         <!-- 商城 -->
-        <Form :model="detail" :label-width="130" ref="model2" class="shop" v-if="active === '5'">
+        <Form :model="detail" :label-width="130" ref="model2" class="shop" :hidden="active !== '5'">
           <FormItem label="商品价格：" class="formitem_left">
             <Input v-model="detail.price" placeholder="请输入商品价格"></Input><span class="unit">元</span>
           </FormItem>
@@ -129,7 +122,7 @@
               <Radio label="00">关闭</Radio>
             </RadioGroup>
           </FormItem>
-          <AttrPanel :attrtList="attrtList" :data="detail.attrItems" :hidden="detail.attrState !== '01'"/>
+          <AttrPanel ref="attr" :attrtList="attrtList" :data="detail.attrItems" :hidden="detail.attrState !== '01'"/>
           <hr/>
           <FormItem label="总价格：" v-if="detail.customAttrMapStore.length > 0">
             <Input v-model="detail.formula" placeholder="（如:长度*宽度*商品价格）" style="width:279px;"></Input>
@@ -177,7 +170,7 @@
         <Button type="primary" size="small" @click="submit">保存</Button>
       </Footer>
     </Layout>
-    <AttrAdd ref="attr" :categoryId="detail.category" @on-change="attrChange"/>
+    <AttrAdd ref="attrAdd" :categoryId="detail.category" @on-change="attrChange"/>
   </Layout>
 </template>
 
@@ -187,9 +180,9 @@ import { mapState } from 'vuex'
 import MenuBar from '@/components/common/menu_bar'
 import JHeader from '@/components/group/j-header'
 import UE from '@/components/group/j-editor'
-import CategorySelect from '@/components/group/j-category-select'
 import JPictrue from '@/components/group/j-pictrue'
 import JTag from '@/components/group/j-tag'
+import CategoryList from '@/components/product/category-list'
 import Attr from '@/components/product/attr'
 import AttrAdd from '@/components/product/attr-add'
 import AttrCustom from '@/components/product/attr-custom'
@@ -199,7 +192,7 @@ export default {
     MenuBar,
     JHeader,
     UE,
-    CategorySelect,
+    CategoryList,
     JPictrue,
     JTag,
     Attr,
@@ -211,10 +204,10 @@ export default {
     return {
       active: '5',
       detail: {
-        category: 'Category_00000000000000000275428',
+        attrState: '01',
         customAttrMapStore: [],
         productAttributeMapStore: [],
-        attrItemsTest: [
+        attrItems: [
           {
             addTime: {
               date: 9,
@@ -245,23 +238,26 @@ export default {
           }
         ]
       },
+      // 多图
       imgList: [
         {
           src: '/upload/g/g2/ggggfj/picture/2018/05/23/b7e30dee-599f-4867-b821-75e6b7b0d755_5.png?v=1527073768068'
         }
       ],
-      attrtList: []
+      attrtList: [],
+      attrtListText: []
     }
   },
   computed: {
     ...mapState({
       menuBarList: state => state.status.menu_product_detail,
-      staticList: state => state.staticList
+      staticList: state => state.staticList,
+      productCategory: state => state.productCategory
     })
   },
   created () {
     this.get()
-    if (this.$store.state.productCategory.length === 0) this.$store.dispatch('getProductCategory')
+    if (this.productCategory.length === 0) this.$store.dispatch('getCategory', 'product')
   },
   methods: {
     get () {
@@ -271,6 +267,7 @@ export default {
         if (res.success) {
           let data = res.attributes.data
           let imglist = JSON.parse(data.productImageListStore)
+          ctx.imgList = []
           imglist && imglist.forEach(item => {
             ctx.imgList.push({id: item.id, src: item.sourceProductImagePath})
           })
@@ -278,11 +275,6 @@ export default {
           this.initAttr()
         }
       })
-      // del
-      this.initAttr()
-    },
-    categoryChange (e) {
-      this.detail.category = e
     },
     customAttrChange () {
       this.detail.customAttrMapStore.push({})
@@ -320,7 +312,7 @@ export default {
     },
     // 产品属性
     attrAdd () {
-      this.$refs.attr.open()
+      this.$refs.attrAdd.open()
     },
     attrChange (item) {
       this.attrtList.push(item)
@@ -329,79 +321,79 @@ export default {
       var ctx = this
       let data = [
         {
-        name: 'aaaa',
-        state: '01',
-        attributeType: 'checkbox',
-        enterpriseId: 'Enterp_0000000000000000000000039',
-        categoryId: 'Category_00000000000000000087647',
-        attId: '8a9e457e638c1f5801639639c4cd020b',
-        orderList: 21,
-        formula: null,
-        addTime: 1527233758410,
-        updateTime: 1527233758410,
-        isRequired: '00',
-        isEnabled: '01',
-        attributeOptionList: [
-          'bbbb'
-        ],
-        value: ['bbbb']
+          name: 'aaaa',
+          state: '01',
+          attributeType: 'checkbox',
+          enterpriseId: 'Enterp_0000000000000000000000039',
+          categoryId: 'Category_00000000000000000087647',
+          attId: '8a9e457e638c1f5801639639c4cd020b',
+          orderList: 21,
+          formula: null,
+          addTime: 1527233758410,
+          updateTime: 1527233758410,
+          isRequired: '00',
+          isEnabled: '01',
+          attributeOptionList: [
+            'bbbb'
+          ],
+          value: ['bbbb']
         },
         {
-        name: 'ac',
-        state: '01',
-        attributeType: 'checkbox',
-        enterpriseId: 'Enterp_0000000000000000000000039',
-        categoryId: 'Category_00000000000000000087647',
-        attId: '8a9e457e638c1f580163966e9ef30259',
-        orderList: 22,
-        formula: null,
-        addTime: 1527237222078,
-        updateTime: 1527237222078,
-        isRequired: '00',
-        isEnabled: '01',
-        attributeOptionList: [
-        'ddd',
-        'eee'
-        ]
+          name: 'ac',
+          state: '01',
+          attributeType: 'checkbox',
+          enterpriseId: 'Enterp_0000000000000000000000039',
+          categoryId: 'Category_00000000000000000087647',
+          attId: '8a9e457e638c1f580163966e9ef30259',
+          orderList: 22,
+          formula: null,
+          addTime: 1527237222078,
+          updateTime: 1527237222078,
+          isRequired: '00',
+          isEnabled: '01',
+          attributeOptionList: [
+            'ddd',
+            'eee'
+          ]
         },
         {
-        name: 'dd',
-        state: '01',
-        attributeType: 'checkbox',
-        enterpriseId: 'Enterp_0000000000000000000000039',
-        categoryId: 'Category_00000000000000000087647',
-        attId: '8a9e457e638c1f580163968d011d0264',
-        orderList: 23,
-        formula: null,
-        addTime: 1527239213316,
-        updateTime: 1527239213316,
-        isRequired: '00',
-        isEnabled: '01',
-        attributeOptionList: [
-        'cc'
-        ]
+          name: 'dd',
+          state: '01',
+          attributeType: 'checkbox',
+          enterpriseId: 'Enterp_0000000000000000000000039',
+          categoryId: 'Category_00000000000000000087647',
+          attId: '8a9e457e638c1f580163968d011d0264',
+          orderList: 23,
+          formula: null,
+          addTime: 1527239213316,
+          updateTime: 1527239213316,
+          isRequired: '00',
+          isEnabled: '01',
+          attributeOptionList: [
+            'cc'
+          ]
         },
         {
-        name: '属性',
-        state: '01',
-        attributeType: 'checkbox',
-        enterpriseId: 'Enterp_0000000000000000000000039',
-        categoryId: 'Category_00000000000000000087647',
-        attId: '8a9e457e638c1f5801639694e4010268',
-        orderList: 24,
-        formula: null,
-        addTime: 1527239730174,
-        updateTime: 1527239730174,
-        isRequired: '00',
-        isEnabled: '01',
-        attributeOptionList: [
-        'a',
-        'b',
-        'c'
-        ]
+          name: '属性',
+          state: '01',
+          attributeType: 'checkbox',
+          enterpriseId: 'Enterp_0000000000000000000000039',
+          categoryId: 'Category_00000000000000000087647',
+          attId: '8a9e457e638c1f5801639694e4010268',
+          orderList: 24,
+          formula: null,
+          addTime: 1527239730174,
+          updateTime: 1527239730174,
+          isRequired: '00',
+          isEnabled: '01',
+          attributeOptionList: [
+            'a',
+            'b',
+            'c'
+          ]
         }
       ]
-      this.attrtListTest = data
+      this.attrtListText = data
       this.detail.productAttributeMapStore.forEach(item => {
         ctx.attrtList.forEach(att => {
           if (item.productAttribute.attId === att.attId) {
@@ -426,11 +418,8 @@ export default {
     submit () {
       var ctx = this
       this.detail.purchaseNum = this.detail.purchaseNum + ''
-      // 编辑器
-      this.detail.proddesc = this.$refs.ue1.getUEContent()
-      this.detail.mobiledesc = this.$refs.ue2.getUEContent()
-      this.detail.detail1 = this.$refs.ue3.getUEContent()
-      this.detail.detail2 = this.$refs.ue4.getUEContent()
+      // 多分类
+      this.detail.category = this.$refs.category.list.join()
       // 图片
       if (this.imgList.length === 0) return this.$Message.info('请上传图片')
       this.detail.picPath = this.imgList[0].src
@@ -443,6 +432,11 @@ export default {
         })
       })
       this.detail.productImageListStore = JSON.stringify(imageListStore)
+      // 编辑器
+      if (this.$refs.ue1.getUEContent()) this.detail.proddesc = this.$refs.ue1.getUEContent()
+      if (this.$refs.ue2.getUEContent()) this.detail.mobiledesc = this.$refs.ue2.getUEContent()
+      if (this.$refs.ue3.getUEContent()) this.detail.detail1 = this.$refs.ue3.getUEContent()
+      if (this.$refs.ue4.getUEContent()) this.detail.detail2 = this.$refs.ue4.getUEContent()
       // 属性
       this.attrtList.forEach(item => {
         if (item.isEnabled === '01') {
@@ -452,6 +446,11 @@ export default {
           }
         }
       })
+      // 属性价格
+      if (this.detail.attrState && this.detail.attrState === '01' && this.$refs.attr.skus.length === 0) {
+        return this.$Message.info('请设置产品规格或者关闭属性固定价格')
+      }
+      this.detail.attrItems = this.$refs.attr.skus
       // 定制规格
       var customAttrList = []
       this.$refs.attrCustom.list.forEach(item => {
@@ -463,7 +462,7 @@ export default {
           })
         }
       })
-      this.detaill.customAttr = JSON.stringify(customAttrList)
+      this.detail.customAttr = JSON.stringify(customAttrList)
       let data = {
         model: JSON.stringify(this.detail),
         _method: 'put'
@@ -477,6 +476,7 @@ export default {
       })
     },
     publish () {
+      this.submit()
       this.publish2('page&thisPage=')
       this.publish2('category&thisPage=product')
       this.publish2('detail&thisPage=product&productId=' + this.detail.productId, true)

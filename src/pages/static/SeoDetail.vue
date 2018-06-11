@@ -60,13 +60,30 @@ export default {
     open (id, type) {
       this.modal = true
       this.type = type
-      this.$http.get('/rest/api/seo/detail/' + id).then((res) => {
-        if (res.success) {
-          this.model = res.attributes.data
-        } else {
-          this.$Message.error(res.msg)
-        }
-      })
+      if (type === 'page') {
+        this.$http.get('/rest/pc/api/navigator/detail/' + id, {
+          headers: {
+            'X-CSRF-Token': this.$store.state.user.token
+          }
+        }).then((res) => {
+          if (res.success) {
+            this.model = res.attributes.data
+            this.model.title = this.model.seoTitle
+            this.model.keywords = this.model.seoKeywords
+            this.model.description = this.model.seoDescription
+          } else {
+            this.$Message.error(res.msg)
+          }
+        })
+      } else {
+        this.$http.get('/rest/api/seo/detail/' + id).then((res) => {
+          if (res.success) {
+            this.model = res.attributes.data
+          } else {
+            this.$Message.error(res.msg)
+          }
+        })
+      }
     },
     cancel () {
       this.modal = false
@@ -96,11 +113,31 @@ export default {
       })
     },
     submit (name) {
+      if (this.type === 'page') {
+        return this.navHttp()
+      }
       let data = {
         model: JSON.stringify(this.model),
         _method: 'put'
       }
       this.$http.post('/rest/api/seo/detail/' + this.model.seoId, qs.stringify(data)).then((res) => {
+        if (res.success) {
+          this.$Message.success('保存成功')
+          this.modal = false
+        } else {
+          this.$Message.error(res.msg)
+        }
+      })
+    },
+    navHttp () {
+      this.model.seoTitle = this.model.title
+      this.model.seoKeywords = this.model.keywords
+      this.model.seoDescription = this.model.description
+      let data = {
+        model: JSON.stringify(this.model),
+        _method: 'put'
+      }
+      this.$http.post('/rest/api/navigator/detail/10262' + this.model.id, qs.stringify(data)).then((res) => {
         if (res.success) {
           this.$Message.success('保存成功')
           this.modal = false

@@ -125,11 +125,18 @@ export default {
     })
   },
   created () {
-    this.get()
+    var ctx = this
+    setTimeout(function () {
+      ctx.get()
+    }, 500)
   },
   methods: {
     get () {
-      this.$http.get('/rest/pc/api/baseLayout/list?' + qs.stringify(this.searchData)).then((res) => {
+      this.$http.get('/rest/pc/api/baseLayout/list?' + qs.stringify(this.searchData), {
+        headers: {
+          'X-CSRF-Token': this.$store.state.user.token
+        }
+      }).then((res) => {
         if (res.success) {
           res.attributes.data.forEach(item => {
             if (item.bind.address) {
@@ -147,9 +154,10 @@ export default {
           this.total = res.attributes.count
           this.onlineCount = res.attributes.onlineCount
         } else {
-          this.$Message.error(res.msg)
           if (res.msg === '未登录') {
             this.get()
+          } else {
+            this.$Message.error(res.msg)
           }
         }
       })
@@ -189,7 +197,11 @@ export default {
         }),
         methods: 'put'
       }
-      this.$http.post('/rest/pc/api/baseLayout/detail/' + item.id, qs.stringify(data)).then((res) => {
+      this.$http.post('/rest/pc/api/baseLayout/detail/' + item.id, qs.stringify(data), {
+        headers: {
+          'X-CSRF-Token': this.$store.state.user.token
+        }
+      }).then((res) => {
         if (res.success) {
           this.$Message.success('修改成功')
           item.seoTitle = item.seoTitle2
@@ -213,7 +225,11 @@ export default {
           copyId: item.id
         })
       }
-      this.$http.post('/rest/pc/api/baseLayout/detail', qs.stringify(data)).then((res) => {
+      this.$http.post('/rest/pc/api/baseLayout/detail', qs.stringify(data), {
+        headers: {
+          'X-CSRF-Token': this.$store.state.user.token
+        }
+      }).then((res) => {
         if (res.success) {
           this.$Message.success('复制成功')
           this.list.splice(0, 0, res.attributes.data)
@@ -223,7 +239,11 @@ export default {
       })
     },
     del (id) {
-      this.$http.delete('/rest/pc/api/baseLayout/detail/' + id).then((res) => {
+      this.$http.delete('/rest/pc/api/baseLayout/detail/' + id, {
+        headers: {
+          'X-CSRF-Token': this.$store.state.user.token
+        }
+      }).then((res) => {
         if (res.success) {
           this.$Message.success('删除成功')
           for (let i = 0; i < this.list.length; i++) {
@@ -251,7 +271,11 @@ export default {
         }),
         methods: 'put'
       }
-      this.$http.post('/rest/pc/api/baseLayout/languageLayout/' + this.id, qs.stringify(data)).then((res) => {
+      this.$http.post('/rest/pc/api/baseLayout/languageLayout/' + this.id, qs.stringify(data), {
+        headers: {
+          'X-CSRF-Token': this.$store.state.user.token
+        }
+      }).then((res) => {
         if (res.success) {
           this.$Message.success('修改成功')
           this.list.forEach(item => {

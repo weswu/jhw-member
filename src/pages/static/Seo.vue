@@ -2,14 +2,14 @@
   <Layout class="j_layout ivu-layout-has-sider j_seo">
     <MenuBar :data="'menuStatic'" :active="'seo'"/>
     <Layout class="j_layout_content">
-      <JHeader :title="'SEO管理'" :website="active === '0' || active === '4'" @on-layout="staticChange" :lan="active === '1'" @on-change="get"></JHeader>
+      <JHeader :title="'SEO管理'" :website="active === '0' || active === '4'" @on-layout="staticChange" :lan="active === '1'" @on-change="lanChange"></JHeader>
       <Content>
         <div class="j_search">
           <Button class="grey" @click="active = item.value" v-for="(item, index) in btns" :key="index" :class="{primary: active === item.value}">{{item.text}}</Button>
         </div>
         <div class="warpper j_scroll">
           <SBase v-if="active === '0'"/>
-          <STemplate @on-change="search" v-if="active === '1'"/>
+          <STemplate ref="temp" @on-change="search" v-if="active === '1'"/>
           <KeywordStore v-if="active === '2'"/>
           <LongTailKeyword v-if="active === '3'"/>
           <InnerLink v-if="active === '4'"/>
@@ -60,6 +60,9 @@ export default {
   methods: {
     staticChange (e) {
       // this.layoutId = e
+    },
+    lanChange () {
+      this.$refs.temp.get()
     }
   }
 }

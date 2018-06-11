@@ -1,6 +1,7 @@
 <template>
   <Table
     ref="dragable"
+    :row-class-name="rowClassName"
     :columns="columns"
     :data="list"
     @on-selection-change="selectChange"
@@ -33,6 +34,12 @@ export default {
     })
   },
   methods: {
+    rowClassName (row, index) {
+      if (row.hidden) {
+        return 'j-table-row-hidden'
+      }
+      return ''
+    },
     startFunc (e) {
       this.$emit('on-start', e.oldIndex)
     },

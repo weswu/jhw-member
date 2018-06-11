@@ -1,17 +1,11 @@
 <template>
   <div>
     <script :id='id' type='text/plain'></script>
-    <Modal
-        v-model="picModel"
-        title="选择图片"
-        width="800"
-        ok-text="确定"
-        @on-ok='insertImg'
-        cancel-text="取消">
-    </Modal>
+    <JAblum ref="ablum" @on-change="insertImg"/>
   </div>
 </template>
 <script>
+import JAblum from '@/components/group/j-ablum'
 export default {
   props: {
     content: {
@@ -21,16 +15,18 @@ export default {
     eWidth: {},
     eHeight: {}
   },
+  components: {
+    JAblum
+  },
   data () {
     return {
       id: '000',
+      imgAlbum: false,
       editor: null,
       imageEdit: false,
       width: '131px',
       imgWidth: '115px',
       imgUpdate: '',
-      picModel: false,
-      imgModel: false, // 点击后为true 只初始化一次
       config: {
         toolbars: [
           ['fullscreen', 'source', '|', 'undo', 'redo', '|', 'fontsize', '|', 'blockquote', 'horizontal', '|', 'removeformat', 'formatmatch', 'link', 'unlink'],
@@ -69,8 +65,10 @@ export default {
       window.UE.dom.domUtils.on(document.getElementsByClassName('edui-for-insertimage')[0], 'click', function (e) {
         // e为事件对象，this为被点击元素对戏那个
         ctx.imgUpdate = ''
-        ctx.picModel = true
-        ctx.imgModel = true
+        if (!ctx.imgAlbum) {
+          ctx.$refs.ablum.open()
+          ctx.imgAlbum = true
+        }
       })
     })
     // 图片替换
@@ -86,8 +84,10 @@ export default {
             window.$('.edui-default .edui-clickable1').click(function () {
               ctx.imgUpdate = 'update'
               ctx.$refs.imgRef.initList()
-              ctx.picModel = true
-              ctx.imgModel = true
+              if (!ctx.imgAlbum) {
+                ctx.$refs.ablum.open()
+                ctx.imgAlbum = true
+              }
             })
           }, 500)
         }
@@ -104,10 +104,11 @@ export default {
     selectImg (data) {
       this.imgList = data
     },
-    insertImg () {
+    insertImg (e) {
       var ctx = this
+      this.imgAlbum = false
       if (this.imgUpdate === 'update') {
-        this.img.src = 'http://dfwjjingtai.b0.upaiyun.com/' + this.imgList.serverPath
+        this.img.src = 'http://dfwjjingtai.b0.upaiyun.com/' + e.src
       } else {
         for (var i = 0; i < this.imgList.length; i++) {
           var pic = 'http://dfwjjingtai.b0.upaiyun.com/' + this.imgList[i]['serverPath']

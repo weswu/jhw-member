@@ -7,53 +7,53 @@
       <a href="#/" class="header_link">首页</a>
       <a href="#/" class="header_link">服务反馈</a>
       <Dropdown placement="bottom" class="j_dropdown_message" @on-visible-change="messageChange">
-          <a href="#/message" class="header_link">
-              <i class="iconfont icon-tixing2"><span class="badge">{{userInfo.noReaderMsg}}</span></i>
-          </a>
-          <DropdownMenu slot="list">
-            <div class="name">
-              站内消息通知
-            </div>
-            <ul>
-              <li v-for="(item, index) in messageList" :key="index" v-if="index<5">
-                <div class="title" @click="detail(item.messageId)">
-                  {{item.title}}
-                </div>
-                <p>
-                  {{item.addTime | time('yyyy-MM-dd hh:mm')}}
-                </p>
-              </li>
-              <li v-if="messageList.length === 0">暂无数据</li>
-            </ul>
-            <a href="#/message/00" class="more">查看更多</a>
-          </DropdownMenu>
+        <a href="#/message" class="header_link">
+          <i class="iconfont icon-tixing2"><span class="badge">{{userInfo.noReaderMsg}}</span></i>
+        </a>
+        <DropdownMenu slot="list">
+          <div class="name">
+            站内消息通知
+          </div>
+          <ul>
+            <li v-for="(item, index) in messageList" :key="index" v-if="index<5">
+              <div class="title" @click="detail(item.messageId)">
+                {{item.title}}
+              </div>
+              <p>
+                {{item.addTime | time('yyyy-MM-dd hh:mm')}}
+              </p>
+            </li>
+            <li v-if="messageList.length === 0">暂无数据</li>
+          </ul>
+          <a href="#/message/00" class="more">查看更多</a>
+        </DropdownMenu>
       </Dropdown>
       <span class="border" style="background:#383d41"></span>
       <Dropdown placement="bottom-end" class="j_dropdown_username">
-          <a href="javascript:void(0)" style="color: #999" class="header_link">
-              {{user.username}}
-              <Icon type="arrow-down-b"></Icon>
-          </a>
-          <a href="javascript:void(0)" class="avatar header_link">
+        <a href="javascript:void(0)" style="color: #999" class="header_link">
+            {{user.username}}
+            <Icon type="arrow-down-b"></Icon>
+        </a>
+        <a href="javascript:void(0)" class="avatar header_link">
+          <i class="iconfont icon-huiyuan"></i>
+        </a>
+        <DropdownMenu slot="list">
+          <div class="info">
             <i class="iconfont icon-huiyuan"></i>
-          </a>
-          <DropdownMenu slot="list">
-            <div class="info">
-              <i class="iconfont icon-huiyuan"></i>
-              <p>账号：{{user.username}}</p>
-            </div>
-            <Row>
-              <Col span="8"><a href="#/account"><i class="iconfont icon-account-only"></i>账号信息</a></Col>
-              <Col span="8"><a href="#/account"><i class="iconfont icon-anquan"></i>安全设置</a></Col>
-              <Col span="8"><a href="#/cost_order"><i class="iconfont icon-price"></i>费用中心</a></Col>
-            </Row>
-            <Row>
-              <Col span="8"><a href="#/point_origin"><i class="iconfont icon-quanyi"></i>积分规则</a></Col>
-              <Col span="8"><a href="#/point"><i class="iconfont icon-jifen"></i>账号积分</a></Col>
-              <Col span="8"><a href="#/enterprise"><i class="iconfont icon-gongsi"></i>公司信息</a></Col>
-            </Row>
-            <a href="javascript:;" @click="signout" class="signout">退出</a>
-          </DropdownMenu>
+            <p>账号：{{user.username}}</p>
+          </div>
+          <Row>
+            <Col span="8"><a href="#/account"><i class="iconfont icon-account-only"></i>账号信息</a></Col>
+            <Col span="8"><a href="#/account"><i class="iconfont icon-anquan"></i>安全设置</a></Col>
+            <Col span="8"><a href="#/cost_order"><i class="iconfont icon-price"></i>费用中心</a></Col>
+          </Row>
+          <Row>
+            <Col span="8"><a href="#/point_origin"><i class="iconfont icon-quanyi"></i>积分规则</a></Col>
+            <Col span="8"><a href="#/point"><i class="iconfont icon-jifen"></i>账号积分</a></Col>
+            <Col span="8"><a href="#/enterprise"><i class="iconfont icon-gongsi"></i>公司信息</a></Col>
+          </Row>
+          <a href="javascript:;" @click="signout" class="signout"> <span v-if="user.username !== '未登录'">退出</span><span v-else>登录</span> </a>
+        </DropdownMenu>
       </Dropdown>
       <span class="border"></span>
     </Col>

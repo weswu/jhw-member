@@ -8,12 +8,6 @@
           <Row type="flex" justify="space-between">
             <Col>
               <Button type="info" icon="plus" class="w130" @click="url('/news/add')">添加新闻</Button>
-              <Upload ref="upload" :action="'/commonutil/uploadUtil2?username=' + $store.state.user.username + '&replace=00&attId=&id=all'" style="display:none"
-                name="Filedata"
-                :max-size="2048"
-                :on-success="handleSuccess">
-                <div id="upload">上传</div>
-              </Upload>
             </Col>
             <Col>
               <Input v-model="searchData.title" clearable placeholder="请输入新闻标题" class="w180"></Input>
@@ -93,12 +87,14 @@
 
 <script>
 import qs from 'qs'
+import { mapState } from 'vuex'
 import MenuBar from '@/components/common/menu_bar'
 import JHeader from '@/components/group/j-header'
 import JPagination from '@/components/group/j-pagination'
 import DragableTable from '@/components/group/j-dragable-table'
 import SeoDetail from '@/pages/static/SeoDetail'
 import TransferCategory from '@/components/group/transfer-category'
+import categorySelect from '@/components/group/j-category-select'
 export default {
   components: {
     MenuBar,
@@ -106,7 +102,8 @@ export default {
     JPagination,
     DragableTable,
     SeoDetail,
-    TransferCategory
+    TransferCategory,
+    categorySelect
   },
   data () {
     return {
@@ -114,7 +111,7 @@ export default {
         { type: 'selection', className: 'j_table_checkbox', width: 44 },
         { type: 'index2', className: 'j_table_checkbox', title: '序号', align: 'center', width: 60, render: this.indexFilter },
         { title: '新闻标题', className: 'j_table_title', sortable: true, key: 'title', width: 120, render: this.titleFilter },
-        { title: '新闻分类', sortable: true, key: 'category', width: 105, ellipsis: true, render: this.categoryFilter },
+        { title: '新闻分类', className: 'j_table_category', sortable: true, key: 'category', width: 160, render: this.categoryFilter },
         { title: '添加时间', sortable: true, key: 'addTime', width: 105, render: this.dataFilter },
         { title: '是否上架', sortable: true, key: 'display', width: 105, render: this.displayFilter },
         { title: '是否置顶', width: 90, render: this.topnewsFilter },
@@ -194,7 +191,6 @@ export default {
           _checked: false
         }
       ],
-      categoryList: [],
       searchData: {
         page: 1,
         pageSize: 10
@@ -204,10 +200,15 @@ export default {
       ids: ''
     }
   },
+  computed: {
+    ...mapState({
+      categoryList: state => state.newsCategory
+    })
+  },
   created () {
     this.searchData.page = this.$cookie.get('newsPage') || 1
     this.get()
-    this.getCate()
+    this.$store.dispatch('getCategory', 'news')
   },
   methods: {
     get () {
@@ -219,13 +220,6 @@ export default {
             item._checked = false
           })
           this.list = data || []
-        }
-      })
-    },
-    getCate () {
-      this.$http.get('/rest/api/category/news?pageSize=1000').then(res => {
-        if (res.success) {
-          this.categoryList = res.attributes.data
         }
       })
     },
@@ -374,72 +368,31 @@ export default {
       ])
     },
     categoryFilter (h, params) {
-      var ctx = this
-      let text = ''
-      let option = []
-      this.categoryList.forEach(item => {
-        if (params.row.category === item.categoryId) {
-          text = item.name
-        }
-        option.push(h('Option', {
-          props: {
-            value: item.categoryId
-          }
-        }, item.name))
-      })
-      return h('div', [
-        h('span', {
-          style: {
-            color: '#5b5b5b'
-          }
-        }, text),
-        h('i', {
-          class: {
-            'none': true,
-            'iconfont': true,
-            'icon-shangxiajiantou': true
-          },
-          style: {
-            color: '#a3a3a3',
-            fontSize: '12px'
-          },
-          on: {
-            click: () => {
-              this.$Modal.confirm({
-                render: (h) => {
-                  return h('Select', {
-                    props: {
-                      value: params.row.category
-                    },
-                    on: {
-                      'on-change': (val) => {
-                        params.row.category2 = val
-                      }
-                    }
-                  }, option)
-                },
-                onOk: () => {
-                  let data = {
-                    model: JSON.stringify({
-                      id: params.row.newsId,
-                      category: params.row.category2
-                    }),
-                    _method: 'put'
-                  }
-                  ctx.$http.post('/rest/api/news/detail/' + params.row.newsId, qs.stringify(data)).then((res) => {
-                    if (res.success) {
-                      ctx.$Message.success('修改成功')
-                      ctx.list[params.index].category = params.row.category2
-                    } else {
-                      ctx.$Message.error(res.msg)
-                    }
-                  })
-                }
-              })
+      return h(categorySelect, {
+        props: {
+          list: this.categoryList,
+          categoryId: params.row.category
+        },
+        on: {
+          'on-change': (val) => {
+            params.row.category = val
+            let data = {
+              model: JSON.stringify({
+                id: params.row.productId,
+                category: val
+              }),
+              _method: 'put'
             }
+            this.$http.post('/rest/api/product/detail/' + params.row.productId, qs.stringify(data)).then((res) => {
+              if (res.success) {
+                this.$Message.success('修改成功')
+              } else {
+                this.$Message.error(res.msg)
+              }
+            })
           }
-        })
-      ])
+        }
+      })
     },
     // 时间格式化
     dataFilter (h, params) {

@@ -79,7 +79,11 @@ export default {
   },
   methods: {
     get () {
-      this.$http.get('/rest/pc/api/authLogin/detail?layoutId=' + this.$store.state.layoutId).then((res) => {
+      this.$http.get('/rest/pc/api/authLogin/detail?layoutId=' + this.$store.state.layoutId, {
+        headers: {
+          'X-CSRF-Token': this.$store.state.user.token
+        }
+      }).then((res) => {
         if (res.success) {
           this.detail = res.attributes.data
           if (!this.detail.oauthWeixinState) this.detail.oauthWeixinState = '00'
@@ -96,7 +100,11 @@ export default {
       })
     },
     submit () {
-      this.$http.post('/rest/pc/api/authLogin/detail', qs.stringify(this.detail)).then((res) => {
+      this.$http.post('/rest/pc/api/authLogin/detail', qs.stringify(this.detail), {
+        headers: {
+          'X-CSRF-Token': this.$store.state.user.token
+        }
+      }).then((res) => {
         if (res.success) {
           this.$Message.success('保存成功')
         } else {

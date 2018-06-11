@@ -47,9 +47,8 @@
             <span class="star">*</span>上传表格:
           </Col>
           <Col span="21">
-            <Upload ref="upload2" :action="'/commonutil/uploadUtil2?username=' + $store.state.user.username + ''"
-              name="Filedata"
-              :max-size="2048"
+            <Upload ref="upload2" action="/rest/api/product/uploadProductsByExcel"
+              formenctype="multipart/form-data"
               :on-success="handleSuccess2">
               <div id="fileUpload" >
                 <span class="select">选择文件</span>{{name}}
@@ -144,6 +143,7 @@ export default {
     handleSuccess2 (res, file) {
       var ctx = this
       this.name = file.name
+      this.$Message.info('上传成功')
       setTimeout(function () {
         ctx.$refs.upload2.clearFiles()
       }, 1000)

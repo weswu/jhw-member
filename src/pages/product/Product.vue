@@ -69,9 +69,9 @@
         <span slot="btn">
           <Checkbox v-model="toggle" @on-change="handleSelectAll(toggle)"/>
           <Button type="ghost" size="small" @click="delAll">删除</Button>
-          <Button type="ghost" size="small" @click="update($Message)">复制</Button>
-          <Button type="ghost" size="small" @click="update($Message)">上架</Button>
-          <Button type="ghost" size="small" @click="update($Message)">下架</Button>
+          <Button type="ghost" size="small" @click="copyAll">复制</Button>
+          <Button type="ghost" size="small" @click="displayAll('01')">上架</Button>
+          <Button type="ghost" size="small" @click="displayAll('00')">下架</Button>
           <Button type="ghost" size="small" @click="categoryAll">转移分类</Button>
         </span>
       </JPagination>
@@ -176,20 +176,12 @@ export default {
         { title: '产品名称', className: 'j_table_title', sortable: true, key: 'name', width: 150, render: this.nameFilter },
         { title: '产品型号', className: 'j_table_title', sortable: true, key: 'prodtype', width: 130, render: this.prodtypeFilter },
         { title: '产品价格', render: this.priceFilter },
-        { title: '产品分类', className: 'j_table_category', sortable: true, key: 'category', width: 130, ellipsis: true, render: this.categoryFilter },
+        { title: '产品分类', className: 'j_table_category', sortable: true, key: 'category', width: 160, render: this.categoryFilter },
         { title: '添加时间', sortable: true, key: 'addTime', width: 105, render: this.dataFilter },
         { title: '是否上架', sortable: true, key: 'isdisplay', width: 105, render: this.isdisplayFilter },
         { title: '排序', className: 'j_table_sort', sortable: true, key: 'sort', minWidth: 80, render: this.sortFilter }
       ],
-      list: [
-        {
-          prodtype: '22',
-          edittingCell: {
-            name: false,
-            prodtype: false
-          }
-        }
-      ],
+      list: [],
       searchData: {
         page: 1,
         pageSize: 10
@@ -207,9 +199,9 @@ export default {
     })
   },
   created () {
-    this.searchData.page = this.$cookie.get('productPage') || 1
+    this.searchData.page = parseInt(this.$cookie.get('productPage')) || 1
     this.get()
-    this.$store.dispatch('getProductCategory')
+    this.$store.dispatch('getCategory', 'product')
     this.initCol()
   },
   methods: {
@@ -248,7 +240,11 @@ export default {
       this.myShowSelect.forEach(item => {
         this.columns2.forEach(col => {
           if (item === col.title) {
-            ctx.columns.push(col)
+            if (item === '序号') {
+              ctx.columns.splice(1, 0, col)
+            } else {
+              ctx.columns.push(col)
+            }
           }
         })
       })
@@ -298,6 +294,36 @@ export default {
             })
           })
           this.ids = ''
+        } else {
+          this.$Message.error(res.msg)
+        }
+      })
+    },
+    copyAll () {
+      if (!this.ids) {
+        return this.$Message.error('未选择')
+      }
+      this.$http.post('/rest/api/product/copyProductByIds', qs.stringify({productIds: this.ids})).then((res) => {
+        if (res.success) {
+          this.$Message.success('复制成功')
+          this.get()
+        } else {
+          this.$Message.error(res.msg)
+        }
+      })
+    },
+    displayAll (e) {
+      if (!this.ids) {
+        return this.$Message.error('未选择')
+      }
+      let url = 'batchShelves'
+      if (e === '00') {
+        url = 'unBatchShelves'
+      }
+      this.$http.post('/rest/api/product/' + url, qs.stringify({productIds: this.ids})).then((res) => {
+        if (res.success) {
+          this.$Message.success(e === '01' ? '上架成功' : '下架成功')
+          this.get()
         } else {
           this.$Message.error(res.msg)
         }
@@ -590,74 +616,31 @@ export default {
       }, '￥' + params.row.price || 0)
     },
     categoryFilter (h, params) {
-      var ctx = this
-      let text = ''
-      let option = []
-      this.categoryList.forEach(item => {
-        if (params.row.category === item.categoryId) {
-          text = item.name
-        }
-        option.push(h('Option', {
-          props: {
-            value: item.categoryId
-          }
-        }, item.name))
-      })
-      return h('div', [
-        h('span', {
-          style: {
-            color: '#5b5b5b'
-          }
-        }, text),
-        h('i', {
-          class: {
-            'none': true,
-            'iconfont': true,
-            'icon-shangxiajiantou': true
-          },
-          style: {
-            color: '#a3a3a3',
-            fontSize: '12px'
-          },
-          on: {
-            click: () => {
-              this.$Modal.confirm({
-                render: (h) => {
-                  return h(categorySelect, {
-                    props: {
-                      list: this.categoryList,
-                      categoryId: params.row.category,
-                      type: 'productCategory'
-                    },
-                    on: {
-                      'on-change': (val) => {
-                        params.row.category2 = val
-                      }
-                    }
-                  })
-                },
-                onOk: () => {
-                  let data = {
-                    model: JSON.stringify({
-                      id: params.row.productId,
-                      category: params.row.category2
-                    }),
-                    _method: 'put'
-                  }
-                  ctx.$http.post('/rest/api/product/detail/' + params.row.productId, qs.stringify(data)).then((res) => {
-                    if (res.success) {
-                      ctx.$Message.success('修改成功')
-                      params.row.category = params.row.category2
-                    } else {
-                      ctx.$Message.error(res.msg)
-                    }
-                  })
-                }
-              })
+      return h(categorySelect, {
+        props: {
+          list: this.categoryList,
+          categoryId: params.row.category
+        },
+        on: {
+          'on-change': (val) => {
+            params.row.category = val
+            let data = {
+              model: JSON.stringify({
+                id: params.row.productId,
+                category: val
+              }),
+              _method: 'put'
             }
+            this.$http.post('/rest/api/product/detail/' + params.row.productId, qs.stringify(data)).then((res) => {
+              if (res.success) {
+                this.$Message.success('修改成功')
+              } else {
+                this.$Message.error(res.msg)
+              }
+            })
           }
-        })
-      ])
+        }
+      })
     },
     dataFilter (h, params) {
       let format = this.dateFormat(params.row.addTime)
@@ -945,18 +928,6 @@ export default {
         display: flex;
         flex-direction: column;
       }
-    }
-  }
-  .j_table_category .ivu-table-cell div{
-    span{
-     width: 80%;
-     display: inline-block;
-     white-space: nowrap;
-     overflow: hidden;
-     text-overflow: ellipsis;
-    }
-    i{
-      vertical-align: top !important;
     }
   }
 }

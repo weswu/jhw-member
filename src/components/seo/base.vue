@@ -38,7 +38,9 @@ export default {
       total: 0,
       searchData: {
         page: 1,
-        pageSize: 10
+        pageSize: 10,
+        layoutId: this.$store.state.layoutId,
+        lanId: this.$store.state.lanId
       }
     }
   },
@@ -47,14 +49,30 @@ export default {
   },
   methods: {
     get () {
-      this.$http.get('/rest/api/' + this.active + '?' + qs.stringify(this.searchData)).then((res) => {
-        if (res.success) {
-          this.list = res.attributes.data
-          this.total = res.attributes.count
-        } else {
-          this.$Message.error(res.msg)
-        }
-      })
+      let url = ''
+      if (this.active === 'navigator/list') {
+        this.$http.get('/rest/pc/api/navigator/list?' + qs.stringify(this.searchData), {
+          headers: {
+            'X-CSRF-Token': this.$store.state.user.token
+          }
+        }).then((res) => {
+          if (res.success) {
+            this.list = res.attributes.data
+            this.total = res.attributes.count
+          } else {
+            this.$Message.error(res.msg)
+          }
+        })
+      } else {
+        this.$http.get('/rest/' + url + 'api/' + this.active + '?' + qs.stringify(this.searchData)).then((res) => {
+          if (res.success) {
+            this.list = res.attributes.data
+            this.total = res.attributes.count
+          } else {
+            this.$Message.error(res.msg)
+          }
+        })
+      }
     },
     // 功能
     search (e) {
@@ -88,9 +106,13 @@ export default {
         href = 'news-detail-' + params.row.newsId2 + '.html'
         page = 'news-detail-' + params.row.newsId2
       }
+      let src = 'http://' + this.$store.state.user.username + '.jihui88.com/' + href
+      if (this.active === 'navigator/list') {
+        src = 'http://pc.jihui88.com/rest/site/' + this.$store.state.layoutId + '/' + page
+      }
       return h('a', {
         attrs: {
-          href: 'http://' + this.$store.state.user.username + '.jihui88.com/' + href,
+          href: src,
           target: '_blank'
         },
         style: {
@@ -111,7 +133,7 @@ export default {
             } else if (this.active === 'news/list') {
               this.$refs.detail.open(params.row.newsId, 'news')
             } else {
-              this.$refs.detail.open(params.row.page, 'page')
+              this.$refs.detail.open(params.row.id, 'page')
             }
           }
         }
