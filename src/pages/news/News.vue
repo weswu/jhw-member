@@ -371,7 +371,8 @@ export default {
       return h(categorySelect, {
         props: {
           list: this.categoryList,
-          categoryId: params.row.category
+          categoryId: params.row.category,
+          type: 'news'
         },
         on: {
           'on-change': (val) => {

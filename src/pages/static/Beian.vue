@@ -2,10 +2,10 @@
   <Layout class="j_layout ivu-layout-has-sider j_beian">
     <MenuBar :data="'menuStatic'" :active="'beian'"/>
     <Layout class="j_layout_content j_form_detail">
-      <JHeader :title="'域名备案'" :website="active === '0' || active === '2'"/>
+      <JHeader :title="'域名备案'" :website="true"/>
       <Content>
         <div class="j_search">
-          <Button class="grey" @click="active = item.value" v-for="(item, index) in btns" :key="index" :class="{primary: active === item.value}">{{item.text}}</Button>
+          <Button class="grey" @click="activeChange(item.value)" v-for="(item, index) in btns" :key="index" :class="{primary: active === item.value}">{{item.text}}</Button>
           <div class="j_tip">
             温馨提醒：
             <span v-if="active === '0'">请完善备案信息，方便网站“界面编辑”调取。备案主要是为了规范网络安全化，维护网站经营者的合法权益，保障网民的合法利益。</span>
@@ -166,6 +166,7 @@
 
 <script>
 import qs from 'qs'
+import { mapState } from 'vuex'
 import MenuBar from '@/components/common/menu_bar'
 import JHeader from '@/components/group/j-header'
 import JAblum from '@/components/group/j-ablum'
@@ -197,6 +198,16 @@ export default {
       uploadText: ''
     }
   },
+  computed: {
+    ...mapState(['layoutId'])
+  },
+  watch: {
+    layoutId () {
+      if (this.active === '2') {
+        this.getBind()
+      }
+    }
+  },
   created () {
     this.get()
   },
@@ -209,11 +220,9 @@ export default {
           this.$Message.error(res.msg)
         }
       })
-      this.$http.get('/rest/pc/api/bind/detail/' + this.$store.state.layoutId, {
-        headers: {
-          'X-CSRF-Token': this.$store.state.user.token
-        }
-      }).then((res) => {
+    },
+    getBind () {
+      this.$http.get('/rest/pc/api/bind/detail/' + this.$store.state.layoutId).then((res) => {
         if (res.success) {
           this.bindDetail = res.attributes.data
         }
@@ -221,6 +230,12 @@ export default {
     },
     add () {
       this.$refs.beianDetail.open()
+    },
+    activeChange (e) {
+      this.active = e
+      if (e === '2') {
+        this.getBind()
+      }
     },
     picChange (e) {
       let obj = this.uploadText.split('.')

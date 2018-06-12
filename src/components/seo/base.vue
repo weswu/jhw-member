@@ -11,6 +11,7 @@
 
 <script>
 import qs from 'qs'
+import { mapState } from 'vuex'
 import JPagination from '@/components/group/j-pagination'
 import Detail from '@/pages/static/SeoDetail'
 export default {
@@ -21,13 +22,13 @@ export default {
   data () {
     return {
       btns: [
-        { text: '导航', value: 'navigator/list' },
+        { text: '导航', value: 'pc' },
         { text: '产品分类', value: 'category/product' },
         { text: '产品', value: 'product/list' },
         { text: '新闻分类', value: 'category/news' },
         { text: '新闻', value: 'news/list' }
       ],
-      active: 'navigator/list',
+      active: 'pc',
       columns: [
         { type: 'index2', title: '序号', align: 'center', width: 60, render: this.indexFilter },
         { title: '导航名称', key: 'name', render: this.nameFilter },
@@ -44,18 +45,23 @@ export default {
       }
     }
   },
+  computed: {
+    ...mapState(['layoutId'])
+  },
+  watch: {
+    layoutId () {
+      if (this.active === 'pc') {
+        this.getPcNav()
+      }
+    }
+  },
   created () {
     this.get()
   },
   methods: {
     get () {
-      let url = ''
-      if (this.active === 'navigator/list') {
-        this.$http.get('/rest/pc/api/navigator/list?' + qs.stringify(this.searchData), {
-          headers: {
-            'X-CSRF-Token': this.$store.state.user.token
-          }
-        }).then((res) => {
+      if (this.active !== 'pc') {
+        this.$http.get('/rest/api/' + this.active + '?' + qs.stringify(this.searchData)).then((res) => {
           if (res.success) {
             this.list = res.attributes.data
             this.total = res.attributes.count
@@ -64,15 +70,16 @@ export default {
           }
         })
       } else {
-        this.$http.get('/rest/' + url + 'api/' + this.active + '?' + qs.stringify(this.searchData)).then((res) => {
-          if (res.success) {
-            this.list = res.attributes.data
-            this.total = res.attributes.count
-          } else {
-            this.$Message.error(res.msg)
-          }
-        })
+        this.getPcNav()
       }
+    },
+    getPcNav () {
+      this.$http.get('/rest/pc/api/navigator/list?' + qs.stringify(this.searchData)).then((res) => {
+        if (res.success) {
+          this.list = res.attributes.data
+          this.total = res.attributes.count
+        }
+      })
     },
     // 功能
     search (e) {
@@ -107,7 +114,7 @@ export default {
         page = 'news-detail-' + params.row.newsId2
       }
       let src = 'http://' + this.$store.state.user.username + '.jihui88.com/' + href
-      if (this.active === 'navigator/list') {
+      if (this.active === 'pc') {
         src = 'http://pc.jihui88.com/rest/site/' + this.$store.state.layoutId + '/' + page
       }
       return h('a', {

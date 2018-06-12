@@ -15,7 +15,7 @@
         </div>
         <DragableTable
           ref="selection"
-          :list="$route.params.id === 'product' ? $store.state.productCategory : $store.state.newsCategory"
+          :list="this.type === 'product' ? this.$store.state.productCategory : this.$store.state.newsCategory"
           :columns="columns"
           @on-update="tableUpdate"
           @on-selection-change="handleSelectChange"/>
@@ -72,20 +72,18 @@ export default {
         { title: '操作', className: 'j_table_operate', align: 'left', width: 160, render: this.renderOperate }
       ],
       ids: '',
-      type: 'product',
-      list: this.$route.params.id === 'product' ? this.$store.state.productCategory : this.$store.state.newsCategory,
+      type: this.$route.params.id,
+      list: [],
       item: {},
       toggle: false
     }
   },
   computed: {
-    ...mapState({
-      categoryList: state => state.newsCategory
-    })
+    ...mapState(['productCategory', 'newsCategory'])
   },
   created () {
     this.get()
-    if (this.$route.params.id === 'product') {
+    if (this.type === 'product') {
       let col1 = { title: '分类图片', width: 105, render: this.imgFilter }
       let col2 = { title: '分类描述', width: 105, render: this.descFilter }
       this.columns.splice(3, 0, col2)
@@ -94,7 +92,13 @@ export default {
   },
   methods: {
     get () {
-      this.$store.dispatch('getCategory', this.$route.params.id)
+      this.$store.dispatch('getCategory', this.type).then(res => {
+        if (this.type === 'product') {
+          this.list = this.$store.state.productCategory
+        } else {
+          this.list = this.$store.state.newsCategory
+        }
+      })
     },
     // 功能
     add () {
@@ -151,16 +155,21 @@ export default {
       this.$refs.transferCategory.open()
     },
     hiddenAll (bool) {
-      this.list.forEach(item => {
-        item.children.forEach(item1 => {
-          item1.hidden = bool
-          item1.children.forEach(item2 => {
-            item2.hidden = bool
-          })
+      if (this.type === 'product') {
+        this.productCategory.forEach(item => {
+          if (item.grade !== '1') {
+            item.hidden = bool
+          }
+          item.expand = !bool
         })
-      })
-      if (this.$route.params.id === 'product') this.$store.commit('setProductCategory', this.list)
-      if (this.$route.params.id === 'news') this.$store.commit('setNewsCategory', this.list)
+      } else {
+        this.newsCategory.forEach(item => {
+          if (item.grade !== '1') {
+            item.hidden = bool
+          }
+          item.expand = !bool
+        })
+      }
     },
     handleSuccess (res, file) {
       var ctx = this
@@ -185,15 +194,12 @@ export default {
     },
     // 过滤
     indexFilter (h, params) {
-      let isroot = false
-      if (this.list.length > (params.index + 1)) {
-        isroot = params.row.grade === '1' && this.list[params.index + 1].grade !== '1'
-      }
+      var ctx = this
       return h('div', [
         h('i', {
           class: {
             iconfont: true,
-            'icon-xialajiantou': isroot
+            'icon-xialajiantou': params.row.isroot && params.row.grade === '1'
           },
           style: {
             color: '#000',
@@ -202,7 +208,21 @@ export default {
           },
           on: {
             click: () => {
-              // params.row.expand = !params.row.expand
+              ctx.list.forEach(item => {
+                if (item.categoryId === params.row.categoryId) {
+                  item.expand = !params.row.expand
+                }
+                if (item.belongId === params.row.categoryId) {
+                  item.hidden = !item.hidden
+                  ctx.list.forEach(row => {
+                    if (row.belongId === item.categoryId) {
+                      row.hidden = !row.hidden
+                    }
+                  })
+                }
+              })
+              // if (this.type === 'product') this.$store.commit('setProductCategory', this.list)
+              // if (this.type === 'news') this.$store.commit('setNewsCategory', this.list)
             }
           }
         })
@@ -210,10 +230,6 @@ export default {
     },
     nameFilter (h, params) {
       var ctx = this
-      let isroot = false
-      if (this.list.length > (params.index + 1)) {
-        isroot = params.row.grade === '2' && this.list[params.index + 1].grade === '3'
-      }
       return h('div', {
         class: {
           j_category_name: true
@@ -222,12 +238,32 @@ export default {
         h('span', {
           class: {
             iconfont: true,
-            'icon-xialajiantou': isroot
+            'icon-xialajiantou': params.row.isroot && params.row.grade === '2'
           },
           style: {
             padding: '7px 10px',
             color: '#000',
-            display: params.row.grade !== '1' ? 'inline-block' : 'none'
+            display: params.row.grade !== '1' ? 'inline-block' : 'none',
+            transform: params.row.expand ? 'rotate(0deg)' : 'rotate(-90deg)'
+          },
+          on: {
+            click: () => {
+              this.list.forEach(item => {
+                if (item.categoryId === params.row.categoryId) {
+                  item.expand = !params.row.expand
+                }
+                if (item.belongId === params.row.categoryId) {
+                  item.hidden = !item.hidden
+                  ctx.list.forEach(row => {
+                    if (row.belongId === item.categoryId) {
+                      row.hidden = !row.hidden
+                    }
+                  })
+                }
+              })
+              // if (this.type === 'product') this.$store.commit('setProductCategory', this.list)
+              // if (this.type === 'news') this.$store.commit('setNewsCategory', this.list)
+            }
           }
         }),
         h('span', {

@@ -163,8 +163,8 @@ export default {
       this.columns = [
         { type: 'selection', className: 'j_table_checkbox', width: 44 }
       ]
-      this.myShowSelect.forEach(item => {
-        this.columns2.forEach(col => {
+      this.columns2.forEach(col => {
+        this.myShowSelect.forEach(item => {
           if (item === col.title) {
             ctx.columns.push(col)
           }
@@ -212,7 +212,7 @@ export default {
       return h('span', params.index + (this.searchData.page - 1) * this.searchData.pageSize + 1)
     },
     nameFilter (h, params) {
-      return h('span', params.row.memberObj.name || params.row.shipName)
+      return h('span', (params.row.memberObj && params.row.memberObj.name) || params.row.shipName)
     },
     totalFilter (h, params) {
       return h('span', {
@@ -261,7 +261,7 @@ export default {
       })
     },
     deliveryFilter (h, params) {
-      return h('span', params.row.shippingSet[0] && params.row.shippingSet[0].deliveryTypeName)
+      return h('span', params.row.shippingSet && params.row.shippingSet[0].deliveryTypeName)
     },
     renderOperate (h, params) {
       var ctx = this

@@ -6,7 +6,7 @@
         <ul ref="menu" class="menu j_panel">
           <li @click="edit">重命名</li>
           <li @click="itemModel = true">编辑</li>
-          <li v-clipboard:copy="item.url3" v-clipboard:success="copy">复制</li>
+          <li @click="copyImg">复制</li>
           <li @click="move">移动</li>
           <li @click="del">删除</li>
           <Upload ref="upload" :action="'/commonutil/uploadUtil2?username=' + $store.state.user.username + '&replace=01&attId=' + item.attId + '&id=' + attId"
@@ -83,7 +83,7 @@
                     <i class="iconfont icon-weibiaoti5"></i>
                   </div>
                   <div class="title" :class="{hover: item._checked}">{{item.title}}</div>
-                  <div class="size">{{item.attCount}}&nbsp;项</div>
+                  <div class="size">{{item.attCount || 0}}&nbsp;项</div>
                 </div>
               </Col>
               <Col :xs="12" :sm="8" :md="6" :lg="4"  v-for="(item, index) in list" :key="index" class="pic_item">
@@ -91,7 +91,10 @@
                   <Card dis-hover :class="{hover: item._checked}">
                     <img :src="$store.state.status.IMG_HOST + item.serverPath | picUrl(5)" :alt="item.filename">
                   </Card>
-                  <div class="title" :class="{hover: item._checked}">{{item.filename}}</div>
+                  <div class="title" :class="{hover: item._checked && !item.editting}">
+                    <span @click.stop="nameClick"><Input v-model="item.filename" @on-blur="nameChange(item)" @on-enter="nameChange(item)" v-if="item.editting"/></span>
+                    <span v-if="!item.editting">{{item.filename | picName}}</span>
+                  </div>
                 </div>
               </Col>
             </Row>
@@ -173,7 +176,7 @@ export default {
           type: '01',
           content: null,
           sort: null,
-          filename: '路人超能2.jpg',
+          filename: '路人超能2',
           userId: 'User_000000000000000000000000082',
           serverPath: 'upload//g//g2//ggggfj//picture//2017//09//15/cb9ea426-772f-4667-afc3-18ac954008d1.jpg',
           belongId: null,
@@ -185,7 +188,8 @@ export default {
           filedesc: null,
           uploadTime: 1505440558943,
           technicView: null,
-          _checked: false
+          _checked: false,
+          editting: false
         },
         {
           state: '01',
@@ -204,7 +208,8 @@ export default {
           filedesc: null,
           uploadTime: 1503382354821,
           technicView: null,
-          _checked: false
+          _checked: false,
+          editting: false
         },
         {
           state: '01',
@@ -223,7 +228,8 @@ export default {
           filedesc: null,
           uploadTime: 1501815560527,
           technicView: null,
-          _checked: false
+          _checked: false,
+          editting: false
         },
         {
           state: '01',
@@ -242,7 +248,8 @@ export default {
           filedesc: null,
           uploadTime: 1496300661556,
           technicView: null,
-          _checked: false
+          _checked: false,
+          editting: false
         },
         {
           state: '01',
@@ -261,7 +268,8 @@ export default {
           filedesc: null,
           uploadTime: 1496296124960,
           technicView: null,
-          _checked: false
+          _checked: false,
+          editting: false
         },
         {
           state: '01',
@@ -280,7 +288,8 @@ export default {
           filedesc: null,
           uploadTime: 1528285374461,
           technicView: null,
-          _checked: false
+          _checked: false,
+          editting: false
         },
         {
           state: '01',
@@ -395,6 +404,7 @@ export default {
           let data = res.attributes.data
           data.forEach(item => {
             item._checked = false
+            item.editting = false
           })
           this.list = data
         } else {
@@ -477,53 +487,47 @@ export default {
       this.$refs.menu.style.left = dom.left + dom.width / 2 + 'px'
       this.$refs.menu.style.top = dom.top + dom.height / 2 + 'px'
       this.item = item
-      this.item.url2 = this.$store.state.status.IMG_HOST + item.serverPath
-      this.item.url3 = '<img src="http://img.jihui88.com/' + item.serverPath + '" alt="' + item.filename + '">'
+      this.item.url2 = '<img src="http://img.jihui88.com/' + item.serverPath + '" alt="' + item.filename + '">'
+      this.item.url3 = this.$store.state.status.IMG_HOST + item.serverPath
       e.preventDefault()
     },
     edit () {
-      var ctx = this
-      this.$Modal.confirm({
-        width: 280,
-        render: (h) => {
-          return h('Input', {
-            props: {
-              value: this.item.filename,
-              autofocus: true,
-              placeholder: '修改图片名称'
-            },
-            on: {
-              input: (val) => {
-                this.item.filename = val
-              }
-            }
-          })
-        },
-        onOk: () => {
-          if (!this.item.filename) return this.$Message.info('图片名称不能为空')
-          let data = {
-            model: JSON.stringify(this.item),
-            _method: 'put'
-          }
-          this.$http.post('/rest/api/album/attr/img/detail/' + this.item.attId, qs.stringify(data)).then((res) => {
-            if (res.success) {
-              ctx.$Message.success('修改成功')
-              ctx.list.forEach(item => {
-                if (item.attId === ctx.item.attId) {
-                  item.filename = ctx.item.filename
-                }
-              })
-            } else {
-              ctx.$Message.error(res.msg)
-            }
-          })
+      this.list.forEach(item => {
+        item.editting = false
+      })
+      this.item.editting = true
+    },
+    nameClick (e) {
+      console.log('click')
+    },
+    nameChange (item) {
+      let data = {
+        model: JSON.stringify({
+          id: item.attId,
+          filename: item.filename,
+          editField: true
+        }),
+        _method: 'put'
+      }
+      this.$http.post('/rest/api/album/attr/img/detail/' + item.attId, qs.stringify(data)).then((res) => {
+        if (res.success) {
+          this.item.editting = false
+        } else {
+          this.$Message.error(res.msg)
         }
       })
     },
     editItem () {
       var ctx = this
       let data = {
-        model: JSON.stringify(this.item),
+        model: JSON.stringify({
+          id: this.item.attId,
+          filename: this.item.filename,
+          filedesc: this.item.filedesc,
+          sort: this.item.sort,
+          linkUrl: this.item.linkUrl,
+          editField: true
+        }),
         _method: 'put'
       }
       this.$http.post('/rest/api/album/attr/img/detail/' + this.item.attId, qs.stringify(data)).then((res) => {
@@ -531,7 +535,7 @@ export default {
           this.$Message.success('修改成功')
           this.list.forEach(item => {
             if (item.attId === ctx.item.attId) {
-              item.filename = ctx.item.filename
+              item = ctx.item
             }
           })
         } else {
@@ -542,6 +546,10 @@ export default {
     move () {
       this.belongModel = true
       this.ids = this.item.attId
+    },
+    copyImg () {
+      this.ids = this.item.attId
+      this.copyAll()
     },
     del () {
       let data = {
@@ -763,6 +771,10 @@ export default {
         border-radius: 3px;
         padding: 0 4px;
         width: 100%;
+        .ivu-input{
+          height: 18px;
+          padding: 4px 5px;
+        }
       }
     }
   }

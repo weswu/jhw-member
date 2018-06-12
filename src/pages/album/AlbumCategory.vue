@@ -307,24 +307,7 @@ export default {
             this.$http.post('/rest/api/album/detail/' + this.item.id, qs.stringify(data)).then((res) => {
               if (res.success) {
                 ctx.$Message.success('修改成功')
-                this.data.forEach(root => {
-                  root.children.forEach((item1, idx) => {
-                    if (item1.id === ctx.item.id) {
-                      item1.title = ctx.item.title
-                    }
-                    item1.children.forEach((item2, idx2) => {
-                      if (item2.id === ctx.item.id) {
-                        item2.title = ctx.item.title
-                      }
-                      item2.children.forEach((item3, idx2) => {
-                        if (item3.id === ctx.item.id) {
-                          item3.title = ctx.item.title
-                        }
-                      })
-                    })
-                  })
-                })
-                ctx.$store.dispatch('getAlbumCategory')
+                ctx.get()
               } else {
                 ctx.$Message.error(res.msg)
               }
@@ -334,30 +317,13 @@ export default {
       }
     },
     del () {
-      var ctx = this
       let data = {
         _method: 'delete'
       }
       this.$http.post('/rest/api/album/detail/' + this.item.id, qs.stringify(data)).then((res) => {
         if (res.success) {
           this.$Message.success('删除成功')
-          this.data.forEach(root => {
-            root.children.forEach((item1, idx) => {
-              if (item1.id === ctx.item.id) {
-                root.splice(idx, 1)
-              }
-              item1.children.forEach((item2, idx2) => {
-                if (item2.id === ctx.item.id) {
-                  item1.splice(idx, 1)
-                }
-                item2.children.forEach((item3, idx2) => {
-                  if (item3.id === ctx.item.id) {
-                    item2.splice(idx, 1)
-                  }
-                })
-              })
-            })
-          })
+          this.get()
         } else {
           this.$Message.success(res.msg)
         }

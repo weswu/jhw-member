@@ -1,4 +1,4 @@
-<template>
+  <template>
   <Layout class="j_layout ivu-layout-has-sider j_product">
     <MenuBar :data="'menu_product'" :active="'product'"/>
     <Layout class="j_layout_content">
@@ -99,61 +99,6 @@ import DragableTable from '@/components/group/j-dragable-table'
 import SeoDetail from '@/pages/static/SeoDetail'
 import TransferCategory from '@/components/group/transfer-category'
 import categorySelect from '@/components/group/j-category-select'
-const cellInput = (vm, h, params) => {
-  return h('Input', {
-    props: {
-      type: 'text',
-      value: params.row[params.column.key]
-    },
-    on: {
-      input: (val) => {
-        params.row[params.column.key] = val
-      }
-    }
-  })
-}
-const incellEditBtn = (vm, h, params) => {
-  return h('i', {
-    class: {
-      'none': true,
-      'iconfont': true,
-      'icon-bianji2': true
-    },
-    on: {
-      click: (event) => {
-        params.row.edittingCell[params.column.key] = true
-      }
-    }
-  })
-}
-const saveIncellEditBtn = (vm, h, params) => {
-  return h('Button', {
-    props: {
-      type: 'text',
-      icon: 'checkmark'
-    },
-    on: {
-      click: (event) => {
-        params.row.edittingCell[params.column.key] = false
-        let model = {
-          id: params.row.productId
-        }
-        model[params.column.key] = params.row[params.column.key]
-        let data = {
-          model: JSON.stringify(model),
-          _method: 'put'
-        }
-        vm.$http.post('/rest/api/product/detail/' + params.row.productId, qs.stringify(data)).then((res) => {
-          if (res.success) {
-            vm.$Message.success('修改成功')
-          } else {
-            vm.$Message.error(res.msg)
-          }
-        })
-      }
-    }
-  })
-}
 export default {
   components: {
     MenuBar,
@@ -182,6 +127,18 @@ export default {
         { title: '排序', className: 'j_table_sort', sortable: true, key: 'sort', minWidth: 80, render: this.sortFilter }
       ],
       list: [],
+      listText: [
+        {
+          id: '555',
+          name: 'ccc',
+          prodtype: '555',
+          edittingCell: {
+            name: false,
+            prodtype: false,
+            api: 'product'
+          }
+        }
+      ],
       searchData: {
         page: 1,
         pageSize: 10
@@ -214,7 +171,9 @@ export default {
             item._checked = false
             item.edittingCell = {
               name: false,
-              prodtype: false
+              prodtype: false,
+              api: 'product',
+              id: item.productId
             }
           })
           this.list = data || []
@@ -237,14 +196,10 @@ export default {
       this.columns = [
         { type: 'selection', className: 'j_table_checkbox', width: 44 }
       ]
-      this.myShowSelect.forEach(item => {
-        this.columns2.forEach(col => {
+      this.columns2.forEach(col => {
+        this.myShowSelect.forEach(item => {
           if (item === col.title) {
-            if (item === '序号') {
-              ctx.columns.splice(1, 0, col)
-            } else {
-              ctx.columns.push(col)
-            }
+            ctx.columns.push(col)
           }
         })
       })
@@ -453,7 +408,6 @@ export default {
       ])
     },
     nameFilter (h, params) {
-      var ctx = this
       let data = [
         h('li', {
           style: {
@@ -479,20 +433,56 @@ export default {
           ])
         ]))
       })
-      let div = [
-        h('span', {
-          style: {
-            color: '#5b5b5b',
-            height: '55px',
-            display: 'block',
-            textOverflow: 'ellipsis',
-            overflow: 'hidden'
+      let input = h('Input', {
+        props: {
+          type: 'textarea',
+          value: params.row[params.column.key]
+        },
+        on: {
+          input: (val) => {
+            params.row[params.column.key] = val
           }
-        }, params.row.name || '产品名称')
+        }
+      })
+      let div = [
+        h('Row', {
+          props: {
+            type: 'flex',
+            align: 'middle',
+            justify: 'center'
+          }
+        }, [
+          h('Col', {
+            props: {
+              span: '22'
+            }
+          }, [
+            !params.row.edittingCell[params.column.key] ? h('span', {
+              style: {
+                color: '#5b5b5b',
+                height: '55px',
+                display: 'block',
+                textOverflow: 'ellipsis',
+                overflow: 'hidden'
+              }
+            }, params.row[params.column.key]) : input
+          ]),
+          h('Col', {
+            props: {
+              span: '2'
+            }
+          }, [
+            params.row.edittingCell[params.column.key] ? this.saveIncellEditBtn(this, h, params) : this.incellEditBtn(this, h, params)
+          ])
+        ])
       ]
       this.myShowSelect.forEach(item => {
         if (item === '二维码') {
-          div.push(h('p', [
+          div.push(h('p', {
+            style: {
+              marginTop: '3px'
+            }
+          }, [
             h('Poptip', {
               props: {
                 placement: 'right'
@@ -531,58 +521,7 @@ export default {
           ]))
         }
       })
-      return h('div', {
-        class: {
-          title: true
-        }
-      }, [
-        h('div', div),
-        h('i', {
-          class: {
-            'none': true,
-            'iconfont': true,
-            'icon-bianji2': true
-          },
-          on: {
-            click: () => {
-              this.$Modal.confirm({
-                render: (h) => {
-                  return h('Input', {
-                    props: {
-                      value: params.row.name,
-                      autofocus: true,
-                      placeholder: '修改产品名称',
-                      type: 'textarea'
-                    },
-                    on: {
-                      input: (val) => {
-                        params.row.name2 = val
-                      }
-                    }
-                  })
-                },
-                onOk: () => {
-                  let data = {
-                    model: JSON.stringify({
-                      id: params.row.productId,
-                      name: params.row.name2
-                    }),
-                    _method: 'put'
-                  }
-                  ctx.$http.post('/rest/api/product/detail/' + params.row.productId, qs.stringify(data)).then((res) => {
-                    if (res.success) {
-                      ctx.$Message.success('修改成功')
-                      ctx.list[params.index].name = params.row.name2
-                    } else {
-                      ctx.$Message.error(res.msg)
-                    }
-                  })
-                }
-              })
-            }
-          }
-        })
-      ])
+      return h('div', div)
     },
     prodtypeFilter (h, params) {
       return h('Row', {
@@ -597,14 +536,14 @@ export default {
             span: '22'
           }
         }, [
-          !params.row.edittingCell[params.column.key] ? h('span', params.row[params.column.key]) : cellInput(this, h, params)
+          !params.row.edittingCell[params.column.key] ? h('span', params.row[params.column.key]) : this.cellInput(this, h, params)
         ]),
         h('Col', {
           props: {
             span: '2'
           }
         }, [
-          params.row.edittingCell[params.column.key] ? saveIncellEditBtn(this, h, params) : incellEditBtn(this, h, params)
+          params.row.edittingCell[params.column.key] ? this.saveIncellEditBtn(this, h, params) : this.incellEditBtn(this, h, params)
         ])
       ])
     },

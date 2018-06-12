@@ -17,8 +17,7 @@ export default {
       default () {
         return {
           page: 1,
-          pageSize: 10,
-          sort: 'addTime,desc'
+          pageSize: 10
         }
       }
     }
@@ -31,7 +30,7 @@ export default {
     return {
       columns: [
         { title: '订单编号', key: 'outTradeNo', width: 130 },
-        { title: '订单摘要', key: 'name', ellipsis: true },
+        { title: '订单摘要', key: 'name', ellipsis: true, minWidth: 130 },
         { title: '原价', render: this.totalPriceFilter, width: 85 },
         { title: '应付金额', render: this.paidPriceFilter, width: 85 },
         { title: '订单创建时间', render: this.dateFilter, width: 135 },
@@ -51,13 +50,10 @@ export default {
     get () {
       let data = {
         size: this.searchData.pageSize,
-        page: this.searchData.page - 1
+        page: this.searchData.page - 1,
+        sort: 'addTime,desc'
       }
-      this.$http.get('/rest/buy/api/order/orderHistory?' + qs.stringify(data), {
-        headers: {
-          'X-CSRF-Token': this.$store.state.user.token
-        }
-      }).then(res => {
+      this.$http.get('/rest/buy/api/order/orderHistory?' + qs.stringify(data)).then(res => {
         if (res.code === 0) {
           this.total = res.data.totalElements
           this.list = res.data.content

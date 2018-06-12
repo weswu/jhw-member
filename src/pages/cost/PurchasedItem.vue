@@ -17,8 +17,7 @@ export default {
       default () {
         return {
           page: 1,
-          pageSize: 10,
-          sort: 'addTime,desc'
+          pageSize: 10
         }
       }
     }
@@ -30,7 +29,7 @@ export default {
   data () {
     return {
       columns: [
-        { title: '产品名称', key: 'name', ellipsis: true },
+        { title: '产品名称', key: 'name', ellipsis: true, minWidth: 180 },
         { title: '原价', render: this.totalPriceFilter, width: 85 },
         { title: '应付金额', render: this.paidPriceFilter, width: 85 },
         { title: '数量', render: this.numberFilter, width: 60 },
@@ -39,11 +38,7 @@ export default {
         { title: '到期时间', render: this.endFilter, width: 135 },
         { title: '操作', className: 'j_table_operate', width: 110, render: this.renderOperate }
       ],
-      list: [
-        {
-          orderId: '8a9e457e614c6de3016153d2dd46001a'
-        }
-      ],
+      list: [],
       total: 0
     }
   },
@@ -57,13 +52,10 @@ export default {
     get () {
       let data = {
         size: this.searchData.pageSize,
-        page: this.searchData.page - 1
+        page: this.searchData.page - 1,
+        sort: 'addTime,desc'
       }
-      this.$http.get('/rest/buy/api/order/listPaid?' + qs.stringify(data), {
-        headers: {
-          'X-CSRF-Token': this.$store.state.user.token
-        }
-      }).then(res => {
+      this.$http.get('/rest/buy/api/order/listPaid?' + qs.stringify(data)).then(res => {
         if (res.code === 0) {
           this.total = res.data.totalElements
           this.list = res.data.content

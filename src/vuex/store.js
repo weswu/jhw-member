@@ -22,6 +22,7 @@ const store = new Vuex.Store({
     newsCategory: [
       {
         categoryId: 'ccc',
+        name: 'text',
         isdisplay: '1'
       }
     ],
@@ -162,6 +163,7 @@ const store = new Vuex.Store({
             addTime: 1272102123858,
             enterprise: {}
           })
+          this.dispatch('getStaticList')
         } else {
           this._vm.$Message.success(res.msg)
         }
@@ -182,17 +184,17 @@ const store = new Vuex.Store({
       })
     },
     getCategory ({commit, state}, type) {
-      this._vm.$http.get('/rest/api/category/' + type + '?pageSize=1000').then(res => {
+      return this._vm.$http.get('/rest/api/category/' + type + '?pageSize=1000').then(res => {
         if (res.success) {
           let data = res.attributes.data
           let list = []
           // 1级
           data.forEach(item => {
             if (!item.belongId) {
+              item.isroot = false
               item._checked = false
               item.expand = true // 展开三角-图标
               item.grade = '1'
-              item.children = []
               list.push(item)
             }
           })
@@ -200,12 +202,12 @@ const store = new Vuex.Store({
           data.forEach(row => {
             list.forEach((item, index) => {
               if (item.grade === '1' && (row.belongId === item.categoryId)) {
+                item.isroot = true // 有子分类
+                row.isroot = false
                 row._checked = false
-                item.hidden = false // 显示隐藏
-                item.expand = true
+                row.hidden = false // 显示隐藏
+                row.expand = true
                 row.grade = '2'
-                item.children = []
-                item.children.push(row)
                 list.splice(index + 1, 0, row)
               }
             })
@@ -214,23 +216,14 @@ const store = new Vuex.Store({
           data.forEach(row => {
             list.forEach((item, index) => {
               if (item.grade === '2' && (row.belongId === item.categoryId)) {
+                item.isroot = true
+                row.isroot = false
                 row._checked = false
-                item.hidden = false
+                row.hidden = false
                 row.grade = '3'
                 list.splice(index + 1, 0, row)
               }
             })
-          })
-          list.forEach((item, index) => {
-            item.isroot = false
-            if (list.length > (index + 1)) {
-              if (item.grade === '1') {
-                item.isroot = item.grade === '1' && list[index + 1].grade === '2'
-              }
-              if (item.grade === '2') {
-                item.isroot = item.grade === '2' && list[index + 1].grade === '3'
-              }
-            }
           })
           if (list) {
             if (list[0].type === '10') this.commit('setProductCategory', list)
@@ -317,11 +310,7 @@ const store = new Vuex.Store({
       })
     },
     getStaticList ({commit, state}) {
-      return this._vm.$http.get('/rest/pc/api/baseLayout/list?page=1&pageSize=100', {
-        headers: {
-          'X-CSRF-Token': state.user.token
-        }
-      }).then(res => {
+      return this._vm.$http.get('/rest/pc/api/baseLayout/list?page=1&pageSize=100').then(res => {
         if (res.success) {
           this.commit('setStaticList', res.attributes.data)
           if (res.attributes.data.length > 0) {

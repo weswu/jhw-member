@@ -48,6 +48,8 @@ export default {
       this.$http.get('/rest/api/webinfo/detail/id').then(res => {
         if (res.success) {
           this.detail = res.attributes.data
+          if (!this.detail.memberRegisterPcDisplay) this.detail.memberRegisterPcDisplay = '00'
+          if (!this.detail.memberRegisterMobileDisplay) this.detail.memberRegisterMobileDisplay = '00'
         } else {
           this.$Message.error(res.msg)
         }

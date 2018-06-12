@@ -202,12 +202,12 @@ export default {
   },
   data () {
     return {
-      active: '5',
+      active: '0',
       detail: {
         attrState: '01',
         customAttrMapStore: [],
         productAttributeMapStore: [],
-        attrItems: [
+        attrItemsText: [
           {
             addTime: {
               date: 9,

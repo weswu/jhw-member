@@ -29,7 +29,7 @@
               <li><a :href="'http://buy.jihui88.com/#/?tab=tab2&layoutId=' + item.id" target="_blank">定制设计</a></li>
             </ul>
           </Poptip>
-          <a href="javascript:;" class="buy" v-if="item.new" @click="again">续费</a>
+          <a href="javascript:;" class="buy" v-if="item.new" @click="again(item.id)">续费</a>
           <a :href="'http://buy.jihui88.com/#/?layoutId=' + item.id" class="buy" target="_blank" v-if="item.new">升级</a>
         </p>
         <p class="more">
@@ -132,11 +132,7 @@ export default {
   },
   methods: {
     get () {
-      this.$http.get('/rest/pc/api/baseLayout/list?' + qs.stringify(this.searchData), {
-        headers: {
-          'X-CSRF-Token': this.$store.state.user.token
-        }
-      }).then((res) => {
+      this.$http.get('/rest/pc/api/baseLayout/list?' + qs.stringify(this.searchData)).then((res) => {
         if (res.success) {
           res.attributes.data.forEach(item => {
             if (item.bind.address) {
@@ -178,6 +174,9 @@ export default {
               src: 'http://buy.jihui88.com/#/qrcode?layoutId=' + id,
               frameborder: '0',
               scrolling: 'no'
+            },
+            style: {
+              height: '428px'
             }
           })
         }
@@ -197,11 +196,7 @@ export default {
         }),
         methods: 'put'
       }
-      this.$http.post('/rest/pc/api/baseLayout/detail/' + item.id, qs.stringify(data), {
-        headers: {
-          'X-CSRF-Token': this.$store.state.user.token
-        }
-      }).then((res) => {
+      this.$http.post('/rest/pc/api/baseLayout/detail/' + item.id, qs.stringify(data)).then((res) => {
         if (res.success) {
           this.$Message.success('修改成功')
           item.seoTitle = item.seoTitle2
@@ -225,11 +220,7 @@ export default {
           copyId: item.id
         })
       }
-      this.$http.post('/rest/pc/api/baseLayout/detail', qs.stringify(data), {
-        headers: {
-          'X-CSRF-Token': this.$store.state.user.token
-        }
-      }).then((res) => {
+      this.$http.post('/rest/pc/api/baseLayout/detail', qs.stringify(data)).then((res) => {
         if (res.success) {
           this.$Message.success('复制成功')
           this.list.splice(0, 0, res.attributes.data)
@@ -239,11 +230,7 @@ export default {
       })
     },
     del (id) {
-      this.$http.delete('/rest/pc/api/baseLayout/detail/' + id, {
-        headers: {
-          'X-CSRF-Token': this.$store.state.user.token
-        }
-      }).then((res) => {
+      this.$http.delete('/rest/pc/api/baseLayout/detail/' + id).then((res) => {
         if (res.success) {
           this.$Message.success('删除成功')
           for (let i = 0; i < this.list.length; i++) {
@@ -271,11 +258,7 @@ export default {
         }),
         methods: 'put'
       }
-      this.$http.post('/rest/pc/api/baseLayout/languageLayout/' + this.id, qs.stringify(data), {
-        headers: {
-          'X-CSRF-Token': this.$store.state.user.token
-        }
-      }).then((res) => {
+      this.$http.post('/rest/pc/api/baseLayout/languageLayout/' + this.id, qs.stringify(data)).then((res) => {
         if (res.success) {
           this.$Message.success('修改成功')
           this.list.forEach(item => {

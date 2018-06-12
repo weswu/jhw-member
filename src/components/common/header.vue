@@ -81,15 +81,11 @@ export default {
     this.$store.commit('setLanId', window.localStorage.getItem('lanId') || '1')
     this.getUser()
     this.getUserInfo()
-    var ctx = this
-    setTimeout(function () {
-      ctx.getStaticList()
-    }, 1000)
+    this.getCustomData()
   },
   methods: {
-    ...mapActions(['getUser', 'getUserInfo', 'getMessage', 'getStaticList']),
+    ...mapActions(['getUser', 'getUserInfo', 'getMessage', 'getCustomData']),
     signout () {
-      let ctx = this
       // 新版PC注销操作
       this.ilogout('iframepclogout', 'http://pc.jihui88.com/rest/api/user/logout')
       // 订购系统注销操作
@@ -97,10 +93,9 @@ export default {
       this.ilogout('iframebuylogout', 'http://www.jihui88.com/rest/buy/api/user/logout')
       this.$http.get('/rest/api/user/logout').then((res) => {
         if (res.success) {
-          ctx.$store.commit('setUser', {})
           window.location.href = 'http://www.jihui88.com/member/login.html?backURL=' + decodeURIComponent(window.location.href)
         } else {
-          ctx.$Message.success(res.msg)
+          this.$Message.success(res.msg)
         }
       })
       window.localStorage.setItem('lanId', '1')

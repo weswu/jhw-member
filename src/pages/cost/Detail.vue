@@ -94,7 +94,8 @@ export default {
   data () {
     return {
       modal: false,
-      detail: {
+      detail: {},
+      detailText: {
         'orderId': '8a9e457e614c6de3016153d2dd46001a',
         'outTradeNo': '1000932859421',
         'paymentType': 'PAID',
@@ -135,13 +136,9 @@ export default {
     open (id, type) {
       this.modal = true
       this.type = type
-      this.$http.get('/rest/buy/api/order/detail/user?orderId=' + id, {
-        headers: {
-          'X-CSRF-Token': this.$store.state.user.token
-        }
-      }).then((res) => {
+      this.$http.get('/rest/buy/api/order/detail/user?orderId=' + id).then((res) => {
         if (res.code === 0) {
-          this.detail = res.data.order
+          this.detail = res.data
           if (this.detail.paymentType === 'UN_PAY') { this.tip = '<span class="red">未支付</span>' }
           if (this.detail.paymentType === 'PAID') { this.tip = '<span class="green">已支付</span>' }
           if (this.detail.paymentType === 'PART_PAY') { this.tip = '部分支付' }

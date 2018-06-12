@@ -3,12 +3,12 @@
     <Tabs :value="tabActive">
       <TabPane label="消费记录" name="1">
         <div class="j_warpper">
-          <OrderItem :searchData="{ page: 1, pageSize: 3, sort: 'addTime,desc' }"/>
+          <OrderItem :searchData="{ page: 1, pageSize: 3 }"/>
         </div>
       </TabPane>
       <TabPane label="已购产品" name="2">
         <div class="j_warpper">
-          <PurchasedItem :searchData="{ page: 1, pageSize: 3, sort: 'addTime,desc' }"/>
+          <PurchasedItem :searchData="{ page: 1, pageSize: 3 }"/>
         </div>
       </TabPane>
       <TabPane label="我的积分" name="3">

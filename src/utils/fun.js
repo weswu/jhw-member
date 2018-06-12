@@ -120,3 +120,59 @@ Vue.prototype.sortPost = function (id, sort, url) {
 Vue.prototype.update = function (e) {
   e.info('更新中...')
 }
+Vue.prototype.cellInput = (vm, h, params) => {
+  return h('Input', {
+    props: {
+      type: 'text',
+      value: params.row[params.column.key]
+    },
+    on: {
+      input: (val) => {
+        params.row[params.column.key] = val
+      }
+    }
+  })
+}
+Vue.prototype.incellEditBtn = (vm, h, params) => {
+  return h('i', {
+    class: {
+      'none': true,
+      'iconfont': true,
+      'icon-bianji2': true
+    },
+    on: {
+      click: (event) => {
+        params.row.edittingCell[params.column.key] = true
+      }
+    }
+  })
+}
+Vue.prototype.saveIncellEditBtn = (vm, h, params) => {
+  return h('Button', {
+    props: {
+      type: 'text',
+      icon: 'checkmark'
+    },
+    on: {
+      click: (event) => {
+        params.row.edittingCell[params.column.key] = false
+        let model = {
+          id: params.row.id,
+          editField: true
+        }
+        model[params.column.key] = params.row[params.column.key]
+        let data = {
+          model: JSON.stringify(model),
+          _method: 'put'
+        }
+        vm.$http.post('/rest/api/' + params.row.edittingCell.api + '/detail/' + params.row.edittingCell.id, qs.stringify(data)).then((res) => {
+          if (res.success) {
+            vm.$Message.success('修改成功')
+          } else {
+            vm.$Message.error(res.msg)
+          }
+        })
+      }
+    }
+  })
+}

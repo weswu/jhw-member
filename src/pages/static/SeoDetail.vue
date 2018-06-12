@@ -61,11 +61,7 @@ export default {
       this.modal = true
       this.type = type
       if (type === 'page') {
-        this.$http.get('/rest/pc/api/navigator/detail/' + id, {
-          headers: {
-            'X-CSRF-Token': this.$store.state.user.token
-          }
-        }).then((res) => {
+        this.$http.get('/rest/pc/api/navigator/detail/' + id).then((res) => {
           if (res.success) {
             this.model = res.attributes.data
             this.model.title = this.model.seoTitle

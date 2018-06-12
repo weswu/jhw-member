@@ -93,11 +93,7 @@ export default {
       let data = {
         model: JSON.stringify(obj)
       }
-      this.$http.post('/rest/pc/api/baseLayout/detail', qs.stringify(data), {
-        headers: {
-          'X-CSRF-Token': this.$store.state.user.token
-        }
-      }).then((res) => {
+      this.$http.post('/rest/pc/api/baseLayout/detail', qs.stringify(data)).then((res) => {
         if (res.success) {
           this.$Message.success('添加成功')
           this.$emit('on-change')
