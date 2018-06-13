@@ -11,7 +11,7 @@
             </Col>
             <Col>
               <span class="a_underline" @click="myShow">我的显示</span>
-              <Input v-model="model.title" clearable placeholder="请输入产品名称" class="w180"></Input>
+              <Input v-model="searchData.name" clearable placeholder="请输入产品名称" class="w180" @on-change="clearInput"></Input>
               <Button class="search" @click="search">搜索</Button>
               <Poptip placement="bottom-end" class="j_poptip_confirm_edit"
                 confirm
@@ -118,16 +118,16 @@ export default {
       columns2: [
         { type: 'index2', className: 'j_table_index', title: '序号', align: 'center', width: 60, render: this.indexFilter },
         { title: '产品图片', className: 'j_table_img', key: 'pic', width: 105, render: this.imgFilter },
-        { title: '产品名称', className: 'j_table_title', sortable: true, key: 'name', width: 150, render: this.nameFilter },
-        { title: '产品型号', className: 'j_table_title', sortable: true, key: 'prodtype', width: 130, render: this.prodtypeFilter },
+        { title: '产品名称', className: 'j_table_title', sortable: true, key: 'name', minWidth: 150, render: this.nameFilter },
+        { title: '产品型号', className: 'j_table_title', sortable: true, key: 'prodtype', minWidth: 130, render: this.prodtypeFilter },
         { title: '产品价格', render: this.priceFilter },
         { title: '产品分类', className: 'j_table_category', sortable: true, key: 'category', width: 160, render: this.categoryFilter },
-        { title: '添加时间', sortable: true, key: 'addTime', width: 105, render: this.dataFilter },
-        { title: '是否上架', sortable: true, key: 'isdisplay', width: 105, render: this.isdisplayFilter },
-        { title: '排序', className: 'j_table_sort', sortable: true, key: 'sort', minWidth: 80, render: this.sortFilter }
+        { title: '添加时间', sortable: true, key: 'addTime', minWidth: 105, render: this.dataFilter },
+        { title: '是否上架', sortable: true, key: 'isdisplay', width: 102, render: this.isdisplayFilter },
+        { title: '排序', className: 'j_table_sort', sortable: true, key: 'sort', minWidth: 125, render: this.sortFilter }
       ],
       list: [],
-      listText: [
+      listTest: [
         {
           id: '555',
           name: 'ccc',
@@ -135,7 +135,9 @@ export default {
           edittingCell: {
             name: false,
             prodtype: false,
-            api: 'product'
+            sort: false,
+            api: 'product',
+            id: '666'
           }
         }
       ],
@@ -172,6 +174,7 @@ export default {
             item.edittingCell = {
               name: false,
               prodtype: false,
+              sort: false,
               api: 'product',
               id: item.productId
             }
@@ -208,6 +211,11 @@ export default {
       this.$store.dispatch('SAVE_CUSTOM_DATA')
     },
     // 搜索
+    clearInput () {
+      if (this.searchData.name === '') {
+        this.get()
+      }
+    },
     search () {
       this.searchData = {
         page: 1,
@@ -524,28 +532,7 @@ export default {
       return h('div', div)
     },
     prodtypeFilter (h, params) {
-      return h('Row', {
-        props: {
-          type: 'flex',
-          align: 'middle',
-          justify: 'center'
-        }
-      }, [
-        h('Col', {
-          props: {
-            span: '22'
-          }
-        }, [
-          !params.row.edittingCell[params.column.key] ? h('span', params.row[params.column.key]) : this.cellInput(this, h, params)
-        ]),
-        h('Col', {
-          props: {
-            span: '2'
-          }
-        }, [
-          params.row.edittingCell[params.column.key] ? this.saveIncellEditBtn(this, h, params) : this.incellEditBtn(this, h, params)
-        ])
-      ])
+      return this.cellEdit(this, h, params)
     },
     priceFilter (h, params) {
       return h('span', {
@@ -677,95 +664,7 @@ export default {
       ])
     },
     sortFilter (h, params) {
-      var ctx = this
-      return h('div', [
-        h('span', params.row.sort),
-        h('i', {
-          class: {
-            'none': true,
-            'iconfont': true,
-            'icon-bianji2': true
-          },
-          on: {
-            click: () => {
-              this.$Modal.confirm({
-                render: (h) => {
-                  return h('Input', {
-                    props: {
-                      value: params.row.sort,
-                      autofocus: true,
-                      placeholder: '修改排序'
-                    },
-                    on: {
-                      input: (val) => {
-                        params.row.sort2 = val
-                      }
-                    }
-                  })
-                },
-                onOk: () => {
-                  let data = {
-                    model: JSON.stringify({
-                      id: params.row.productId,
-                      sort: params.row.sort2
-                    }),
-                    _method: 'put'
-                  }
-                  ctx.$http.post('/rest/api/product/detail/' + params.row.productId, qs.stringify(data)).then((res) => {
-                    if (res.success) {
-                      ctx.$Message.success('修改成功')
-                      ctx.list[params.index].sort = params.row.sort2
-                    } else {
-                      ctx.$Message.error(res.msg)
-                    }
-                  })
-                }
-              })
-            }
-          }
-        }),
-        h('span', {
-          class: {
-            'j_sort': true
-          }
-        }, [
-          h('i', {
-            class: {
-              'none': true,
-              'iconfont': true,
-              'icon-icon--': true
-            },
-            on: {
-              click: () => {
-                if (params.index > 0) {
-                  this.sortable(params.index, params.index - 1, 'product', 'productId')
-                }
-              }
-            }
-          }),
-          h('i', {
-            class: {
-              'none': true,
-              'iconfont': true,
-              'icon-tuozhuai': true
-            }
-          }),
-          h('i', {
-            class: {
-              'none': true,
-              'iconfont': true,
-              'icon-icon--1': true
-            },
-            on: {
-              click: () => {
-                if (params.index < this.searchData.pageSize - 1) {
-                  this.sortable(params.index, params.index + 1, 'product', 'productId')
-                }
-              }
-            }
-          })
-        ])
-      ])
+      return this.cellEdit(this, h, params)
     },
     renderOperate (h, params) {
       var ctx = this

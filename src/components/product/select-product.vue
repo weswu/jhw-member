@@ -4,8 +4,8 @@
     width="700"
     :title="title">
     <div class="j_search">
-      <Input v-model="searchData.name" placeholder="请输入产品名称" clearable class="w144"></Input>
-      <Input v-model="searchData.prodtype" placeholder="请输入产品型号" clearable class="w144" style="margin-left:3px"></Input>
+      <Input v-model="searchData.name" placeholder="请输入产品名称" clearable class="w144" @on-change="clearInput('name')"></Input>
+      <Input v-model="searchData.prodtype" placeholder="请输入产品型号" clearable class="w144" style="margin-left:3px" @on-change="clearInput('prodtype')"></Input>
       <Button class="search" @click="search">搜索</Button>
     </div>
     <Table :columns="columns" :data="list" @on-select="selected" @on-select-cancel="selectCancel" @on-select-all="selectAll"></Table>
@@ -107,6 +107,11 @@ export default {
       this.cancel()
     },
     // 搜索
+    clearInput (e) {
+      if (this.searchData[e] === '') {
+        this.get()
+      }
+    },
     search (e) {
       this.searchData.page = 1
       this.get()

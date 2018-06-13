@@ -102,7 +102,6 @@ Vue.prototype.sortable = function (a, b, url, id) {
 Vue.prototype.sortPost = function (id, sort, url) {
   let data = {
     model: JSON.stringify({
-      id: id,
       sort: sort,
       editField: true
     }),
@@ -120,6 +119,64 @@ Vue.prototype.sortPost = function (id, sort, url) {
 Vue.prototype.update = function (e) {
   e.info('更新中...')
 }
+
+Vue.prototype.cellSort = (vm, h, params) => {
+  return h('div', [
+    h('i', {
+      class: {
+        'none': true,
+        'iconfont': true,
+        'icon-bianji2': true
+      },
+      on: {
+        click: () => {
+          params.row.edittingCell[params.column.key] = true
+        }
+      }
+    }),
+    h('span', {
+      class: {
+        'j_sort': true
+      }
+    }, [
+      h('i', {
+        class: {
+          'none': true,
+          'iconfont': true,
+          'icon-icon--': true
+        },
+        on: {
+          click: () => {
+            if (params.index > 0) {
+              vm.sortable(params.index, params.index - 1, params.row.edittingCell.api, params.row.edittingCell.id)
+            }
+          }
+        }
+      }),
+      h('i', {
+        class: {
+          'none': true,
+          'iconfont': true,
+          'icon-tuozhuai': true
+        }
+      }),
+      h('i', {
+        class: {
+          'none': true,
+          'iconfont': true,
+          'icon-icon--1': true
+        },
+        on: {
+          click: () => {
+            if (params.index < vm.list.pageSize - 1) {
+              vm.sortable(params.index, params.index + 1, params.row.edittingCell.api, params.row.edittingCell.id)
+            }
+          }
+        }
+      })
+    ])
+  ])
+}
 Vue.prototype.cellInput = (vm, h, params) => {
   return h('Input', {
     props: {
@@ -134,18 +191,22 @@ Vue.prototype.cellInput = (vm, h, params) => {
   })
 }
 Vue.prototype.incellEditBtn = (vm, h, params) => {
-  return h('i', {
-    class: {
-      'none': true,
-      'iconfont': true,
-      'icon-bianji2': true
-    },
-    on: {
-      click: (event) => {
-        params.row.edittingCell[params.column.key] = true
+  if (params.column.key === 'sort') {
+    return vm.cellSort(vm, h, params)
+  } else {
+    return h('i', {
+      class: {
+        'none': true,
+        'iconfont': true,
+        'icon-bianji2': true
+      },
+      on: {
+        click: (event) => {
+          params.row.edittingCell[params.column.key] = true
+        }
       }
-    }
-  })
+    })
+  }
 }
 Vue.prototype.saveIncellEditBtn = (vm, h, params) => {
   return h('Button', {
@@ -156,6 +217,7 @@ Vue.prototype.saveIncellEditBtn = (vm, h, params) => {
     on: {
       click: (event) => {
         params.row.edittingCell[params.column.key] = false
+        vm.list[params.index] = params.row
         let model = {
           id: params.row.id,
           editField: true
@@ -167,6 +229,9 @@ Vue.prototype.saveIncellEditBtn = (vm, h, params) => {
         }
         vm.$http.post('/rest/api/' + params.row.edittingCell.api + '/detail/' + params.row.edittingCell.id, qs.stringify(data)).then((res) => {
           if (res.success) {
+            if (params.column.key === 'sort') {
+              vm.get()
+            }
             vm.$Message.success('修改成功')
           } else {
             vm.$Message.error(res.msg)
@@ -175,4 +240,28 @@ Vue.prototype.saveIncellEditBtn = (vm, h, params) => {
       }
     }
   })
+}
+Vue.prototype.cellEdit = (vm, h, params) => {
+  return h('Row', {
+    props: {
+      type: 'flex',
+      align: 'middle',
+      justify: 'center'
+    }
+  }, [
+    h('Col', {
+      props: {
+        span: params.column.key === 'sort' ? '14' : '22'
+      }
+    }, [
+      !params.row.edittingCell[params.column.key] ? h('span', params.row[params.column.key]) : vm.cellInput(vm, h, params)
+    ]),
+    h('Col', {
+      props: {
+        span: params.column.key === 'sort' ? '10' : '2'
+      }
+    }, [
+      params.row.edittingCell[params.column.key] ? vm.saveIncellEditBtn(vm, h, params) : vm.incellEditBtn(vm, h, params)
+    ])
+  ])
 }

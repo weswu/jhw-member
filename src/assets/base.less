@@ -46,6 +46,9 @@ a.primary{
 .red{
   color: @error-color;
 }
+.green{
+  color: @success-color;
+}
 .pl5{
   padding-left: 5px;
 }
@@ -331,9 +334,6 @@ a.primary{
   .ivu-input{
      border:none;
      box-shadow: none;
-     background: none;
-     position: relative;
-     z-index: 99;
   }
   .ivu-input-icon{
     color: #a0a0a0;
@@ -374,6 +374,14 @@ a.primary{
           }
           .icon-bianji2{
             font-size: 12px;
+          }
+          .ivu-row-flex{
+            span{
+              color: @text-color;
+            }
+            .ivu-input{
+              padding: 0 5px;
+            }
           }
         }
         &.ivu-table-row-hover{

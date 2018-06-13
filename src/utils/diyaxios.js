@@ -3,7 +3,7 @@ axios.defaults.timeout = 15000
 // 添加一个请求拦截器
 axios.interceptors.request.use(config => {
   // header都加上token
-  if (config.url.indexOf('/rest/pc/api/') > -1 || config.url.indexOf('/rest//buy/api') > -1) {
+  if (config.url.indexOf('/rest/pc/api/') > -1 || config.url.indexOf('/rest/buy/api/') > -1) {
     config.headers['X-CSRF-Token'] = window.token
   }
   return config

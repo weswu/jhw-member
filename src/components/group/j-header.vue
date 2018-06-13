@@ -6,10 +6,10 @@
           <span class="title">{{title}}<span v-if="count">拥有积分：{{count}}分</span></span>
         </Col>
         <Col>
-          <Select v-model="$store.state.lanId" class="primary" @on-change="change" style="width:106px" v-if="lan">
+          <Select v-model="$store.state.lanId" class="primary" @on-change="lanChange" style="width:106px" v-if="lan">
             <Option v-for="item in lanList" :value="item.value" :key="item.value">{{ item.text }}</Option>
           </Select>
-          <Select v-model="$store.state.layoutId" class="primary" @on-change="staticChange" style="width:167px" v-if="website">
+          <Select v-model="$store.state.layoutId" class="primary" @on-change="layoutChange" style="width:167px" v-if="website">
             <Option v-for="item in staticList" :value="item.layoutId" :key="item.layoutId">网站编号：{{ item.layoutId }}</Option>
           </Select>
           <slot name="btn"></slot>
@@ -47,13 +47,15 @@ export default {
     })
   },
   methods: {
-    change (e) {
+    lanChange (e) {
       var ctx = this
       this.$store.dispatch('lanIdChange', e).then((res) => {
         ctx.$emit('on-change', e)
       })
     },
-    staticChange (e) {
+    layoutChange (e) {
+      console.log('layout:' + e)
+      window.localStorage.setItem('layoutId', e)
       this.$emit('on-layout', e)
     }
   }

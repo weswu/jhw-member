@@ -5,8 +5,8 @@
       <li
         v-for="item in data"
         :key="item.categoryId"
-        v-if="item.isdisplay === '1' && !item.hidden"
-        :class="{'ivu-select-item-selected': item.categoryId === categoryId, 'ivu-select-item': true, 'item1': item.grade == '1', 'item2': item.grade == '2', 'item3': item.grade == '3'}"
+        v-if="!item.hidden"
+        :class="{'ivu-select-item-selected': item.bg, 'ivu-select-item': true, 'item1': item.grade == '1', 'item2': item.grade == '2', 'item3': item.grade == '3'}"
         @click="select(item)">
         <span>{{item.name}}</span>
         <i class="iconfont icon-xialajiantou" v-if="item.isroot && !item.expand" @click.stop="changeCateList(item)"></i>
@@ -43,12 +43,40 @@ export default {
           }
         })
         ctx.data = ctx.list
+        ctx.initBg(ctx.categoryId)
       }, 200)
     },
     select (item) {
       this.name = item.name
+      if (this.$parent.$parent.name === 'j_category_multiple') {
+        // 为什么多了个中间组件
+        this.$parent.$parent.change(item.categoryId)
+      } else {
+        this.$emit('on-change', item.categoryId)
+      }
+      this.initBg(item.categoryId)
       this.visible = false
-      this.$emit('on-change', item.categoryId)
+    },
+    initBg (categoryId) {
+      var ctx = this
+      this.data.forEach(item => {
+        item.bg = false
+      })
+      this.data.forEach(item => {
+        if (item.categoryId === categoryId) {
+          item.bg = true
+          ctx.data.forEach(row => {
+            if (row.categoryId === item.belongId) {
+              row.bg = true
+              ctx.data.forEach(row2 => {
+                if (row2.categoryId === row.belongId) {
+                  row2.bg = true
+                }
+              })
+            }
+          })
+        }
+      })
     },
     changeCateList (data) {
       var ctx = this
@@ -73,6 +101,11 @@ export default {
   position: relative;
   width: 100%;
   max-width: 450px;
+  .ivu-input{
+     background: none;
+     position: relative;
+     z-index: 99;
+  }
   .ivu-select-dropdown{
     box-shadow: none;
     border: 1px solid #e9e9e9;
@@ -109,7 +142,7 @@ export default {
       background: #9dd9ff;
     }
     .icon-xialajiantou{
-      color: #fff;
+      color: #fff !important;
     }
   }
 }

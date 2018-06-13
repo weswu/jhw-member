@@ -10,7 +10,7 @@
               <Button type="info" icon="plus" class="w130" @click="url('/member/add')">添加会员</Button>
             </Col>
             <Col>
-              <Input v-model="searchData.name" class="w180" clearable placeholder="请输入用户名"></Input>
+              <Input v-model="searchData.name" class="w180" clearable placeholder="请输入用户名" @on-change="clearInput"></Input>
               <Button class="search" @click="search">搜索</Button>
               <Poptip placement="bottom-end" class="j_poptip_confirm_edit"
                 confirm
@@ -100,6 +100,11 @@ export default {
       })
     },
     // 功能
+    clearInput () {
+      if (this.searchData.name === '') {
+        this.get()
+      }
+    },
     search () {
       this.searchData = {
         page: 1,

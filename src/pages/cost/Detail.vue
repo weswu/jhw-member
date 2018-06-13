@@ -33,7 +33,7 @@
       </Row>
       <Row>
         <Col span="12">总计：￥{{detail.totalPrice}}</Col>
-        <Col span="12">客户应付金额：<span class="price">￥{{detail.paidPrice}}</span></Col>
+        <Col span="12">客户应付金额：<span class="price">￥{{detail.paidPrice || '-'}}</span></Col>
       </Row>
     </div>
     <div v-else>
@@ -42,7 +42,7 @@
       </Row>
       <Row>
         <Col span="12">原价：<span class="price">￥{{detail.totalPrice}}</span></Col>
-        <Col span="12">应付金额：<span class="price">￥{{detail.paidPrice}}</span></Col>
+        <Col span="12">应付金额：<span class="price">￥{{detail.paidPrice || '-'}}</span></Col>
       </Row>
       <Row>
         <Col span="12">数量：1</Col>
@@ -65,7 +65,7 @@
       </Row>
       <Row>
         <Col span="12">使用年限：{{item.year}}年</Col>
-        <Col span="12">x1</Col>
+        <Col span="12">原价：￥{{item.price}}x{{item.year}}</Col>
       </Row>
       <Row>
         <Col span="12">网站编号：{{detail.layoutId || '-'}}</Col>
@@ -77,7 +77,7 @@
         客户应付金额：<span class="price" style="font-size: 24px;">￥{{detail.paidPrice}}</span>
       </Col>
       <Col>
-        <a :href="'http://buy.jihui88.com/#/alipay?orderId=' + this.detail.orderId" target="_blank">
+        <a :href="'http://buy.jihui88.com/#/alipay?title=续费&orderId=' + this.detail.orderId" target="_blank">
           <Button type="primary" style="margin-right: 0;">确认支付</Button>
         </a>
       </Col>
@@ -143,7 +143,7 @@ export default {
           if (this.detail.paymentType === 'PAID') { this.tip = '<span class="green">已支付</span>' }
           if (this.detail.paymentType === 'PART_PAY') { this.tip = '部分支付' }
           if (type === 'order') {
-            this.title = '订单编辑：' + this.detail.outTradeNo
+            this.title = '订单编号：' + this.detail.outTradeNo
             this.tip = '订单状态：' + this.tip
           } else if (type === 'buy') {
             this.title = '产品续费'

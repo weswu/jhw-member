@@ -191,9 +191,10 @@ const store = new Vuex.Store({
           // 1级
           data.forEach(item => {
             if (!item.belongId) {
-              item.isroot = false
+              item.isroot = false // 根目录和三角
               item._checked = false
-              item.expand = true // 展开三角-图标
+              item.expand = true // 三角图标展开-关闭
+              item.bg = false // 层级背景颜色
               item.grade = '1'
               list.push(item)
             }
@@ -202,11 +203,12 @@ const store = new Vuex.Store({
           data.forEach(row => {
             list.forEach((item, index) => {
               if (item.grade === '1' && (row.belongId === item.categoryId)) {
-                item.isroot = true // 有子分类
+                item.isroot = true
                 row.isroot = false
                 row._checked = false
                 row.hidden = false // 显示隐藏
                 row.expand = true
+                row.bg = false
                 row.grade = '2'
                 list.splice(index + 1, 0, row)
               }
@@ -220,6 +222,7 @@ const store = new Vuex.Store({
                 row.isroot = false
                 row._checked = false
                 row.hidden = false
+                row.bg = false
                 row.grade = '3'
                 list.splice(index + 1, 0, row)
               }
@@ -305,7 +308,15 @@ const store = new Vuex.Store({
     getMemberAttr ({commit, state}) {
       return this._vm.$http.get('/rest/api/member/attr/list').then(res => {
         if (res.success) {
-          this.commit('setMemberAttrList', res.attributes.data)
+          let data = res.attributes.data
+          data.forEach(item => {
+            item.edittingCell = {
+              sort: false,
+              api: 'member/attr',
+              id: item.attId
+            }
+          })
+          this.commit('setMemberAttrList', data)
         }
       })
     },
@@ -314,7 +325,11 @@ const store = new Vuex.Store({
         if (res.success) {
           this.commit('setStaticList', res.attributes.data)
           if (res.attributes.data.length > 0) {
-            this.commit('setLayoutId', res.attributes.data[0].layoutId)
+            let layoutId = window.localStorage.getItem('layoutId')
+            if (!layoutId) {
+              layoutId = res.attributes.data[0].layoutId
+            }
+            this.commit('setLayoutId', parseInt(layoutId))
           }
         }
       })

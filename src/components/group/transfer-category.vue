@@ -47,7 +47,7 @@ export default {
       this.detail.ids = this.ids
       this.$http.post('/rest/api/' + this.type + '/batch/transfer', qs.stringify(this.detail)).then((res) => {
         if (res.success) {
-          this.$Message.success(res.msg || '转移成功')
+          this.$Message.success('转移成功')
           this.$emit('on-change')
           this.modal = false
         } else {

@@ -256,7 +256,7 @@ export default {
           id: this.id,
           language: this.lan
         }),
-        methods: 'put'
+        _method: 'put'
       }
       this.$http.post('/rest/pc/api/baseLayout/languageLayout/' + this.id, qs.stringify(data)).then((res) => {
         if (res.success) {

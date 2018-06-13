@@ -5,7 +5,7 @@
       <JHeader :title="'订单列表'"/>
       <Content>
         <div class="j_search">
-          <Input v-model="searchData.orderSn" class="w180" clearable placeholder="请输入订单编号"></Input>
+          <Input v-model="searchData.orderSn" class="w180" clearable placeholder="请输入订单编号" @on-change="clearInput"></Input>
           <Button class="search" @click="search">搜索</Button>
           <Poptip placement="bottom" class="j_poptip_confirm_edit"
             confirm
@@ -15,10 +15,10 @@
             <div slot="title">
               <Form :model="searchData" :label-width="90">
                 <FormItem label="订单编号：" class="formitem_left">
-                  <Input v-model="searchData.name" class="w180" clearable></Input>
+                  <Input v-model="searchData.orderSn" class="w180" clearable></Input>
                 </FormItem>
                 <FormItem label="用户名：" class="formitem_left">
-                  <Input v-model="searchData.username" class="w180" clearable></Input>
+                  <Input v-model="searchData.name" class="w180" clearable></Input>
                 </FormItem>
                 <FormItem label="收货人：" class="formitem_left">
                   <Input v-model="searchData.shipName" class="w180" clearable></Input>
@@ -89,7 +89,7 @@ export default {
     return {
       // 我的显示
       myShowSelect: this.$store.state.customData.shopShow,
-      myShowList: ['序号', '订单编号', '用户名', '订单总额', '订单状态', '付款状态', '配送状态', '支付方式', '配送方式', '下单时间', '来源（网站编辑）'],
+      myShowList: ['序号', '订单编号', '用户名', '订单总额', '订单状态', '付款状态', '配送状态', '支付方式', '配送方式', '下单时间', '来源（网站编号）'],
       columns: [],
       columns2: [
         { type: 'index2', title: '序号', align: 'center', width: 60, render: this.indexFilter },
@@ -102,7 +102,7 @@ export default {
         { title: '支付方式', key: 'paymentConfigName' },
         { title: '配送方式', render: this.deliveryFilter },
         { title: '下单时间', key: 'addTime', ellipsis: true, width: 150 },
-        { title: '来源（网站编辑）', key: 'layoutId' }
+        { title: '来源（网站编号）', key: 'layoutId' }
       ],
       list: [
         {}
@@ -143,6 +143,11 @@ export default {
       })
     },
     // 功能
+    clearInput () {
+      if (this.searchData.orderSn === '') {
+        this.get()
+      }
+    },
     search () {
       this.searchData = {
         page: 1,

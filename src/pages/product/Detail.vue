@@ -8,7 +8,7 @@
           <FormItem label="产品名称：">
             <Input v-model="detail.name" placeholder="请输入产品名称"></Input>
           </FormItem>
-          <CategoryList ref="category" :categorySelect="productCategory" :category="detail.category"/>
+          <CategoryList ref="category" :categorySelect="productCategory"/>
           <FormItem label="产品型号：">
             <Input v-model="detail.legalPre" placeholder="请输入产品型号"></Input>
           </FormItem>
@@ -272,6 +272,7 @@ export default {
             ctx.imgList.push({id: item.id, src: item.sourceProductImagePath})
           })
           this.detail = data
+          this.$refs.category.open(this.detail.category)
           this.initAttr()
         }
       })

@@ -4,7 +4,7 @@
       图片目录
     </div>
     <div style="width:209px;">
-      <Input v-model="name" class="w144" placeholder="搜索文件夹"></Input>
+      <Input v-model="name" class="w144" clearable placeholder="搜索文件夹" @on-change="clearInput"></Input>
       <Button class="search" @click="search" style="margin-right: 0;">搜索</Button>
     </div>
     <ul ref="menu" class="menu j_panel">
@@ -15,7 +15,7 @@
       <li @click="del">删除</li>
     </ul>
     <Tree :data="data" class="j_scroll"></Tree>
-    <Add ref="add"/>
+    <Add ref="add" @on-change="get"/>
     <TransferAlbum ref="TransferAlbum" :item="item" @on-change="get"/>
   </div>
 </template>
@@ -70,7 +70,7 @@ export default {
     initData () {
       var ctx = this
       this.list = this.$store.state.albumCategory
-      this.data = [
+      this.data2 = [
         {
           title: '全部图片',
           id: 'all',
@@ -80,7 +80,7 @@ export default {
           children: []
         }
       ]
-      ctx.data2 = [
+      ctx.data = [
         {
           title: '全部图片',
           id: 'all',
@@ -94,6 +94,7 @@ export default {
               expand: false,
               selected: false,
               render: this.iconFilter,
+              _checked: false,
               attCount: '10',
               children: [
                 {
@@ -102,7 +103,19 @@ export default {
                   expand: false,
                   selected: false,
                   render: this.iconFilter,
-                  attCount: 20
+                  _checked: false,
+                  attCount: 20,
+                  children: [
+                    {
+                      title: '图片3',
+                      id: 'all3',
+                      expand: false,
+                      selected: false,
+                      render: this.iconFilter,
+                      _checked: false,
+                      attCount: 22
+                    }
+                  ]
                 }
               ]
             }
@@ -117,6 +130,7 @@ export default {
             expand: false,
             selected: false,
             render: this.iconFilter,
+            _checked: false,
             children: []
           })
         }
@@ -130,6 +144,7 @@ export default {
               expand: false,
               selected: false,
               render: this.iconFilter,
+              _checked: false,
               children: [],
               attCount: item.attCount
             })
@@ -144,6 +159,7 @@ export default {
                 title: item2.name,
                 id: item2.albumId,
                 render: this.iconFilter,
+                _checked: false,
                 children: [],
                 attCount: item.attCount
               })
@@ -259,12 +275,29 @@ export default {
     },
     // 文件
     bread (value) {
-      this.data.forEach(item => {
+      this.data[0].children.forEach(item => {
         item.selected = false
         if (item.id === value) {
           item.selected = true
         }
+        item.children.forEach(item1 => {
+          item1.selected = false
+          if (item1.id === value) {
+            item1.selected = true
+          }
+          item1.children.forEach(item2 => {
+            item2.selected = false
+            if (item2.id === value) {
+              item2.selected = true
+            }
+          })
+        })
       })
+    },
+    clearInput () {
+      if (this.name === '') {
+        this.initData()
+      }
     },
     // 右击
     add () {

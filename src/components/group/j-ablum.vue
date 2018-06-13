@@ -5,7 +5,7 @@
     @on-ok="ok"
     cancelText="取消">
     <Layout class="ivu-layout-has-sider">
-    <Cateogy @on-change="cateChange"/>
+    <Cateogy @on-change="categoryChange"/>
     <Content class="">
       <div class="j_search">
         <Row type="flex" justify="space-between">
@@ -93,8 +93,8 @@ export default {
       this.get()
     },
     // 功能
-    cateChange (e) {
-      this.attId = e
+    categoryChange (e) {
+      this.attId = e.data.id
       this.get()
     },
     handleSuccess (res, file) {
@@ -134,6 +134,9 @@ export default {
 <style lang="less">
 .j_pictrue_upload{
   z-index: 1001;
+  .menu {
+    display: none !important
+  }
   .j_album_category {
     height: 508px;
   }

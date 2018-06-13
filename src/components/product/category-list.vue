@@ -4,7 +4,9 @@
       :label="(type === 'product' ? '产品' : '新闻') + '分类' + (index !== 0 ? index : '') + '：'"
       :key="index"
       v-for="(item, index) in list">
-      <CategorySelect :categoryId="item" :list="categorySelect" @on-change="change(item, e)" @click="itemClick(index)"/>
+      <span @click="itemClick(index)">
+        <CategorySelect :categoryId="item" :list="categorySelect" @on-change="change(item)"/>
+      </span>
       <span v-if="index === 0">
         <span class="a_normal" style="padding-left:10px;" @click="add">新增分类</span>
         <div class="j_tip j_tip_category" v-if="type === 'product'">
@@ -25,7 +27,6 @@ export default {
   },
   props: {
     categorySelect: Array,
-    category: {},
     type: {
       type: String,
       default: 'product'
@@ -33,18 +34,15 @@ export default {
   },
   data () {
     return {
-      list: [
-        {}
-      ],
-      index: ''
-    }
-  },
-  created () {
-    if (this.category) {
-      this.list = this.category.split(',')
+      list: [''],
+      index: '',
+      name: 'j_category_multiple'
     }
   },
   methods: {
+    open (category) {
+      this.list = category.split(',')
+    },
     itemClick (e) {
       this.index = e
     },
@@ -52,7 +50,7 @@ export default {
       this.list[this.index] = e
     },
     add () {
-      this.list.push({})
+      this.list.push(this.categorySelect[0].categoryId)
     },
     del (index) {
       this.list.splice(index, 1)

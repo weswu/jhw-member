@@ -10,7 +10,7 @@
               <Button type="info" icon="plus" class="w130" @click="url('/news/add')">添加新闻</Button>
             </Col>
             <Col>
-              <Input v-model="searchData.title" clearable placeholder="请输入新闻标题" class="w180"></Input>
+              <Input v-model="searchData.title" clearable placeholder="请输入新闻标题" class="w180" @on-change="clearInput"></Input>
               <Button class="search" @click="search">搜索</Button>
               <Poptip placement="bottom-end" class="j_poptip_confirm_edit"
                 confirm
@@ -110,16 +110,16 @@ export default {
       columns: [
         { type: 'selection', className: 'j_table_checkbox', width: 44 },
         { type: 'index2', className: 'j_table_checkbox', title: '序号', align: 'center', width: 60, render: this.indexFilter },
-        { title: '新闻标题', className: 'j_table_title', sortable: true, key: 'title', width: 120, render: this.titleFilter },
-        { title: '新闻分类', className: 'j_table_category', sortable: true, key: 'category', width: 160, render: this.categoryFilter },
-        { title: '添加时间', sortable: true, key: 'addTime', width: 105, render: this.dataFilter },
-        { title: '是否上架', sortable: true, key: 'display', width: 105, render: this.displayFilter },
-        { title: '是否置顶', width: 90, render: this.topnewsFilter },
-        { title: '排序', className: 'j_table_sort', sortable: true, key: 'sort', minWidth: 80, render: this.sortFilter },
+        { title: '新闻标题', className: 'text-color', sortable: true, key: 'title', minWidth: 120, render: this.titleFilter },
+        { title: '新闻分类', className: 'j_table_category', sortable: true, key: 'category', minWidth: 160, render: this.categoryFilter },
+        { title: '添加时间', sortable: true, key: 'addTime', minWidth: 105, render: this.dataFilter },
+        { title: '是否上架', sortable: true, key: 'display', minWidth: 105, render: this.displayFilter },
+        { title: '是否置顶', minWidth: 90, render: this.topnewsFilter },
+        { title: '排序', className: 'j_table_sort', sortable: true, key: 'sort', minWidth: 125, render: this.sortFilter },
         { title: '操作', className: 'j_table_operate', align: 'left', width: 160, render: this.renderOperate }
       ],
-      list: [],
-      list2: [
+      listTest: [],
+      list: [
         {
           state: '01',
           content: null,
@@ -153,7 +153,12 @@ export default {
           author: null,
           newsId2: '101939',
           nkey: null,
-          _checked: false
+          _checked: false,
+          edittingCell: {
+            title: false,
+            sort: false,
+            api: 'news'
+          }
         },
         {
           state: '01',
@@ -188,7 +193,12 @@ export default {
           author: null,
           newsId2: '109030',
           nkey: null,
-          _checked: false
+          _checked: false,
+          edittingCell: {
+            title: false,
+            sort: false,
+            api: 'news'
+          }
         }
       ],
       searchData: {
@@ -218,8 +228,14 @@ export default {
           let data = res.attributes.data
           data.forEach(item => {
             item._checked = false
+            item.edittingCell = {
+              title: false,
+              sort: false,
+              api: 'news',
+              id: item.newsId
+            }
           })
-          this.list = data || []
+          this.list = data
         }
       })
     },
@@ -235,6 +251,11 @@ export default {
       this.sortable(a, b, 'news', 'newsId')
     },
     // 搜索
+    clearInput () {
+      if (this.searchData.title === '') {
+        this.get()
+      }
+    },
     search () {
       this.searchData = {
         page: 1,
@@ -310,62 +331,7 @@ export default {
       return h('span', params.index + (this.searchData.page - 1) * this.searchData.pageSize + 1)
     },
     titleFilter (h, params) {
-      var ctx = this
-      return h('div', {
-        class: {
-          title: true
-        }
-      }, [
-        h('span', {
-          style: {
-            color: '#5b5b5b'
-          }
-        }, params.row.title),
-        h('i', {
-          class: {
-            'none': true,
-            'iconfont': true,
-            'icon-bianji2': true
-          },
-          on: {
-            click: () => {
-              this.$Modal.confirm({
-                render: (h) => {
-                  return h('Input', {
-                    props: {
-                      value: params.row.title,
-                      autofocus: true,
-                      placeholder: '修改新闻标题'
-                    },
-                    on: {
-                      input: (val) => {
-                        params.row.title2 = val
-                      }
-                    }
-                  })
-                },
-                onOk: () => {
-                  let data = {
-                    model: JSON.stringify({
-                      id: params.row.newsId,
-                      title: params.row.title2
-                    }),
-                    _method: 'put'
-                  }
-                  ctx.$http.post('/rest/api/news/detail/' + params.row.newsId, qs.stringify(data)).then((res) => {
-                    if (res.success) {
-                      ctx.$Message.success('修改成功')
-                      ctx.list[params.index].title = params.row.title2
-                    } else {
-                      ctx.$Message.error(res.msg)
-                    }
-                  })
-                }
-              })
-            }
-          }
-        })
-      ])
+      return this.cellEdit(this, h, params)
     },
     categoryFilter (h, params) {
       return h(categorySelect, {
@@ -379,12 +345,12 @@ export default {
             params.row.category = val
             let data = {
               model: JSON.stringify({
-                id: params.row.productId,
+                id: params.row.newsId,
                 category: val
               }),
               _method: 'put'
             }
-            this.$http.post('/rest/api/product/detail/' + params.row.productId, qs.stringify(data)).then((res) => {
+            this.$http.post('/rest/api/news/detail/' + params.row.newsId, qs.stringify(data)).then((res) => {
               if (res.success) {
                 this.$Message.success('修改成功')
               } else {
@@ -397,8 +363,7 @@ export default {
     },
     // 时间格式化
     dataFilter (h, params) {
-      let format = this.dateFormat(params.row.addTime)
-      return h('div', format)
+      return h('div', this.dateFormat(params.row.addTime))
     },
     displayFilter (h, params) {
       var ctx = this
@@ -465,95 +430,7 @@ export default {
       ])
     },
     sortFilter (h, params) {
-      var ctx = this
-      return h('div', [
-        h('span', params.row.sort),
-        h('i', {
-          class: {
-            'none': true,
-            'iconfont': true,
-            'icon-bianji2': true
-          },
-          on: {
-            click: () => {
-              this.$Modal.confirm({
-                render: (h) => {
-                  return h('Input', {
-                    props: {
-                      value: params.row.sort,
-                      autofocus: true,
-                      placeholder: '修改排序'
-                    },
-                    on: {
-                      input: (val) => {
-                        params.row.sort2 = val
-                      }
-                    }
-                  })
-                },
-                onOk: () => {
-                  let data = {
-                    model: JSON.stringify({
-                      id: params.row.newsId,
-                      sort: params.row.sort2
-                    }),
-                    _method: 'put'
-                  }
-                  ctx.$http.post('/rest/api/news/detail/' + params.row.newsId, qs.stringify(data)).then((res) => {
-                    if (res.success) {
-                      ctx.$Message.success('修改成功')
-                      ctx.list[params.index].sort = params.row.sort2
-                    } else {
-                      ctx.$Message.error(res.msg)
-                    }
-                  })
-                }
-              })
-            }
-          }
-        }),
-        h('span', {
-          class: {
-            'j_sort': true
-          }
-        }, [
-          h('i', {
-            class: {
-              'none': true,
-              'iconfont': true,
-              'icon-icon--': true
-            },
-            on: {
-              click: () => {
-                if (params.index > 0) {
-                  this.sortable(params.index, params.index - 1, 'news', 'newsId')
-                }
-              }
-            }
-          }),
-          h('i', {
-            class: {
-              'none': true,
-              'iconfont': true,
-              'icon-tuozhuai': true
-            }
-          }),
-          h('i', {
-            class: {
-              'none': true,
-              'iconfont': true,
-              'icon-icon--1': true
-            },
-            on: {
-              click: () => {
-                if (params.index < this.searchData.pageSize - 1) {
-                  this.sortable(params.index, params.index + 1, 'news', 'newsId')
-                }
-              }
-            }
-          })
-        ])
-      ])
+      return this.cellEdit(this, h, params)
     },
     renderOperate (h, params) {
       var ctx = this

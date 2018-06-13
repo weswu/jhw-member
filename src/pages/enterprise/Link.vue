@@ -29,13 +29,31 @@ export default {
     return {
       columns: [
         { type: 'index', title: '序号', align: 'center', width: 60 },
-        { title: '链接名称', render: this.nameFilter },
-        { title: '链接地址', render: this.urlFilter },
-        { title: '链接图片', className: 'j_table_img', render: this.imgFilter },
+        { title: '链接名称', key: 'name', minWidth: 90, render: this.editFilter },
+        { title: '链接地址', key: 'url', minWidth: 90, render: this.editFilter },
+        { title: '链接图片', className: 'j_table_img', minWidth: 90, render: this.imgFilter },
         { title: '排序', className: 'j_table_sort', width: 100, render: this.sortFilter },
         { title: '操作', className: 'j_table_operate', width: 120, render: this.renderOperate }
       ],
-      list: []
+      list: [],
+      listTest: [
+        {
+          name: '李五2',
+          state: null,
+          url: 'g.cn',
+          userId: 'User_000000000000000000000000082',
+          linkId: 'Link_000000000000000000000000102',
+          lorder: 2,
+          lanId: 1,
+          image: null,
+          edittingCell: {
+            name: false,
+            url: false,
+            api: 'link',
+            id: 'Link_000000000000000000000000102'
+          }
+        }
+      ]
     }
   },
   created () {
@@ -45,7 +63,16 @@ export default {
     get () {
       this.$http.get('/rest/api/link/list?page=1&pageSize=200').then(res => {
         if (res.success) {
-          this.list = res.attributes.data
+          let data = res.attributes.data
+          data.forEach(item => {
+            item.edittingCell = {
+              name: false,
+              url: false,
+              api: 'link',
+              id: item.jobId
+            }
+          })
+          this.list = data
         }
       })
     },
@@ -55,12 +82,12 @@ export default {
     sortable (a, b) {
       let objA = this.list[a]
       let objB = this.list[b]
-      let sortA = this.list[a].sort
-      let sortB = this.list[b].sort
+      let sortA = this.list[a].lorder
+      let sortB = this.list[b].lorder
       this.sortPost(this.list[a].linkId, sortB)
       this.sortPost(this.list[b].linkId, sortA)
-      objA.sort = sortB
-      objB.sort = sortA
+      objA.lorder = sortB
+      objB.lorder = sortA
       this.list[a] = objB
       this.list[b] = objA
     },
@@ -74,6 +101,7 @@ export default {
       }
       this.$http.post('/rest/api/link/detail/' + id, qs.stringify(data)).then((res) => {
         if (res.success) {
+          this.get()
           console.log(sort)
         } else {
           this.$Message.error(res.msg)
@@ -92,131 +120,8 @@ export default {
       }
     },
     // 过滤
-    nameFilter (h, params) {
-      var ctx = this
-      return h('div', [
-        h('span', {
-          style: {
-            color: '#5b5b5b'
-          }
-        }, params.row.name),
-        h('Poptip', {
-          props: {
-            confirm: true,
-            width: '200',
-            placement: 'right'
-          },
-          class: {
-            j_poptip_confirm_edit: true
-          },
-          on: {
-            'on-ok': () => {
-              let data = {
-                model: JSON.stringify({
-                  id: params.row.linkId,
-                  name: params.row.name2
-                }),
-                _method: 'put'
-              }
-              this.$http.post('/rest/api/link/detail/' + params.row.linkId, qs.stringify(data)).then((res) => {
-                if (res.success) {
-                  ctx.$Message.success('修改成功')
-                  params.row.name = params.row.name2
-                } else {
-                  ctx.$Message.success(res.msg)
-                }
-              })
-            },
-            'on-cancel': () => {
-              console.log('cancel')
-            }
-          }
-        }, [
-          h('i', {
-            class: {
-              'none': true,
-              'iconfont': true,
-              'icon-bianji2': true
-            }
-          }),
-          h('Input', {
-            slot: 'title',
-            props: {
-              value: params.row.name,
-              autofocus: true,
-              placeholder: '修改标题'
-            },
-            on: {
-              input: (val) => {
-                params.row.name2 = val
-              }
-            }
-          })
-        ])
-      ])
-    },
-    urlFilter (h, params) {
-      var ctx = this
-      return h('div', [
-        h('span', {
-          style: {
-            color: '#5b5b5b'
-          }
-        }, params.row.url),
-        h('Poptip', {
-          props: {
-            confirm: true,
-            width: '200',
-            placement: 'right'
-          },
-          class: {
-            j_poptip_confirm_edit: true
-          },
-          on: {
-            'on-ok': () => {
-              let data = {
-                model: JSON.stringify({
-                  id: params.row.linkId,
-                  url: params.row.url2
-                }),
-                _method: 'put'
-              }
-              this.$http.post('/rest/api/link/detail/' + params.row.linkId, qs.stringify(data)).then((res) => {
-                if (res.success) {
-                  ctx.$Message.success('修改成功')
-                  params.row.url = params.row.url2
-                } else {
-                  ctx.$Message.success(res.msg)
-                }
-              })
-            },
-            'on-cancel': () => {
-              console.log('cancel')
-            }
-          }
-        }, [
-          h('i', {
-            class: {
-              'none': true,
-              'iconfont': true,
-              'icon-bianji2': true
-            }
-          }),
-          h('Input', {
-            slot: 'title',
-            props: {
-              value: params.row.url,
-              autofocus: true,
-              placeholder: '修改链接地址'
-            },
-            on: {
-              input: (val) => {
-                params.row.url2 = val
-              }
-            }
-          })
-        ])
-      ])
+    editFilter (h, params) {
+      return this.cellEdit(this, h, params)
     },
     imgFilter (h, params) {
       return h('div', {

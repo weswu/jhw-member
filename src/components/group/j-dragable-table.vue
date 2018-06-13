@@ -25,9 +25,6 @@ export default {
       },
       animation: 120,
       handle: '.icon-tuozhuai',
-      onStart: vm.startFunc,
-      onEnd: vm.endFunc,
-      onChoose: vm.chooseFunc,
       onUpdate (e) {
         vm.$emit('on-update', e.oldIndex, e.newIndex)
       }
@@ -39,22 +36,6 @@ export default {
         return 'j-table-row-hidden'
       }
       return ''
-    },
-    startFunc (e) {
-      this.$emit('on-start', e.oldIndex)
-    },
-    endFunc (e) {
-      let movedRow = this.value[e.oldIndex]
-      this.value.splice(e.oldIndex, 1)
-      this.value.splice(e.newIndex, 0, movedRow)
-      this.$emit('on-end', {
-        value: this.value,
-        from: e.oldIndex,
-        to: e.newIndex
-      })
-    },
-    chooseFunc (e) {
-      this.$emit('on-choose', e.oldIndex)
     },
     selectChange (status) {
       this.$emit('on-selection-change', status)

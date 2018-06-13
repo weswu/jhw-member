@@ -56,6 +56,12 @@ export default {
     change (e) {
       if (e === '0') {
         console.log('0')
+      } else if (e === '1') {
+        window.location.href = 'http://buy.jihui88.com/#/'
+      } else if (e === '2') {
+        window.location.href = 'http://buy.jihui88.com/#/'
+      } else if (e === '3') {
+        window.location.href = 'http://buy.jihui88.com/#/'
       } else if (e === '4') {
         window.location.href = 'http://buy.jihui88.com/#/?tab=tab1'
       } else if (e === '5') {

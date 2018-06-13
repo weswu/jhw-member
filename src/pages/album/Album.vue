@@ -19,6 +19,13 @@
           <li v-clipboard:copy="item.url2" v-clipboard:success="copy">复制图片的代码</li>
           <li v-clipboard:copy="item.url3" v-clipboard:success="copy" style="border:none;">复制链接的代码</li>
         </ul>
+        <ul ref="menu2" class="menu j_panel">
+          <li @click="add">新建</li>
+          <li @click="copy">复制</li>
+          <li @click="move">移动</li>
+          <li @click="edit">重命名</li>
+          <li @click="del">删除</li>
+        </ul>
         <Cateogy ref="category" @on-change="changeCategory"/>
         <Layout class="j_album_container">
           <div class="j_search">
@@ -36,7 +43,7 @@
                 <Button class="info" @click="recycle"><i class="iconfont icon-huishouzhan"></i>回收站</Button>
               </Col>
               <Col>
-                <Input v-model="searchData.filename" class="w144" clearable placeholder="搜索图片名称"></Input>
+                <Input v-model="searchData.filename" class="w144" clearable placeholder="搜索图片名称" @on-change="clearInput"></Input>
                 <Button class="search" @click="search">搜索</Button>
                 <Poptip placement="bottom" class="j_poptip_confirm_edit"
                   confirm
@@ -60,25 +67,28 @@
               <Row type="flex" justify="space-between">
                 <Col>
                   <Breadcrumb separator=">">
-                    <BreadcrumbItem v-for="(item, index) in breadList" :key="index" @click="breadClick(item, index)">
-                      <i class="iconfont icon-tupian1" v-if="index === 0"></i>{{item.text}}
+                    <BreadcrumbItem v-for="(item, index) in breadList" :key="index">
+                      <span @click="breadClick(item, index)"><i class="iconfont icon-tupian1" v-if="index === 0"></i>{{item.text}}</span>
                     </BreadcrumbItem>
                   </Breadcrumb>
                 </Col>
                 <Col>
-                  <Select v-model="searchData.sortType" class="select_sort" @on-change="get">
-                    <Option v-for="item in sortList" :value="item.value" :key="item.value" :label="item.label">
-                      <span>{{ item.label }}</span>
-                      <i :class="{iconfont: true, 'icon-jiantou': item.value === '00', 'icon-jiantou-copy-copy': item.value === '01'}"></i>
+                  <Select v-model="searchData.sortField" class="select_sort">
+                    <Option v-for="(item, index) in sortList" :key="index" :value="item.value" :label="item.label">
+                      <div @click="sortChange">
+                        <span>{{ item.label }}</span>
+                        <i class="iconfont icon-jiantou"></i>
+                        <i class="iconfont icon-jiantou-copy-copy"></i>
+                      </div>
                     </Option>
                   </Select>
-                  <i :class="{iconfont_active: true, iconfont: true, 'icon-jiantou': searchData.sort === '00', 'icon-jiantou-copy-copy': searchData.sort === '01'}"></i>
+                  <i :class="{iconfont_active: true, iconfont: true, 'icon-jiantou': searchData.sortType === 'desc', 'icon-jiantou-copy-copy': searchData.sortType === 'asc'}"></i>
                 </Col>
               </Row>
             </div>
             <Row type="flex" justify="start" class="picture_warpper">
-              <Col :xs="12" :sm="8" :md="6" :lg="4" v-for="(item, index) in fileList.children" :key="index" class="pic_item">
-                <div class="box" @click="fileClick(item)">
+              <Col :xs="12" :sm="8" :md="6" :lg="4" v-for="(item, index) in fileList" :key="index" class="pic_item">
+                <div class="box" @click="fileClick(item)" @dblclick="filedbClick(item)" @contextmenu.prevent="filemore($event, item)">
                   <div class="file">
                     <i class="iconfont icon-weibiaoti5"></i>
                   </div>
@@ -92,7 +102,7 @@
                     <img :src="$store.state.status.IMG_HOST + item.serverPath | picUrl(5)" :alt="item.filename">
                   </Card>
                   <div class="title" :class="{hover: item._checked && !item.editting}">
-                    <span @click.stop="nameClick"><Input v-model="item.filename" @on-blur="nameChange(item)" @on-enter="nameChange(item)" v-if="item.editting"/></span>
+                    <span @click.stop="nameClick"><Input v-model="item.filename" @on-blur="nameChange(item)" v-if="item.editting"/></span>
                     <span v-if="!item.editting">{{item.filename | picName}}</span>
                   </div>
                 </div>
@@ -163,14 +173,15 @@ export default {
     return {
       pic: '',
       sortList: [
-        { value: 'desc', label: '时间' },
-        { value: 'asc', label: '时间' }
+        { value: 'uploadTime', label: '时间' },
+        { value: 'sort', label: '大小' },
+        { value: 'filename', label: '名称' }
       ],
       breadList: [
         { value: 'all', text: '全部图片' }
       ],
-      list: [],
-      listTest: [
+      listTest: [],
+      list: [
         {
           state: '01',
           type: '01',
@@ -380,7 +391,7 @@ export default {
       toggle: false,
       ids: '',
       attId: 'all',
-      fileList: {},
+      fileList: [],
       belongModel: false,
       belongId: '',
       itemModel: false,
@@ -394,6 +405,11 @@ export default {
     var ctx = this
     window.document.addEventListener('click', function (e) {
       if (ctx.$refs.menu) ctx.$refs.menu.style.display = 'none'
+      if (e.target.innerHTML !== '重命名') {
+        ctx.list.forEach(item => {
+          item.editting = false
+        })
+      }
     })
   },
   methods: {
@@ -416,25 +432,56 @@ export default {
     changeCategory (res) {
       this.attId = res.data.id
       this.breadList = res.breadList
-      this.fileList = res.data
+      this.fileList = res.data.children
       this.get()
     },
     breadClick (item, index) {
+      var ctx = this
       this.attId = item.value
       this.get()
       this.breadList.splice(index + 2, 1)
       this.breadList.splice(index + 1, 1)
+      this.$refs.category.data[0].children.forEach(row => {
+        if (row.id === ctx.attId) {
+          ctx.fileList = row.children
+        } else {
+          row.children.forEach(row1 => {
+            if (row1.id === ctx.attId) {
+              ctx.fileList = row1.children
+            } else {
+              row1.children.forEach(row2 => {
+                if (row2.id === ctx.attId) {
+                  ctx.fileList = row2.children
+                }
+              })
+            }
+          })
+        }
+      })
       this.$refs.category.bread(item.value)
     },
-    fileClick () {},
-    fileClick2 (item) {
+    fileClick (item) {
+      item._checked = !item._checked
+    },
+    filedbClick (item) {
       this.attId = item.id
+      if (this.breadList[this.breadList.length - 1].value !== item.id) {
+        this.breadList.push({
+          value: item.id,
+          text: item.title
+        })
+      }
+      this.fileList = item.children
       this.get()
-      this.breadList.push({
-        value: item.id,
-        text: item.title
-      })
       this.$refs.category.bread(item.id)
+    },
+    filemore (e, item) {
+      this.$refs.category.$refs.menu.style.display = 'block'
+      let dom = e.target.getBoundingClientRect()
+      this.$refs.category.$refs.menu.style.left = dom.left + dom.width / 2 + 'px'
+      this.$refs.category.$refs.menu.style.top = dom.top + dom.height / 2 + 'px'
+      this.$refs.category.item = item
+      e.preventDefault()
     },
     // 左
     add () {
@@ -454,13 +501,13 @@ export default {
       this.$refs.recycle.open(this.attId)
     },
     // 右
-    search () {
-      this.searchData = {
-        page: 1,
-        pageSize: this.searchData.pageSize,
-        filename: this.searchData.filename,
-        searchType: '1'
+    clearInput () {
+      if (this.searchData.filename === '') {
+        this.get()
       }
+    },
+    search () {
+      this.searchData.searchType = '1'
       this.get()
     },
     advancedSearch () {
@@ -479,6 +526,16 @@ export default {
           this.$Message.error(res.msg)
         }
       })
+    },
+    sortChange () {
+      let sort = this.searchData.sortField
+      var ctx = this
+      setTimeout(function () {
+        if (sort === ctx.searchData.sortField) {
+          ctx.searchData.sortType = ctx.searchData.sortType === 'desc' ? 'asc' : 'desc'
+        }
+        ctx.get()
+      }, 100)
     },
     // 图片中
     more (e, item) {
@@ -512,6 +569,7 @@ export default {
       this.$http.post('/rest/api/album/attr/img/detail/' + item.attId, qs.stringify(data)).then((res) => {
         if (res.success) {
           this.item.editting = false
+          this.$Message.success('修改成功')
         } else {
           this.$Message.error(res.msg)
         }

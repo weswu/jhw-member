@@ -29,10 +29,30 @@ export default {
       columns: [
         { type: 'index', title: '序号', align: 'center', width: 60 },
         { title: '名称', key: 'name' },
-        { title: '移序', className: 'j_table_sort', width: 130, render: this.sortFilter },
+        { title: '移序', className: 'j_table_sort', key: 'sort', width: 130, render: this.editFilter },
         { title: '操作', className: 'j_table_operate', width: 130, render: this.renderOperate }
       ],
-      list: []
+      list: [],
+      listTest: [
+        {
+          description: null,
+          name: '支付宝担保交易',
+          sort: 2,
+          enterpriseId: 'Enterp_0000000000000000000000039',
+          paymentConfigType: 'offline',
+          addTime: 1434361924805,
+          paymentFee: 0.5,
+          paymentId: 'ff8081814df4f05d014df6a20cc60010',
+          updateTime: 1528425169198,
+          paymentFeeType: 'fixed',
+          configObject: null,
+          edittingCell: {
+            sort: false,
+            api: 'paymentconfig',
+            id: 'ff8081814df4f05d014df6a20cc60010'
+          }
+        }
+      ]
     }
   },
   created () {
@@ -42,7 +62,15 @@ export default {
     get () {
       this.$http.get('/rest/api/paymentconfig/list?page=1&pageSize=16').then((res) => {
         if (res.success) {
-          this.list = res.attributes.data
+          let data = res.attributes.data
+          data.forEach(item => {
+            item.edittingCell = {
+              sort: false,
+              api: 'paymentconfig',
+              id: item.paymentId
+            }
+          })
+          this.list = data
         } else {
           this.$Message.error(res.msg)
         }
@@ -56,97 +84,8 @@ export default {
       this.sortable(a, b, 'paymentconfig', 'paymentId')
     },
     // 过滤
-    sortFilter (h, params) {
-      var ctx = this
-      return h('div', [
-        h('span', params.row.sort),
-        h('i', {
-          class: {
-            'none': true,
-            'iconfont': true,
-            'icon-bianji2': true
-          },
-          on: {
-            click: () => {
-              this.$Modal.confirm({
-                render: (h) => {
-                  return h('Input', {
-                    props: {
-                      value: params.row.sort,
-                      autofocus: true,
-                      placeholder: '修改排序'
-                    },
-                    on: {
-                      input: (val) => {
-                        params.row.sort2 = val
-                      }
-                    }
-                  })
-                },
-                onOk: () => {
-                  let data = {
-                    model: JSON.stringify({
-                      id: params.row.paymentId,
-                      sort: params.row.sort2,
-                      editField: true
-                    }),
-                    _method: 'put'
-                  }
-                  ctx.$http.post('/rest/api/paymentconfig/detail/' + params.row.paymentId, qs.stringify(data)).then((res) => {
-                    if (res.success) {
-                      ctx.$Message.success('修改成功')
-                      ctx.list[params.index].sort = params.row.sort2
-                    } else {
-                      ctx.$Message.error(res.msg)
-                    }
-                  })
-                }
-              })
-            }
-          }
-        }),
-        h('span', {
-          class: {
-            'j_sort': true
-          }
-        }, [
-          h('i', {
-            class: {
-              'none': true,
-              'iconfont': true,
-              'icon-icon--': true
-            },
-            on: {
-              click: () => {
-                if (params.index > 0) {
-                  this.sortable(params.index, params.index - 1, 'paymentconfig', 'paymentId')
-                }
-              }
-            }
-          }),
-          h('i', {
-            class: {
-              'none': true,
-              'iconfont': true,
-              'icon-tuozhuai': true
-            }
-          }),
-          h('i', {
-            class: {
-              'none': true,
-              'iconfont': true,
-              'icon-icon--1': true
-            },
-            on: {
-              click: () => {
-                if (params.index < this.searchData.pageSize - 1) {
-                  this.sortable(params.index, params.index + 1, 'paymentconfig', 'paymentId')
-                }
-              }
-            }
-          })
-        ])
-      ])
+    editFilter (h, params) {
+      return this.cellEdit(this, h, params)
     },
     renderOperate (h, params) {
       var ctx = this

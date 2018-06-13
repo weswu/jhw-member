@@ -32,14 +32,38 @@ export default {
     return {
       columns: [
         { type: 'index', title: '序号', align: 'center', width: 60 },
-        { title: '名称', key: 'name' },
-        { title: '类型', render: this.typeFilter },
-        { title: '是否必填', render: this.isRequiredFilter },
-        { title: '是否启用', render: this.isEnabledFilter },
-        { title: '移序', className: 'j_table_sort', render: this.sortFilter },
+        { title: '名称', key: 'name', minWidth: 110 },
+        { title: '类型', render: this.typeFilter, minWidth: 110 },
+        { title: '是否必填', render: this.isRequiredFilter, minWidth: 85 },
+        { title: '是否启用', render: this.isEnabledFilter, minWidth: 85 },
+        { title: '移序', className: 'j_table_sort', key: 'sort', minWidth: 125, render: this.editFilter },
         { title: '操作', className: 'j_table_operate', width: 120, render: this.renderOperate }
       ],
-      list: this.$store.state.memberAttrList
+      list: this.$store.state.memberAttrList,
+      listTest: [
+        {
+          attributeType: 'checkbox',
+          name: '爱好',
+          sort: 0,
+          enterpriseId: 'Enterp_0000000000000000000000039',
+          attId: '4028818f4ac894bd014ac8a7a2ee0003',
+          addTime: 1420705637087,
+          updateTime: 1462867959468,
+          isRequired: '01',
+          isEnabled: '01',
+          attributeOptionList: [
+            '唱歌',
+            '跳舞',
+            '下棋',
+            '打乒乓'
+          ],
+          edittingCell: {
+            sort: false,
+            api: 'member/attr',
+            id: '4028818f4ac894bd014ac8a7a2ee0003'
+          }
+        }
+      ]
     }
   },
   computed: {
@@ -62,6 +86,9 @@ export default {
       this.sortable(a, b, 'member/attr', 'attId')
     },
     // 过滤
+    editFilter (h, params) {
+      return this.cellEdit(this, h, params)
+    },
     typeFilter (h, params) {
       let text = '文本'
       this.memberAttrList.forEach(item => {
@@ -90,97 +117,6 @@ export default {
           'icon-gou': params.row.isEnabled === '01'
         }
       })
-    },
-    sortFilter (h, params) {
-      var ctx = this
-      return h('div', [
-        h('span', params.row.sort),
-        h('i', {
-          class: {
-            'none': true,
-            'iconfont': true,
-            'icon-bianji2': true
-          },
-          on: {
-            click: () => {
-              this.$Modal.confirm({
-                render: (h) => {
-                  return h('Input', {
-                    props: {
-                      value: params.row.sort,
-                      autofocus: true,
-                      placeholder: '修改排序'
-                    },
-                    on: {
-                      input: (val) => {
-                        params.row.sort2 = val
-                      }
-                    }
-                  })
-                },
-                onOk: () => {
-                  let data = {
-                    model: JSON.stringify({
-                      id: params.row.attId,
-                      sort: params.row.sort2
-                    }),
-                    _method: 'put'
-                  }
-                  ctx.$http.post('/rest/api/member/attr/detail/' + params.row.attId, qs.stringify(data)).then((res) => {
-                    if (res.success) {
-                      ctx.$Message.success('修改成功')
-                      ctx.list[params.index].sort = params.row.sort2
-                    } else {
-                      ctx.$Message.error(res.msg)
-                    }
-                  })
-                }
-              })
-            }
-          }
-        }),
-        h('span', {
-          class: {
-            'j_sort': true
-          }
-        }, [
-          h('i', {
-            class: {
-              'none': true,
-              'iconfont': true,
-              'icon-icon--': true
-            },
-            on: {
-              click: () => {
-                if (params.index > 0) {
-                  this.sortable(params.index, params.index - 1)
-                }
-              }
-            }
-          }),
-          h('i', {
-            class: {
-              'none': true,
-              'iconfont': true,
-              'icon-tuozhuai': true
-            }
-          }),
-          h('i', {
-            class: {
-              'none': true,
-              'iconfont': true,
-              'icon-icon--1': true
-            },
-            on: {
-              click: () => {
-                if (params.index < this.searchData.pageSize - 1) {
-                  this.sortable(params.index, params.index + 1)
-                }
-              }
-            }
-          })
-        ])
-      ])
     },
     renderOperate (h, params) {
       var ctx = this

@@ -8,7 +8,7 @@
           <FormItem label="新闻标题：" prop="title">
             <Input v-model="detail.title" placeholder="请输入新闻标题"></Input>
           </FormItem>
-          <CategoryList ref="category" :categorySelect="newsCategory" :category="detail.category" :type="'news'"/>
+          <CategoryList ref="category" :categorySelect="newsCategory" :type="'news'"/>
           <FormItem label="延时发布：">
             <Select v-model="dateselect" class="border" style="width: 100px;" @on-change="dataChange">
               <Option :value="i" v-for="i in 11" :key="i">{{i-1}}</Option>
@@ -123,6 +123,7 @@ export default {
             if (this.detail.imagenews === '01') this.imagenews = true
             if (this.detail.topnews === '01') this.topnews = true
             this.addTime = this.detail.addTime
+            this.$refs.category.open(this.detail.category)
           }
         })
       }
