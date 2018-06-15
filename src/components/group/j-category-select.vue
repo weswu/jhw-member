@@ -38,6 +38,19 @@ export default {
       name: ''
     }
   },
+  watch: {
+    categoryId: {
+      handler () {
+        var ctx = this
+        this.data.forEach(item => {
+          if (item.categoryId === ctx.categoryId) {
+            ctx.name = item.name
+          }
+        })
+        this.initBg(this.categoryId)
+      }
+    }
+  },
   created () {
     this.init()
   },
@@ -63,7 +76,6 @@ export default {
       } else {
         this.$emit('on-change', item.categoryId)
       }
-      this.initBg(item.categoryId)
       this.visible = false
     },
     initBg (categoryId) {

@@ -180,7 +180,7 @@ export default {
           type: '01',
           content: null,
           sort: null,
-          filename: '路人超能2',
+          filename: null,
           filename2: '路人超能2',
           userId: 'User_000000000000000000000000082',
           serverPath: 'upload//g//g2//ggggfj//picture//2017//09//15/cb9ea426-772f-4667-afc3-18ac954008d1.jpg',
@@ -426,6 +426,7 @@ export default {
       })
     },
     picName (src) {
+      if (!src) return ''
       let arr = src.split('.')
       if (arr.length > 1) {
         arr.splice(arr.length - 1, 1)

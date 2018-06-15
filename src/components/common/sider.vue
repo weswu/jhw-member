@@ -1,5 +1,5 @@
 <template>
-  <Sider id="J_Sider" ref="side1" hide-trigger collapsible :collapsed-width="50" v-model="isCollapsed" width="180">
+  <Sider id="J_Sider" ref="side1" hide-trigger collapsible :collapsed-width="50" v-model="customData.isCollapsed" width="180">
     <Header :style="{padding: 0}" class="layout-header-bar" @click.native="collapsedSider">
       <Icon :class="rotateIcon" :style="{margin: '10px 10px 0'}" type="navicon" size="20"></Icon>
     </Header>
@@ -37,10 +37,10 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
 export default {
   data () {
     return {
-      isCollapsed: this.$store.state.customData.isCollapsed,
       transfer: true,
       disabled: false,
       activeName: 'index',
@@ -93,24 +93,25 @@ export default {
     }
   },
   computed: {
+    ...mapState(['customData']),
     rotateIcon () {
       return [
         'menu-icon',
-        this.isCollapsed ? 'rotate-icon' : ''
+        this.customData.isCollapsed ? 'rotate-icon' : ''
       ]
     },
     menuitemClasses () {
       return [
         'menu-item',
-        this.isCollapsed ? 'collapsed-menu' : ''
+        this.customData.isCollapsed ? 'collapsed-menu' : ''
       ]
     }
   },
   methods: {
     collapsedSider () {
       this.$refs.side1.toggleCollapse()
-      this.disabled = !this.isCollapsed
-      this.$store.state.customData.isCollapsed = this.isCollapsed
+      this.disabled = !this.customData.isCollapsed
+      this.customData.isCollapsed = this.customData.isCollapsed
       this.$store.dispatch('SAVE_CUSTOM_DATA')
     },
     mrouter (name) {

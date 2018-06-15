@@ -23,7 +23,7 @@
                       <Input v-model="searchData.name" class="w244" clearable></Input>
                     </FormItem>
                     <FormItem label="会员等级：">
-                      <Select v-model="searchData.rankId" class="w244">
+                      <Select v-model="searchData.memberRankId" class="w244">
                         <Option :value="item.rankId" v-for="item in $store.state.memberRankList" :key="item.rankId">{{item.name}}</Option>
                       </Select>
                     </FormItem>

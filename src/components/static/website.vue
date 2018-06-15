@@ -16,11 +16,10 @@
           </Poptip>
 
           <span>(网站编号：{{item.id}}&nbsp;&nbsp;/&nbsp;&nbsp;语言：<span v-if="item.language === '1'">中文</span><span v-if="item.language === '2'">英文</span>)</span>
-          <span class="type" v-if="!item.url">未上线</span>
+          <span class="type" v-if="!item.bind.address">未上线</span>
         </p>
         <p>
-          <span v-if="!item.url">http://pc.jihui88.com/rest/site/{{item.id}}/index</span>
-          <span v-else>item.url</span>
+          <a :href="item.url" target="_blank" class="url">{{item.url}}</a>
           <span class="time" v-if="item.endTime">(到期时间：{{item.endTime | time}})</span>
           <Poptip trigger="hover" placement="top" class="j_poptip_ul" v-if="!item.new">
             <a href="javascript:;" class="buy">购买</a>
@@ -110,6 +109,12 @@ export default {
   data () {
     return {
       list: [],
+      listTest: [
+        {
+          url: 'http://pc.jihui88.com/rest/site/96/index',
+          bind: {}
+        }
+      ],
       total: 0,
       lan: '1',
       detail: {
@@ -137,6 +142,8 @@ export default {
           res.attributes.data.forEach(item => {
             if (item.bind.address) {
               item.url = item.bind.address
+            } else {
+              item.url = 'http://pc.jihui88.com/rest/site/' + item.id + '/index'
             }
             item.new = false
             if (item.endTime) {
@@ -346,6 +353,9 @@ export default {
       color: #fff;
       padding: 3px 5px;
       margin-left: 10px;
+    }
+    .url {
+      color: #b9b9b9;
     }
     .time{
       margin: 0 8px 0 14px;

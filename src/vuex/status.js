@@ -3,13 +3,7 @@ const state = {
   IMG_HOST: 'http://img.jihui88.com/',
   lanList: [
     { value: '1', text: '中文' },
-    { value: '2', text: '英文' },
-    { value: '3', text: '日语' },
-    { value: '4', text: '韩语' },
-    { value: '5', text: '德语' },
-    { value: '6', text: '法语' },
-    { value: '7', text: '西班牙语' },
-    { value: '8', text: '俄语' }
+    { value: '2', text: '英文' }
   ],
   // 会员属性
   memberAttrList: [

@@ -357,8 +357,9 @@ const store = new Vuex.Store({
     getCustomData ({commit, state}) {
       this._vm.$http.get('/rest/api/custom/detail').then(res => {
         if (res.success) {
-          if (res.attributes.data.content) {
-            this.commit('setCustomData', JSON.parse(res.attributes.data.content))
+          let data = res.attributes.data
+          if (data.content) {
+            this.commit('setCustomData', JSON.parse(data.content))
           }
         }
       })
@@ -374,7 +375,7 @@ const store = new Vuex.Store({
         }
       })
     },
-    SAVE_CUSTOM_DATA  ({commit, state}) {
+    SAVE_CUSTOM_DATA ({commit, state}) {
       this._vm.$http.post('/rest/api/custom/update', qs.stringify({content: JSON.stringify(state.customData)})).then(res => {
         if (res.success) {
           console.log('自定义数据保存成功')

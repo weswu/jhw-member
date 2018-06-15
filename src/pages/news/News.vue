@@ -22,11 +22,10 @@
                     <FormItem label="名称：" class="formitem_left">
                       <Input v-model="searchData.title" class="w180" clearable></Input>
                     </FormItem>
-                    <FormItem label="分类：" class="formitem_left">
-                      <Select v-model="searchData.category" class="w180">
-                        <Option value="">请选择</Option>
-                        <Option :value="item.categoryId" v-for="item in categoryList" :key="item.categoryId">{{item.name}}</Option>
-                      </Select>
+                    <FormItem label="分类：" :label-width="62" class="formitem_left">
+                      <div style="width:203px">
+                        <categorySelect :categoryId="searchData.category" :list="categoryList" @on-change="categoryChange"/>
+                      </div>
                     </FormItem>
                     <FormItem label="图片新闻：" class="formitem_left">
                       <Select v-model="searchData.imagenews" class="w180" placeholder="全部">
@@ -334,10 +333,14 @@ export default {
       return this.cellEdit(this, h, params)
     },
     categoryFilter (h, params) {
+      let category = ''
+      if (params.row.category) {
+        category = params.row.category.split(',')[0]
+      }
       return h(categorySelect, {
         props: {
           list: this.categoryList,
-          categoryId: params.row.category,
+          categoryId: category,
           type: 'news'
         },
         on: {

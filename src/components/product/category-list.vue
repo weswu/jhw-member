@@ -5,7 +5,7 @@
       :key="index"
       v-for="(item, index) in list">
       <span @click="itemClick(index)">
-        <CategorySelect :categoryId="item" :list="categorySelect" @on-change="change(item)"/>
+        <CategorySelect :categoryId.sync="item" :list="categorySelect" @on-change="change(item)"/>
       </span>
       <span v-if="index === 0">
         <span class="a_normal" style="padding-left:10px;" @click="add">新增分类</span>
@@ -35,7 +35,7 @@ export default {
   data () {
     return {
       list: [''],
-      index: '',
+      index: 0,
       name: 'j_category_multiple'
     }
   },

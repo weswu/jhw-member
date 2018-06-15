@@ -23,14 +23,13 @@
                     <FormItem label="名称：" class="formitem_left">
                       <Input v-model="searchData.name" class="w180" clearable></Input>
                     </FormItem>
+                    <FormItem label="分类：" :label-width="62" class="formitem_left">
+                      <div style="width:228px">
+                        <categorySelect :categoryId="searchData.category" :list="categoryList" @on-change="categoryChange"/>
+                      </div>
+                    </FormItem>
                     <FormItem label="型号：" class="formitem_left">
                       <Input v-model="searchData.prodtype" class="w180" clearable></Input>
-                    </FormItem>
-                    <FormItem label="分类：" class="formitem_left">
-                      <Select v-model="searchData.category" class="w180">
-                        <Option value="">请选择</Option>
-                        <Option :value="item.categoryId" v-for="item in categoryList" :key="item.categoryId">{{item.name}}</Option>
-                      </Select>
                     </FormItem>
                     <FormItem label="产品属性：" class="formitem_left">
                       <Select v-model="searchData.productType" class="w180" placeholder="请选择">
@@ -78,7 +77,7 @@
     </Layout>
     <SeoDetail ref="seoDetail"/>
     <TransferCategory ref="transferCategory" :data="categoryList" :ids="ids" :type="'product'" @on-change="get"/>
-    <JDialog ref="dialog" :title="'我的显示'" :tip="'温馨提醒：勾选不要超过9个，以免列表显示不下。'" @on-ok="initCol">
+    <JDialog ref="dialog" :title="'我的显示'" :tip="'温馨提醒：勾选不要超过9个，以免列表显示不下。'" @on-ok="initCol('ok')">
       <div slot="content">
         <CheckboxGroup v-model="myShowSelect" class="j_checkout">
           <Checkbox :label="item" v-for="(item, index) in myShowList" :key="index">{{item}}</Checkbox>
@@ -194,7 +193,7 @@ export default {
     myShow () {
       this.$refs.dialog.open()
     },
-    initCol () {
+    initCol (e) {
       var ctx = this
       this.columns = [
         { type: 'selection', className: 'j_table_checkbox', width: 44 }
@@ -208,7 +207,7 @@ export default {
       })
       this.columns.push({ title: '操作', className: 'j_table_operate', width: 156, render: this.renderOperate })
       this.$store.state.customData.productShow = this.myShowSelect
-      this.$store.dispatch('SAVE_CUSTOM_DATA')
+      if (e === 'ok') this.$store.dispatch('SAVE_CUSTOM_DATA')
     },
     // 搜索
     clearInput () {
@@ -223,6 +222,9 @@ export default {
         name: this.searchData.name
       }
       this.get()
+    },
+    categoryChange (e) {
+      this.searchData.category = e
     },
     advancedSearch () {
       this.searchData.page = 1
@@ -542,10 +544,14 @@ export default {
       }, '￥' + params.row.price || 0)
     },
     categoryFilter (h, params) {
+      let category = ''
+      if (params.row.category) {
+        category = params.row.category.split(',')[0]
+      }
       return h(categorySelect, {
         props: {
           list: this.categoryList,
-          categoryId: params.row.category
+          categoryId: category
         },
         on: {
           'on-change': (val) => {
@@ -715,6 +721,9 @@ export default {
     width: 135px;
     .ivu-poptip-popper{
       width: 223px;
+      .ivu-poptip-arrow{
+        margin-top: 0;
+      }
     }
   }
   .a_underline{

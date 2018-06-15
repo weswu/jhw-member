@@ -28,8 +28,8 @@
               <InputNumber v-model="detail.deposit" placeholder="请输入预存款" class="w144"></InputNumber>
             </FormItem>
 
-            <FormItem label="会员等级：" prop="memberRank.rankId">
-              <Select v-model="detail.memberRank.rankId" class="w144">
+            <FormItem label="会员等级：" prop="memberRank">
+              <Select v-model="detail.memberRank" class="w144">
                 <Option v-for="item in memberRankList" :value="item.rankId" :key="item.rankId">
                   {{item.name}}
                 </Option>
@@ -50,13 +50,15 @@
               :key="index"
               :label="item.name+'：'"
               :prop="'items.' + index + '.value'"
-              :rules="{required: item.isRequired === '01', type: item.attributeType === 'checkbox' ? 'array' : (item.attributeType === 'number' ? 'number' : (item.attributeType === 'date' ? 'date' : '')), message: '内容不能为空', trigger: 'blur'}">
+              :rules="{required: item.isRequired === '01', type: item.attributeType === 'checkbox' ? 'array' : (item.attributeType === 'number' ? 'number' : (item.attributeType === 'date' ? 'date' : 'string')), message: '内容不能为空', trigger: 'blur'}">
               <Input v-model="item.value" v-if="item.attributeType === 'text'"></Input>
               <InputNumber v-model="item.value" class="w144" v-if="item.attributeType === 'number'"></InputNumber>
               <Input v-model="item.value" v-if="item.attributeType === 'alphaint'"></Input>
-              <RadioGroup v-model="item.value" v-if="item.attributeType === 'select'">
-                <Radio :label="row" v-for="(row, rowIndex) in item.attributeOptionList" :key="rowIndex">{{row}}</Radio>
-              </RadioGroup>
+              <Select v-model="item.value" v-if="item.attributeType === 'select'" class="w144 border">
+                <Option :value="row" v-for="(row, rowIndex) in item.attributeOptionList" :key="rowIndex">
+                  {{row}}
+                </Option>
+              </Select>
               <CheckboxGroup v-model="item.value" v-if="item.attributeType === 'checkbox'">
                 <Checkbox :label="row" v-for="row in item.attributeOptionList" :key="row"></Checkbox>
               </CheckboxGroup>
@@ -86,7 +88,24 @@ export default {
     return {
       active: '0',
       detail: {
-        memberRank: {}
+        itemsTest: [
+          {
+            attributeType: 'select',
+            name: '是否已婚',
+            sort: 3,
+            enterpriseId: 'Enterp_0000000000000000000000039',
+            attId: 'ff8081815481b8e9015499b91e9b03b0',
+            addTime: 1462867926680,
+            updateTime: 1527068021987,
+            isRequired: '01',
+            isEnabled: '01',
+            attributeOptionList: [
+              '是',
+              '否'
+            ],
+            value: '是'
+          }
+        ]
       },
       rules: {
         username: [
@@ -96,12 +115,14 @@ export default {
           { required: true, message: '昵称不能为空', trigger: 'blur' }
         ],
         password: [
-          { required: this.$route.params.id === 'add', message: '密码不能为空', trigger: 'blur' }
+          { required: this.$route.params.id === 'add', message: '密码不能为空', trigger: 'blur' },
+          { min: 6, message: '密码最小6位', trigger: 'change' }
         ],
         rePassword: [
-          { required: this.$route.params.id === 'add', message: '密码不能为空', trigger: 'blur' }
+          { required: this.$route.params.id === 'add', message: '密码不能为空', trigger: 'blur' },
+          { min: 6, message: '密码最小6位', trigger: 'change' }
         ],
-        'memberRank.rankId': [
+        memberRank: [
           { required: true, message: '会员等级不能为空', trigger: 'blur' }
         ]
       }
@@ -116,42 +137,62 @@ export default {
   },
   created () {
     this.get()
-    this.$store.dispatch('getMemberRank')
+    if (this.memberRankList.length === 0) this.$store.dispatch('getMemberRank')
   },
   methods: {
     get () {
-      var ctx = this
       if (this.$route.params.id === 'add') {
         this.detail = {
-          memberRank: {},
-          isAccountEnabled: '10'
+          isAccountEnabled: '10',
+          point: 0,
+          memberAttributeMapStore: []
         }
-        this.$store.dispatch('getMemberAttr').then((res) => {
-          ctx.detail.items = ctx.memberAttrList
-        })
+        this.initAttr()
       } else {
         this.$http.get('/rest/api/member/detail/' + this.$route.params.id).then(res => {
           if (res.success) {
             let data = res.attributes.data
-            // 属性
-            data.items = []
-            data.memberAttributeMapStore.forEach(item => {
-              let obj = item.att
-              let val = item.element.substring(1, item.element.length - 1)
-              if (obj.attributeType === 'checkbox') {
-                obj.value = val.split(',')
-              } else if (obj.attributeType === 'number') {
-                obj.value = parseInt(val)
-              } else {
-                obj.value = val
-              }
-              data.items.push(obj)
-            })
+            let rankId = data.memberRank.rankId
+            data.memberRank = rankId
             if (!data.isAccountEnabled) data.isAccountEnabled = '01'
+            if (!data.point) data.point = 0
             this.detail = data
+            this.initAttr()
           }
         })
       }
+    },
+    initAttr () {
+      var ctx = this
+      this.detail.items = []
+      this.$store.dispatch('getMemberAttr').then((res) => {
+        ctx.memberAttrList.forEach(item => {
+          // 属性
+          if (item.attributeType === 'checkbox') {
+            item.value = []
+          } else if (item.attributeType === 'number') {
+            item.value = 1
+          } else if (item.attributeType === 'date') {
+            item.value = new Date()
+          } else {
+            item.value = ''
+          }
+          ctx.detail.memberAttributeMapStore.forEach(store => {
+            let obj = store.att
+            if (item.attId === obj.attId) {
+              let val = store.element.substring(1, store.element.length - 1)
+              if (item.attributeType === 'checkbox') {
+                item.value = val.split(',')
+              } else if (item.attributeType === 'number') {
+                item.value = parseInt(val)
+              } else {
+                item.value = val
+              }
+            }
+          })
+          ctx.detail.items.push(item)
+        })
+      })
     },
     // 功能
     activeChange (e) {
@@ -198,7 +239,7 @@ export default {
           })
         } else {
           if (this.detail.items.length > 0) {
-            this.$Message.info('完善会员属性')
+            this.$Message.info('完善会员基本信息和会员属性')
           }
         }
       })

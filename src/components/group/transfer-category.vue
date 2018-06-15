@@ -9,9 +9,7 @@
     </div>
     <Form :model="detail" :label-width="90">
       <FormItem label="请选择：">
-        <Select v-model="detail.category" style="width:250px">
-          <Option :value="item.categoryId" v-for="item in data" :key="item.categoryId">{{item.name}}</Option>
-        </Select>
+        <CategorySelect :categoryId="detail.category" :list="data" @on-change="categoryChange"/>
       </FormItem>
     </Form>
   </Modal>
@@ -19,6 +17,7 @@
 
 <script>
 import qs from 'qs'
+import CategorySelect from '@/components/group/j-category-select'
 export default {
   props: {
     data: {
@@ -27,10 +26,15 @@ export default {
     ids: {},
     type: {}
   },
+  components: {
+    CategorySelect
+  },
   data () {
     return {
       modal: false,
-      detail: {}
+      detail: {
+        category: ''
+      }
     }
   },
   methods: {
@@ -40,15 +44,18 @@ export default {
     cancel () {
       this.modal = false
     },
+    categoryChange (e) {
+      this.detail.category = e
+    },
     submit () {
       if (this.ids === this.detail.category) {
         return this.$Message.info('相同分类不能转移')
       }
       if (this.type === 'category/news' || this.type === 'category/product') {
-        this.detail.cateogry = this.detail.categoryId
+        this.detail.categoryId = this.detail.category
       }
-      // rest/api/category/news/batch/transfer
-      // rest/api/news/batch/transfer
+      // rest/api/category/news/batch/transfer   categoryId
+      // rest/api/news/batch/transfer  category
       this.detail.ids = this.ids
       this.$http.post('/rest/api/' + this.type + '/batch/transfer', qs.stringify(this.detail)).then((res) => {
         if (res.success) {

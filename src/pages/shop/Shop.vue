@@ -61,7 +61,7 @@
         </JPagination>
       </Content>
     </Layout>
-    <JDialog ref="dialog" :title="'我的显示'" :tip="'温馨提醒：勾选不要超过10个，以免列表显示不下。'" @on-ok="initCol">
+    <JDialog ref="dialog" :title="'我的显示'" :tip="'温馨提醒：勾选不要超过10个，以免列表显示不下。'" @on-ok="initCol('ok')">
       <div slot="content">
         <CheckboxGroup v-model="myShowSelect" class="j_checkout">
           <Checkbox :label="item" v-for="(item, index) in myShowList" :key="index">{{item}}</Checkbox>
@@ -163,7 +163,7 @@ export default {
     myShow () {
       this.$refs.dialog.open()
     },
-    initCol () {
+    initCol (e) {
       var ctx = this
       this.columns = [
         { type: 'selection', className: 'j_table_checkbox', width: 44 }
@@ -177,7 +177,7 @@ export default {
       })
       this.columns.push({ title: '操作', className: 'j_table_operate', width: 135, render: this.renderOperate })
       this.$store.state.customData.shopShow = this.myShowSelect
-      this.$store.dispatch('SAVE_CUSTOM_DATA')
+      if (e === 'ok') this.$store.dispatch('SAVE_CUSTOM_DATA')
     },
     // 批量操作
     handleSelectAll () {
