@@ -34,8 +34,8 @@ export default {
   data () {
     return {
       modal: false,
-      list: [],
-      listTest: [
+      listTest: [],
+      list: [
         {
           state: '01',
           type: '01',
@@ -82,7 +82,7 @@ export default {
       },
       id: 'all',
       ids: '',
-      toggle: false
+      toggle: true
     }
   },
   mounted () {
@@ -121,8 +121,9 @@ export default {
       }
       this.$http.post('/rest/api/album/restoreImg?attIds=' + this.ids).then((res) => {
         if (res.success) {
-          this.$Message.success('清空回收站成功')
+          this.$Message.success('还原成功')
           this.get()
+          this.$emit('on-change')
         } else {
           this.$Message.error(res.msg)
         }
@@ -131,7 +132,7 @@ export default {
     cleanAll () {
       this.$http.post('/rest/api/album/attCleanAll').then((res) => {
         if (res.success) {
-          this.$Message.success('还原成功')
+          this.$Message.success('清空回收站成功')
           this.list = []
         } else {
           this.$Message.error(res.msg)
@@ -157,10 +158,12 @@ export default {
       let dom = e.target.getBoundingClientRect()
       this.$refs.menu.style.left = dom.left + dom.width / 2 + 'px'
       this.$refs.menu.style.top = dom.top + dom.height / 2 + 'px'
+      item._checked = true
+      this.select()
       e.preventDefault()
     },
     select (e) {
-      e._checked = !e._checked
+      if (e) e._checked = !e._checked
       this.ids = ''
       this.list.forEach((item, index) => {
         if (item._checked) {

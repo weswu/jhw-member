@@ -27,13 +27,13 @@
         </tr>
       </tbody>
     </table>
-    <JAblum ref="ablum" @on-change="picChange"/>
+    <JAlbum ref="ablum" @on-change="picChange"/>
     <attrPrice ref="attrPrice" @on-change="picChange"/>
   </div>
 </template>
 
 <script>
-import JAblum from '@/components/group/j-ablum'
+import JAlbum from '@/components/group/j-album'
 import attrPrice from '@/components/product/attr-panel-price'
 export default {
   props: {
@@ -41,7 +41,7 @@ export default {
     attrtList: Array
   },
   components: {
-    JAblum,
+    JAlbum,
     attrPrice
   },
   data () {

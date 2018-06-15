@@ -2,11 +2,11 @@
   <div class="j_product_attr">
     <FormItem
       :label="item.name+'：'"
-      :key="item.attId"
-      v-if="item.isEnabled === '01'"
-      v-for="item in list">
+      v-for="(item, index) in list"
+      :key="index"
+      v-if="item.isEnabled === '01'">
       <CheckboxGroup v-model="item.value" v-if="item.attributeType === 'checkbox'">
-        <Checkbox :label="row" v-for="row in item.attributeOptionList" :key="row"></Checkbox>
+        <Checkbox :label="row" v-for="(row, rowIndex) in item.attributeOptionList" :key="rowIndex"></Checkbox>
       </CheckboxGroup>
     </FormItem>
   </div>

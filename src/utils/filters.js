@@ -83,11 +83,6 @@ Vue.filter('picUrl', function (src, number) {
  * @date: 2018-6-12
  * @desc: 图片名字
 */
-Vue.filter('picName', function (src) {
-  let arr = src.split('.')
-  if (arr.length > 1) {
-    arr.splice(arr.length - 1, 1)
-    src = arr.join('.')
-  }
-  return src
+Vue.filter('postfix', function (src) {
+  return '.' + src.split('.')[1]
 })

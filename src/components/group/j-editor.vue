@@ -1,22 +1,19 @@
 <template>
   <div>
     <script :id='id' type='text/plain'></script>
-    <JAblum ref="ablum" @on-change="insertImg"/>
+    <JAlbum ref="ablum" @on-change="insertImg"/>
   </div>
 </template>
 <script>
-import JAblum from '@/components/group/j-ablum'
+import JAlbum from '@/components/group/j-album'
 export default {
   props: {
-    content: {
-      type: String,
-      default: '<p><br/></p>'
-    },
+    content: {},
     eWidth: {},
     eHeight: {}
   },
   components: {
-    JAblum
+    JAlbum
   },
   data () {
     return {
@@ -61,7 +58,7 @@ export default {
     }
     this.editor = window.UE.getEditor(this.id, this.config) // 初始化UE
     this.editor.addListener('ready', function () {
-      ctx.editor.setContent(ctx.content) // 确保UE加载完成后，放入内容。
+      ctx.editor.setContent(ctx.content || '<p><br/></p>') // 确保UE加载完成后，放入内容。
       window.UE.dom.domUtils.on(document.getElementsByClassName('edui-for-insertimage')[0], 'click', function (e) {
         // e为事件对象，this为被点击元素对戏那个
         ctx.imgUpdate = ''

@@ -22,9 +22,6 @@
                     <FormItem label="会员用户名：">
                       <Input v-model="searchData.name" class="w244" clearable></Input>
                     </FormItem>
-                    <FormItem label="会员用户名：">
-                      <Input v-model="searchData.username" class="w244" clearable></Input>
-                    </FormItem>
                     <FormItem label="会员等级：">
                       <Select v-model="searchData.rankId" class="w244">
                         <Option :value="item.rankId" v-for="item in $store.state.memberRankList" :key="item.rankId">{{item.name}}</Option>
@@ -68,8 +65,8 @@ export default {
         { title: '会员等级', key: 'memberRank', render: this.rankFilter },
         { title: '邮箱', key: 'email' },
         { title: '注册时间', key: 'addTime' },
-        { title: '状态', key: 'isAccountEnabled', render: this.typeFilter },
-        { title: '来源：网站编号', key: 'layout' },
+        { title: '状态', key: 'isAccountEnabled', width: 70, render: this.typeFilter },
+        { title: '来源：网站编号', key: 'layoutId' },
         { title: '操作', className: 'j_table_operate', width: 120, render: this.renderOperate }
       ],
       list: [],

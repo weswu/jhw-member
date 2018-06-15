@@ -129,7 +129,7 @@ export default {
   },
   methods: {
     get () {
-      this.$http.get('/rest/pc/api/bind/detail/' + this.$store.state.layoutId).then((res) => {
+      this.layoutId && this.$http.get('/rest/pc/api/bind/detail/' + this.layoutId).then((res) => {
         if (res.success) {
           this.detail = res.attributes.data
         }
@@ -174,7 +174,7 @@ export default {
         }),
         _method: 'put'
       }
-      this.$http.post('/rest/pc/api/bind/detail/' + this.$store.state.layoutId, qs.stringify(data)).then((res) => {
+      this.$http.post('/rest/pc/api/bind/detail/' + this.layoutId, qs.stringify(data)).then((res) => {
         if (res.success) {
           this.$Message.success('保存成功')
         } else {

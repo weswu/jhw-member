@@ -9,10 +9,10 @@
 </template>
 
 <script>
-import JAblum from '@/components/group/j-ablum'
+import JAlbum from '@/components/group/j-album'
 export default {
   components: {
-    JAblum
+    JAlbum
   },
   data () {
     return {

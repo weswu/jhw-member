@@ -18,12 +18,12 @@
     <li class="j_picture_item add" v-if="list && list.length < 10">
       <i class="iconfont icon-plus-add" @click="open"></i>
     </li>
-    <JAblum ref="ablum" @on-change="picChange"/>
+    <JAlbum ref="ablum" @on-change="picChange"/>
   </ul>
 </template>
 
 <script>
-import JAblum from '@/components/group/j-ablum'
+import JAlbum from '@/components/group/j-album'
 export default {
   props: {
     src: {},
@@ -35,7 +35,7 @@ export default {
     }
   },
   components: {
-    JAblum
+    JAlbum
   },
   data () {
     return {
@@ -44,7 +44,7 @@ export default {
   },
   methods: {
     open (e, index) {
-      this.index = index || ''
+      this.index = index
       this.$refs.ablum.open()
     },
     prev (index) {

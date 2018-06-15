@@ -38,6 +38,7 @@ export default {
   },
   methods: {
     open (id) {
+      if (id) this.detail.id = id
       this.$refs.dialog.open()
     },
     ok () {

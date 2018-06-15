@@ -28,7 +28,7 @@
               <InputNumber v-model="detail.deposit" placeholder="请输入预存款" class="w144"></InputNumber>
             </FormItem>
 
-            <FormItem label="会员等级：">
+            <FormItem label="会员等级：" prop="memberRank.rankId">
               <Select v-model="detail.memberRank.rankId" class="w144">
                 <Option v-for="item in memberRankList" :value="item.rankId" :key="item.rankId">
                   {{item.name}}
@@ -41,13 +41,6 @@
                 <Radio label="01">是</Radio>
                 <Radio label="00">否</Radio>
               </RadioGroup>
-            </FormItem>
-            <hr/>
-            <FormItem label="注册时间：">
-              <DatePicker type="datetime" placeholder="注册时间" v-model="detail.addTime" @on-change="detail.addTime=$event"></DatePicker>
-            </FormItem>
-            <FormItem label="注册IP:">
-              <Input v-model="detail.registerIp" placeholder="请输入注册IP"></Input>
             </FormItem>
           </div>
           <div :hidden="active !== '1'">
@@ -62,7 +55,7 @@
               <InputNumber v-model="item.value" class="w144" v-if="item.attributeType === 'number'"></InputNumber>
               <Input v-model="item.value" v-if="item.attributeType === 'alphaint'"></Input>
               <RadioGroup v-model="item.value" v-if="item.attributeType === 'select'">
-                <Radio :label="row" v-for="row in item.attributeOptionList" :key="row">{{row}}</Radio>
+                <Radio :label="row" v-for="(row, rowIndex) in item.attributeOptionList" :key="rowIndex">{{row}}</Radio>
               </RadioGroup>
               <CheckboxGroup v-model="item.value" v-if="item.attributeType === 'checkbox'">
                 <Checkbox :label="row" v-for="row in item.attributeOptionList" :key="row"></Checkbox>
@@ -107,6 +100,9 @@ export default {
         ],
         rePassword: [
           { required: this.$route.params.id === 'add', message: '密码不能为空', trigger: 'blur' }
+        ],
+        'memberRank.rankId': [
+          { required: true, message: '会员等级不能为空', trigger: 'blur' }
         ]
       }
     }
@@ -128,7 +124,7 @@ export default {
       if (this.$route.params.id === 'add') {
         this.detail = {
           memberRank: {},
-          isAccountEnabled: '00'
+          isAccountEnabled: '10'
         }
         this.$store.dispatch('getMemberAttr').then((res) => {
           ctx.detail.items = ctx.memberAttrList
@@ -151,6 +147,7 @@ export default {
               }
               data.items.push(obj)
             })
+            if (!data.isAccountEnabled) data.isAccountEnabled = '01'
             this.detail = data
           }
         })
@@ -180,8 +177,6 @@ export default {
               }
             }
           })
-          // 时间组件bug处理
-          detail.addTime = ctx.dateFormat(detail.addTime, 'yyyy-MM-dd hh:mm:ss')
           let data = {
             model: JSON.stringify(detail)
           }
@@ -201,6 +196,10 @@ export default {
               this.$Message.error(res.msg)
             }
           })
+        } else {
+          if (this.detail.items.length > 0) {
+            this.$Message.info('完善会员属性')
+          }
         }
       })
     }

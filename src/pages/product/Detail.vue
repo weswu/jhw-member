@@ -4,18 +4,18 @@
     <Layout class="j_layout_content j_form_detail">
       <JHeader :title="menuBarList.menu[active].text" :lan="true" @on-change="get" :tip="'建议使用最新版的谷歌浏览器、360浏览器、IE11及以上浏览器'"/>
       <Content>
-        <Form :model="detail" :label-width="130" ref="model" v-if="active === '0'">
+        <Form :model="detail" :label-width="130" ref="model" :hidden="active !== '0'">
           <FormItem label="产品名称：">
             <Input v-model="detail.name" placeholder="请输入产品名称"></Input>
           </FormItem>
           <CategoryList ref="category" :categorySelect="productCategory"/>
           <FormItem label="产品型号：">
-            <Input v-model="detail.legalPre" placeholder="请输入产品型号"></Input>
+            <Input v-model="detail.prodtype" placeholder="请输入产品型号"></Input>
           </FormItem>
           <FormItem label="是否上架：">
-            <RadioGroup v-model="detail.isdisplay">
-              <Radio label="1">是</Radio>
-              <Radio label="0">否</Radio>
+            <RadioGroup v-model="detail.isMarketableBol">
+              <Radio label="01">是</Radio>
+              <Radio label="00">否</Radio>
             </RadioGroup>
           </FormItem>
           <FormItem label="新品商品：" class="formitem_left">
@@ -46,10 +46,10 @@
             @on-del="delImg"/>
           </FormItem>
         </Form>
-        <UE :content='detail.proddesc' ref='ue1' :hidden="active !== '1'"></UE>
-        <UE :content='detail.mobiledesc' ref='ue2' :hidden="active !== '2'"></UE>
-        <UE :content='detail.detail1' ref='ue3' :hidden="active !== '3'"></UE>
-        <UE :content='detail.detail2' ref='ue4' :hidden="active !== '4'"></UE>
+        <UE :content='detail.proddesc' ref='ue1' :hidden="active !== '1'" v-if="editor1"></UE>
+        <UE :content='detail.mobiledesc' ref='ue2' :hidden="active !== '2'" v-if="editor2"></UE>
+        <UE :content='detail.detail1' ref='ue3' :hidden="active !== '3'" v-if="editor3"></UE>
+        <UE :content='detail.detail2' ref='ue4' :hidden="active !== '4'" v-if="editor4"></UE>
         <!-- 商城 -->
         <Form :model="detail" :label-width="130" ref="model2" class="shop" :hidden="active !== '5'">
           <FormItem label="商品价格：" class="formitem_left">
@@ -142,7 +142,7 @@
             <span class="red">3.注意事项：</span> 标签的添加跟产品的保存无关， 请慎重添加
           </div>
         </div>
-        <Form :model="detail" :label-width="130" ref="model4" v-if="active === '7'">
+        <Form :model="detail" :label-width="130" ref="model4" :hidden="active !== '7'">
           <FormItem label="SEO标题：">
             <Input v-model="detail.seoTitle" :maxlength="100" placeholder="请输入SEO标题"></Input>
           </FormItem>
@@ -159,7 +159,7 @@
         <Button type="ghost" size="small" @click="submit">保存草稿</Button>
         <Poptip placement="bottom" class="j_poptip_ul">
           <Button type="ghost" size="small">预览</Button>
-          <ul slot="content">
+          <ul slot="content" style="max-height: 250px;">
             <li v-for="(item, index) in staticList" :key="index">
               <a :href="'http://pc.jihui88.com/rest/site/'+item.layoutId+'/pd?itemId='+$route.params.id" target="_blank">网站编号：{{item.layoutId}}</a>
             </li>
@@ -239,13 +239,14 @@ export default {
         ]
       },
       // 多图
-      imgList: [
-        {
-          src: '/upload/g/g2/ggggfj/picture/2018/05/23/b7e30dee-599f-4867-b821-75e6b7b0d755_5.png?v=1527073768068'
-        }
-      ],
+      imgList: [],
       attrtList: [],
-      attrtListText: []
+      attrtListText: [],
+      // editor1
+      editor1: false,
+      editor2: false,
+      editor3: false,
+      editor4: false
     }
   },
   computed: {
@@ -267,12 +268,17 @@ export default {
         if (res.success) {
           let data = res.attributes.data
           let imglist = JSON.parse(data.productImageListStore)
-          ctx.imgList = []
           imglist && imglist.forEach(item => {
             ctx.imgList.push({id: item.id, src: item.sourceProductImagePath})
           })
+          if (data.isMarketable) {
+            data.isMarketableBol = '01'
+          } else {
+            data.isMarketableBol = '00'
+          }
           this.detail = data
-          this.$refs.category.open(this.detail.category)
+          this.$refs.category.open(data.category)
+          this.detail.customAttrMapStore = []
           this.initAttr()
         }
       })
@@ -286,11 +292,15 @@ export default {
       if (e === '6') {
         this.$store.dispatch('getTagList')
       }
+      if (e === '1') this.editor1 = true
+      if (e === '2') this.editor2 = true
+      if (e === '3') this.editor3 = true
+      if (e === '4') this.editor4 = true
     },
     // 产品图片
     imgChange (item, index) {
-      if (index) {
-        this.imgList[index] = item.src
+      if (index === 0 || index > 0) {
+        this.imgList[index].src = item.src
       } else {
         this.imgList.push({id: item.id, src: item.src})
       }
@@ -416,11 +426,17 @@ export default {
       })
     },
     // 提交
-    submit () {
+    submit (tip) {
       var ctx = this
       this.detail.purchaseNum = this.detail.purchaseNum + ''
       // 多分类
       this.detail.category = this.$refs.category.list.join()
+      // 上架
+      if (this.detail.isMarketableBol === '01') {
+        this.detail.isMarketable = true
+      } else {
+        this.detail.isMarketable = false
+      }
       // 图片
       if (this.imgList.length === 0) return this.$Message.info('请上传图片')
       this.detail.picPath = this.imgList[0].src
@@ -434,10 +450,10 @@ export default {
       })
       this.detail.productImageListStore = JSON.stringify(imageListStore)
       // 编辑器
-      if (this.$refs.ue1.getUEContent()) this.detail.proddesc = this.$refs.ue1.getUEContent()
-      if (this.$refs.ue2.getUEContent()) this.detail.mobiledesc = this.$refs.ue2.getUEContent()
-      if (this.$refs.ue3.getUEContent()) this.detail.detail1 = this.$refs.ue3.getUEContent()
-      if (this.$refs.ue4.getUEContent()) this.detail.detail2 = this.$refs.ue4.getUEContent()
+      if (this.$refs.ue1) this.detail.proddesc = this.$refs.ue1.getUEContent()
+      if (this.$refs.ue2) this.detail.mobiledesc = this.$refs.ue2.getUEContent()
+      if (this.$refs.ue3) this.detail.detail1 = this.$refs.ue3.getUEContent()
+      if (this.$refs.ue4) this.detail.detail2 = this.$refs.ue4.getUEContent()
       // 属性
       this.attrtList.forEach(item => {
         if (item.isEnabled === '01') {
@@ -470,26 +486,29 @@ export default {
       } // http://pc.jihui88.com/rest/site/96/pd?itemId=581124
       this.$http.post('/rest/api/product/detail/' + this.detail.productId, qs.stringify(data)).then((res) => {
         if (res.success) {
-          this.$Message.success('保存成功')
+          !tip && this.$Message.success('保存成功')
         } else {
           this.$Message.error(res.msg)
         }
       })
     },
     publish () {
-      this.submit()
-      this.publish2('page&thisPage=')
-      this.publish2('category&thisPage=product')
-      this.publish2('detail&thisPage=product&productId=' + this.detail.productId, true)
+      this.submit(true)
+      var ctx = this
+      setTimeout(function () {
+        ctx.publish2('page&thisPage=')
+      }, 200)
+      setTimeout(function () {
+        ctx.publish2('category&thisPage=product')
+      }, 400)
+      setTimeout(function () {
+        ctx.publish2('detail&thisPage=product&productId=' + ctx.detail.productId, true)
+      }, 600)
     },
     publish2 (url, tip) {
       this.$http.post('/rest/static1/' + this.$store.state.user.username + '/publish?type=' + url).then((res) => {
         if (tip) {
-          if (res === '') {
-            this.$Message.success('发布成功')
-          } else {
-            this.$Message.error('发布失败')
-          }
+          this.$Message.success('发布成功')
         }
       })
     }

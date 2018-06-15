@@ -1,6 +1,14 @@
 <template>
   <Dropdown trigger="custom" :visible="visible" placement="bottom" class="j_category_select" @on-clickoutside="visible = false" >
-    <Input v-model="name" placeholder="请选择分类" icon="arrow-down-b" @on-focus="visible = true"></Input>
+    <div class="ivu-select ivu-select-single">
+      <div class="ivu-select-selection" @click="visible = true">
+        <input v-model="name"  type="hidden">
+        <span class="ivu-select-placeholder" v-if="!name">请选择</span>
+        <span class="ivu-select-selected-value" v-if="name">{{name}}</span>
+        <i class="ivu-icon ivu-icon-ios-close ivu-select-arrow" style="display: none;"></i>
+        <i class="ivu-icon ivu-icon-arrow-down-b ivu-select-arrow"></i>
+      </div>
+    </div>
     <ul class="ivu-select-dropdown-list" slot="list">
       <li
         v-for="item in data"
@@ -37,12 +45,13 @@ export default {
     init () {
       var ctx = this
       setTimeout(function () {
-        ctx.list.forEach(item => {
+        let list = JSON.parse(JSON.stringify(ctx.list))
+        list.forEach(item => {
           if (item.categoryId === ctx.categoryId) {
             ctx.name = item.name
           }
         })
-        ctx.data = ctx.list
+        ctx.data = list
         ctx.initBg(ctx.categoryId)
       }, 200)
     },
@@ -83,10 +92,10 @@ export default {
       data.expand = !data.expand
       this.data.forEach(item => {
         if (item.belongId === data.categoryId) {
-          item.hidden = !item.hidden
+          item.hidden = !data.expand
           ctx.data.forEach(row => {
             if (row.belongId === item.categoryId) {
-              row.hidden = !row.hidden
+              row.hidden = !data.expand
             }
           })
         }

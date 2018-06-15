@@ -100,7 +100,7 @@
         </div>
       </div>
       <Password ref="password"/>
-      <JAblum :title="'修改头像'" ref="ablum"/>
+      <JAlbum :title="'修改头像'" ref="ablum"/>
   </Layout>
 </template>
 
@@ -109,13 +109,13 @@ import qs from 'qs'
 import { mapState } from 'vuex'
 import MenuBar from '@/components/common/menu_bar'
 import JHeader from '@/components/group/j-header'
-import JAblum from '@/components/group/j-ablum'
+import JAlbum from '@/components/group/j-album'
 import Password from '@/pages/account/Password'
 export default {
   components: {
     MenuBar,
     JHeader,
-    JAblum,
+    JAlbum,
     Password
   },
   computed: {

@@ -23,7 +23,12 @@ const store = new Vuex.Store({
       {
         categoryId: 'ccc',
         name: 'text',
-        isdisplay: '1'
+        isdisplay: '1',
+        edittingCell: {
+          sort: false,
+          api: 'category',
+          id: 'ccc'
+        }
       }
     ],
     albumCategory: [],
@@ -196,6 +201,11 @@ const store = new Vuex.Store({
               item.expand = true // 三角图标展开-关闭
               item.bg = false // 层级背景颜色
               item.grade = '1'
+              item.edittingCell = {
+                sort: false,
+                api: 'category',
+                id: item.categoryId
+              }
               list.push(item)
             }
           })
@@ -210,6 +220,11 @@ const store = new Vuex.Store({
                 row.expand = true
                 row.bg = false
                 row.grade = '2'
+                row.edittingCell = {
+                  sort: false,
+                  api: 'category',
+                  id: row.categoryId
+                }
                 list.splice(index + 1, 0, row)
               }
             })
@@ -224,6 +239,11 @@ const store = new Vuex.Store({
                 row.hidden = false
                 row.bg = false
                 row.grade = '3'
+                row.edittingCell = {
+                  sort: false,
+                  api: 'category',
+                  id: row.categoryId
+                }
                 list.splice(index + 1, 0, row)
               }
             })
@@ -337,7 +357,9 @@ const store = new Vuex.Store({
     getCustomData ({commit, state}) {
       this._vm.$http.get('/rest/api/custom/detail').then(res => {
         if (res.success) {
-          this.commit('setCustomData', JSON.parse(res.attributes.data.content))
+          if (res.attributes.data.content) {
+            this.commit('setCustomData', JSON.parse(res.attributes.data.content))
+          }
         }
       })
     },

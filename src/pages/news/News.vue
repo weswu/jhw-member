@@ -118,8 +118,8 @@ export default {
         { title: '排序', className: 'j_table_sort', sortable: true, key: 'sort', minWidth: 125, render: this.sortFilter },
         { title: '操作', className: 'j_table_operate', align: 'left', width: 160, render: this.renderOperate }
       ],
-      listTest: [],
-      list: [
+      list: [],
+      listTest: [
         {
           state: '01',
           content: null,
@@ -216,7 +216,7 @@ export default {
     })
   },
   created () {
-    this.searchData.page = this.$cookie.get('newsPage') || 1
+    this.searchData.page = parseInt(this.$cookie.get('newsPage')) || 1
     this.get()
     this.$store.dispatch('getCategory', 'news')
   },

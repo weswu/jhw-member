@@ -81,9 +81,9 @@ export default {
           title: '相册管理',
           children: [
             { value: 'album', text: '图片目录', icon: 'icon-mulu' },
-            { value: 'index', text: '新建相册', icon: 'icon-xinjian' },
+            { value: 'addAlbum', text: '新建相册', icon: 'icon-xinjian' },
             { value: 'shangchuanPic', text: '上传图片', icon: 'icon-shangchuan1' },
-            { value: 'texxt', text: '回收站', icon: 'icon-huishouzhan1' }
+            { value: 'recycle', text: '回收站', icon: 'icon-huishouzhan1' }
           ]
         },
         {

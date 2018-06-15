@@ -39,14 +39,12 @@ export default {
       total: 0,
       searchData: {
         page: 1,
-        pageSize: 10,
-        layoutId: this.$store.state.layoutId,
-        lanId: this.$store.state.lanId
+        pageSize: 10
       }
     }
   },
   computed: {
-    ...mapState(['layoutId'])
+    ...mapState(['layoutId', 'lanId'])
   },
   watch: {
     layoutId () {
@@ -74,12 +72,16 @@ export default {
       }
     },
     getPcNav () {
-      this.$http.get('/rest/pc/api/navigator/list?' + qs.stringify(this.searchData)).then((res) => {
-        if (res.success) {
-          this.list = res.attributes.data
-          this.total = res.attributes.count
-        }
-      })
+      if (this.layoutId) {
+        this.searchData.layoutId = this.layoutId
+        this.searchData.lanId = this.lanId
+        this.$http.get('/rest/pc/api/navigator/list?' + qs.stringify(this.searchData)).then((res) => {
+          if (res.success) {
+            this.list = res.attributes.data
+            this.total = res.attributes.count
+          }
+        })
+      }
     },
     // 功能
     search (e) {
@@ -115,7 +117,7 @@ export default {
       }
       let src = 'http://' + this.$store.state.user.username + '.jihui88.com/' + href
       if (this.active === 'pc') {
-        src = 'http://pc.jihui88.com/rest/site/' + this.$store.state.layoutId + '/' + page
+        src = 'http://pc.jihui88.com/rest/site/' + this.layoutId + '/' + page
       }
       return h('a', {
         attrs: {

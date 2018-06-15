@@ -2,21 +2,27 @@
   <ul class="j_nav_link j_panel ivu-tabs-bar">
     <li v-for="item in customData.linkList" :key="item.value">
       <a href="javascript:;" @click="nav(item.value)"><i :class="'iconfont ' + item.icon"></i>{{item.text}}</a>
-      <JAblum ref="ablum" v-if="item.value === 'shangchuanPic'"/>
     </li>
     <li class="add" @click="add"><i class="iconfont icon--jia"></i></li>
     <Tool ref="tool" :selected="customData.linkList"/>
+    <JAlbum ref="album"/>
+    <addAlbum ref="addAlbum"/>
+    <Recycle ref="recycle"/>
   </ul>
 </template>
 
 <script>
 import { mapState } from 'vuex'
 import Tool from '@/components/home/j-tool'
-import JAblum from '@/components/group/j-ablum'
+import JAlbum from '@/components/group/j-album'
+import addAlbum from '@/pages/album/Add'
+import Recycle from '@/pages/album/Recycle'
 export default {
   components: {
     Tool,
-    JAblum
+    JAlbum,
+    addAlbum,
+    Recycle
   },
   computed: {
     ...mapState(['customData'])
@@ -27,13 +33,14 @@ export default {
     },
     nav (name) {
       if (name === 'shangchuanPic') {
-        this.open()
+        this.$refs.album.open()
+      } else if (name === 'addAlbum') {
+        this.$refs.addAlbum.open()
+      } else if (name === 'recycle') {
+        this.$refs.recycle.open('all')
       } else {
         this.$router.push({path: '/' + name})
       }
-    },
-    open () {
-      this.$refs.ablum.open()
     }
   }
 }

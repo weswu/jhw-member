@@ -3,7 +3,8 @@
     <div class="logo">
       <a href="http://www.jihui88.com"><img src="http://img.jihui88.com/upload/w/w5/www2/picture/2017/07/05/54b68a5c-fdd2-4842-9e1e-b88d1c403f28.png" height="30" alt=""></a>
     </div>
-    <Col span="18" class="userInfo">
+    <Badge count="体验版" class="badge-primary"></Badge>
+    <Col span="16" class="userInfo">
       <a href="#/" class="header_link">首页</a>
       <a href="#/" class="header_link">服务反馈</a>
       <Dropdown placement="bottom" class="j_dropdown_message" @on-visible-change="messageChange">
@@ -91,13 +92,17 @@ export default {
       // 订购系统注销操作
       this.ilogout('iframeorderlogout', 'http://buy.jihui88.com/api/user/logout')
       this.ilogout('iframebuylogout', 'http://www.jihui88.com/rest/buy/api/user/logout')
-      this.$http.get('/rest/api/user/logout').then((res) => {
-        if (res.success) {
-          window.location.href = 'http://www.jihui88.com/member/login.html?backURL=' + decodeURIComponent(window.location.href)
-        } else {
-          this.$Message.success(res.msg)
-        }
-      })
+      if (this.user.username === '未登录') {
+        window.location.href = 'http://www.jihui88.com/member/login.html?backURL=' + decodeURIComponent(window.location.href)
+      } else {
+        this.$http.get('/rest/api/user/logout').then((res) => {
+          if (res.success) {
+            window.location.href = 'http://www.jihui88.com/member/login.html?backURL=http://www.jihui88.com/member_new/index.html#/'
+          } else {
+            this.$Message.success(res.msg)
+          }
+        })
+      }
       window.localStorage.setItem('lanId', '1')
     },
     ilogout (id, url) {

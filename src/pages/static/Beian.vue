@@ -160,7 +160,7 @@
       </Footer>
     </Layout>
     <Detail ref="beianDetail"/>
-    <JAblum ref="ablum" @on-change="picChange"/>
+    <JAlbum ref="ablum" @on-change="picChange"/>
   </Layout>
 </template>
 
@@ -169,13 +169,13 @@ import qs from 'qs'
 import { mapState } from 'vuex'
 import MenuBar from '@/components/common/menu_bar'
 import JHeader from '@/components/group/j-header'
-import JAblum from '@/components/group/j-ablum'
+import JAlbum from '@/components/group/j-album'
 import Detail from '@/pages/static/Detail'
 export default {
   components: {
     MenuBar,
     JHeader,
-    JAblum,
+    JAlbum,
     Detail
   },
   data () {
@@ -222,7 +222,7 @@ export default {
       })
     },
     getBind () {
-      this.$http.get('/rest/pc/api/bind/detail/' + this.$store.state.layoutId).then((res) => {
+      this.$http.get('/rest/pc/api/bind/detail/' + this.layoutId).then((res) => {
         if (res.success) {
           this.bindDetail = res.attributes.data
         }

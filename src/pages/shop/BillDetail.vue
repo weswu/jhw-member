@@ -40,7 +40,7 @@
         <Button type="primary" size="small" @click="submit('modalForm')">保存</Button>
       </Footer>
     </Layout>
-    <JAblum ref="ablum" @on-change="picChange"/>
+    <JAlbum ref="ablum" @on-change="picChange"/>
   </Layout>
 </template>
 
@@ -49,12 +49,12 @@ import qs from 'qs'
 import { mapState } from 'vuex'
 import MenuBar from '@/components/common/menu_bar'
 import JHeader from '@/components/group/j-header'
-import JAblum from '@/components/group/j-ablum'
+import JAlbum from '@/components/group/j-album'
 export default {
   components: {
     MenuBar,
     JHeader,
-    JAblum
+    JAlbum
   },
   data () {
     return {

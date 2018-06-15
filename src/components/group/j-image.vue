@@ -4,12 +4,12 @@
     <div class="null_pic" v-if="!src">
       上传
     </div>
-    <JAblum :title="title" ref="ablum" @on-change="picChange"/>
+    <JAlbum :title="title" ref="ablum" @on-change="picChange"/>
   </div>
 </template>
 
 <script>
-import JAblum from '@/components/group/j-ablum'
+import JAlbum from '@/components/group/j-album'
 export default {
   props: {
     src: {},
@@ -23,7 +23,7 @@ export default {
     }
   },
   components: {
-    JAblum
+    JAlbum
   },
   methods: {
     open () {

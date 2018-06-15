@@ -6,9 +6,9 @@
         <ul ref="menu" class="menu j_panel">
           <li @click="edit">重命名</li>
           <li @click="itemModel = true">编辑</li>
-          <li @click="copyImg">复制</li>
-          <li @click="move">移动</li>
-          <li @click="del">删除</li>
+          <li @click="copyAll">复制</li>
+          <li @click="moveAll">移动</li>
+          <li @click="delAll">删除</li>
           <Upload ref="upload" :action="'/commonutil/uploadUtil2?username=' + $store.state.user.username + '&replace=01&attId=' + item.attId + '&id=' + attId"
             name="Filedata"
             :max-size="2048"
@@ -19,14 +19,7 @@
           <li v-clipboard:copy="item.url2" v-clipboard:success="copy">复制图片的代码</li>
           <li v-clipboard:copy="item.url3" v-clipboard:success="copy" style="border:none;">复制链接的代码</li>
         </ul>
-        <ul ref="menu2" class="menu j_panel">
-          <li @click="add">新建</li>
-          <li @click="copy">复制</li>
-          <li @click="move">移动</li>
-          <li @click="edit">重命名</li>
-          <li @click="del">删除</li>
-        </ul>
-        <Cateogy ref="category" @on-change="changeCategory"/>
+        <Cateogy ref="category" @on-change="changeCategory" @on-del="fileChange"/>
         <Layout class="j_album_container">
           <div class="j_search">
             <Row type="flex" justify="space-between">
@@ -87,7 +80,7 @@
               </Row>
             </div>
             <Row type="flex" justify="start" class="picture_warpper">
-              <Col :xs="12" :sm="8" :md="6" :lg="4" v-for="(item, index) in fileList" :key="index" class="pic_item">
+              <Col :xs="12" :sm="8" :md="6" :lg="4" v-for="item in fileList" :key="item.id" class="pic_item">
                 <div class="box" @click="fileClick(item)" @dblclick="filedbClick(item)" @contextmenu.prevent="filemore($event, item)">
                   <div class="file">
                     <i class="iconfont icon-weibiaoti5"></i>
@@ -102,8 +95,8 @@
                     <img :src="$store.state.status.IMG_HOST + item.serverPath | picUrl(5)" :alt="item.filename">
                   </Card>
                   <div class="title" :class="{hover: item._checked && !item.editting}">
-                    <span @click.stop="nameClick"><Input v-model="item.filename" @on-blur="nameChange(item)" v-if="item.editting"/></span>
-                    <span v-if="!item.editting">{{item.filename | picName}}</span>
+                    <span @click.stop="nameClick"><Input v-model="item.filename2" @on-blur="nameChange(item)" v-if="item.editting"/></span>
+                    <span v-if="!item.editting">{{item.filename2}} <span class="postfix">{{item.serverPath | postfix}}</span> </span>
                   </div>
                 </div>
               </Col>
@@ -121,7 +114,7 @@
       </Layout>
     </Content>
     <Add ref="add" @on-change="categoryChange"/>
-    <Recycle ref="recycle"/>
+    <Recycle ref="recycle" @on-change="get"/>
     <Watermark ref="watermark"/>
     <Modal
       width="276"
@@ -180,14 +173,15 @@ export default {
       breadList: [
         { value: 'all', text: '全部图片' }
       ],
-      listTest: [],
-      list: [
+      list: [],
+      listTest: [
         {
           state: '01',
           type: '01',
           content: null,
           sort: null,
           filename: '路人超能2',
+          filename2: '路人超能2',
           userId: 'User_000000000000000000000000082',
           serverPath: 'upload//g//g2//ggggfj//picture//2017//09//15/cb9ea426-772f-4667-afc3-18ac954008d1.jpg',
           belongId: null,
@@ -208,6 +202,7 @@ export default {
           content: null,
           sort: null,
           filename: '路人头像3.jpg',
+          filename2: '路人头像3.jpg',
           userId: 'User_000000000000000000000000082',
           serverPath: 'upload//g//g2//ggggfj//picture//2017//08//22/d45b87db-460a-42ba-beee-c5551ea5a7ee.jpg',
           belongId: null,
@@ -414,6 +409,7 @@ export default {
   },
   methods: {
     get () {
+      var ctx = this
       this.$http.get('/rest/api/album/attr/list/' + this.attId + '?' + qs.stringify(this.searchData)).then((res) => {
         if (res.success) {
           this.total = res.attributes.count
@@ -421,12 +417,21 @@ export default {
           data.forEach(item => {
             item._checked = false
             item.editting = false
+            item.filename2 = ctx.picName(item.filename)
           })
           this.list = data
         } else {
           this.$Message.error(res.msg)
         }
       })
+    },
+    picName (src) {
+      let arr = src.split('.')
+      if (arr.length > 1) {
+        arr.splice(arr.length - 1, 1)
+      }
+      arr = arr.join()
+      return arr
     },
     // 相册分类
     changeCategory (res) {
@@ -459,6 +464,13 @@ export default {
         }
       })
       this.$refs.category.bread(item.value)
+    },
+    fileChange (id) {
+      this.fileList.forEach((item, index, arr) => {
+        if (item.id === id) {
+          arr.splice(index, 1)
+        }
+      })
     },
     fileClick (item) {
       item._checked = !item._checked
@@ -539,13 +551,15 @@ export default {
     },
     // 图片中
     more (e, item) {
+      item._checked = true
+      this.item = item
+      this.item.url2 = '<img src="http://img.jihui88.com/' + item.serverPath + '" alt="' + item.filename + '">'
+      this.item.url3 = this.$store.state.status.IMG_HOST + item.serverPath
+      this.selected()
       this.$refs.menu.style.display = 'block'
       let dom = e.target.getBoundingClientRect()
       this.$refs.menu.style.left = dom.left + dom.width / 2 + 'px'
       this.$refs.menu.style.top = dom.top + dom.height / 2 + 'px'
-      this.item = item
-      this.item.url2 = '<img src="http://img.jihui88.com/' + item.serverPath + '" alt="' + item.filename + '">'
-      this.item.url3 = this.$store.state.status.IMG_HOST + item.serverPath
       e.preventDefault()
     },
     edit () {
@@ -558,6 +572,7 @@ export default {
       console.log('click')
     },
     nameChange (item) {
+      item.filename = item.filename2 + '.' + item.serverPath.split('.')[1]
       let data = {
         model: JSON.stringify({
           id: item.attId,
@@ -601,27 +616,6 @@ export default {
         }
       })
     },
-    move () {
-      this.belongModel = true
-      this.ids = this.item.attId
-    },
-    copyImg () {
-      this.ids = this.item.attId
-      this.copyAll()
-    },
-    del () {
-      let data = {
-        _method: 'delete'
-      }
-      this.$http.post('/rest/api/album/attr/img/detail/' + this.item.attId, qs.stringify(data)).then((res) => {
-        if (res.success) {
-          this.$Message.success('删除成功')
-          this.get()
-        } else {
-          this.$Message.error(res.msg)
-        }
-      })
-    },
     refurbish () {
       var ctx = this
       this.list.forEach(item => {
@@ -646,7 +640,7 @@ export default {
     // 批量
     selected (item) {
       var ctx = this
-      item._checked = !item._checked
+      if (item) item._checked = !item._checked
       this.ids = ''
       this.list.forEach((item, index) => {
         if (item._checked) {
@@ -816,6 +810,9 @@ export default {
         &.hover{
           background: #0369d9;
           color: #fff;
+          .postfix{
+            color: #fff;
+          }
         }
         flex: 0 0 20px;
         height: 20px;
@@ -832,6 +829,9 @@ export default {
         .ivu-input{
           height: 18px;
           padding: 4px 5px;
+        }
+        .postfix{
+          color: #999;
         }
       }
     }
@@ -902,7 +902,6 @@ export default {
       }
       .iconfont{
         font-size: 12px;
-        color: #7a7a7a;
       }
     }
   }

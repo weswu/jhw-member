@@ -14,7 +14,7 @@
       <li @click="edit">重命名</li>
       <li @click="del">删除</li>
     </ul>
-    <Tree :data="data" class="j_scroll"></Tree>
+    <Tree ref="tree" :data="data" class="j_scroll"></Tree>
     <Add ref="add" @on-change="get"/>
     <TransferAlbum ref="TransferAlbum" :item="item" @on-change="get"/>
   </div>
@@ -38,6 +38,7 @@ export default {
           id: 'all',
           expand: true, // 展开节点
           selected: false, // 选中节点
+          editting: false, // 修改
           render: this.iconFilter,
           children: []
         }
@@ -59,6 +60,17 @@ export default {
     var ctx = this
     window.document.addEventListener('click', function (e) {
       if (ctx.$refs.menu) ctx.$refs.menu.style.display = 'none'
+      if (e.target.innerHTML !== '重命名' && e.target.className !== 'ivu-input') {
+        ctx.data[0].children.forEach(row => {
+          row.editting = false
+          row.children.forEach(row1 => {
+            row1.editting = false
+            row1.children.forEach(row2 => {
+              row2.editting = false
+            })
+          })
+        })
+      }
     })
   },
   methods: {
@@ -70,22 +82,24 @@ export default {
     initData () {
       var ctx = this
       this.list = this.$store.state.albumCategory
-      this.data2 = [
+      this.data = [
         {
           title: '全部图片',
           id: 'all',
           expand: true, // 展开节点
           selected: false, // 选中节点
+          editting: false, // 修改
           render: this.iconFilter,
           children: []
         }
       ]
-      ctx.data = [
+      this.dataTest = [
         {
           title: '全部图片',
           id: 'all',
           expand: true, // 展开节点
           selected: false, // 选中节点
+          editting: false, // 修改
           render: this.iconFilter,
           children: [
             {
@@ -95,7 +109,8 @@ export default {
               selected: false,
               render: this.iconFilter,
               _checked: false,
-              attCount: '10',
+              editting: false,
+              attCount: 10,
               children: [
                 {
                   title: '图片2',
@@ -104,6 +119,7 @@ export default {
                   selected: false,
                   render: this.iconFilter,
                   _checked: false,
+                  editting: false,
                   attCount: 20,
                   children: [
                     {
@@ -113,6 +129,7 @@ export default {
                       selected: false,
                       render: this.iconFilter,
                       _checked: false,
+                      editting: false,
                       attCount: 22
                     }
                   ]
@@ -131,7 +148,9 @@ export default {
             selected: false,
             render: this.iconFilter,
             _checked: false,
-            children: []
+            editting: false,
+            children: [],
+            attCount: item.attCount
           })
         }
       })
@@ -145,6 +164,7 @@ export default {
               selected: false,
               render: this.iconFilter,
               _checked: false,
+              editting: false,
               children: [],
               attCount: item.attCount
             })
@@ -160,10 +180,20 @@ export default {
                 id: item2.albumId,
                 render: this.iconFilter,
                 _checked: false,
+                editting: false,
                 children: [],
                 attCount: item.attCount
               })
             }
+          })
+        })
+      })
+      this.data[0].children.forEach(item1 => {
+        item1.attCount = (item1.attCount || 0) + item1.children.length
+        item1.children.forEach(item2 => {
+          item2.attCount = (item2.attCount || 0) + item2.children.length
+          item2.children.forEach(item3 => {
+            item3.attCount = (item3.attCount || 0) + item3.children.length
           })
         })
       })
@@ -187,6 +217,8 @@ export default {
               expand: false,
               selected: false,
               render: this.iconFilter,
+              _checked: false,
+              editting: false,
               children: []
             })
           }
@@ -197,6 +229,64 @@ export default {
     },
     iconFilter (h, { root, node, data }) {
       var ctx = this
+      let a = h('Input', {
+        props: {
+          type: 'text',
+          value: data.title
+        },
+        on: {
+          input: (val) => {
+            data.title = val
+          },
+          'on-blur': (e) => {
+            let data = {
+              model: JSON.stringify({
+                id: ctx.item.id,
+                name: e.target.value
+              }),
+              _method: 'put'
+            }
+            this.$http.post('/rest/api/album/detail/' + ctx.item.id, qs.stringify(data)).then((res) => {
+              if (res.success) {
+                ctx.$Message.success('修改成功')
+              } else {
+                ctx.$Message.error(res.msg)
+              }
+            })
+          }
+        }
+      })
+      let b = h('span', {
+        class: {
+          'ivu-tree-title': true,
+          'ivu-tree-title-selected': data.selected
+        },
+        on: {
+          click: () => {
+            this.ok(root, node, data)
+          },
+          contextmenu: (e) => {
+            ctx.$refs.menu.style.display = 'block'
+            ctx.$refs.menu.style.left = e.target.getBoundingClientRect().left + 'px'
+            ctx.$refs.menu.style.top = e.target.getBoundingClientRect().top + 'px'
+            ctx.item = data
+            e.preventDefault()
+          }
+        }
+      }, [
+        h('i', {
+          class: {
+            'iconfont': true,
+            'icon-weibiaoti5': !data.expand,
+            'icon-wenjianjia-zhankai': data.expand
+          },
+          style: {
+            marginRight: '8px',
+            color: '#79d3fb'
+          }
+        }),
+        h('span', data.title)
+      ])
       return h('span', {
         class: {
           'item': true
@@ -206,37 +296,7 @@ export default {
           width: '100%'
         }
       }, [
-        h('span', {
-          class: {
-            'ivu-tree-title': true,
-            'ivu-tree-title-selected': data.selected
-          },
-          on: {
-            click: () => {
-              this.ok(root, node, data)
-            },
-            contextmenu: (e) => {
-              ctx.$refs.menu.style.display = 'block'
-              ctx.$refs.menu.style.left = e.target.getBoundingClientRect().left + 'px'
-              ctx.$refs.menu.style.top = e.target.getBoundingClientRect().top + 'px'
-              ctx.item = data
-              e.preventDefault()
-            }
-          }
-        }, [
-          h('i', {
-            class: {
-              'iconfont': true,
-              'icon-weibiaoti5': !data.expand,
-              'icon-wenjianjia-zhankai': data.expand
-            },
-            style: {
-              marginRight: '8px',
-              color: '#79d3fb'
-            }
-          }),
-          h('span', data.title)
-        ])
+        data.editting ? a : b
       ])
     },
     ok (root, node, data) {
@@ -301,7 +361,7 @@ export default {
     },
     // 右击
     add () {
-      this.$refs.add.open()
+      this.$refs.add.open(this.item.id)
     },
     move () {
       this.$refs.TransferAlbum.open()
@@ -312,40 +372,22 @@ export default {
     edit () {
       var ctx = this
       if (this.item.id !== 'all') {
-        this.$Modal.confirm({
-          width: 280,
-          render: (h) => {
-            return h('Input', {
-              props: {
-                value: this.item.title,
-                autofocus: true,
-                placeholder: '修改相册'
-              },
-              on: {
-                input: (val) => {
-                  this.item.title = val
-                }
-              }
-            })
-          },
-          onOk: () => {
-            if (!this.item.title) return this.$Message.info('相册名称不能为空')
-            let data = {
-              model: JSON.stringify({
-                id: this.item.id,
-                name: this.item.title
-              }),
-              _method: 'put'
-            }
-            this.$http.post('/rest/api/album/detail/' + this.item.id, qs.stringify(data)).then((res) => {
-              if (res.success) {
-                ctx.$Message.success('修改成功')
-                ctx.get()
-              } else {
-                ctx.$Message.error(res.msg)
-              }
-            })
+        this.item.editting = true
+        this.data[0].children.forEach(row => {
+          if (row.nodeKey === ctx.item.nodeKey) {
+            ctx.data[0].expand = true
           }
+          row.children.forEach(row1 => {
+            if (row1.nodeKey === ctx.item.nodeKey) {
+              row.expand = true
+            } else {
+              row1.children.forEach(row2 => {
+                if (row2.nodeKey === ctx.item.nodeKey) {
+                  row1.expand = true
+                }
+              })
+            }
+          })
         })
       }
     },
@@ -357,6 +399,7 @@ export default {
         if (res.success) {
           this.$Message.success('删除成功')
           this.get()
+          this.$emit('on-del', this.item.id)
         } else {
           this.$Message.success(res.msg)
         }
@@ -403,6 +446,10 @@ export default {
   }
   .ivu-tree ul {
     line-height: 1.3;
+    .ivu-input{
+      padding: 0px 10px;
+      height: 26px;
+    }
     .item{
       position: relative;
       padding: 2px 0;
@@ -460,13 +507,22 @@ export default {
           width: 129px;
           vertical-align: text-bottom;
         }
+        .ivu-input{
+          width: 164px;
+        }
         ul li{
           .ivu-tree-title span{
             width: 106px;
           }
+          .ivu-input{
+            width: 141px;
+          }
           ul li{
             .ivu-tree-title span{
               width: 83px;
+            }
+            .ivu-input{
+              width: 118px;
             }
           }
         }

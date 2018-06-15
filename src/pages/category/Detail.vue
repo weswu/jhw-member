@@ -45,6 +45,11 @@ export default {
       this.detail.belongId = e
     },
     ok () {
+      if (this.$route.params.id === 'product') {
+        this.detail.type = '10'
+      } else {
+        this.detail.type = '11'
+      }
       let data = {
         model: JSON.stringify(this.detail)
       }

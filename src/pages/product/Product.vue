@@ -123,7 +123,7 @@ export default {
         { title: '产品价格', render: this.priceFilter },
         { title: '产品分类', className: 'j_table_category', sortable: true, key: 'category', width: 160, render: this.categoryFilter },
         { title: '添加时间', sortable: true, key: 'addTime', minWidth: 105, render: this.dataFilter },
-        { title: '是否上架', sortable: true, key: 'isdisplay', width: 102, render: this.isdisplayFilter },
+        { title: '是否上架', sortable: true, key: 'isMarketable', width: 102, render: this.isMarketableFilter },
         { title: '排序', className: 'j_table_sort', sortable: true, key: 'sort', minWidth: 125, render: this.sortFilter }
       ],
       list: [],
@@ -522,7 +522,7 @@ export default {
               h('ul', {
                 slot: 'content',
                 style: {
-                  height: '250px'
+                  maxHeight: '250px'
                 }
               }, data)
             ])
@@ -553,7 +553,8 @@ export default {
             let data = {
               model: JSON.stringify({
                 id: params.row.productId,
-                category: val
+                category: val,
+                editField: true
               }),
               _method: 'put'
             }
@@ -572,10 +573,10 @@ export default {
       let format = this.dateFormat(params.row.addTime)
       return h('div', format)
     },
-    isdisplayFilter (h, params) {
+    isMarketableFilter (h, params) {
       var ctx = this
       return h('div', [
-        h('span', params.row.isdisplay === '1' ? '是' : '否'),
+        h('span', params.row.isMarketable ? '是' : '否'),
         h('i', {
           class: {
             'none': true,
@@ -584,11 +585,12 @@ export default {
           },
           on: {
             click: () => {
-              params.row.isdisplay = params.row.isdisplay === '1' ? '0' : '1'
+              params.row.isMarketable = !params.row.isMarketable
               let data = {
                 model: JSON.stringify({
                   id: params.row.productId,
-                  isdisplay: params.row.isdisplay
+                  isMarketable: params.row.isMarketable,
+                  editField: true
                 }),
                 _method: 'put'
               }
@@ -615,47 +617,19 @@ export default {
           },
           on: {
             click: () => {
-              this.$Modal.confirm({
-                render: (h) => {
-                  return h('Select', {
-                    props: {
-                      value: params.row.topproduct,
-                      placeholder: '是否置顶'
-                    },
-                    on: {
-                      'on-change': (val) => {
-                        params.row.topproduct2 = val
-                      }
-                    }
-                  }, [
-                    h('Option', {
-                      props: {
-                        value: '01'
-                      }
-                    }, '是'),
-                    h('Option', {
-                      props: {
-                        value: '00'
-                      }
-                    }, '否')
-                  ])
-                },
-                onOk: () => {
-                  let data = {
-                    model: JSON.stringify({
-                      id: params.row.productId,
-                      topproduct: params.row.topproduct2
-                    }),
-                    _method: 'put'
-                  }
-                  ctx.$http.post('/rest/api/product/detail/' + params.row.productId, qs.stringify(data)).then((res) => {
-                    if (res.success) {
-                      ctx.$Message.success('修改成功')
-                      ctx.list[params.index].topproduct = params.row.topproduct2
-                    } else {
-                      ctx.$Message.error(res.msg)
-                    }
-                  })
+              params.row.topproduct = params.row.topproduct === '01' ? '00' : '01'
+              let data = {
+                model: JSON.stringify({
+                  id: params.row.productId,
+                  topproduct: params.row.topproduct,
+                  editField: true
+                }),
+                _method: 'put'
+              }
+              ctx.$http.post('/rest/api/product/detail/' + params.row.productId, qs.stringify(data)).then((res) => {
+                if (res.success) {
+                } else {
+                  ctx.$Message.error(res.msg)
                 }
               })
             }

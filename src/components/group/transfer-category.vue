@@ -41,9 +41,14 @@ export default {
       this.modal = false
     },
     submit () {
-      if (this.ids === this.detail.categoryId) {
+      if (this.ids === this.detail.category) {
         return this.$Message.info('相同分类不能转移')
       }
+      if (this.type === 'category/news' || this.type === 'category/product') {
+        this.detail.cateogry = this.detail.categoryId
+      }
+      // rest/api/category/news/batch/transfer
+      // rest/api/news/batch/transfer
       this.detail.ids = this.ids
       this.$http.post('/rest/api/' + this.type + '/batch/transfer', qs.stringify(this.detail)).then((res) => {
         if (res.success) {

@@ -26,14 +26,14 @@
           <Button type="ghost" size="small" @click="delAll">删除</Button>
           <Button type="ghost" size="small" @click="displayAll('1')">显示</Button>
           <Button type="ghost" size="small" @click="displayAll('0')">隐藏</Button>
-          <Button type="ghost" size="small" @click="categoryAll">转换分类</Button>
+          <Button type="ghost" size="small" @click="categoryAll">转移分类</Button>
           <Button type="ghost" size="small" @click="hiddenAll(false)">展开</Button>
           <Button type="ghost" size="small" @click="hiddenAll(true)">折叠</Button>
         </div>
       </div>
     </Layout>
     <SeoDetail ref="seoDetail"/>
-    <Detail ref="detail"/>
+    <Detail ref="detail" @on-change="get"/>
     <TransferCategory
       ref="transferCategory"
       :data="$store.state[$route.params.id+'Category']"
@@ -68,7 +68,7 @@ export default {
         { type: 'index2', className: 'j_table_checkbox', title: '序号', align: 'center', width: 60, render: this.indexFilter },
         { title: '分类名称', className: 'j_table_title', minWidth: 200, render: this.nameFilter },
         { title: '是否显示', width: 105, render: this.displayFilter },
-        { title: '移序', className: 'j_table_sort', width: 130, render: this.sortFilter },
+        { title: '移序', className: 'j_table_sort', key: 'sort', width: 130, render: this.sortFilter },
         { title: '操作', className: 'j_table_operate', align: 'left', width: 160, render: this.renderOperate }
       ],
       ids: '',
@@ -213,10 +213,14 @@ export default {
                   item.expand = !params.row.expand
                 }
                 if (item.belongId === params.row.categoryId) {
-                  item.hidden = !item.hidden
+                  item.hidden = params.row.expand
                   ctx.list.forEach(row => {
                     if (row.belongId === item.categoryId) {
-                      row.hidden = !row.hidden
+                      if (params.row.expand) {
+                        row.hidden = true
+                      } else {
+                        row.hidden = !item.expand
+                      }
                     }
                   })
                 }
@@ -242,7 +246,8 @@ export default {
           },
           style: {
             padding: '7px 10px',
-            color: '#000',
+            width: '37px',
+            color: '#666',
             display: params.row.grade !== '1' ? 'inline-block' : 'none',
             transform: params.row.expand ? 'rotate(0deg)' : 'rotate(-90deg)'
           },
@@ -253,12 +258,7 @@ export default {
                   item.expand = !params.row.expand
                 }
                 if (item.belongId === params.row.categoryId) {
-                  item.hidden = !item.hidden
-                  ctx.list.forEach(row => {
-                    if (row.belongId === item.categoryId) {
-                      row.hidden = !row.hidden
-                    }
-                  })
+                  item.hidden = params.row.expand
                 }
               })
               // if (this.type === 'product') this.$store.commit('setProductCategory', this.list)
@@ -268,7 +268,7 @@ export default {
         }),
         h('span', {
           style: {
-            padding: '0 16px',
+            width: '60px',
             display: params.row.grade === '3' ? 'inline-block' : 'none'
           }
         }),
@@ -280,7 +280,7 @@ export default {
             input: (val) => {
               params.row.name = val
             },
-            'on-change': () => {
+            'on-blur': () => {
               let data = {
                 model: JSON.stringify({
                   id: params.row.categoryId,
@@ -421,9 +421,7 @@ export default {
     },
     sortFilter (h, params) {
       var ctx = this
-      let list = this.$route.params.id === 'product' ? this.$store.state.productCategory : this.$store.state.newsCategory
-      return h('div', [
-        h('span', params.row.sort),
+      let sort = h('div', [
         h('i', {
           class: {
             'none': true,
@@ -432,39 +430,7 @@ export default {
           },
           on: {
             click: () => {
-              this.$Modal.confirm({
-                render: (h) => {
-                  return h('Input', {
-                    props: {
-                      value: params.row.sort,
-                      autofocus: true,
-                      placeholder: '修改排序'
-                    },
-                    on: {
-                      input: (val) => {
-                        params.row.sort2 = val
-                      }
-                    }
-                  })
-                },
-                onOk: () => {
-                  let data = {
-                    model: JSON.stringify({
-                      id: params.row.categoryId,
-                      sort: params.row.sort2
-                    }),
-                    _method: 'put'
-                  }
-                  ctx.$http.post('/rest/api/category/detail/' + params.row.categoryId, qs.stringify(data)).then((res) => {
-                    if (res.success) {
-                      ctx.$Message.success('修改成功')
-                      ctx.list[params.index].sort = params.row.sort2
-                    } else {
-                      ctx.$Message.error(res.msg)
-                    }
-                  })
-                }
-              })
+              params.row.edittingCell[params.column.key] = true
             }
           }
         }),
@@ -479,25 +445,25 @@ export default {
               'iconfont': true,
               'icon-icon--': true
             },
-            style: {
-              fontSize: '8px'
-            },
             on: {
               click: () => {
                 if (params.index > 0) {
-                  this.sortable(params.index, params.index - 1)
+                  let grade = parseInt(params.row.grade)
+                  for (var i = 0; i < params.index; i++) {
+                    let org = ctx.list[params.index - i - 1]
+                    let orgGrade = parseInt(org.grade)
+                    if (orgGrade < grade) return false
+                    if (orgGrade === grade) {
+                      this.sortPost(params.row.categoryId, org.sort, 'category')
+                      this.sortPost(org.categoryId, params.row.sort, 'category')
+                      setTimeout(function () {
+                        ctx.get()
+                      }, 200)
+                      return false
+                    }
+                  }
                 }
               }
-            }
-          }),
-          h('i', {
-            class: {
-              'none': true,
-              'iconfont': true,
-              'icon-tuozhuai': true
-            },
-            style: {
-              fontSize: '8px'
             }
           }),
           h('i', {
@@ -506,17 +472,49 @@ export default {
               'iconfont': true,
               'icon-icon--1': true
             },
-            style: {
-              fontSize: '8px'
-            },
             on: {
               click: () => {
-                if (params.index < list.length - 1) {
-                  this.sortable(params.index, params.index + 1)
+                if (params.index < this.list.length - 1) {
+                  let grade = parseInt(params.row.grade)
+                  for (var i = 0; i < this.list.length - params.index; i++) {
+                    let org = ctx.list[params.index + i + 1]
+                    let orgGrade = parseInt(org.grade)
+                    if (orgGrade < grade) return false
+                    if (orgGrade === grade) {
+                      this.sortPost(params.row.categoryId, org.sort, 'category')
+                      this.sortPost(org.categoryId, params.row.sort, 'category')
+                      setTimeout(function () {
+                        ctx.get()
+                      }, 200)
+                      return false
+                    }
+                  }
                 }
               }
             }
           })
+        ])
+      ])
+      return h('Row', {
+        props: {
+          type: 'flex',
+          align: 'middle',
+          justify: 'center'
+        }
+      }, [
+        h('Col', {
+          props: {
+            span: '14'
+          }
+        }, [
+          !params.row.edittingCell[params.column.key] ? h('span', params.row[params.column.key]) : this.cellInput(this, h, params)
+        ]),
+        h('Col', {
+          props: {
+            span: '10'
+          }
+        }, [
+          params.row.edittingCell[params.column.key] ? this.saveIncellEditBtn(this, h, params) : sort
         ])
       ])
     },

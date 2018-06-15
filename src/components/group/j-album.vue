@@ -10,7 +10,7 @@
       <div class="j_search">
         <Row type="flex" justify="space-between">
           <Col>
-            <Input v-model="searchData.name" class="w144" placeholder="搜索图片名称"></Input>
+            <Input v-model="searchData.filename" class="w144" clearable placeholder="搜索图片名称" @on-change="clearInput"></Input>
             <Button class="search" @click="get">搜索</Button>
           </Col>
           <Col>
@@ -63,11 +63,54 @@ export default {
     return {
       modal: false,
       list: [],
+      listTest: [
+        {
+          state: '01',
+          type: '01',
+          content: null,
+          sort: null,
+          filename: '路人超能2',
+          filename2: '路人超能2',
+          userId: 'User_000000000000000000000000082',
+          serverPath: 'upload//g//g2//ggggfj//picture//2017//09//15/cb9ea426-772f-4667-afc3-18ac954008d1.jpg',
+          belongId: null,
+          attId: 'Attach_0000000000000000001403056',
+          belongType: 'AD',
+          linkUrl: null,
+          storeType: null,
+          serverIp: '125.120.86.154',
+          filedesc: null,
+          uploadTime: 1505440558943,
+          technicView: null,
+          _checked: false,
+          editting: false
+        },
+        {
+          state: '01',
+          type: '01',
+          content: null,
+          sort: null,
+          filename: '路人头像3.jpg',
+          filename2: '路人头像3.jpg',
+          userId: 'User_000000000000000000000000082',
+          serverPath: 'upload//g//g2//ggggfj//picture//2017//08//22/d45b87db-460a-42ba-beee-c5551ea5a7ee.jpg',
+          belongId: null,
+          attId: 'Attach_0000000000000000001391538',
+          belongType: 'AD',
+          linkUrl: null,
+          storeType: null,
+          serverIp: '183.159.177.57',
+          filedesc: null,
+          uploadTime: 1503382354821,
+          technicView: null,
+          _checked: false,
+          editting: false
+        }
+      ],
       total: 0,
       searchData: {
         page: 1,
-        pageSize: 20,
-        name: ''
+        pageSize: 20
       },
       detail: {},
       attId: 'all'
@@ -93,6 +136,11 @@ export default {
       this.get()
     },
     // 功能
+    clearInput () {
+      if (this.searchData.filename === '') {
+        this.get()
+      }
+    },
     categoryChange (e) {
       this.attId = e.data.id
       this.get()
@@ -136,6 +184,13 @@ export default {
   z-index: 1001;
   .menu {
     display: none !important
+  }
+  // 上传
+  .ivu-upload-list{
+    position: absolute;
+    z-index: 99;
+    background: #fff;
+    border: 1px solid #f0f0f0;
   }
   .j_album_category {
     height: 508px;
