@@ -13,39 +13,18 @@ const store = new Vuex.Store({
       enterprise: {}
     },
     userInfo: {
-      noReaderMsg: 1
+      noReaderMsg: 0
     },
     lanId: '1',
     uid: ['0', '0', '0'],
     // 列表数据
     productCategory: [],
-    newsCategory: [
-      {
-        categoryId: 'ccc',
-        name: 'text',
-        isdisplay: '1',
-        edittingCell: {
-          sort: false,
-          api: 'category',
-          id: 'ccc'
-        }
-      }
-    ],
+    newsCategory: [],
     albumCategory: [],
     messageList: [],
     memberRankList: [],
     memberAttrList: [],
-    tagList: [
-      {
-        name: '新闻标签2',
-        state: '01',
-        type: 'news',
-        categoryId: null,
-        addTime: 1528434276359,
-        tagId: '8a9e457e63d989a20163ddc838070086',
-        _checked: false
-      }
-    ],
+    tagList: [],
     areaList: [],
     // 站点
     staticList: [],

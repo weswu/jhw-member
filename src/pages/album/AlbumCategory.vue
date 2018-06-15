@@ -166,7 +166,7 @@ export default {
               _checked: false,
               editting: false,
               children: [],
-              attCount: item.attCount
+              attCount: item2.attCount
             })
           }
         })
@@ -182,7 +182,7 @@ export default {
                 _checked: false,
                 editting: false,
                 children: [],
-                attCount: item.attCount
+                attCount: item2.attCount
               })
             }
           })
@@ -367,7 +367,14 @@ export default {
       this.$refs.TransferAlbum.open()
     },
     copy () {
-      this.$refs.TransferAlbum.open('copy', '复制相册')
+      this.$http.post('/rest/api/album/albumCopy?albumId=' + this.item.id).then((res) => {
+        if (res.success) {
+          this.$Message.success('复制成功')
+          this.get()
+        } else {
+          this.$Message.error(res.msg)
+        }
+      })
     },
     edit () {
       var ctx = this

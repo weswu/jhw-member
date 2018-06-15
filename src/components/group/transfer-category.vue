@@ -9,7 +9,7 @@
     </div>
     <Form :model="detail" :label-width="90">
       <FormItem label="请选择：">
-        <CategorySelect :categoryId="detail.category" :list="data" @on-change="categoryChange"/>
+        <CategorySelect :categoryId="detail.category" :list="data" @on-change="categoryChange" :isDefalut="true"/>
       </FormItem>
     </Form>
   </Modal>

@@ -10,6 +10,7 @@
       </div>
     </div>
     <ul class="ivu-select-dropdown-list" slot="list">
+      <li class="ivu-select-item" @click="select({name: '请选择', categoryId: ''})" v-if="isDefalut">请选择</li>
       <li
         v-for="item in data"
         :key="item.categoryId"
@@ -29,7 +30,8 @@ export default {
   name: 'categorySelect',
   props: {
     list: Array,
-    categoryId: {}
+    categoryId: {},
+    isDefalut: Boolean
   },
   data () {
     return {

@@ -54,14 +54,14 @@
       </li>
     </ul>
     <JPagination :fixed="true" :total="total" :searchData='searchData' @on-change="get"></JPagination>
-    <JDialog ref="lan" :title="'设置语言版本'" :tip="'温馨提醒：'"  @on-ok="save" >
+    <JDialog ref="lan" :title="'设置语言版本'" :tip="'温馨提醒：'" @on-ok="save" >
       <div slot="content">
         <Select v-model="lan" style="width:144px">
           <Option v-for="item in lanList" :value="item.value" :key="item.value">{{ item.text }}</Option>
         </Select>
       </div>
     </JDialog>
-    <JDialog ref="data" :title="'同步数据'" :width="715" :okText="'确定'" :tip="'温馨提醒：同步数据包含（新闻和产品数据），请完善总站的数据后再导数据，导入后“文字内容”需自行修改'"  @on-ok="saveData" >
+    <JDialog ref="data" :title="'同步数据'" :width="715" :okText="'确定'" :tip="'温馨提醒：同步数据包含（新闻和产品数据），请完善总站的数据后再导数据，导入后“文字内容”需自行修改'" @on-ok="saveData" >
       <div slot="content">
         <Form :model="detail" :label-width="120">
           <FormItem label="来源语言版本：">
@@ -74,6 +74,22 @@
             <Select v-model="detail.end" class="border w144">
               <Option value="1">中文版</Option>
               <Option value="2">英文版</Option>
+            </Select>
+          </FormItem>
+        </Form>
+      </div>
+    </JDialog>
+    <JDialog ref="again" :title="'续费'" :width="350" :okText="'确定'" @on-ok="saveAgain" >
+      <div slot="content">
+        <Form :model="buy" :label-width="70">
+          <FormItem label="年份：">
+            <Select v-model="buy.year" class="border" style="width:144px;">
+              <Option value="1">1</Option>
+              <Option value="2">2</Option>
+              <Option value="3">3</Option>
+              <Option value="4">4</Option>
+              <Option value="5">5</Option>
+              <Option value="10">10</Option>
             </Select>
           </FormItem>
         </Form>
@@ -108,20 +124,19 @@ export default {
   },
   data () {
     return {
+      listTest: [],
       list: [],
-      listTest: [
-        {
-          url: 'http://pc.jihui88.com/rest/site/96/index',
-          bind: {}
-        }
-      ],
       total: 0,
       lan: '1',
       detail: {
         begin: '1',
         end: '2'
       },
-      onlineCount: 0
+      onlineCount: 0,
+      buy: {
+        year: '1',
+        layoutId: ''
+      }
     }
   },
   computed: {
@@ -173,19 +188,15 @@ export default {
       this.get()
     },
     again (id) {
-      this.$Modal.confirm({
-        width: 770,
-        render: (h) => {
-          return h('iframe', {
-            attrs: {
-              src: 'http://buy.jihui88.com/#/qrcode?layoutId=' + id,
-              frameborder: '0',
-              scrolling: 'no'
-            },
-            style: {
-              height: '428px'
-            }
-          })
+      this.buy.layoutId = id
+      this.$refs.again.open()
+    },
+    saveAgain () {
+      this.$http.post('/rest/buy/api/order/renew', qs.stringify(this.buy)).then((res) => {
+        if (res.code === 0) {
+          window.open('http://buy.jihui88.com/#/alipay?title=续费&orderId=' + res.data.orderId, '_blank')
+        } else {
+          this.$Message.error(res.msg)
         }
       })
     },
@@ -201,7 +212,7 @@ export default {
           id: item.id,
           seoTitle: item.seoTitle2
         }),
-        methods: 'put'
+        _method: 'put'
       }
       this.$http.post('/rest/pc/api/baseLayout/detail/' + item.id, qs.stringify(data)).then((res) => {
         if (res.success) {

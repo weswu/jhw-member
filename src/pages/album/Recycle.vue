@@ -93,6 +93,7 @@ export default {
   },
   methods: {
     get () {
+      this.ids = ''
       this.$http.get('/rest/api/album/attr/recycle/' + this.id + '?' + qs.stringify(this.searchData)).then((res) => {
         if (res.success) {
           let data = res.attributes.data

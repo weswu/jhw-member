@@ -164,6 +164,7 @@ export default {
   },
   methods: {
     get () {
+      this.ids = ''
       this.$http.get('/rest/api/product/list?' + qs.stringify(this.searchData)).then(res => {
         if (res.success) {
           this.total = res.attributes.count
@@ -247,18 +248,10 @@ export default {
       if (!this.ids) {
         return this.$Message.error('未选择')
       }
-      var ctx = this
       this.$http.post('/rest/api/product/batch/del', qs.stringify({ids: this.ids})).then((res) => {
         if (res.success) {
           this.$Message.success('删除成功')
-          this.ids.split(',').forEach(id => {
-            ctx.list.forEach((item, index) => {
-              if (id === item.productId) {
-                ctx.list.splice(index, 1)
-              }
-            })
-          })
-          this.ids = ''
+          this.get()
         } else {
           this.$Message.error(res.msg)
         }
@@ -721,9 +714,9 @@ export default {
     width: 135px;
     .ivu-poptip-popper{
       width: 223px;
-      .ivu-poptip-arrow{
-        margin-top: 0;
-      }
+    }
+    .ivu-poptip-arrow{
+      margin-top: 0;
     }
   }
   .a_underline{

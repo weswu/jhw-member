@@ -131,10 +131,10 @@
       v-model="itemModel"
       title="编辑图片"
       @on-ok="editItem">
-      <Input v-model="item.filename" class="w244" placeholder="图片名称"></Input><br/>
+      <Input v-model="item.filename2" class="w244" placeholder="图片名称"></Input><br/>
       <Input v-model="item.filedesc" type="textarea" class="w244" placeholder="图片描述"></Input><br/>
       <Input v-model="item.linkUrl" class="w244" placeholder="链接地址"></Input><br/>
-      <InputNumber v-model="item.sort" placeholder="排序"></InputNumber>
+      排序：<InputNumber v-model="item.sort" placeholder="排序"></InputNumber>
     </Modal>
   </Layout>
 </template>
@@ -410,6 +410,7 @@ export default {
   methods: {
     get () {
       var ctx = this
+      this.ids = ''
       this.$http.get('/rest/api/album/attr/list/' + this.attId + '?' + qs.stringify(this.searchData)).then((res) => {
         if (res.success) {
           this.total = res.attributes.count
@@ -596,8 +597,8 @@ export default {
       let data = {
         model: JSON.stringify({
           id: this.item.attId,
-          filename: this.item.filename,
-          filedesc: this.item.filedesc,
+          filename: this.item.filename2 + '.' + this.item.serverPath.split('.')[1],
+          filedesc: this.item.filedesc || '',
           sort: this.item.sort,
           linkUrl: this.item.linkUrl,
           editField: true

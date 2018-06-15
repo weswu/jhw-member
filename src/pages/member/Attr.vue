@@ -7,7 +7,7 @@
         <div class="j_search">
           <Button type="info" icon="plus" class="w130" @click="add">添加会员属性</Button>
         </div>
-        <DragableTable :list="list" :columns="columns" @on-update="tableUpdate"/>
+        <DragableTable :list="memberAttrList" :columns="columns" @on-update="tableUpdate"/>
       </Content>
     </Layout>
     <Detail ref='detail' @on-change="get"/>
@@ -39,7 +39,6 @@ export default {
         { title: '移序', className: 'j_table_sort', key: 'sort', minWidth: 125, render: this.editFilter },
         { title: '操作', className: 'j_table_operate', width: 120, render: this.renderOperate }
       ],
-      list: this.$store.state.memberAttrList,
       listTest: [
         {
           attributeType: 'checkbox',
@@ -67,9 +66,7 @@ export default {
     }
   },
   computed: {
-    ...mapState({
-      memberAttrList: state => state.status.memberAttrList
-    })
+    ...mapState(['memberAttrList'])
   },
   created () {
     this.get()
@@ -144,11 +141,7 @@ export default {
                 this.$http.post('/rest/api/member/attr/detail/' + params.row.attId, qs.stringify({_method: 'DELETE'})).then((res) => {
                   if (res.success) {
                     ctx.$Message.success('删除成功')
-                    for (let i = 0; i < ctx.list.length; i++) {
-                      if (ctx.list[i].attId === params.row.attId) {
-                        ctx.list.splice(i, 1)
-                      }
-                    }
+                    ctx.get()
                   } else {
                     ctx.$Message.success(res.msg)
                   }

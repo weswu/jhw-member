@@ -2,7 +2,7 @@
   <JDialog ref="dialog" :title="'分类'" :width="620" :tip="tip" @on-ok="ok" :okText="'提交'">
     <Form ref="modalForm" :model="detail" :label-width="80" slot="content" class="j_category_detail">
       <FormItem label="上级分类：">
-        <CategorySelect :categoryId="detail.belongId" :list="$store.state[$route.params.id+'Category']" @on-change="categoryChange"/>
+        <CategorySelect :categoryId="detail.belongId" :list="$store.state[$route.params.id+'Category']" @on-change="categoryChange" :isDefalut="true"/>
       </FormItem>
       <FormItem label="分类名称：">
         <Input v-model="detail.name" placeholder="请输入分类名称" style="width: 100%;"></Input>

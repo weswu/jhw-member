@@ -7,7 +7,7 @@
         <div class="j_search">
           <Button type="info" icon="plus" class="w130" @click="add">添加会员等级</Button>
         </div>
-        <Table :columns="columns" :data="list"/>
+        <Table :columns="columns" :data="memberRankList"/>
       </Content>
     </Layout>
     <Detail ref='detail' @on-change="get"/>
@@ -16,6 +16,7 @@
 
 <script>
 import qs from 'qs'
+import { mapState } from 'vuex'
 import MenuBar from '@/components/common/menu_bar'
 import JHeader from '@/components/group/j-header'
 import Detail from '@/pages/member/RankDetail'
@@ -34,9 +35,11 @@ export default {
         { title: '所需积分', key: 'point' },
         { title: '是否默认', render: this.isDefaultFilter },
         { title: '操作', className: 'j_table_operate', width: 120, render: this.renderOperate }
-      ],
-      list: this.$store.state.memberRankList
+      ]
     }
+  },
+  computed: {
+    ...mapState(['memberRankList'])
   },
   created () {
     this.get()
@@ -89,11 +92,7 @@ export default {
                 this.$http.post('/rest/api/member/rank/detail/' + params.row.rankId, qs.stringify({_method: 'DELETE'})).then((res) => {
                   if (res.success) {
                     ctx.$Message.success('删除成功')
-                    for (let i = 0; i < ctx.list.length; i++) {
-                      if (ctx.list[i].rankId === params.row.rankId) {
-                        ctx.list.splice(i, 1)
-                      }
-                    }
+                    ctx.get()
                   } else {
                     ctx.$Message.success(res.msg)
                   }

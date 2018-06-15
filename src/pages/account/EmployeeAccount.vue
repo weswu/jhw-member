@@ -86,6 +86,7 @@ export default {
   },
   methods: {
     get () {
+      this.ids = ''
       this.$http.get('/rest/api/submember/list?' + qs.stringify(this.searchData)).then((res) => {
         if (res.success) {
           this.list = res.attributes.data
@@ -119,17 +120,10 @@ export default {
       if (!this.ids) {
         return this.$Message.error('未选择')
       }
-      var ctx = this
       this.$http.post('/rest/api/submember/delete?ids=' + this.ids).then((res) => {
         if (res.success) {
           this.$Message.success('删除成功')
-          this.ids.split(',').forEach(id => {
-            ctx.list.forEach((item, index) => {
-              if (id === item.memberId) {
-                ctx.list.splice(index, 1)
-              }
-            })
-          })
+          this.get()
         } else {
           this.$Message.error(res.msg)
         }

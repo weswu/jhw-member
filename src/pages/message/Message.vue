@@ -105,6 +105,7 @@ export default {
   },
   methods: {
     get () {
+      this.ids = ''
       this.$http.get('/rest/api/message/list?' + qs.stringify(this.searchData)).then(res => {
         if (res.success) {
           this.total = res.attributes.count

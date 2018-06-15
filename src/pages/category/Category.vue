@@ -92,6 +92,7 @@ export default {
   },
   methods: {
     get () {
+      this.ids = ''
       this.$store.dispatch('getCategory', this.type).then(res => {
         if (this.type === 'product') {
           this.list = this.$store.state.productCategory

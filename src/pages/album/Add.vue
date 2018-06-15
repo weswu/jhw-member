@@ -23,6 +23,9 @@
 import qs from 'qs'
 import JDialog from '@/components/group/j-dialog'
 export default {
+  props: {
+    init: Boolean
+  },
   components: {
     JDialog
   },
@@ -49,6 +52,9 @@ export default {
         if (res.success) {
           this.$Message.success('添加成功')
           this.$emit('on-change')
+          if (this.init) {
+            this.$store.dispatch('getAlbumCategory')
+          }
         } else {
           this.$Message.error(res.msg)
         }

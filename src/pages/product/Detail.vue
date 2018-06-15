@@ -155,8 +155,7 @@
         </Form>
       </Content>
       <Footer v-if="this.$route.params.id !== 'add'">
-        <Button type="primary" size="small" @click="publish">发布</Button>
-        <Button type="ghost" size="small" @click="submit">保存草稿</Button>
+        <Button type="primary" size="small" @click="submit">保存</Button>
         <Poptip placement="bottom" class="j_poptip_ul">
           <Button type="ghost" size="small">预览</Button>
           <ul slot="content" style="max-height: 250px;">
@@ -204,7 +203,19 @@ export default {
     return {
       active: '0',
       detail: {
-        attrState: '01',
+        isMarketableBol: '01', // 上架,三品
+        isNew: '00',
+        isBest: '00',
+        isHot: '00',
+        price: 0,
+        marketPrice: 0,
+        store: 999,
+        weight: 0,
+        weightUnit: 'kg',
+        priceState: '00',
+        limitState: '00',
+        integralState: '00',
+        attrState: '00', // 关闭属性价格
         customAttrMapStore: [],
         productAttributeMapStore: [],
         attrItemsText: [
@@ -239,7 +250,11 @@ export default {
         ]
       },
       // 多图
-      imgList: [],
+      imgList: [
+        {
+          src: 'ccc'
+        }
+      ],
       attrtList: [],
       attrtListText: [],
       // editor1
@@ -426,7 +441,7 @@ export default {
       })
     },
     // 提交
-    submit (tip) {
+    submit () {
       var ctx = this
       this.detail.purchaseNum = this.detail.purchaseNum + ''
       // 多分类
@@ -481,34 +496,18 @@ export default {
       })
       this.detail.customAttr = JSON.stringify(customAttrList)
       let data = {
-        model: JSON.stringify(this.detail),
-        _method: 'put'
-      } // http://pc.jihui88.com/rest/site/96/pd?itemId=581124
-      this.$http.post('/rest/api/product/detail/' + this.detail.productId, qs.stringify(data)).then((res) => {
+        model: JSON.stringify(this.detail)
+      }
+      let url = ''
+      if (this.detail.productId) {
+        url = '/' + this.detail.productId
+        data._method = 'put'
+      }
+      this.$http.post('/rest/api/product/detail' + url, qs.stringify(data)).then((res) => {
         if (res.success) {
-          !tip && this.$Message.success('保存成功')
+          this.$Message.success('保存成功')
         } else {
           this.$Message.error(res.msg)
-        }
-      })
-    },
-    publish () {
-      this.submit(true)
-      var ctx = this
-      setTimeout(function () {
-        ctx.publish2('page&thisPage=')
-      }, 200)
-      setTimeout(function () {
-        ctx.publish2('category&thisPage=product')
-      }, 400)
-      setTimeout(function () {
-        ctx.publish2('detail&thisPage=product&productId=' + ctx.detail.productId, true)
-      }, 600)
-    },
-    publish2 (url, tip) {
-      this.$http.post('/rest/static1/' + this.$store.state.user.username + '/publish?type=' + url).then((res) => {
-        if (tip) {
-          this.$Message.success('发布成功')
         }
       })
     }

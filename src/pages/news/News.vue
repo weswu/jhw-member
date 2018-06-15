@@ -221,6 +221,7 @@ export default {
   },
   methods: {
     get () {
+      this.ids = ''
       this.$http.get('/rest/api/news/list?' + qs.stringify(this.searchData)).then(res => {
         if (res.success) {
           this.total = res.attributes.count

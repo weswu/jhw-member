@@ -68,6 +68,7 @@ export default {
   methods: {
     get () {
       var ctx = this
+      this.ids = ''
       this.$http.get('/rest/api/product/list?' + qs.stringify(this.searchData)).then(res => {
         if (res.success) {
           this.total = res.attributes.count
