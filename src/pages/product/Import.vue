@@ -69,9 +69,7 @@
       </div>
       <Form :label-width="90">
         <FormItem label="请选择：">
-          <Select v-model="attId">
-            <Option :value="item.albumId" v-for="item in $store.state.albumCategory" :key="item.albumId">{{item.name}}</Option>
-          </Select>
+          <CategorySelect @on-change="change"/>
         </FormItem>
       </Form>
     </Modal>
@@ -82,10 +80,12 @@
 import qs from 'qs'
 import MenuBar from '@/components/common/menu_bar'
 import JHeader from '@/components/group/j-header'
+import CategorySelect from '@/pages/album/CategorySelect'
 export default {
   components: {
     MenuBar,
-    JHeader
+    JHeader,
+    CategorySelect
   },
   data () {
     return {
@@ -151,6 +151,9 @@ export default {
     select () {
       var btn = document.getElementById('fileUpload')
       btn.click()
+    },
+    change (e) {
+      this.attId = e
     },
     generate () {
       let data = {

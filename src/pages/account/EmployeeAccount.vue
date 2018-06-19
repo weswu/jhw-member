@@ -176,11 +176,7 @@ export default {
                 this.$http.delete('/rest/api/submember/detail/' + params.row.memberId).then((res) => {
                   if (res.success) {
                     ctx.$Message.success('删除成功')
-                    for (let i = 0; i < ctx.list.length; i++) {
-                      if (ctx.list[i].memberId === params.row.memberId) {
-                        ctx.list.splice(i, 1)
-                      }
-                    }
+                    ctx.list.splice(params.index, 1)
                   } else {
                     ctx.$Message.success(res.msg)
                   }

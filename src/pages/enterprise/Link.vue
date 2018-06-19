@@ -7,22 +7,26 @@
         <div class="j_search">
           <Button type="info" icon="plus" class="w130" @click="add">添加友情链接</Button>
         </div>
-        <Table :columns="columns" :data="list"></Table>
+        <DragableTable
+          :list="list"
+          :columns="columns"
+          @on-update="tableUpdate"/>
       </Content>
     </Layout>
-    <Detail ref='detail' @on-change="detailChange"/>
+    <Detail ref='detail' @on-change="get"/>
   </Layout>
 </template>
 
 <script>
-import qs from 'qs'
 import MenuBar from '@/components/common/menu_bar'
 import JHeader from '@/components/group/j-header'
+import DragableTable from '@/components/group/j-dragable-table'
 import Detail from '@/pages/enterprise/LinkDetail'
 export default {
   components: {
     MenuBar,
     JHeader,
+    DragableTable,
     Detail
   },
   data () {
@@ -32,7 +36,7 @@ export default {
         { title: '链接名称', key: 'name', minWidth: 90, render: this.editFilter },
         { title: '链接地址', key: 'url', minWidth: 90, render: this.editFilter },
         { title: '链接图片', className: 'j_table_img', minWidth: 90, render: this.imgFilter },
-        { title: '排序', className: 'j_table_sort', width: 100, render: this.sortFilter },
+        { title: '排序', className: 'j_table_sort', key: 'lorder', width: 125, render: this.editFilter },
         { title: '操作', className: 'j_table_operate', width: 120, render: this.renderOperate }
       ],
       list: [],
@@ -68,8 +72,9 @@ export default {
             item.edittingCell = {
               name: false,
               url: false,
+              lorder: false,
               api: 'link',
-              id: item.jobId
+              id: item.linkId
             }
           })
           this.list = data
@@ -79,45 +84,8 @@ export default {
     add () {
       this.$refs.detail.open()
     },
-    sortable (a, b) {
-      let objA = this.list[a]
-      let objB = this.list[b]
-      let sortA = this.list[a].lorder
-      let sortB = this.list[b].lorder
-      this.sortPost(this.list[a].linkId, sortB)
-      this.sortPost(this.list[b].linkId, sortA)
-      objA.lorder = sortB
-      objB.lorder = sortA
-      this.list[a] = objB
-      this.list[b] = objA
-    },
-    sortPost (id, sort) {
-      let data = {
-        model: JSON.stringify({
-          id: id,
-          lorder: sort
-        }),
-        _method: 'put'
-      }
-      this.$http.post('/rest/api/link/detail/' + id, qs.stringify(data)).then((res) => {
-        if (res.success) {
-          this.get()
-          console.log(sort)
-        } else {
-          this.$Message.error(res.msg)
-        }
-      })
-    },
-    detailChange (a, b) {
-      if (b === 'add') {
-        this.list.push(a)
-      } else {
-        this.list.forEach(item => {
-          if (item.linkId === a.linkId) {
-            item = a
-          }
-        })
-      }
+    tableUpdate (a, b) {
+      this.sortable(a, b, 'link', 'linkId')
     },
     // 过滤
     editFilter (h, params) {
@@ -148,90 +116,6 @@ export default {
             src: this.$store.state.status.IMG_HOST + this.picUrl(params.row.image, 4)
           }
         })
-      ])
-    },
-    sortFilter (h, params) {
-      var ctx = this
-      return h('div', [
-        h('span', params.row.lorder),
-        h('i', {
-          class: {
-            'none': true,
-            'iconfont': true,
-            'icon-bianji2': true
-          },
-          on: {
-            click: () => {
-              this.$Modal.confirm({
-                render: (h) => {
-                  return h('Input', {
-                    props: {
-                      value: params.row.lorder,
-                      autofocus: true,
-                      placeholder: '修改排序'
-                    },
-                    on: {
-                      input: (val) => {
-                        params.row.lorder2 = val
-                      }
-                    }
-                  })
-                },
-                onOk: () => {
-                  let data = {
-                    model: JSON.stringify({
-                      id: params.row.newsId,
-                      lorder: params.row.lorder2
-                    }),
-                    _method: 'put'
-                  }
-                  ctx.$http.post('/rest/api/link/detail/' + params.row.linkId, qs.stringify(data)).then((res) => {
-                    if (res.success) {
-                      ctx.$Message.success('修改成功')
-                      ctx.list[params.index].lorder = params.row.lorder2
-                    } else {
-                      ctx.$Message.error(res.msg)
-                    }
-                  })
-                }
-              })
-            }
-          }
-        }),
-        h('span', {
-          class: {
-            'j_sort': true
-          }
-        }, [
-          h('i', {
-            class: {
-              'none': true,
-              'iconfont': true,
-              'icon-icon--': true
-            },
-            on: {
-              click: () => {
-                if (params.index > 0) {
-                  this.sortable(params.index, params.index - 1)
-                }
-              }
-            }
-          }),
-          h('i', {
-            class: {
-              'none': true,
-              'iconfont': true,
-              'icon-icon--1': true
-            },
-            on: {
-              click: () => {
-                if (params.index < this.searchData.pageSize - 1) {
-                  this.sortable(params.index, params.index + 1)
-                }
-              }
-            }
-          })
-        ])
       ])
     },
     renderOperate (h, params) {
@@ -285,7 +169,7 @@ export default {
 <style lang="less">
 .j_link .j_table_img{
   img{
-    width: 32px;
+    max-width: 48px;
   }
 }
 </style>

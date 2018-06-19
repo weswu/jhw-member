@@ -10,9 +10,7 @@
     </div>
     <Form :model="detail" :label-width="90">
       <FormItem label="请选择：">
-        <Select v-model="detail.parentId">
-          <Option :value="item.albumId" v-for="item in $store.state.albumCategory" :key="item.albumId" :class="{item: !!item.parentId}">{{item.name}}</Option>
-        </Select>
+        <CategorySelect @on-change="change"/>
       </FormItem>
     </Form>
   </Modal>
@@ -20,9 +18,13 @@
 
 <script>
 import qs from 'qs'
+import CategorySelect from '@/pages/album/CategorySelect'
 export default {
   props: {
     item: {}
+  },
+  components: {
+    CategorySelect
   },
   data () {
     return {
@@ -39,6 +41,9 @@ export default {
     },
     submit () {
       this.move()
+    },
+    change (e) {
+      this.detail.parentId = e
     },
     move () {
       let data = {

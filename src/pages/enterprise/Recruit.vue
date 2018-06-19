@@ -14,7 +14,7 @@
         <JPagination :total="total" :searchData='searchData' @on-change="get"/>
       </Content>
     </Layout>
-    <Detail ref='detail'/>
+    <Detail ref='detail' @on-change="get"/>
   </Layout>
 </template>
 

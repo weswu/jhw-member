@@ -3,6 +3,7 @@
     <Table :columns="columns" :data="list"/>
     <JPagination :total="total" :searchData='searchData' @on-change="get"/>
     <Detail ref="detail"/>
+    <Again ref="again"/>
   </Content>
 </template>
 
@@ -10,6 +11,7 @@
 import qs from 'qs'
 import JPagination from '@/components/group/j-pagination'
 import Detail from '@/pages/cost/Detail'
+import Again from '@/pages/cost/Again'
 export default {
   props: {
     searchData: {
@@ -24,7 +26,8 @@ export default {
   },
   components: {
     JPagination,
-    Detail
+    Detail,
+    Again
   },
   data () {
     return {
@@ -106,7 +109,7 @@ export default {
           },
           on: {
             click: () => {
-              this.$refs.detail.open(params.row.orderId, 'buy')
+              this.$refs.again.open(params.row.orderId, 'orderId')
             }
           }
         }, '续费')

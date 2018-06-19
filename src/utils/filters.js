@@ -84,5 +84,5 @@ Vue.filter('picUrl', function (src, number) {
  * @desc: 图片名字
 */
 Vue.filter('postfix', function (src) {
-  return '.' + src.split('.')[1]
+  return '.' + src.split('.')[1].split('?')[0]
 })

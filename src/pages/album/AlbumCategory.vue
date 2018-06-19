@@ -48,7 +48,7 @@ export default {
     }
   },
   created () {
-    if (this.list.length < 2) {
+    if (this.$route.path === '/album' || this.$store.state.albumCategory.length === 0) {
       this.$store.dispatch('getAlbumCategory').then(res => {
         this.initData()
       })

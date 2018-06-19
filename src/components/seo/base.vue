@@ -74,7 +74,6 @@ export default {
     getPcNav () {
       if (this.layoutId) {
         this.searchData.layoutId = this.layoutId
-        this.searchData.lanId = this.lanId
         this.$http.get('/rest/pc/api/navigator/list?' + qs.stringify(this.searchData)).then((res) => {
           if (res.success) {
             this.list = res.attributes.data

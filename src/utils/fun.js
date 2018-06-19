@@ -92,19 +92,35 @@ Vue.prototype.sortable = function (a, b, url, id) {
   let objB = this.list[b]
   let sortA = this.list[a].sort
   let sortB = this.list[b].sort
+  if (url === 'link') {
+    sortA = this.list[a].lorder
+    sortB = this.list[b].lorder
+  }
   this.sortPost(this.list[a][id], sortB, url)
   this.sortPost(this.list[b][id], sortA, url)
-  objA.sort = sortB
-  objB.sort = sortA
+  if (url === 'link') {
+    objA.lorder = sortB
+    objB.lorder = sortA
+  } else {
+    objA.sort = sortB
+    objB.sort = sortA
+  }
   this.list[a] = objB
   this.list[b] = objA
 }
 Vue.prototype.sortPost = function (id, sort, url) {
-  let data = {
-    model: JSON.stringify({
-      sort: sort,
+  let model = {
+    sort: sort,
+    editField: true
+  }
+  if (url === 'link') {
+    model = {
+      lorder: sort,
       editField: true
-    }),
+    }
+  }
+  let data = {
+    model: JSON.stringify(model),
     _method: 'put'
   }
   this.$http.post('/rest/api/' + url + '/detail/' + id, qs.stringify(data)).then((res) => {
@@ -191,7 +207,7 @@ Vue.prototype.cellInput = (vm, h, params) => {
   })
 }
 Vue.prototype.incellEditBtn = (vm, h, params) => {
-  if (params.column.key === 'sort') {
+  if (params.column.key === 'sort' || params.column.key === 'lorder') {
     return vm.cellSort(vm, h, params)
   } else {
     return h('i', {
@@ -229,7 +245,7 @@ Vue.prototype.saveIncellEditBtn = (vm, h, params) => {
         }
         vm.$http.post('/rest/api/' + params.row.edittingCell.api + '/detail/' + params.row.edittingCell.id, qs.stringify(data)).then((res) => {
           if (res.success) {
-            if (params.column.key === 'sort') {
+            if (params.column.key === 'sort' || params.column.key === 'lorder') {
               vm.get()
             }
             vm.$Message.success('修改成功')
@@ -251,14 +267,14 @@ Vue.prototype.cellEdit = (vm, h, params) => {
   }, [
     h('Col', {
       props: {
-        span: params.column.key === 'sort' ? '14' : '22'
+        span: (params.column.key === 'sort' || params.column.key === 'lorder') ? '14' : '22'
       }
     }, [
       !params.row.edittingCell[params.column.key] ? h('span', params.row[params.column.key]) : vm.cellInput(vm, h, params)
     ]),
     h('Col', {
       props: {
-        span: params.column.key === 'sort' ? '10' : '2'
+        span: (params.column.key === 'sort' || params.column.key === 'lorder') ? '10' : '2'
       }
     }, [
       params.row.edittingCell[params.column.key] ? vm.saveIncellEditBtn(vm, h, params) : vm.incellEditBtn(vm, h, params)

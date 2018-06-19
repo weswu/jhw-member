@@ -93,11 +93,11 @@ export default {
       this.ilogout('iframeorderlogout', 'http://buy.jihui88.com/api/user/logout')
       this.ilogout('iframebuylogout', 'http://www.jihui88.com/rest/buy/api/user/logout')
       if (this.user.username === '未登录') {
-        window.location.href = 'http://www.jihui88.com/member/login.html?backURL=' + decodeURIComponent(window.location.href)
+        window.location.href = 'http://www.jihui88.com/member/login.html?backURL=' + decodeURIComponent(window.location.origin + window.location.pathname)
       } else {
         this.$http.get('/rest/api/user/logout').then((res) => {
           if (res.success) {
-            window.location.href = 'http://www.jihui88.com/member/login.html?backURL=http://www.jihui88.com/member_new/index.html#/'
+            window.location.href = 'http://www.jihui88.com/member/login.html?backURL=' + window.location.origin + window.location.pathname
           } else {
             this.$Message.success(res.msg)
           }

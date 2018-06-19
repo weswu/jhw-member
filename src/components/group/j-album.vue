@@ -181,7 +181,7 @@ export default {
 
 <style lang="less">
 .j_pictrue_upload{
-  z-index: 1001;
+  z-index: 1100 !important;
   .menu {
     display: none !important
   }

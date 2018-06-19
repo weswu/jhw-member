@@ -7,8 +7,8 @@
           <Row :gutter="24" class="account_user">
             <Col span="6" style="width:130px">
               <div @click="avatar">
-                <Avatar shape="square" :src="$store.state.status.IMG_HOST+user.enterprise.logo" size="large" v-if="user.enterprise.logo" class="head_portrait"/>
-                <i class="iconfont icon-huiyuan" v-if="!user.enterprise.logo"></i>
+                <Avatar shape="square" :src="$store.state.status.IMG_HOST+user.headimg" size="large" v-if="user.headimg" class="head_portrait"/>
+                <i class="iconfont icon-huiyuan" v-if="!user.headimg"></i>
               </div>
               <a href="javascript:;" @click="avatar">修改头像</a>
             </Col>
@@ -100,7 +100,7 @@
         </div>
       </div>
       <Password ref="password"/>
-      <JAlbum :title="'修改头像'" ref="ablum"/>
+      <JAlbum :title="'修改头像'" ref="ablum" @on-change="picChange" v-if="ablumToggle"/>
   </Layout>
 </template>
 
@@ -185,7 +185,8 @@ export default {
       width: '348',
       src: 'http://www.jihui88.com/member/login.html?backURL=http://www.jihui88.com/member/qqRedirect.html&scope=snsapi_login_quick',
       open: false,
-      email: ''
+      email: '',
+      ablumToggle: false
     }
   },
   created () {
@@ -228,7 +229,14 @@ export default {
       })
     },
     avatar () {
-      this.$refs.ablum.open()
+      this.ablumToggle = true
+      var ctx = this
+      setTimeout(function () {
+        ctx.$refs.ablum.open()
+      }, 100)
+    },
+    picChange (e) {
+      this.user.user.headimg = e.src
     },
     password () {
       this.$refs.password.open()

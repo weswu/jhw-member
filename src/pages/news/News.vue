@@ -202,7 +202,8 @@ export default {
       ],
       searchData: {
         page: 1,
-        pageSize: 10
+        pageSize: 10,
+        category: ''
       },
       total: 0,
       toggle: false,
@@ -263,6 +264,9 @@ export default {
         title: this.searchData.title
       }
       this.get()
+    },
+    categoryChange (e) {
+      this.searchData.category = e
     },
     advancedSearch () {
       this.searchData.page = 1
@@ -497,13 +501,15 @@ export default {
 </script>
 
 <style lang="less">
-.j_news .ivu-table{
-  .ivu-table-tip,.ivu-table-body {
-    height: calc(100vh - 293px);
-    border-bottom: 1px solid #e9e9e9;
-  }
-  td{
-    height: 70px
+.j_news {
+  .ivu-table{
+    .ivu-table-tip,.ivu-table-body {
+      height: calc(100vh - 293px);
+      border-bottom: 1px solid #e9e9e9;
+    }
+    td{
+      height: 70px
+    }
   }
   .advancedSearch{
     .ivu-select-dropdown-list{

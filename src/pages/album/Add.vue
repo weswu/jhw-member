@@ -2,9 +2,7 @@
   <JDialog ref="dialog" :title="'新建相册'" :width="520" :tip="tip" @on-ok="ok" :okText="'提交'">
     <Form ref="modalForm" :model="detail" :label-width="120" slot="content">
       <FormItem label="上级分类：">
-        <Select v-model="detail.parentId">
-          <Option :value="item.albumId" v-for="item in $store.state.albumCategory" :key="item.albumId" :class="{item: !!item.parentId}">{{item.name}}</Option>
-        </Select>
+        <CategorySelect @on-change="change"/>
       </FormItem>
       <FormItem label="相册名称：">
         <Input v-model="detail.name" placeholder="请输入相册名称"></Input>
@@ -22,12 +20,14 @@
 <script>
 import qs from 'qs'
 import JDialog from '@/components/group/j-dialog'
+import CategorySelect from '@/pages/album/CategorySelect'
 export default {
   props: {
     init: Boolean
   },
   components: {
-    JDialog
+    JDialog,
+    CategorySelect
   },
   data () {
     return {
@@ -43,6 +43,9 @@ export default {
     open (id) {
       if (id) this.detail.id = id
       this.$refs.dialog.open()
+    },
+    change (e) {
+      this.detail.parentId = e
     },
     ok () {
       let data = {

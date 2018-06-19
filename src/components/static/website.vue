@@ -79,22 +79,7 @@
         </Form>
       </div>
     </JDialog>
-    <JDialog ref="again" :title="'续费'" :width="350" :okText="'确定'" @on-ok="saveAgain" >
-      <div slot="content">
-        <Form :model="buy" :label-width="70">
-          <FormItem label="年份：">
-            <Select v-model="buy.year" class="border" style="width:144px;">
-              <Option value="1">1</Option>
-              <Option value="2">2</Option>
-              <Option value="3">3</Option>
-              <Option value="4">4</Option>
-              <Option value="5">5</Option>
-              <Option value="10">10</Option>
-            </Select>
-          </FormItem>
-        </Form>
-      </div>
-    </JDialog>
+    <Again ref="again"/>
     <Add ref="add" @on-change="addChange"/>
   </div>
 </template>
@@ -105,6 +90,7 @@ import { mapState } from 'vuex'
 import JPagination from '@/components/group/j-pagination'
 import JDialog from '@/components/group/j-dialog'
 import Add from '@/components/static/add'
+import Again from '@/pages/cost/Again'
 export default {
   props: {
     searchData: {
@@ -120,11 +106,11 @@ export default {
   components: {
     JPagination,
     JDialog,
-    Add
+    Add,
+    Again
   },
   data () {
     return {
-      listTest: [],
       list: [],
       total: 0,
       lan: '1',
@@ -132,11 +118,7 @@ export default {
         begin: '1',
         end: '2'
       },
-      onlineCount: 0,
-      buy: {
-        year: '1',
-        layoutId: ''
-      }
+      onlineCount: 0
     }
   },
   computed: {
@@ -188,17 +170,7 @@ export default {
       this.get()
     },
     again (id) {
-      this.buy.layoutId = id
-      this.$refs.again.open()
-    },
-    saveAgain () {
-      this.$http.post('/rest/buy/api/order/renew', qs.stringify(this.buy)).then((res) => {
-        if (res.code === 0) {
-          window.open('http://buy.jihui88.com/#/alipay?title=续费&orderId=' + res.data.orderId, '_blank')
-        } else {
-          this.$Message.error(res.msg)
-        }
-      })
+      this.$refs.again.open(id)
     },
     // 网站上线
     bind (e) {

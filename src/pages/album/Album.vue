@@ -6,13 +6,13 @@
         <ul ref="menu" class="menu j_panel">
           <li @click="edit">重命名</li>
           <li @click="itemModel = true">编辑</li>
-          <li @click="copyAll">复制</li>
-          <li @click="moveAll">移动</li>
-          <li @click="delAll">删除</li>
-          <Upload ref="upload" :action="'/commonutil/uploadUtil2?username=' + $store.state.user.username + '&replace=01&attId=' + item.attId + '&id=' + attId"
+          <li @click="copyAll('item')">复制</li>
+          <li @click="moveAll('item')">移动</li>
+          <li @click="delAll('item')">删除</li>
+          <Upload ref="uploadImg" :action="'/commonutil/uploadUtil2?username=' + $store.state.user.username + '&replace=01&attId=' + item.attId + '&id=' + attId"
             name="Filedata"
             :max-size="2048"
-            :on-success="handleSuccess">
+            :on-success="handleSuccessImg">
             <li >替换图片</li>
           </Upload>
           <li @click="refurbish">刷新</li>
@@ -121,9 +121,7 @@
       v-model="belongModel"
       title="移动图片"
       @on-ok="moveAll2">
-      <Select v-model="belongId" class="w244">
-        <Option :value="item.albumId" v-for="item in albumCategory" :key="item.albumId">{{item.name}}</Option>
-      </Select>
+      <CategorySelect @on-change="picCatechange"/>
     </Modal>
     <Modal
       class-name="j_edit_item"
@@ -148,6 +146,7 @@ import JPagination from '@/components/group/j-pagination'
 import Add from '@/pages/album/Add'
 import Recycle from '@/pages/album/Recycle'
 import Watermark from '@/pages/album/Watermark'
+import CategorySelect from '@/pages/album/CategorySelect'
 export default {
   components: {
     JHeader,
@@ -155,7 +154,8 @@ export default {
     JPagination,
     Add,
     Recycle,
-    Watermark
+    Watermark,
+    CategorySelect
   },
   computed: {
     ...mapState({
@@ -511,6 +511,18 @@ export default {
       }, 1000)
       this.get()
     },
+    handleSuccessImg (res) {
+      var ctx = this
+      setTimeout(function () {
+        ctx.$refs.uploadImg.clearFiles()
+        ctx.$Message.success('更换成功')
+        ctx.list.forEach(item => {
+          if (item.attId === ctx.item.attId) {
+            item.serverPath = ctx.item.serverPath + '?1'
+          }
+        })
+      }, 1000)
+    },
     recycle () {
       this.$refs.recycle.open(this.attId)
     },
@@ -552,8 +564,10 @@ export default {
       }, 100)
     },
     // 图片中
+    picCatechange (e) {
+      this.belongId = e
+    },
     more (e, item) {
-      item._checked = true
       this.item = item
       this.item.url2 = '<img src="http://img.jihui88.com/' + item.serverPath + '" alt="' + item.filename + '">'
       this.item.url3 = this.$store.state.status.IMG_HOST + item.serverPath
@@ -622,7 +636,7 @@ export default {
       var ctx = this
       this.list.forEach(item => {
         if (item.attId === ctx.item.attId) {
-          item.serverPath = this.item.serverPath + '?1'
+          item.serverPath = ctx.item.serverPath + '?1'
         }
       })
       let data = {
@@ -665,7 +679,10 @@ export default {
         }
       })
     },
-    delAll () {
+    delAll (e) {
+      if (e === 'item') {
+        this.ids = this.ids + ',' + this.item.attId
+      }
       if (!this.ids) {
         return this.$Message.error('未选择')
       }
@@ -678,7 +695,10 @@ export default {
         }
       })
     },
-    copyAll () {
+    copyAll (e) {
+      if (e === 'item') {
+        this.ids = this.ids + ',' + this.item.attId
+      }
       if (!this.ids) {
         return this.$Message.error('未选择')
       }
@@ -691,7 +711,10 @@ export default {
         }
       })
     },
-    moveAll () {
+    moveAll (e) {
+      if (e === 'item') {
+        this.ids = this.ids + ',' + this.item.attId
+      }
       if (!this.ids) {
         return this.$Message.error('未选择')
       }

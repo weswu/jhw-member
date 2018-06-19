@@ -75,11 +75,10 @@ export default {
             url = '/' + this.detail.linkId
             data._method = 'put'
           }
-          var ctx = this
           this.$http.post('/rest/api/link/detail' + url, qs.stringify(data)).then((res) => {
             if (res.success) {
               this.$Message.success('保存成功')
-              this.$emit('on-change', res.attributes.data, ctx.detail.linkId ? '' : 'add')
+              this.$emit('on-change')
               this.modal = false
             } else {
               this.$Message.error(res.msg)

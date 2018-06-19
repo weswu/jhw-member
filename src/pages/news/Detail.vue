@@ -29,7 +29,7 @@
             <JPictrue :src="detail.picPath" @on-change="picChange"/>
           </FormItem>
         </Form>
-        <UE :content='detail.content' ref='ue' :hidden="active !== '1'"></UE>
+        <UE :content='detail.content' ref='ue' :hidden="active !== '1'" v-if="editor"></UE>
         <div v-if="active === '2'">
           <Form :model="detail" :label-width="130">
             <JTag :tagMapStore="detail.tagMapStore" :id="detail.newsId" :type="'news'"/>
@@ -41,7 +41,7 @@
             <span class="red">3.注意事项：</span> 标签的添加跟新闻的保存无关， 请慎重添加
           </div>
         </div>
-        <Form :model="detail" :label-width="130" v-if="active === '3'">
+        <Form :model="detail" :label-width="130" :hidden="active !== '3'">
           <FormItem label="SEO标题：">
             <Input v-model="detail.seoTitle" :maxlength="100" placeholder="请输入SEO标题"></Input>
           </FormItem>
@@ -88,6 +88,7 @@ export default {
       addTime: new Date(),
       imagenews: false,
       topnews: false,
+      editor: false,
       rules: {
         title: [
           { required: true, message: '新闻标题不能为空', trigger: 'blur' }
@@ -131,6 +132,7 @@ export default {
     // 功能
     activeChange (e) {
       this.active = e
+      if (e === '1') this.editor = true
     },
     categoryChange (e) {
       this.detail.category = e

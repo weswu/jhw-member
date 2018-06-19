@@ -1,7 +1,7 @@
 <template>
   <FormItem label="标签：">
     <p style="padding:0 0 10px 0">
-      <span v-for="item in tagList" :key="item.tagId" v-if="item.type === type">
+      <span v-for="(item, index) in list" :key="index" v-if="item.type === type">
         <Tag v-if="item._checked" type="border" closable @on-close="delTag(item)">{{item.name}}</Tag>
       </span>
     </p>
@@ -9,7 +9,7 @@
       <Input v-model="name" class="w244" placeholder="请输入标签名称"></Input>
       <DropdownMenu slot="list">
         <p style="width:244px;padding: 0 5px">
-          <span v-for="item in tagList" :key="item.tagId" v-if="item.type === type">
+          <span v-for="(item, index) in list" :key="index" v-if="item.type === type">
             <Tag v-if="!item._checked">
               <span @click="addTag(item)">{{item.name}}</span>
             </Tag>
@@ -40,7 +40,7 @@ export default {
   data () {
     return {
       name: '',
-      taglist: []
+      list: []
     }
   },
   computed: {
@@ -48,19 +48,33 @@ export default {
       tagList: state => state.tagList
     })
   },
+  watch: {
+    tagList () {
+      this.tagActive()
+    }
+  },
   created () {
-    this.tagActive()
+    if (this.tagList.length === 0) {
+      this.$store.dispatch('getTagList')
+    } else {
+      this.tagActive()
+    }
   },
   methods: {
     // 初始化标签
     tagActive () {
-      this.tagList.forEach(item => {
-        item._checked = false
-        this.tagMapStore && this.tagMapStore.forEach(item2 => {
-          if (item.tagId === item2.tagId) {
-            item._checked = true
-          }
-        })
+      var ctx = this
+      let list = JSON.parse(JSON.stringify(this.tagList))
+      list.forEach(item => {
+        if (item.type === ctx.type) {
+          item._checked = false
+          ctx.tagMapStore && this.tagMapStore.forEach(item2 => {
+            if (item.tagId === item2.tagId) {
+              item._checked = true
+            }
+          })
+          ctx.list.push(item)
+        }
       })
     },
     // 添加
@@ -71,9 +85,11 @@ export default {
     addTag (item) {
       if (item.tagId) {
         this.name = item.name
+        item._checked = true
       }
       let data = {
         model: JSON.stringify({
+          tagId: item.tagId,
           name: this.name,
           type: this.type
         })
@@ -83,9 +99,13 @@ export default {
       this.$http.post('/rest/api/tag/detail' + url, qs.stringify(data)).then((res) => {
         if (res.success) {
           this.$Message.success('添加成功')
-          let data = res.attributes.data
-          data._checked = true
-          this.tagList.push(data)
+          if (!item.tagId) {
+            let data = res.attributes.data
+            data._checked = true
+            this.list.push(data)
+            this.tagList.push(data)
+            this.$store.commit('setTagList', this.tagList)
+          }
         } else {
           this.$Message.error(res.msg)
         }
@@ -98,11 +118,7 @@ export default {
       this.$http.post('/rest/api/tag/detail/' + this.id + '/' + item.tagId, qs.stringify(data)).then((res) => {
         if (res.success) {
           this.$Message.success('删除成功')
-          this.tagList.forEach(tag => {
-            if (tag.tagId === item.tagId) {
-              tag._checked = false
-            }
-          })
+          item._checked = false
         } else {
           this.$Message.error(res.msg)
         }

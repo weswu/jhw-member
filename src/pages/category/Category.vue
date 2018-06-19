@@ -6,12 +6,6 @@
         <JHeader :title="'分类管理'" :lan="true" @on-change="get"/>
         <div class="j_search">
           <Button type="info" icon="plus" class="w130" @click="add">添加{{$route.params.id === 'product' ?'产品':'新闻'}}分类</Button>
-          <Upload ref="upload" :action="'/commonutil/uploadUtil2?username=' + $store.state.user.username + '&replace=00&attId=&id=all'" style="display:none"
-            name="Filedata"
-            :max-size="2048"
-            :on-success="handleSuccess">
-            <div id="upload">上传</div>
-          </Upload>
         </div>
         <DragableTable
           ref="selection"
@@ -40,6 +34,7 @@
       :ids="ids"
       :type="'category/'+$route.params.id"
       @on-change="get"/>
+    <JAlbum ref="album" @on-change="picChange"/>
   </Layout>
 </template>
 
@@ -52,6 +47,7 @@ import DragableTable from '@/components/group/j-dragable-table'
 import SeoDetail from '@/pages/static/SeoDetail'
 import Detail from '@/pages/category/Detail'
 import TransferCategory from '@/components/group/transfer-category'
+import JAlbum from '@/components/group/j-album'
 export default {
   components: {
     MenuBar,
@@ -59,7 +55,8 @@ export default {
     DragableTable,
     SeoDetail,
     Detail,
-    TransferCategory
+    TransferCategory,
+    JAlbum
   },
   data () {
     return {
@@ -107,6 +104,24 @@ export default {
     },
     tableUpdate (a, b) {
       this.sortable(a, b, 'category', 'categoryId')
+    },
+    picChange (e) {
+      let data = {
+        model: JSON.stringify({
+          id: this.item.categoryId,
+          image: e.src,
+          editField: true
+        }),
+        _method: 'put'
+      }
+      this.item.image = e.src
+      this.$http.post('/rest/api/category/detail/' + this.item.categoryId, qs.stringify(data)).then((res) => {
+        if (res.success) {
+          this.$Message.success('图片修改成功')
+        } else {
+          this.$Message.error(res.msg)
+        }
+      })
     },
     // 批量操作
     handleSelectChange (status) {
@@ -171,27 +186,6 @@ export default {
           item.expand = !bool
         })
       }
-    },
-    handleSuccess (res, file) {
-      var ctx = this
-      let data = {
-        model: JSON.stringify({
-          id: this.item.categoryId,
-          image: file.src,
-          editField: true
-        }),
-        _method: 'put'
-      }
-      this.$http.post('/rest/api/category/detail/' + this.item.categoryId, qs.stringify(data)).then((res) => {
-        if (res.success) {
-          this.$Message.success('修改成功')
-        } else {
-          this.$Message.error(res.msg)
-        }
-      })
-      setTimeout(function () {
-        ctx.$refs.upload.clearFiles()
-      }, 1000)
     },
     // 过滤
     indexFilter (h, params) {
@@ -321,7 +315,7 @@ export default {
         on: {
           click: () => {
             this.item = params.row
-            document.getElementById('upload').click()
+            this.$refs.album.open()
           }
         }
       }, [
@@ -331,8 +325,18 @@ export default {
             'icon-tupian': true
           },
           style: {
+            fontSize: '24px',
             padding: '0',
-            display: 'block'
+            display: !params.row.image ? 'block' : 'none'
+          }
+        }),
+        h('img', {
+          style: {
+            display: params.row.image ? 'inline-block' : 'none',
+            maxWidth: '32px'
+          },
+          attrs: {
+            src: this.$store.state.status.IMG_HOST + this.picUrl(params.row.image, 4)
           }
         })
       ])
@@ -450,14 +454,19 @@ export default {
               click: () => {
                 if (params.index > 0) {
                   let grade = parseInt(params.row.grade)
+                  let index = 0
                   for (var i = 0; i < params.index; i++) {
                     let org = ctx.list[params.index - i - 1]
                     let orgGrade = parseInt(org.grade)
                     if (orgGrade < grade) return false
                     if (orgGrade === grade) {
-                      this.sortPost(params.row.categoryId, org.sort, 'category')
-                      this.sortPost(org.categoryId, params.row.sort, 'category')
-                      return false
+                      if (index === 0) {
+                        this.sortPost(params.row.categoryId, org.sort, 'category')
+                        this.sortPost(org.categoryId, params.row.sort, 'category')
+                        index = 1
+                      } else {
+                        return false
+                      }
                     }
                   }
                 }
@@ -474,14 +483,19 @@ export default {
               click: () => {
                 if (params.index < this.list.length - 1) {
                   let grade = parseInt(params.row.grade)
+                  let index = 0
                   for (var i = 0; i < this.list.length - params.index; i++) {
                     let org = ctx.list[params.index + i + 1]
                     let orgGrade = parseInt(org.grade)
                     if (orgGrade < grade) return false
                     if (orgGrade === grade) {
-                      this.sortPost(params.row.categoryId, org.sort, 'category')
-                      this.sortPost(org.categoryId, params.row.sort, 'category')
-                      return false
+                      if (index === 0) {
+                        this.sortPost(params.row.categoryId, org.sort, 'category')
+                        this.sortPost(org.categoryId, params.row.sort, 'category')
+                        index = 1
+                      } else {
+                        return false
+                      }
                     }
                   }
                 }

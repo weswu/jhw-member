@@ -5,9 +5,9 @@
     @on-cancel="cancel">
     <div class="modal-upload-list">
       <ul ref="menu" class="menu j_panel">
-        <li @click="restoreImg">还原</li>
+        <li @click="restoreImg('item')">还原</li>
         <li @click="cleanAll">清空回收站</li>
-        <li @click="delAll">批量删除</li>
+        <li @click="delAll('item')">批量删除</li>
         <li @click="selectAll">批量选择</li>
       </ul>
       <div class="modal-upload-item" v-for="item in list" :key="item.url" :class="{active: item._checked}" @click="select(item)" @contextmenu.prevent="more($event, item)">
@@ -34,8 +34,8 @@ export default {
   data () {
     return {
       modal: false,
-      listTest: [],
-      list: [
+      list: [],
+      listTest: [
         {
           state: '01',
           type: '01',
@@ -116,7 +116,10 @@ export default {
       this.modal = false
     },
     // 批量操作
-    restoreImg () {
+    restoreImg (e) {
+      if (e === 'item') {
+        this.ids = this.ids + ',' + this.item.attId
+      }
       if (!this.ids) {
         return this.$Message.error('未选择')
       }
@@ -140,7 +143,10 @@ export default {
         }
       })
     },
-    delAll () {
+    delAll (e) {
+      if (e === 'item') {
+        this.ids = this.ids + ',' + this.item.attId
+      }
       if (!this.ids) {
         return this.$Message.error('未选择')
       }
@@ -159,7 +165,6 @@ export default {
       let dom = e.target.getBoundingClientRect()
       this.$refs.menu.style.left = dom.left + dom.width / 2 + 'px'
       this.$refs.menu.style.top = dom.top + dom.height / 2 + 'px'
-      item._checked = true
       this.select()
       e.preventDefault()
     },

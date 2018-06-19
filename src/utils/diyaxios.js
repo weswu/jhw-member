@@ -25,8 +25,8 @@ axios.interceptors.response.use(res => {
     return res.data
   }
   if (!res.data.success) {
-    if (res.data.msg === '未登录') {
-      // window.location.href = 'http://www.jihui88.com/member/login.html?backURL=' + location.href
+    if (res.data.msg === '未登录' || res.data.msg === '未登陆') {
+      window.location.href = 'http://www.jihui88.com/member/login.html?backURL=' + window.location.origin + window.location.pathname
     }
   }
   return res.data

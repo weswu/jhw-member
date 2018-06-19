@@ -51,6 +51,11 @@ export default {
         })
         this.initBg(this.categoryId)
       }
+    },
+    list: {
+      handler () {
+        this.init()
+      }
     }
   },
   created () {
@@ -65,6 +70,8 @@ export default {
           if (item.categoryId === ctx.categoryId) {
             ctx.name = item.name
           }
+          if (item.grade === '1' || item.grade === '2') item.expand = true
+          if (item.grade === '2' || item.grade === '3') item.hidden = false
         })
         ctx.data = list
         ctx.initBg(ctx.categoryId)

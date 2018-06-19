@@ -21,7 +21,7 @@
     <li class="j_picture_item add" v-if="list && list.length < 10">
       <i class="iconfont icon-plus-add" @click="open"></i>
     </li>
-    <JAlbum ref="ablum" @on-change="picChange"/>
+    <JAlbum ref="ablum" @on-change="picChange" v-if="toggle"/>
   </ul>
 </template>
 
@@ -42,13 +42,18 @@ export default {
   },
   data () {
     return {
-      index: ''
+      index: '',
+      toggle: false
     }
   },
   methods: {
     open (e, index) {
       this.index = index
-      this.$refs.ablum.open()
+      this.toggle = true
+      var ctx = this
+      setTimeout(function () {
+        ctx.$refs.ablum.open()
+      }, 100)
     },
     prev (index) {
       if (index !== 0) this.$emit('on-prev', index)

@@ -37,7 +37,6 @@
             </RadioGroup>
           </FormItem>
           <br/>
-          <img src="" alt="">
           <FormItem label="产品图片：">
             <JPictrue :list="imgList" :multiple="true" :type="'product'"
             @on-change="imgChange"
@@ -133,7 +132,7 @@
         </Form>
         <div v-if="active === '6'">
           <Form :model="detail" :label-width="130" ref="model3">
-            <JTag :tagMapStore="detail.tagMapStore" :id="detail.pruductId" :type="'product'"/>
+            <JTag :tagMapStore="detail.tagMapStore" :id="detail.productId" :type="'product'"/>
           </Form>
           <div class="j_tip" style="width: 560px;margin-left: 130px;">
             小提示: <br>
@@ -259,6 +258,7 @@ export default {
             data.isMarketableBol = '00'
           }
           this.detail = data
+          if (!data.category) { data.category = '' }
           this.$refs.category.open(data.category)
           this.detail.customAttrMapStore = []
           this.initAttr()
@@ -271,9 +271,6 @@ export default {
     // 功能
     activeChange (e) {
       this.active = e
-      if (e === '6') {
-        this.$store.dispatch('getTagList')
-      }
       if (e === '1') this.editor1 = true
       if (e === '2') this.editor2 = true
       if (e === '3') this.editor3 = true
@@ -424,13 +421,19 @@ export default {
       this.detail.picPath = this.imgList[0].src
       let imageListStore = []
       this.imgList.forEach((item, index) => {
-        imageListStore.push({
-          id: item.id,
-          sourceProductImagePath: item.src,
-          type: index === 0 ? 'main_pic' : 'pertain_pic'
-        })
+        if (index === 0) {
+          ctx.detail.photo = item.src
+          ctx.detail.photoId = item.id
+        } else {
+          imageListStore.push({
+            id: item.id,
+            src: item.src
+          })
+        }
       })
-      this.detail.productImageListStore = JSON.stringify(imageListStore)
+      this.detail.photo2 = JSON.stringify(imageListStore)
+      // this.detail.productImageListStore = JSON.stringify(imageListStore)
+      this.detail.taglist = ''
       // 编辑器
       if (this.$refs.ue1) this.detail.proddesc = this.$refs.ue1.getUEContent()
       if (this.$refs.ue2) this.detail.mobiledesc = this.$refs.ue2.getUEContent()

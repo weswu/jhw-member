@@ -131,6 +131,9 @@ export default {
           id: '555',
           name: 'ccc',
           prodtype: '555',
+          isBest: '00',
+          isNew: '00',
+          isHot: '00',
           edittingCell: {
             name: false,
             prodtype: false,
@@ -142,7 +145,8 @@ export default {
       ],
       searchData: {
         page: 1,
-        pageSize: 10
+        pageSize: 10,
+        category: ''
       },
       model: {},
       total: 0,
@@ -178,6 +182,9 @@ export default {
               api: 'product',
               id: item.productId
             }
+            if (!item.isBest) { item.isBest = '00' }
+            if (!item.isNew) { item.isNew = '00' }
+            if (!item.isHot) { item.isHot = '00' }
           })
           this.list = data || []
         }
@@ -375,13 +382,140 @@ export default {
             },
             on: {
               click: () => {
-                this.$Message.info('info')
+                var ctx = this
+                this.$Modal.confirm({
+                  width: 250,
+                  render: (h) => {
+                    return h('div', [
+                      h('div', [
+                        h('span', {
+                          class: {
+                            proThreeType: true
+                          }
+                        }, '精品：'),
+                        h('RadioGroup', {
+                          props: {
+                            value: params.row.isBest
+                          },
+                          on: {
+                            input: (val) => {
+                              params.row.isBest = val
+                              let data = {
+                                model: JSON.stringify({
+                                  id: params.row.productId,
+                                  isBest: params.row.isBest,
+                                  editField: true
+                                }),
+                                _method: 'put'
+                              }
+                              ctx.fixedSubmit(data, params.row.productId)
+                            }
+                          }
+                        }, [
+                          h('Radio', {
+                            props: {
+                              label: '01'
+                            }
+                          }, '是'),
+                          h('Radio', {
+                            props: {
+                              label: '00'
+                            }
+                          }, '否')
+                        ])
+                      ]),
+                      h('div', [
+                        h('span', {
+                          class: {
+                            proThreeType: true
+                          }
+                        }, '新品：'),
+                        h('RadioGroup', {
+                          props: {
+                            value: params.row.isNew
+                          },
+                          on: {
+                            input: (val) => {
+                              params.row.isNew = val
+                              let data = {
+                                model: JSON.stringify({
+                                  id: params.row.productId,
+                                  isNew: params.row.isNew,
+                                  editField: true
+                                }),
+                                _method: 'put'
+                              }
+                              ctx.fixedSubmit(data, params.row.productId)
+                            }
+                          }
+                        }, [
+                          h('Radio', {
+                            props: {
+                              label: '01'
+                            }
+                          }, '是'),
+                          h('Radio', {
+                            props: {
+                              label: '00'
+                            }
+                          }, '否')
+                        ])
+                      ]),
+                      h('div', [
+                        h('span', {
+                          class: {
+                            proThreeType: true
+                          }
+                        }, '热销：'),
+                        h('RadioGroup', {
+                          props: {
+                            value: params.row.isHot
+                          },
+                          on: {
+                            input: (val) => {
+                              params.row.isHot = val
+                              let data = {
+                                model: JSON.stringify({
+                                  id: params.row.productId,
+                                  isHot: params.row.isHot,
+                                  editField: true
+                                }),
+                                _method: 'put'
+                              }
+                              ctx.fixedSubmit(data, params.row.productId)
+                            }
+                          }
+                        }, [
+                          h('Radio', {
+                            props: {
+                              label: '01'
+                            }
+                          }, '是'),
+                          h('Radio', {
+                            props: {
+                              label: '00'
+                            }
+                          }, '否')
+                        ])
+                      ])
+                    ])
+                  }
+                })
               }
             }
           })
         ]),
         h('span', params.index + (this.searchData.page - 1) * this.searchData.pageSize + 1)
       ])
+    },
+    fixedSubmit (data, id) {
+      this.$http.post('/rest/api/product/detail/' + id, qs.stringify(data)).then((res) => {
+        if (res.success) {
+          this.$Message.success('修改成功')
+        } else {
+          this.$Message.error(res.msg)
+        }
+      })
     },
     imgFilter (h, params) {
       return h('div', {
@@ -749,5 +883,12 @@ export default {
       width: 226px;
     }
   }
+}
+.proThreeType{
+  display: inline-block;
+  width: 80px;
+  text-align: right;
+  padding-right: 10px;
+  margin-top: 10px;
 }
 </style>

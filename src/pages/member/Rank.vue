@@ -92,7 +92,7 @@ export default {
                 this.$http.post('/rest/api/member/rank/detail/' + params.row.rankId, qs.stringify({_method: 'DELETE'})).then((res) => {
                   if (res.success) {
                     ctx.$Message.success('删除成功')
-                    ctx.get()
+                    ctx.list.splice(params.index, 1)
                   } else {
                     ctx.$Message.success(res.msg)
                   }

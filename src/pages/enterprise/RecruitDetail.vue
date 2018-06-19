@@ -82,6 +82,7 @@ export default {
           this.$http.post('/rest/api/job/detail' + url, qs.stringify(data)).then((res) => {
             if (res.success) {
               this.$Message.success('保存成功')
+              this.$emit('on-change')
               this.modal = false
             } else {
               this.$Message.error(res.msg)
