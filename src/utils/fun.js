@@ -219,7 +219,7 @@ Vue.prototype.saveIncellEditBtn = (vm, h, params) => {
         params.row.edittingCell[params.column.key] = false
         vm.list[params.index] = params.row
         let model = {
-          id: params.row.id,
+          id: params.row.edittingCell.id,
           editField: true
         }
         model[params.column.key] = params.row[params.column.key]

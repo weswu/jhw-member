@@ -457,9 +457,6 @@ export default {
                     if (orgGrade === grade) {
                       this.sortPost(params.row.categoryId, org.sort, 'category')
                       this.sortPost(org.categoryId, params.row.sort, 'category')
-                      setTimeout(function () {
-                        ctx.get()
-                      }, 200)
                       return false
                     }
                   }
@@ -484,9 +481,6 @@ export default {
                     if (orgGrade === grade) {
                       this.sortPost(params.row.categoryId, org.sort, 'category')
                       this.sortPost(org.categoryId, params.row.sort, 'category')
-                      setTimeout(function () {
-                        ctx.get()
-                      }, 200)
                       return false
                     }
                   }

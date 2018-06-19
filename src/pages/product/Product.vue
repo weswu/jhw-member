@@ -13,7 +13,7 @@
               <span class="a_underline" @click="myShow">我的显示</span>
               <Input v-model="searchData.name" clearable placeholder="请输入产品名称" class="w180" @on-change="clearInput"></Input>
               <Button class="search" @click="search">搜索</Button>
-              <Poptip placement="bottom-end" class="j_poptip_confirm_edit"
+              <Poptip placement="bottom-end" class="j_poptip_confirm_edit advancedSearch"
                 confirm
                 width="630"
                 @on-ok="advancedSearch">
@@ -25,7 +25,7 @@
                     </FormItem>
                     <FormItem label="分类：" :label-width="62" class="formitem_left">
                       <div style="width:228px">
-                        <categorySelect :categoryId="searchData.category" :list="categoryList" @on-change="categoryChange"/>
+                        <categorySelect :categoryId="searchData.category" :list="$store.state.productCategory" :isDefalut="true" @on-change="categoryChange"/>
                       </div>
                     </FormItem>
                     <FormItem label="型号：" class="formitem_left">
@@ -742,6 +742,11 @@ export default {
         display: flex;
         flex-direction: column;
       }
+    }
+  }
+  .advancedSearch{
+    .ivu-select-dropdown-list{
+      width: 226px;
     }
   }
 }

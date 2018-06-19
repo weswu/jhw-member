@@ -12,7 +12,7 @@
             <Col>
               <Input v-model="searchData.title" clearable placeholder="请输入新闻标题" class="w180" @on-change="clearInput"></Input>
               <Button class="search" @click="search">搜索</Button>
-              <Poptip placement="bottom-end" class="j_poptip_confirm_edit"
+              <Poptip placement="bottom-end" class="j_poptip_confirm_edit advancedSearch"
                 confirm
                 width="600"
                 @on-ok="advancedSearch">
@@ -24,7 +24,7 @@
                     </FormItem>
                     <FormItem label="分类：" :label-width="62" class="formitem_left">
                       <div style="width:203px">
-                        <categorySelect :categoryId="searchData.category" :list="categoryList" @on-change="categoryChange"/>
+                        <categorySelect :categoryId="searchData.category" :list="$store.state.newsCategory" :isDefalut="true" @on-change="categoryChange"/>
                       </div>
                     </FormItem>
                     <FormItem label="图片新闻：" class="formitem_left">
@@ -504,6 +504,11 @@ export default {
   }
   td{
     height: 70px
+  }
+  .advancedSearch{
+    .ivu-select-dropdown-list{
+      width: 203px;
+    }
   }
 }
 </style>

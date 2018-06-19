@@ -217,44 +217,10 @@ export default {
         integralState: '00',
         attrState: '00', // 关闭属性价格
         customAttrMapStore: [],
-        productAttributeMapStore: [],
-        attrItemsText: [
-          {
-            addTime: {
-              date: 9,
-              day: 6,
-              hours: 11,
-              minutes: 29,
-              month: 5,
-              nanos: 535000000,
-              seconds: 26,
-              time: 1528514966535,
-              timezoneOffset: -480,
-              year: 118
-            },
-            barCode: '',
-            costPrice: '1.00',
-            groupNum: 0,
-            groupPrice: '',
-            id: '8a9e457e63dec73f0163e29774070072',
-            memberPrice: [ ],
-            memberPriceState: '00',
-            pic: '',
-            productId: 'Product_000000000000000000567121',
-            propertyNames: '颜色:白色',
-            skuCode: '白色',
-            soldNum: 0,
-            status: '01',
-            stockNum: 2
-          }
-        ]
+        productAttributeMapStore: []
       },
       // 多图
-      imgList: [
-        {
-          src: 'ccc'
-        }
-      ],
+      imgList: [],
       attrtList: [],
       attrtListText: [],
       // editor1
@@ -283,6 +249,7 @@ export default {
         if (res.success) {
           let data = res.attributes.data
           let imglist = JSON.parse(data.productImageListStore)
+          ctx.imgList = []
           imglist && imglist.forEach(item => {
             ctx.imgList.push({id: item.id, src: item.sourceProductImagePath})
           })

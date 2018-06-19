@@ -82,7 +82,7 @@ export default {
       },
       id: 'all',
       ids: '',
-      toggle: true
+      toggle: false
     }
   },
   mounted () {
