@@ -298,11 +298,7 @@ export default {
                 this.$http.post('/rest/api/order/batch/del', qs.stringify({ids: params.row.orderId})).then((res) => {
                   if (res.success) {
                     ctx.$Message.success('删除成功')
-                    for (let i = 0; i < ctx.list.length; i++) {
-                      if (ctx.list[i].orderId === params.row.orderId) {
-                        ctx.list.splice(i, 1)
-                      }
-                    }
+                    ctx.list.splice(params.index, 1)
                     ctx.total -= 1
                   } else {
                     ctx.$Message.success(res.msg)

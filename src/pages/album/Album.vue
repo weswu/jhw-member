@@ -421,6 +421,7 @@ export default {
             item.filename2 = ctx.picName(item.filename)
           })
           this.list = data
+          if (this.attId !== 'all') this.$refs.category.intiCount(this.attId, this.total)
         } else {
           this.$Message.error(res.msg)
         }
@@ -510,18 +511,6 @@ export default {
         ctx.$refs.upload.clearFiles()
       }, 1000)
       this.get()
-    },
-    handleSuccessImg (res) {
-      var ctx = this
-      setTimeout(function () {
-        ctx.$refs.uploadImg.clearFiles()
-        ctx.$Message.success('更换成功')
-        ctx.list.forEach(item => {
-          if (item.attId === ctx.item.attId) {
-            item.serverPath = ctx.item.serverPath + '?1'
-          }
-        })
-      }, 1000)
     },
     recycle () {
       this.$refs.recycle.open(this.attId)
@@ -632,19 +621,26 @@ export default {
         }
       })
     },
-    refurbish () {
+    handleSuccessImg (res) {
       var ctx = this
-      this.list.forEach(item => {
-        if (item.attId === ctx.item.attId) {
-          item.serverPath = ctx.item.serverPath + '?1'
-        }
-      })
+      setTimeout(function () {
+        ctx.$refs.uploadImg.clearFiles()
+        ctx.$Notice.success({
+          title: '替换成功',
+          desc: '图片10分钟后生效，请耐心等待'
+        })
+      }, 1000)
+    },
+    refurbish () {
       let data = {
         serverPath: this.item.serverPath
       }
       this.$http.post('/rest/api/album/single/refurbish', qs.stringify(data)).then((res) => {
         if (res.success) {
-          this.$Message.success('刷新成功')
+          this.$Notice.success({
+            title: '刷新成功',
+            desc: '图片10分钟后生效，请耐心等待'
+          })
         } else {
           this.$Message.error(res.msg)
         }

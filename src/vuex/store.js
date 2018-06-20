@@ -74,6 +74,9 @@ const store = new Vuex.Store({
     setUserInfo (state, userInfo) {
       state.userInfo = userInfo
     },
+    setAccountInfo (state, data) {
+      state.user.headimg = data.headimg
+    },
     setProductCategory (state, productCategory) {
       state.productCategory = productCategory
     },
@@ -138,8 +141,10 @@ const store = new Vuex.Store({
       this._vm.$http.get('/rest/api/user/detail').then((res) => {
         if (res.success) {
           let data = res.attributes.data
+          data.headimg = null
           if (data) {
             data.enterprise.addresslist = data.enterprise.address && data.enterprise.address.split(',')
+            this.dispatch('getAccountInfo', data.userId)
           }
           this.commit('setUser', data || {
             name: '未登录',
@@ -157,6 +162,13 @@ const store = new Vuex.Store({
       this._vm.$http.get('/rest/api/user/index').then((res) => {
         if (res.success) {
           this.commit('setUserInfo', res.attributes.data)
+        }
+      })
+    },
+    getAccountInfo ({commit, state}, id) {
+      this._vm.$http.get('/rest/api/user/accountInfo/' + id).then((res) => {
+        if (res.success) {
+          this.commit('setAccountInfo', res.attributes.data)
         }
       })
     },
@@ -227,7 +239,7 @@ const store = new Vuex.Store({
               }
             })
           })
-          if (list) {
+          if (list.length > 0) {
             if (list[0].type === '10') this.commit('setProductCategory', list)
             if (list[0].type === '11') this.commit('setNewsCategory', list)
           }

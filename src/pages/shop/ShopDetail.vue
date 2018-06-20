@@ -495,18 +495,18 @@ export default {
         return this.$Message.info('请选择物流公司')
       }
       if (this.shippingSet.deliveryCorpName.indexOf('ff') > -1) {
-        return this.$Message.info({
-          content: '该物流公司没有配置单据!<a href="#/shop_bill">设置</a>',
-          duration: 5
+        return this.$Notice.error({
+          title: '该物流公司没有配置单据!',
+          desc: '<a href="#/shop_bill">前往设置</a>'
         })
       }
       this.$http.get('/rest/api/deliverycorpSingle/detail/byCorpId/' + encodeURIComponent(this.shippingSet.deliveryCorpName)).then(res => {
         if (res.success) {
           if (res.attributes && res.attributes.data && res.attributes.data.length === 0) {
             if (!res.msg) {
-              this.$Message.info({
-                content: res.msg || '该物流公司没有配置当前物流公司的单据!<a href="#/shop/logistics_single">前往设置</a>',
-                duration: 5
+              this.$Notice.error({
+                title: '该物流公司没有配置物流单据!',
+                desc: '<a href="#/shop_bill">前往设置</a>'
               })
             } else {
               this.$Message.info(res.msg)
@@ -547,9 +547,9 @@ export default {
             ctx.print('delivery')
           }, 100)
         } else {
-          this.$Message.info({
-            content: '该物流公司没有配置当前物流公司的单据!<a href="#/shop_bill">前往设置</a>',
-            duration: 5
+          this.$Notice.error({
+            title: '该物流公司没有配置物流单据!',
+            desc: '<a href="#/shop_bill">前往设置</a>'
           })
         }
       })

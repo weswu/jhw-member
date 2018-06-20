@@ -112,6 +112,15 @@ export default {
   data () {
     return {
       list: [],
+      listTest: [
+        {
+          id: '99',
+          new: true,
+          bind: {
+            address: ''
+          }
+        }
+      ],
       total: 0,
       lan: '1',
       detail: {

@@ -12,6 +12,7 @@
       <Form ref="modalForm" :model="detail" :label-width="75" style="float:left">
         <FormItem label="水印属性：">
           <RadioGroup v-model="detail.type">
+            <Radio label="">无</Radio>
             <Radio label="text">文字</Radio>
             <Radio label="img">图片</Radio>
           </RadioGroup>

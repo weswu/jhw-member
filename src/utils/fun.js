@@ -69,8 +69,8 @@ Vue.prototype.picUrl = function (src, number) {
  * @date: 2018-5-5
  * @desc: 时间选择
 */
-Vue.prototype.index2 = function (index, obj) {
-  return index + (obj.page - 1) * obj.pageSize + 1
+Vue.prototype.index2 = function (vm, h, params) {
+  return h('span', params.index + (parseInt(vm.searchData.page) - 1) * parseInt(vm.searchData.pageSize) + 1)
 }
 
 /*

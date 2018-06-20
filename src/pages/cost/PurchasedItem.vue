@@ -89,7 +89,7 @@ export default {
       return h('span', params.row.endTime ? this.dateFormat(params.row.endTime) : '-')
     },
     renderOperate (h, params) {
-      return h('span', [
+      let data = [
         h('a', {
           style: {
             color: '#2467C5'
@@ -99,11 +99,13 @@ export default {
               this.$refs.detail.open(params.row.orderId)
             }
           }
-        }, '详情'),
-        h('span', {
+        }, '详情')
+      ]
+      if (params.row.endTime) {
+        data.push(h('span', {
           class: { delimiter: true }
-        }, '|'),
-        h('a', {
+        }, '|'))
+        data.push(h('a', {
           style: {
             color: '#ff8938'
           },
@@ -112,8 +114,9 @@ export default {
               this.$refs.again.open(params.row.orderId, 'orderId')
             }
           }
-        }, '续费')
-      ])
+        }, '续费'))
+      }
+      return h('span', data)
     }
   }
 }

@@ -82,6 +82,7 @@ export default {
       },
       id: 'all',
       ids: '',
+      item: {},
       toggle: false
     }
   },
@@ -165,6 +166,7 @@ export default {
       let dom = e.target.getBoundingClientRect()
       this.$refs.menu.style.left = dom.left + dom.width / 2 + 'px'
       this.$refs.menu.style.top = dom.top + dom.height / 2 + 'px'
+      this.item = item
       this.select()
       e.preventDefault()
     },

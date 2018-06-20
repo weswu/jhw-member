@@ -118,14 +118,8 @@ export default {
     JAlbum,
     Password
   },
-  computed: {
-    ...mapState({
-      'user': state => state.user
-    })
-  },
   data () {
     return {
-      percent: 20,
       list: [
         {
           language: null,
@@ -189,10 +183,22 @@ export default {
       ablumToggle: false
     }
   },
-  created () {
-    if (this.user.email) {
-      this.percent += 20
+  computed: {
+    ...mapState(['user']),
+    percent () {
+      let percent = 20
+      if (this.user.email) {
+        percent += 20
+      }
+      this.list.forEach(item => {
+        if (item.nickname && item.nickname !== '未绑定' && item.type !== 'user') {
+          percent += 20
+        }
+      })
+      return percent
     }
+  },
+  created () {
     this.get()
   },
   mounted () {
@@ -203,26 +209,15 @@ export default {
         // 处理iframe  src地址和隐藏弹出框
         ctx.src = 'http://www.jihui88.com/member/login.html?backURL=http://' + location.host + '/redirect&scope=snsapi_login_quick'
         ctx.close()
-        if (ctx.user.email) {
-          ctx.percent = 40
-        } else {
-          ctx.percent = 20
-        }
         ctx.get()
       }
     }, false)
   },
   methods: {
     get () {
-      var ctx = this
       this.$http.get('/rest/api/oauth/list').then((res) => {
         if (res.success) {
           this.list = res.attributes.data
-          this.list.forEach(item => {
-            if (item.nickname && item.nickname !== '未绑定') {
-              ctx.percent += 20
-            }
-          })
         } else {
           this.$Message.error(res.msg)
         }
@@ -235,17 +230,25 @@ export default {
         ctx.$refs.ablum.open()
       }, 100)
     },
-    picChange (e) {
-      this.user.user.headimg = e.src
-    },
     password () {
       this.$refs.password.open()
     },
+    // 修改user
+    picChange (e) {
+      this.user.headimg = e.src
+      this.$store.commit('setUser', this.user)
+      this.changeUser({
+        headimg: e.src
+      })
+    },
     input (e) {
+      this.changeUser({
+        nickName: this.user.nickName
+      })
+    },
+    changeUser (info) {
       let data = {
-        model: JSON.stringify({
-          nickName: this.user.nickName
-        }),
+        model: JSON.stringify(info),
         _method: 'put'
       }
       this.$http.post('/rest/api/user/accountInfo/' + this.user.userId, qs.stringify(data)).then((res) => {
@@ -363,7 +366,7 @@ export default {
   }
   .account_user{
     width:660px;
-    padding: 0 0 20px 0;
+    padding: 2px 0 20px 0;
     .ivu-avatar-large{
       width: 110px;
       height: 110px;

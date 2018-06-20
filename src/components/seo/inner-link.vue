@@ -86,10 +86,10 @@ export default {
     },
     // 过滤
     indexFilter (h, params) {
-      return h('span', this.index2(params.index, this.searchData))
+      return this.index2(this, h, params)
     },
     linkFilter (h, params) {
-      let text = params.row.toReplace
+      let text = params.row.toReplace || ''
       if (text.indexOf('http') > -1) {
         return h('div', text)
       } else {
@@ -140,11 +140,7 @@ export default {
               this.$http.delete('/rest/api/keywords/innerLinks/detail/' + params.row.keywordsId).then((res) => {
                 if (res.success) {
                   ctx.$Message.success('删除成功')
-                  for (let i = 0; i < ctx.list.length; i++) {
-                    if (ctx.list[i].keywordsId === params.row.keywordsId) {
-                      ctx.list.splice(i, 1)
-                    }
-                  }
+                  ctx.list.splice(params.index, 1)
                   ctx.total -= 1
                 } else {
                   ctx.$Message.success(res.msg)

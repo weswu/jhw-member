@@ -359,6 +359,25 @@ export default {
         this.initData()
       }
     },
+    // 计数
+    intiCount (value, count) {
+      debugger
+      this.data[0].children.forEach(item => {
+        if (item.id === value) {
+          item.attCount = count + item.children.length
+        }
+        item.children.forEach(item1 => {
+          if (item1.id === value) {
+            item1.attCount = count + item1.children.length
+          }
+          item1.children.forEach(item2 => {
+            if (item2.id === value) {
+              item2.attCount = count + item2.children.length
+            }
+          })
+        })
+      })
+    },
     // 右击
     add () {
       this.$refs.add.open(this.item.id)

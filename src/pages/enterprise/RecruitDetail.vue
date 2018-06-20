@@ -53,6 +53,7 @@ export default {
         this.$http.get('/rest/api/job/detail/' + id).then((res) => {
           if (res.success) {
             this.detail = res.attributes.data
+            this.$refs.ue.setUEContent(this.detail.content)
           } else {
             this.$Message.error(res.msg)
           }

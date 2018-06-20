@@ -477,11 +477,7 @@ export default {
                 this.$http.delete('/rest/api/news/detail/' + params.row.newsId).then((res) => {
                   if (res.success) {
                     ctx.$Message.success('删除成功')
-                    for (let i = 0; i < ctx.list.length; i++) {
-                      if (ctx.list[i].newsId === params.row.newsId) {
-                        ctx.list.splice(i, 1)
-                      }
-                    }
+                    ctx.list.splice(params.index, 1)
                     ctx.total -= 1
                   } else {
                     ctx.$Message.success(res.msg)

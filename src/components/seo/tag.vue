@@ -19,9 +19,11 @@
       <JPagination :fixed="true" :borderTop="true" :total="total" :searchData='searchData' @on-change="get"/>
     </div>
     <div class="j_sort" :hidden="active !== '1'">
+      <Button type="info" icon="plus" class="w130" @click="addTagCate" style="margin-bottom: 9px;">添加标签分类</Button>
       <Table ref="dragable" :columns="columns2" :data="catelist"/>
     </div>
     <Detail ref="detail" :list="catelist" @on-change="get"/>
+    <CateDetail ref="cateDetail" :list="catelist" @on-change="getCate"/>
   </div>
 </template>
 
@@ -29,11 +31,12 @@
 import qs from 'qs'
 import JPagination from '@/components/group/j-pagination'
 import Detail from '@/components/seo/tag-detail'
-import Sortable from 'sortablejs'
+import CateDetail from '@/pages/category/Detail'
 export default {
   components: {
     JPagination,
-    Detail
+    Detail,
+    CateDetail
   },
   data () {
     return {
@@ -57,29 +60,13 @@ export default {
       },
       // 标签分类
       columns2: [
-        { type: 'index2', className: 'j_table_checkbox', title: '序号', align: 'center', width: 60, render: this.indexFilter2 },
+        { type: 'index', className: 'j_table_checkbox', title: '序号', align: 'center', width: 60 },
         { title: '分类名称', className: 'j_table_title', minWidth: 200, render: this.nameFilter2 },
-        { title: '移序', className: 'j_table_sort', width: 130, render: this.sortFilter2 },
-        { title: '操作', className: 'j_table_operate', align: 'left', width: 130, render: this.renderOperate2 }
+        { title: '移序', className: 'j_table_sort', key: 'sort', width: 130, render: this.sortFilter2 },
+        { title: '操作', className: 'j_table_operate', width: 130, render: this.renderOperate2 }
       ],
       catelist: []
     }
-  },
-  mounted () {
-    var ctx = this
-    setTimeout(function () {
-      var el = this.$refs.dragable.$children[1].$el.children[1]
-      Sortable.create(el, {
-        group: {
-          name: 'list',
-          pull: true
-        },
-        animation: 120,
-        onUpdate (e) {
-          ctx.sortable(e.oldIndex, e.newIndex, 'category', 'categoryId')
-        }
-      })
-    }, 3000)
   },
   created () {
     this.getCate()
@@ -104,39 +91,70 @@ export default {
       })
     },
     init (data) {
-      var ctx = this
+      let list = []
       // 1级
       data.forEach(item => {
         if (!item.belongId) {
+          item.isroot = false // 根目录和三角
           item._checked = false
+          item.expand = false // 三角图标展开-关闭
+          item.bg = false // 层级背景颜色
           item.grade = '1'
-          this.catelist.push(item)
+          item.edittingCell = {
+            sort: false,
+            api: 'category',
+            id: item.categoryId
+          }
+          list.push(item)
         }
       })
       // 2级
       data.forEach(row => {
-        this.catelist.forEach((item, index) => {
+        list.forEach((item, index) => {
           if (item.grade === '1' && (row.belongId === item.categoryId)) {
+            item.isroot = true
+            row.isroot = false
             row._checked = false
+            row.hidden = true // 显示隐藏
+            row.expand = false
+            row.bg = false
             row.grade = '2'
-            ctx.catelist.splice(index + 1, 0, row)
+            row.edittingCell = {
+              sort: false,
+              api: 'category',
+              id: row.categoryId
+            }
+            list.splice(index + 1, 0, row)
           }
         })
       })
       // 3级
       data.forEach(row => {
-        this.catelist.forEach((item, index) => {
+        list.forEach((item, index) => {
           if (item.grade === '2' && (row.belongId === item.categoryId)) {
+            item.isroot = true
+            row.isroot = false
             row._checked = false
+            row.hidden = true
+            row.bg = false
             row.grade = '3'
-            ctx.catelist.splice(index + 1, 0, row)
+            row.edittingCell = {
+              sort: false,
+              api: 'category',
+              id: row.categoryId
+            }
+            list.splice(index + 1, 0, row)
           }
         })
       })
+      this.catelist = list
     },
     // 功能
     add () {
       this.$refs.detail.open()
+    },
+    addTagCate () {
+      this.$refs.cateDetail.open()
     },
     search () {
       this.searchData.page = 1
@@ -144,7 +162,7 @@ export default {
     },
     // 过滤
     indexFilter (h, params) {
-      return h('span', this.index2(params.index, this.searchData))
+      return this.index2(this, h, params)
     },
     cateFilter (h, params) {
       let text = ''
@@ -185,11 +203,7 @@ export default {
                 this.$http.delete('/rest/api/tag/detail/' + params.row.tagId).then((res) => {
                   if (res.success) {
                     ctx.$Message.success('删除成功')
-                    for (let i = 0; i < ctx.list.length; i++) {
-                      if (ctx.list[i].tagId === params.row.tagId) {
-                        ctx.list.splice(i, 1)
-                      }
-                    }
+                    ctx.list.splice(params.index, 1)
                     ctx.total -= 1
                   } else {
                     ctx.$Message.success(res.msg)
@@ -225,29 +239,20 @@ export default {
     },
     nameFilter2 (h, params) {
       var ctx = this
-      let isroot = false
-      if (this.list.length > (params.index + 1)) {
-        isroot = params.row.grade === '2' && this.list[params.index + 1].grade === '3'
-      }
       return h('div', {
-        class: {
-          j_category_name: true
+        style: {
+          display: 'flex'
         }
       }, [
         h('span', {
-          class: {
-            iconfont: true,
-            'icon-xialajiantou': isroot
-          },
           style: {
-            padding: '7px 10px',
-            color: '#000',
-            display: params.row.grade !== '1' ? 'inline-block' : 'none'
+            width: '37px',
+            display: params.row.grade === '2' ? 'inline-block' : 'none'
           }
         }),
         h('span', {
           style: {
-            padding: '0 16px',
+            width: '60px',
             display: params.row.grade === '3' ? 'inline-block' : 'none'
           }
         }),
@@ -257,26 +262,23 @@ export default {
           },
           on: {
             input: (val) => {
-              params.row.name2 = val
+              params.row.name = val
             },
             'on-blur': () => {
-              if (params.row.name2 !== '' && params.row.name2 !== params.row.name) {
-                params.row.name = params.row.name2
-                let data = {
-                  model: JSON.stringify({
-                    id: params.row.categoryId,
-                    name: params.row.name
-                  }),
-                  _method: 'put'
-                }
-                this.$http.post('/rest/api/category/detail/' + params.row.categoryId, qs.stringify(data)).then((res) => {
-                  if (res.success) {
-                    ctx.$Message.success('修改成功')
-                  } else {
-                    ctx.$Message.error(res.msg)
-                  }
-                })
+              let data = {
+                model: JSON.stringify({
+                  id: params.row.categoryId,
+                  name: params.row.name
+                }),
+                _method: 'put'
               }
+              this.$http.post('/rest/api/category/detail/' + params.row.categoryId, qs.stringify(data)).then((res) => {
+                if (res.success) {
+                  // ctx.$Message.success('修改成功')
+                } else {
+                  ctx.$Message.error(res.msg)
+                }
+              })
             }
           }
         }, [
@@ -289,10 +291,29 @@ export default {
         ])
       ])
     },
+    initList (idx, endIdx, grade) {
+      var ctx = this
+      let list = JSON.parse(JSON.stringify(this.catelist))
+      list.forEach((item, index) => {
+        if (index === endIdx) {
+          ctx.catelist.splice(index - endIdx + idx, 0, item)
+          ctx.catelist.splice(index + 1, 1)
+          console.log('1-' + index)
+        }
+        if (index > endIdx) {
+          if (parseInt(item.grade) < grade || parseInt(item.grade) === grade) {
+            endIdx = 10000
+          } else {
+            console.log('2-' + index)
+            ctx.catelist.splice(index - endIdx + idx, 0, item)
+            ctx.catelist.splice(index + 1, 1)
+          }
+        }
+      })
+    },
     sortFilter2 (h, params) {
       var ctx = this
-      return h('div', [
-        h('span', params.row.sort),
+      let sort = h('div', [
         h('i', {
           class: {
             'none': true,
@@ -301,39 +322,7 @@ export default {
           },
           on: {
             click: () => {
-              this.$Modal.confirm({
-                render: (h) => {
-                  return h('Input', {
-                    props: {
-                      value: params.row.sort,
-                      autofocus: true,
-                      placeholder: '修改排序'
-                    },
-                    on: {
-                      input: (val) => {
-                        params.row.sort2 = val
-                      }
-                    }
-                  })
-                },
-                onOk: () => {
-                  let data = {
-                    model: JSON.stringify({
-                      id: params.row.categoryId,
-                      sort: params.row.sort2
-                    }),
-                    _method: 'put'
-                  }
-                  ctx.$http.post('/rest/api/category/detail/' + params.row.categoryId, qs.stringify(data)).then((res) => {
-                    if (res.success) {
-                      ctx.$Message.success('修改成功')
-                      ctx.list[params.index].sort = params.row.sort2
-                    } else {
-                      ctx.$Message.error(res.msg)
-                    }
-                  })
-                }
-              })
+              params.row.edittingCell[params.column.key] = true
             }
           }
         }),
@@ -350,17 +339,25 @@ export default {
             },
             on: {
               click: () => {
+                // 向上-最近子级orgGrade
                 if (params.index > 0) {
-                  this.sortable(params.index, params.index - 1, 'category', 'categoryId')
+                  let grade = parseInt(params.row.grade)
+                  for (var i = 0; i < params.index; i++) {
+                    let org = ctx.catelist[params.index - i - 1]
+                    let orgGrade = parseInt(org.grade)
+                    if (orgGrade < grade) return false
+                    if (orgGrade === grade) {
+                      this.sortPost(params.row.categoryId, org.sort, 'category')
+                      this.sortPost(org.categoryId, params.row.sort, 'category')
+                      const sort = params.row.sort
+                      ctx.catelist[params.index].sort = org.sort
+                      org.sort = sort
+                      ctx.initList(params.index - i - 1, params.index, grade)
+                      return false
+                    }
+                  }
                 }
               }
-            }
-          }),
-          h('i', {
-            class: {
-              'none': true,
-              'iconfont': true,
-              'icon-tuozhuai': true
             }
           }),
           h('i', {
@@ -371,12 +368,48 @@ export default {
             },
             on: {
               click: () => {
-                if (params.index < this.list.length - 1) {
-                  this.sortable(params.index, params.index + 1, 'category', 'categoryId')
+                if (params.index < this.catelist.length - 1) {
+                  let grade = parseInt(params.row.grade)
+                  for (var i = 0; i < this.catelist.length - params.index; i++) {
+                    let org = ctx.catelist[params.index + i + 1]
+                    let orgGrade = parseInt(org.grade)
+                    if (orgGrade < grade) return false
+                    if (orgGrade === grade) {
+                      this.sortPost(params.row.categoryId, org.sort, 'category')
+                      this.sortPost(org.categoryId, params.row.sort, 'category')
+                      const sort = params.row.sort
+                      ctx.catelist[params.index].sort = org.sort
+                      org.sort = sort
+                      ctx.initList(params.index, params.index + i + 1, grade)
+                      return false
+                    }
+                  }
                 }
               }
             }
           })
+        ])
+      ])
+      return h('Row', {
+        props: {
+          type: 'flex',
+          align: 'middle',
+          justify: 'center'
+        }
+      }, [
+        h('Col', {
+          props: {
+            span: '14'
+          }
+        }, [
+          !params.row.edittingCell[params.column.key] ? h('span', params.row[params.column.key]) : this.cellInput(this, h, params)
+        ]),
+        h('Col', {
+          props: {
+            span: '10'
+          }
+        }, [
+          params.row.edittingCell[params.column.key] ? this.saveIncellEditBtn(this, h, params) : sort
         ])
       ])
     },
@@ -386,7 +419,7 @@ export default {
         h('a', {
           on: {
             click: () => {
-              this.$Message.success('更新中..')
+              this.$refs.cateDetail.open(params.row.categoryId)
             }
           }
         }, '修改'),
@@ -406,11 +439,7 @@ export default {
                 this.$http.delete('/rest/api/category/detail/' + params.row.categoryId).then((res) => {
                   if (res.success) {
                     ctx.$Message.success('删除成功')
-                    for (let i = 0; i < ctx.list.length; i++) {
-                      if (ctx.list[i].categoryId === params.row.categoryId) {
-                        ctx.list.splice(i, 1)
-                      }
-                    }
+                    ctx.list.splice(params.index, 1)
                   } else {
                     ctx.$Message.success(res.msg)
                   }

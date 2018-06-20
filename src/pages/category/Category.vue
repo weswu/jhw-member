@@ -7,12 +7,13 @@
         <div class="j_search">
           <Button type="info" icon="plus" class="w130" @click="add">添加{{$route.params.id === 'product' ?'产品':'新闻'}}分类</Button>
         </div>
-        <DragableTable
+        <Table
           ref="selection"
-          :list="this.type === 'product' ? this.$store.state.productCategory : this.$store.state.newsCategory"
+          :row-class-name="rowClassName"
           :columns="columns"
-          @on-update="tableUpdate"
-          @on-selection-change="handleSelectChange"/>
+          :data="this.type === 'product' ? this.$store.state.productCategory : this.$store.state.newsCategory"
+          @on-selection-change="handleSelectChange"
+        ></Table>
       </Content>
       <div class="j_pagination fixed border">
         <div class="btn">
@@ -43,7 +44,6 @@ import qs from 'qs'
 import { mapState } from 'vuex'
 import MenuBar from '@/components/common/menu_bar'
 import JHeader from '@/components/group/j-header'
-import DragableTable from '@/components/group/j-dragable-table'
 import SeoDetail from '@/pages/static/SeoDetail'
 import Detail from '@/pages/category/Detail'
 import TransferCategory from '@/components/group/transfer-category'
@@ -52,7 +52,6 @@ export default {
   components: {
     MenuBar,
     JHeader,
-    DragableTable,
     SeoDetail,
     Detail,
     TransferCategory,
@@ -98,12 +97,15 @@ export default {
         }
       })
     },
+    rowClassName (row, index) {
+      if (row.hidden) {
+        return 'j-table-row-hidden'
+      }
+      return ''
+    },
     // 功能
     add () {
       this.$refs.detail.open()
-    },
-    tableUpdate (a, b) {
-      this.sortable(a, b, 'category', 'categoryId')
     },
     picChange (e) {
       let data = {
@@ -134,7 +136,7 @@ export default {
       })
     },
     handleSelectAll () {
-      this.$refs.selection.$refs.dragable.selectAll(this.toggle)
+      this.$refs.selection.selectAll(this.toggle)
     },
     delAll () {
       if (!this.ids) {
@@ -424,6 +426,28 @@ export default {
         })
       ])
     },
+    initList (idx, endIdx, grade) {
+      var ctx = this
+      let list = JSON.parse(JSON.stringify(this.list))
+      list.forEach((item, index) => {
+        if (index === endIdx) {
+          ctx.list.splice(index - endIdx + idx, 0, item)
+          ctx.list.splice(index + 1, 1)
+          console.log('1-' + index)
+        }
+        if (index > endIdx) {
+          if (parseInt(item.grade) < grade || parseInt(item.grade) === grade) {
+            endIdx = 10000
+          } else {
+            console.log('2-' + index)
+            ctx.list.splice(index - endIdx + idx, 0, item)
+            ctx.list.splice(index + 1, 1)
+          }
+        }
+      })
+      // if (this.type === 'product') this.$store.commit('setProductCategory', this.list)
+      // if (this.type === 'news') this.$store.commit('setNewsCategory', this.list)
+    },
     sortFilter (h, params) {
       var ctx = this
       let sort = h('div', [
@@ -452,21 +476,21 @@ export default {
             },
             on: {
               click: () => {
+                // 向上-最近子级orgGrade
                 if (params.index > 0) {
                   let grade = parseInt(params.row.grade)
-                  let index = 0
                   for (var i = 0; i < params.index; i++) {
                     let org = ctx.list[params.index - i - 1]
                     let orgGrade = parseInt(org.grade)
                     if (orgGrade < grade) return false
                     if (orgGrade === grade) {
-                      if (index === 0) {
-                        this.sortPost(params.row.categoryId, org.sort, 'category')
-                        this.sortPost(org.categoryId, params.row.sort, 'category')
-                        index = 1
-                      } else {
-                        return false
-                      }
+                      this.sortPost(params.row.categoryId, org.sort, 'category')
+                      this.sortPost(org.categoryId, params.row.sort, 'category')
+                      const sort = params.row.sort
+                      ctx.list[params.index].sort = org.sort
+                      org.sort = sort
+                      ctx.initList(params.index - i - 1, params.index, grade)
+                      return false
                     }
                   }
                 }
@@ -483,19 +507,18 @@ export default {
               click: () => {
                 if (params.index < this.list.length - 1) {
                   let grade = parseInt(params.row.grade)
-                  let index = 0
                   for (var i = 0; i < this.list.length - params.index; i++) {
                     let org = ctx.list[params.index + i + 1]
                     let orgGrade = parseInt(org.grade)
                     if (orgGrade < grade) return false
                     if (orgGrade === grade) {
-                      if (index === 0) {
-                        this.sortPost(params.row.categoryId, org.sort, 'category')
-                        this.sortPost(org.categoryId, params.row.sort, 'category')
-                        index = 1
-                      } else {
-                        return false
-                      }
+                      this.sortPost(params.row.categoryId, org.sort, 'category')
+                      this.sortPost(org.categoryId, params.row.sort, 'category')
+                      const sort = params.row.sort
+                      ctx.list[params.index].sort = org.sort
+                      org.sort = sort
+                      ctx.initList(params.index, params.index + i + 1, grade)
+                      return false
                     }
                   }
                 }
@@ -563,11 +586,7 @@ export default {
                 this.$http.delete('/rest/api/category/detail/' + params.row.categoryId).then((res) => {
                   if (res.success) {
                     ctx.$Message.success('删除成功')
-                    for (let i = 0; i < ctx.list.length; i++) {
-                      if (ctx.list[i].categoryId === params.row.categoryId) {
-                        ctx.list.splice(i, 1)
-                      }
-                    }
+                    ctx.list.splice(params.index, 1)
                   } else {
                     ctx.$Message.success(res.msg)
                   }

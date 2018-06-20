@@ -122,11 +122,7 @@ export default {
                   ctx.$http.post('/rest/api/message/bind/del?id=' + params.row.customizeId).then((res) => {
                     if (res.success) {
                       ctx.$Message.success('删除成功')
-                      for (let i = 0; i < ctx.list.length; i++) {
-                        if (ctx.list[i].customizeId === params.row.customizeId) {
-                          ctx.list.splice(i, 1)
-                        }
-                      }
+                      ctx.list.splice(params.index, 1)
                     } else {
                       ctx.$Message.success(res.msg)
                     }

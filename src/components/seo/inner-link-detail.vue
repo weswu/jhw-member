@@ -45,10 +45,7 @@ export default {
     },
     ok () {
       if (!this.detail.keywords) return this.$Message.info('关键字名称不能为空')
-      let data = {
-        model: JSON.stringify(this.detail)
-      }
-      this.$http.post('/rest/api/keywords/innerLinks/detail', qs.stringify(data)).then((res) => {
+      this.$http.post('/rest/api/keywords/innerLinks/detail', qs.stringify(this.detail)).then((res) => {
         if (res.success) {
           this.$Message.success('添加成功')
           this.$emit('on-change')

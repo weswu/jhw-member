@@ -90,7 +90,7 @@ export default {
     },
     // 过滤
     indexFilter (h, params) {
-      return h('span', this.index2(params.index, this.searchData))
+      return this.index2(this, h, params)
     },
     nameFilter (h, params) {
       return h('span', this.active === 'news/list' ? params.row.title : params.row.name)

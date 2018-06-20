@@ -47,9 +47,9 @@ export default {
           window.open('http://buy.jihui88.com/#/alipay?title=续费&orderId=' + res.data.orderId, '_blank')
         } else {
           if (res.msg === '订单不存在') {
-            this.$Message.info({
-              content: '该站点未购买过产品!<a href="http://buy.jihui88.com/#/?layoutId="' + ctx.detail.layoutId + ' target="_blank">前往购买</a>',
-              duration: 5
+            this.$Notice.info({
+              title: '该站点未购买过产品!',
+              desc: '<a href="http://buy.jihui88.com/#/?layoutId=' + ctx.detail.layoutId + '" target="_blank">前往购买</a>'
             })
           } else {
             this.$Message.error(res.msg)

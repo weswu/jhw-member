@@ -15,6 +15,7 @@
           </Col>
           <Col>
             <Upload ref="upload" :action="'/commonutil/uploadUtil2?username=' + $store.state.user.username + '&replace=00&attId=&id=' + attId"
+              :multiple="multiple"
               name="Filedata"
               :max-size="2048"
               :on-success="handleSuccess">
@@ -53,6 +54,10 @@ export default {
     width: {
       type: String,
       default: '800'
+    },
+    multiple: {
+      type: Boolean,
+      default: false
     }
   },
   components: {
@@ -154,7 +159,7 @@ export default {
       }
       this.$emit('on-change', obj)
       this.get()
-      this.modal = false
+      if (!this.multiple) this.modal = false
       var ctx = this
       setTimeout(function () {
         ctx.$refs.upload.clearFiles()
