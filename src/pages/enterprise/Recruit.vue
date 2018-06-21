@@ -109,7 +109,7 @@ export default {
       this.$refs.detail.open()
     },
     tableUpdate (a, b) {
-      this.sortable(a, b, 'job', 'jobId')
+      this.sortable(a, b, 'job')
     },
     // 过滤
     indexFilter (h, params) {

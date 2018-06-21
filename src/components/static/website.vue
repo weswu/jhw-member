@@ -136,10 +136,14 @@ export default {
     })
   },
   created () {
-    var ctx = this
-    setTimeout(function () {
-      ctx.get()
-    }, 500)
+    if (!window.token) {
+      var ctx = this
+      setTimeout(function () {
+        ctx.get()
+      }, 1000)
+    } else {
+      this.get()
+    }
   },
   methods: {
     get () {

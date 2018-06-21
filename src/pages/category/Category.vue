@@ -431,6 +431,7 @@ export default {
       let list = JSON.parse(JSON.stringify(this.list))
       list.forEach((item, index) => {
         if (index === endIdx) {
+          item.expand = false
           ctx.list.splice(index - endIdx + idx, 0, item)
           ctx.list.splice(index + 1, 1)
           console.log('1-' + index)
@@ -440,6 +441,7 @@ export default {
             endIdx = 10000
           } else {
             console.log('2-' + index)
+            item.hidden = true
             ctx.list.splice(index - endIdx + idx, 0, item)
             ctx.list.splice(index + 1, 1)
           }
@@ -483,11 +485,13 @@ export default {
                     let org = ctx.list[params.index - i - 1]
                     let orgGrade = parseInt(org.grade)
                     if (orgGrade < grade) return false
+                    if (orgGrade > grade) org.hidden = true
                     if (orgGrade === grade) {
                       this.sortPost(params.row.categoryId, org.sort, 'category')
                       this.sortPost(org.categoryId, params.row.sort, 'category')
                       const sort = params.row.sort
                       ctx.list[params.index].sort = org.sort
+                      org.expand = false
                       org.sort = sort
                       ctx.initList(params.index - i - 1, params.index, grade)
                       return false
@@ -511,11 +515,13 @@ export default {
                     let org = ctx.list[params.index + i + 1]
                     let orgGrade = parseInt(org.grade)
                     if (orgGrade < grade) return false
+                    if (orgGrade > grade) org.hidden = true
                     if (orgGrade === grade) {
                       this.sortPost(params.row.categoryId, org.sort, 'category')
                       this.sortPost(org.categoryId, params.row.sort, 'category')
                       const sort = params.row.sort
                       ctx.list[params.index].sort = org.sort
+                      ctx.list[params.index].expand = false
                       org.sort = sort
                       ctx.initList(params.index, params.index + i + 1, grade)
                       return false

@@ -3,6 +3,15 @@
     v-model="modal"
     title="回收站"
     @on-cancel="cancel">
+    <div class="picture_panel">
+      <div class="picture_header">
+        <Breadcrumb separator=">" style="padding-left: 10px;">
+          <BreadcrumbItem v-for="(item, index) in menu" :key="index">
+            <span @click="breadClick(item, index)" :style="index === active ? 'color: #666' : ''"><i class="iconfont icon-tupian1" v-if="index === 0"></i>{{item.text}}</span>
+          </BreadcrumbItem>
+        </Breadcrumb>
+      </div>
+    </div>
     <div class="modal-upload-list">
       <ul ref="menu" class="menu j_panel">
         <li @click="restoreImg('item')">还原</li>
@@ -16,7 +25,7 @@
           {{item.filename}}
         </div>
       </div>
-      <div v-if="list.length === 0">
+      <div class="j_empty" v-if="list.length === 0">
         暂无数据
       </div>
     </div>
@@ -28,6 +37,9 @@
 import qs from 'qs'
 import JPagination from '@/components/group/j-pagination'
 export default {
+  props: {
+    menu: Array
+  },
   components: {
     JPagination
   },
@@ -83,7 +95,8 @@ export default {
       id: 'all',
       ids: '',
       item: {},
-      toggle: false
+      toggle: false,
+      active: 4
     }
   },
   mounted () {
@@ -115,6 +128,11 @@ export default {
     },
     cancel () {
       this.modal = false
+    },
+    breadClick (item, index) {
+      this.id = item.value
+      this.active = index
+      this.get()
     },
     // 批量操作
     restoreImg (e) {

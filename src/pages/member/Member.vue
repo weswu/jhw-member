@@ -24,6 +24,7 @@
                     </FormItem>
                     <FormItem label="会员等级：">
                       <Select v-model="searchData.memberRankId" class="w244">
+                        <Option value="">请选择</Option>
                         <Option :value="item.rankId" v-for="item in $store.state.memberRankList" :key="item.rankId">{{item.name}}</Option>
                       </Select>
                     </FormItem>

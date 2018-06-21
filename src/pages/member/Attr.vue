@@ -80,7 +80,7 @@ export default {
       this.$refs.detail.open()
     },
     tableUpdate (a, b) {
-      this.sortable(a, b, 'member/attr', 'attId')
+      this.sortable(a, b, 'member/attr')
     },
     // 过滤
     editFilter (h, params) {

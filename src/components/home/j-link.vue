@@ -5,7 +5,7 @@
     </li>
     <li class="add" @click="add"><i class="iconfont icon--jia"></i></li>
     <Tool ref="tool" :selected="customData.linkList"/>
-    <JAlbum ref="album" :multiple="true"/>
+    <JAlbum ref="album" :multiple="true" v-if="isAlbum"/>
     <addAlbum ref="addAlbum"/>
     <Recycle ref="recycle"/>
   </ul>
@@ -25,7 +25,14 @@ export default {
     Recycle
   },
   computed: {
-    ...mapState(['customData'])
+    ...mapState(['customData']),
+    isAlbum () {
+      let bol = false
+      this.customData.linkList.forEach(item => {
+        if (item.value === 'shangchuanPic') bol = true
+      })
+      return bol
+    }
   },
   methods: {
     add () {

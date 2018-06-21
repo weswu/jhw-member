@@ -2,17 +2,17 @@
   <Layout class="j_layout ivu-layout-has-sider j_seo">
     <MenuBar :data="'menuStatic'" :active="'seo'"/>
     <Layout class="j_layout_content">
-      <JHeader :title="'SEO管理'" :website="active === '0' || active === '4'" @on-layout="staticChange" :lan="active === '1'" @on-change="lanChange"></JHeader>
+      <JHeader :title="'SEO管理'" :website="!header" @on-layout="staticChange" :lan="active === '4' || active === '1' || header" @on-change="lanChange"></JHeader>
       <Content>
         <div class="j_search">
           <Button class="grey" @click="active = item.value" v-for="(item, index) in btns" :key="index" :class="{primary: active === item.value}">{{item.text}}</Button>
         </div>
         <div class="warpper j_scroll">
-          <SBase v-if="active === '0'"/>
+          <SBase ref="base" @on-change="headerChange" v-if="active === '0'"/>
           <STemplate ref="temp" @on-change="search" v-if="active === '1'"/>
           <KeywordStore v-if="active === '2'"/>
           <LongTailKeyword v-if="active === '3'"/>
-          <InnerLink v-if="active === '4'"/>
+          <InnerLink ref="link" v-if="active === '4'"/>
           <JTab v-if="active === '5'"/>
           <Paid v-if="active === '6'"/>
         </div>
@@ -54,7 +54,8 @@ export default {
         { text: 'Tag标签管理', value: '5' },
         { text: '付费SEO推广', value: '6' }
       ],
-      active: '0'
+      active: '0',
+      header: false
     }
   },
   methods: {
@@ -62,7 +63,12 @@ export default {
       // this.layoutId = e
     },
     lanChange () {
-      this.$refs.temp.get()
+      if (this.active === '0') this.$refs.base.get()
+      if (this.active === '1') this.$refs.temp.get()
+      if (this.active === '4') this.$refs.link.get()
+    },
+    headerChange (e) {
+      this.header = e
     }
   }
 }

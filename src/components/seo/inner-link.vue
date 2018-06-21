@@ -45,7 +45,6 @@ export default {
   },
   created () {
     this.get()
-    this.getNav()
   },
   methods: {
     get () {
@@ -58,6 +57,7 @@ export default {
           this.$Message.error(res.msg)
         }
       })
+      this.getNav()
     },
     getNav () {
       this.$http.get('/rest/api/keywords/innerLinks/add').then((res) => {
@@ -128,6 +128,16 @@ export default {
     renderOperate (h, params) {
       var ctx = this
       return h('a', [
+        h('a', {
+          on: {
+            click: () => {
+              this.$refs.detail.open(params.row.keywordsId)
+            }
+          }
+        }, '修改'),
+        h('span', {
+          class: { delimiter: true }
+        }, '|'),
         h('Poptip', {
           props: {
             confirm: true,

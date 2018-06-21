@@ -60,6 +60,7 @@ export default {
         })
       } else {
         this.detail = {}
+        this.$refs.ue.setUEContent('<p><br/></p>')
       }
     },
     cancel () {

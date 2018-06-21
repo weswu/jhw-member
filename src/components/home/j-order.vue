@@ -1,18 +1,18 @@
 <template>
   <div class="j_panel">
-    <Tabs :value="tabActive">
+    <Tabs :value="tabActive" @on-click="tabChange">
       <TabPane label="消费记录" name="1">
         <div class="j_warpper">
           <OrderItem :searchData="{ page: 1, pageSize: 3 }"/>
         </div>
       </TabPane>
       <TabPane label="已购产品" name="2">
-        <div class="j_warpper">
+        <div class="j_warpper" v-if="tab2">
           <PurchasedItem :searchData="{ page: 1, pageSize: 3 }"/>
         </div>
       </TabPane>
       <TabPane label="我的积分" name="3">
-        <div class="j_warpper">
+        <div class="j_warpper" v-if="tab3">
           <PointTable :searchData="searchData"/>
         </div>
       </TabPane>
@@ -36,7 +36,9 @@ export default {
       searchData: {
         page: 1,
         pageSize: 3
-      }
+      },
+      tab2: false,
+      tab3: false
     }
   },
   mounted () {
@@ -49,8 +51,9 @@ export default {
     }, false)
   },
   methods: {
-    handleTabRemove (name) {
-      this['tabActive'] = name
+    tabChange (name) {
+      if (!this.tab2 && name === '2') this.tab2 = true
+      if (!this.tab3 && name === '3') this.tab3 = true
     }
   }
 }

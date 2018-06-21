@@ -27,17 +27,16 @@
           </tbody>
         </table>
         <Button type="primary" style="margin-bottom:22px;" @click="generate">生成产品表格模板</Button>
-
         <div class="j_tip">
           <span class="red">步骤二：</span>进行批量上传产品表格前，请先把产品图片上传好
         </div>
         <Button type="primary" @click="uploadPic" style="margin-bottom:16px;">上传产品图片</Button>
-        <Upload ref="upload" :action="'/commonutil/uploadUtil2?username=' + $store.state.user.username + '&replace=00&attId=&id=' + attId" style="display:none"
+        <Upload ref="upload" :action="'/commonutil/uploadUtil2?username=' + $store.state.user.username + '&replace=00&attId=&id=' + albumId" style="display:none"
           name="Filedata"
           multiple
           :max-size="2048"
           :on-success="handleSuccess">
-          <div id="upload">上传</div>
+          <div id="productUpload">上传</div>
         </Upload>
         <div class="j_tip">
           <span class="red">步骤三：</span>提交填写好的产品表格
@@ -58,34 +57,18 @@
         </Row>
       </Content>
     </Layout>
-    <Modal
-      v-model="modal"
-      width="430"
-      title="选择相册"
-      @on-cancel="modal = false">
-      <div slot="footer">
-        <Button type="text" @click="modal = false">取消</Button>
-        <Button type="primary" @click="submitAlbumId">确定</Button>
-      </div>
-      <Form :label-width="90">
-        <FormItem label="请选择：">
-          <CategorySelect @on-change="change"/>
-        </FormItem>
-      </Form>
-    </Modal>
   </Layout>
 </template>
 
 <script>
 import qs from 'qs'
+import { mapState } from 'vuex'
 import MenuBar from '@/components/common/menu_bar'
 import JHeader from '@/components/group/j-header'
-import CategorySelect from '@/pages/album/CategorySelect'
 export default {
   components: {
     MenuBar,
-    JHeader,
-    CategorySelect
+    JHeader
   },
   data () {
     return {
@@ -114,28 +97,63 @@ export default {
         { value: 'e', text: '-' }
       ],
       modal: false,
-      attId: 'all',
+      albumId: 'all',
       name: '未选择任何文件'
     }
   },
   create () {
-    this.initAlbum()
+    this.$store.dispatch('getAlbumCategory').then(res => {
+      this.initData()
+    })
+  },
+  computed: {
+    ...mapState({
+      categoryList: state => state.albumCategory
+    })
+  },
+  watch: {
+    categoryList: {
+      handler () {
+        this.init()
+      }
+    }
+  },
+  created () {
+    if (this.categoryList.length === 0) {
+      this.$store.dispatch('getAlbumCategory').then(res => {
+        this.init()
+      })
+    } else {
+      this.init()
+    }
   },
   methods: {
-    initAlbum () {
-      if (this.$store.state.albumCategory.length < 2) {
-        this.$store.dispatch('getAlbumCategory')
-      }
+    init () {
+      this.categoryList.forEach(item => {
+        if (item.name === '产品批量上传') {
+          this.albumId = item.albumId
+        }
+      })
     },
     uploadPic () {
-      this.modal = true
-    },
-    submitAlbumId () {
-      this.modal = false
-      document.getElementById('upload').click()
+      var btn = document.getElementById('productUpload')
+      if (this.albumId !== 'all') {
+        btn.click()
+      } else {
+        let data = {
+          model: JSON.stringify({blongType: 'AP', state: '01', name: '产品批量上传'})
+        }
+        this.$http.post('/rest/api/album/detail', qs.stringify(data)).then((res) => {
+          if (res.success) {
+            this.albumId = res.attributes.data.albumId
+            btn.click()
+          }
+        })
+      }
     },
     handleSuccess (res, file) {
       var ctx = this
+      this.$Message.info('上传成功')
       setTimeout(function () {
         ctx.$refs.upload.clearFiles()
       }, 1000)
@@ -151,9 +169,6 @@ export default {
     select () {
       var btn = document.getElementById('fileUpload')
       btn.click()
-    },
-    change (e) {
-      this.attId = e
     },
     generate () {
       let data = {

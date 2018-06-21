@@ -13,13 +13,13 @@
             name="Filedata"
             :max-size="2048"
             :on-success="handleSuccessImg">
-            <li >替换图片</li>
+            <li>替换图片</li>
           </Upload>
           <li @click="refurbish">刷新</li>
           <li v-clipboard:copy="item.url2" v-clipboard:success="copy">复制图片的代码</li>
           <li v-clipboard:copy="item.url3" v-clipboard:success="copy" style="border:none;">复制链接的代码</li>
         </ul>
-        <Cateogy ref="category" @on-change="changeCategory" @on-del="fileChange"/>
+        <Cateogy ref="category" @on-change="changeCategory" @on-file="changeFile" @on-del="fileChange"/>
         <Layout class="j_album_container">
           <div class="j_search">
             <Row type="flex" justify="space-between">
@@ -55,7 +55,7 @@
               </Col>
             </Row>
           </div>
-          <Content class="picture">
+          <Content class="picture_panel">
             <div class="picture_header">
               <Row type="flex" justify="space-between">
                 <Col>
@@ -80,22 +80,25 @@
               </Row>
             </div>
             <Row type="flex" justify="start" class="picture_warpper">
-              <Col :xs="12" :sm="8" :md="6" :lg="4" v-for="item in fileList" :key="item.id" class="pic_item">
+              <Col :xs="12" :sm="8" :md="6" :lg="4" v-for="item in fileList" :key="item.id" class="pic_item" v-if="searchData.page === 1">
                 <div class="box" @click="fileClick(item)" @dblclick="filedbClick(item)" @contextmenu.prevent="filemore($event, item)">
-                  <div class="file">
+                  <div class="file" :class="{hover: item._checked}">
                     <i class="iconfont icon-weibiaoti5"></i>
                   </div>
-                  <div class="title" :class="{hover: item._checked}">{{item.title}}</div>
+                  <div class="title" :class="{hover: item._checked && !item.editting}">
+                    <span><Input v-model="item.title" @on-blur="filenameChange(item)" v-if="item.editting && $refs.category.fileNameEdit"/></span>
+                    <span v-if="!item.editting || !$refs.category.fileNameEdit">{{item.title}}</span>
+                  </div>
                   <div class="size">{{item.attCount || 0}}&nbsp;项</div>
                 </div>
               </Col>
               <Col :xs="12" :sm="8" :md="6" :lg="4"  v-for="(item, index) in list" :key="index" class="pic_item">
                 <div class="box" @click="selected(item)" @contextmenu.prevent="more($event, item)">
                   <Card dis-hover :class="{hover: item._checked}">
-                    <img :src="$store.state.status.IMG_HOST + item.serverPath | picUrl(5)" :alt="item.filename">
+                    <img :src="$store.state.status.IMG_HOST + item.serverPath | picUrl(5)" :alt="item.filename" @error="imgError($event, item)">
                   </Card>
                   <div class="title" :class="{hover: item._checked && !item.editting}">
-                    <span @click.stop="nameClick"><Input v-model="item.filename2" @on-blur="nameChange(item)" v-if="item.editting"/></span>
+                    <span><Input v-model="item.filename2" @on-blur="nameChange(item)" v-if="item.editting"/></span>
                     <span v-if="!item.editting">{{item.filename2}} <span class="postfix">{{item.serverPath | postfix}}</span> </span>
                   </div>
                 </div>
@@ -114,7 +117,7 @@
       </Layout>
     </Content>
     <Add ref="add" @on-change="categoryChange"/>
-    <Recycle ref="recycle" @on-change="get"/>
+    <Recycle ref="recycle" :menu="breadList" @on-change="get"/>
     <Watermark ref="watermark"/>
     <Modal
       width="276"
@@ -173,207 +176,8 @@ export default {
       breadList: [
         { value: 'all', text: '全部图片' }
       ],
-      list: [],
-      listTest: [
-        {
-          state: '01',
-          type: '01',
-          content: null,
-          sort: null,
-          filename: null,
-          filename2: '路人超能2',
-          userId: 'User_000000000000000000000000082',
-          serverPath: 'upload//g//g2//ggggfj//picture//2017//09//15/cb9ea426-772f-4667-afc3-18ac954008d1.jpg',
-          belongId: null,
-          attId: 'Attach_0000000000000000001403056',
-          belongType: 'AD',
-          linkUrl: null,
-          storeType: null,
-          serverIp: '125.120.86.154',
-          filedesc: null,
-          uploadTime: 1505440558943,
-          technicView: null,
-          _checked: false,
-          editting: false
-        },
-        {
-          state: '01',
-          type: '01',
-          content: null,
-          sort: null,
-          filename: '路人头像3.jpg',
-          filename2: '路人头像3.jpg',
-          userId: 'User_000000000000000000000000082',
-          serverPath: 'upload//g//g2//ggggfj//picture//2017//08//22/d45b87db-460a-42ba-beee-c5551ea5a7ee.jpg',
-          belongId: null,
-          attId: 'Attach_0000000000000000001391538',
-          belongType: 'AD',
-          linkUrl: null,
-          storeType: null,
-          serverIp: '183.159.177.57',
-          filedesc: null,
-          uploadTime: 1503382354821,
-          technicView: null,
-          _checked: false,
-          editting: false
-        },
-        {
-          state: '01',
-          type: '01',
-          content: null,
-          sort: null,
-          filename: '9e4246d9-7150-49f0-af69-237598418759.png',
-          userId: 'User_000000000000000000000000082',
-          serverPath: 'upload//g//g2//ggggfj//picture//2017//08//04/69521af9-edbf-4c83-b615-03d53f64c252.png',
-          belongId: null,
-          attId: 'Attach_0000000000000000001384336',
-          belongType: 'AD',
-          linkUrl: null,
-          storeType: null,
-          serverIp: '36.24.223.42',
-          filedesc: null,
-          uploadTime: 1501815560527,
-          technicView: null,
-          _checked: false,
-          editting: false
-        },
-        {
-          state: '01',
-          type: '01',
-          content: null,
-          sort: null,
-          filename: '大逃杀.jpg',
-          userId: 'User_000000000000000000000000082',
-          serverPath: 'upload//g//g2//ggggfj//picture//2017//06//01/94526c88-cd49-4a3f-a75e-b6a4d29b3378.jpg',
-          belongId: null,
-          attId: 'Attach_0000000000000000001353022',
-          belongType: 'AD',
-          linkUrl: null,
-          storeType: null,
-          serverIp: '125.120.83.147',
-          filedesc: null,
-          uploadTime: 1496300661556,
-          technicView: null,
-          _checked: false,
-          editting: false
-        },
-        {
-          state: '01',
-          type: '01',
-          content: null,
-          sort: null,
-          filename: 'timg.jpg',
-          userId: 'User_000000000000000000000000082',
-          serverPath: 'upload//g//g2//ggggfj//picture//2017//06//01/2be1866b-8f23-42a3-b34e-2cc5cfcbe2f9.jpg',
-          belongId: null,
-          attId: 'Attach_0000000000000000001353018',
-          belongType: 'AD',
-          linkUrl: null,
-          storeType: null,
-          serverIp: '125.120.83.147',
-          filedesc: null,
-          uploadTime: 1496296124960,
-          technicView: null,
-          _checked: false,
-          editting: false
-        },
-        {
-          state: '01',
-          type: '01',
-          content: null,
-          sort: 29,
-          filename: '产品.png',
-          userId: 'User_000000000000000000000000082',
-          serverPath: 'upload/g/g2/ggggfj/picture/2018/06/06/bb79b2bf-8075-4f84-9f41-d881b956ff77.png',
-          belongId: null,
-          attId: 'Attach_0000000000000000001514776',
-          belongType: 'AD',
-          linkUrl: null,
-          storeType: null,
-          serverIp: '10.30.197.254',
-          filedesc: null,
-          uploadTime: 1528285374461,
-          technicView: null,
-          _checked: false,
-          editting: false
-        },
-        {
-          state: '01',
-          type: '01',
-          content: null,
-          sort: 28,
-          filename: 'nopic.png',
-          userId: 'User_000000000000000000000000082',
-          serverPath: 'upload/g/g2/ggggfj/picture/2018/05/23/b7e30dee-599f-4867-b821-75e6b7b0d755.png',
-          belongId: 'Album_00000000000000000000064887',
-          attId: 'Attach_0000000000000000001507691',
-          belongType: 'AD',
-          linkUrl: null,
-          storeType: null,
-          serverIp: '10.30.197.254',
-          filedesc: null,
-          uploadTime: 1527073768068,
-          technicView: null,
-          _checked: false
-        },
-        {
-          state: '01',
-          type: '01',
-          content: null,
-          sort: 27,
-          filename: '1.png',
-          userId: 'User_000000000000000000000000082',
-          serverPath: 'upload/g/g2/ggggfj/picture/2018/05/22/97ec231a-1795-4b7c-9382-dc437383c5d2.png',
-          belongId: null,
-          attId: 'Attach_0000000000000000001507317',
-          belongType: 'AD',
-          linkUrl: null,
-          storeType: null,
-          serverIp: '10.30.197.254',
-          filedesc: null,
-          uploadTime: 1526982781866,
-          technicView: null,
-          _checked: false
-        },
-        {
-          state: '01',
-          type: '01',
-          content: null,
-          sort: null,
-          filename: 'tmp_f20db1581edca3cecd0c2e3e9d13a3863e52b861fccf49ec.jpg',
-          userId: 'User_000000000000000000000000082',
-          serverPath: 'upload//g//g2//ggggfj//picture//2018//05//02/3686976e-b6fd-4d64-9862-fdee09780c39.jpg',
-          belongId: null,
-          attId: 'Attach_0000000000000000001493938',
-          belongType: 'AD',
-          linkUrl: null,
-          storeType: null,
-          serverIp: '115.192.36.239',
-          filedesc: null,
-          uploadTime: 1525252073511,
-          technicView: null,
-          _checked: false
-        },
-        {
-          state: '01',
-          type: '01',
-          content: null,
-          sort: null,
-          filename: '路人头像3.jpg',
-          userId: 'User_000000000000000000000000082',
-          serverPath: 'upload//g//g2//ggggfj//picture//2018//04//03/1d77f759-40ed-4c6e-b0e1-dec453dae438.jpg',
-          belongId: null,
-          attId: 'Attach_0000000000000000001476614',
-          belongType: 'AD',
-          linkUrl: null,
-          storeType: null,
-          serverIp: '125.122.222.10',
-          filedesc: null,
-          uploadTime: 1522733211003,
-          technicView: null,
-          _checked: false
-        }
-      ],
+      listTest: [],
+      list: this.$store.state.status.test_album,
       total: 0,
       searchData: {
         page: 1,
@@ -385,6 +189,7 @@ export default {
       },
       toggle: false,
       ids: '',
+      fileids: '',
       attId: 'all',
       fileList: [],
       belongModel: false,
@@ -404,6 +209,7 @@ export default {
         ctx.list.forEach(item => {
           item.editting = false
         })
+        ctx.$refs.category.fileNameEdit = false
       }
     })
   },
@@ -443,6 +249,9 @@ export default {
       this.fileList = res.data.children
       this.get()
     },
+    changeFile (data) {
+      this.fileList = data.children
+    },
     breadClick (item, index) {
       var ctx = this
       this.attId = item.value
@@ -476,7 +285,30 @@ export default {
       })
     },
     fileClick (item) {
-      item._checked = !item._checked
+      var ctx = this
+      if (item) item._checked = !item._checked
+      this.fileids = ''
+      this.fileList.forEach((item, index) => {
+        if (item._checked) {
+          ctx.fileids = ctx.fileids ? (ctx.fileids + ',' + item.id) : item.id
+        }
+      })
+    },
+    filenameChange (item) {
+      let data = {
+        model: JSON.stringify({
+          id: item.id,
+          name: item.title
+        }),
+        _method: 'put'
+      }
+      this.$http.post('/rest/api/album/detail/' + item.id, qs.stringify(data)).then((res) => {
+        if (res.success) {
+          this.$Message.success('修改成功')
+        } else {
+          this.$Message.error(res.msg)
+        }
+      })
     },
     filedbClick (item) {
       this.attId = item.id
@@ -496,6 +328,17 @@ export default {
       this.$refs.category.$refs.menu.style.left = dom.left + dom.width / 2 + 'px'
       this.$refs.category.$refs.menu.style.top = dom.top + dom.height / 2 + 'px'
       this.$refs.category.item = item
+      // 重命名
+      this.$refs.category.data[0].children.forEach(row => {
+        row.editting = false
+        row.children.forEach(row1 => {
+          row1.editting = false
+          row1.children.forEach(row2 => {
+            row2.editting = false
+          })
+        })
+      })
+      this.$refs.category.fileNameEdit = true
       e.preventDefault()
     },
     // 左
@@ -573,9 +416,6 @@ export default {
       })
       this.item.editting = true
     },
-    nameClick (e) {
-      console.log('click')
-    },
     nameChange (item) {
       item.filename = item.filename2 + '.' + item.serverPath.split('.')[1]
       let data = {
@@ -641,6 +481,7 @@ export default {
             title: '刷新成功',
             desc: '图片10分钟后生效，请耐心等待'
           })
+          this.item.serverPath = this.item.serverPath + '?0'
         } else {
           this.$Message.error(res.msg)
         }
@@ -648,6 +489,12 @@ export default {
     },
     copy () {
       this.$Message.success('复制成功')
+    },
+    imgError (e, item) {
+      if (e.target.src.indexOf('_5') > -1) {
+        e.target.src = this.$store.state.status.IMG_HOST + item.serverPath
+      }
+      e.target.onerror = null
     },
     // 批量
     selected (item) {
@@ -679,10 +526,10 @@ export default {
       if (e === 'item') {
         this.ids = this.ids + ',' + this.item.attId
       }
-      if (!this.ids) {
+      if (!this.ids && !this.fileids) {
         return this.$Message.error('未选择')
       }
-      this.$http.post('/rest/api/album/attr/img/delete?attIds=' + this.ids).then((res) => {
+      this.ids && this.$http.post('/rest/api/album/attr/img/delete?attIds=' + this.ids).then((res) => {
         if (res.success) {
           this.$Message.success('删除成功')
           this.get()
@@ -690,15 +537,26 @@ export default {
           this.$Message.error(res.msg)
         }
       })
+      if (this.fileids) {
+        var ctx = this
+        let list = this.fileids.split(',')
+        list.forEach((id, index) => {
+          let type = ''
+          if (list.length === index + 1) {
+            type = 'end'
+          }
+          ctx.$refs.category.del(type, id)
+        })
+      }
     },
     copyAll (e) {
       if (e === 'item') {
         this.ids = this.ids + ',' + this.item.attId
       }
-      if (!this.ids) {
+      if (!this.ids && !this.fileids) {
         return this.$Message.error('未选择')
       }
-      this.$http.post('/rest/api/album/attr/img/copy?attIds=' + this.ids).then((res) => {
+      this.ids && this.$http.post('/rest/api/album/attr/img/copy?attIds=' + this.ids).then((res) => {
         if (res.success) {
           this.$Message.success('复制成功')
           this.get()
@@ -706,26 +564,61 @@ export default {
           this.$Message.error(res.msg)
         }
       })
+      if (this.fileids) {
+        var ctx = this
+        let list = this.fileids.split(',')
+        list.forEach((id, index) => {
+          let type = ''
+          if (list.length === index + 1) {
+            type = 'end'
+          }
+          ctx.$refs.category.copy(type, id)
+        })
+      }
     },
     moveAll (e) {
       if (e === 'item') {
         this.ids = this.ids + ',' + this.item.attId
       }
-      if (!this.ids) {
+      if (!this.ids && !this.fileids) {
         return this.$Message.error('未选择')
       }
       this.belongModel = true
     },
     moveAll2 () {
-      this.$http.post('/rest/api/album/attr/img/move?attIds=' + this.ids + '&belongId=' + this.belongId).then((res) => {
-        if (res.success) {
-          this.$Message.success('移动成功')
-          this.get()
-          this.belongModel = false
-        } else {
-          this.$Message.error(res.msg)
-        }
-      })
+      this.belongModel = false
+      if (this.ids) {
+        this.$http.post('/rest/api/album/attr/img/move?attIds=' + this.ids + '&belongId=' + this.belongId).then((res) => {
+          if (res.success) {
+            this.$Message.success('图片移动成功')
+            this.get()
+          } else {
+            this.$Message.error(res.msg)
+          }
+        })
+      }
+      if (this.fileids) {
+        var ctx = this
+        let list = this.fileids.split(',')
+        list.forEach((id, index) => {
+          let data = {
+            model: JSON.stringify({
+              parentId: ctx.belongId
+            }),
+            _method: 'put'
+          }
+          ctx.$http.post('/rest/api/album/detail/' + id, qs.stringify(data)).then((res) => {
+            if (res.success) {
+              if (list.length === index + 1) {
+                ctx.$Message.success('相册转移成功')
+                ctx.$refs.category.get()
+              }
+            } else {
+              ctx.$Message.error(res.msg)
+            }
+          })
+        })
+      }
     }
   }
 }
@@ -857,35 +750,6 @@ export default {
       }
     }
   }
-  .picture{
-    border: 1px solid #e9e9e9;
-    border-bottom: none;
-    .picture_header{
-      background: #f5f6fa;
-      height: 36px;
-      line-height: 36px;
-      border-bottom: 1px solid #e9e9e9;
-      .ivu-breadcrumb{
-        padding-left: 21px;
-        font-size: 12px;
-        .icon-tupian1{
-          padding-right: 3px;
-          font-size: 14px;
-        }
-        span{
-          font-weight: normal;
-          color: #bfbfc0;
-          margin: 0 3px;
-          cursor: pointer;
-        }
-        a{
-          font-size: 12px;
-          color: #a8a8a8;
-          font-weight: normal;
-        }
-      }
-    }
-  }
   .select_sort.ivu-select-single{
     width:144px;
     color: #666;
@@ -942,6 +806,36 @@ export default {
     .ivu-btn{
       height: 32px;
       padding: 0 10px;
+    }
+  }
+}
+// 面包屑导航
+.picture_panel{
+  border: 1px solid #e9e9e9;
+  border-bottom: none;
+  .picture_header{
+    background: #f5f6fa;
+    height: 36px;
+    line-height: 36px;
+    border-bottom: 1px solid #e9e9e9;
+    .ivu-breadcrumb{
+      padding-left: 21px;
+      font-size: 12px;
+      .icon-tupian1{
+        padding-right: 3px;
+        font-size: 14px;
+      }
+      span{
+        font-weight: normal;
+        color: #bfbfc0;
+        margin: 0 3px;
+        cursor: pointer;
+      }
+      a{
+        font-size: 12px;
+        color: #a8a8a8;
+        font-weight: normal;
+      }
     }
   }
 }

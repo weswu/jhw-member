@@ -141,8 +141,8 @@ const store = new Vuex.Store({
       this._vm.$http.get('/rest/api/user/detail').then((res) => {
         if (res.success) {
           let data = res.attributes.data
-          data.headimg = null
           if (data) {
+            data.headimg = null
             data.enterprise.addresslist = data.enterprise.address && data.enterprise.address.split(',')
             this.dispatch('getAccountInfo', data.userId)
           }

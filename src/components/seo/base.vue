@@ -1,7 +1,7 @@
 <template>
   <div class="j_seo_base">
     <div class="j_search">
-      <Button class="mormal" @click="search(item.value)" v-for="(item, index) in btns" :key="index" :class="{active: active === item.value}">{{item.text}}</Button>
+      <Button class="mormal" @click="change(item.value)" v-for="(item, index) in btns" :key="index" :class="{active: active === item.value}">{{item.text}}</Button>
     </div>
     <Table :columns="columns" :data="list"/>
     <JPagination :fixed="true" :borderTop="true" :total="total" :searchData='searchData' @on-change="get"/>
@@ -83,10 +83,15 @@ export default {
       }
     },
     // 功能
-    search (e) {
+    change (e) {
       this.active = e
       this.searchData.page = 1
       this.get()
+      if (e === 'pc') {
+        this.$emit('on-change', false)
+      } else {
+        this.$emit('on-change', true)
+      }
     },
     // 过滤
     indexFilter (h, params) {

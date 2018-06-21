@@ -44,7 +44,9 @@ export default {
         }
       ],
       list: this.$store.state.albumCategory,
-      item: {}
+      item: {},
+      fileNameEdit: false,
+      copyId: ''
     }
   },
   created () {
@@ -70,6 +72,7 @@ export default {
             })
           })
         })
+        ctx.fileNameEdit = false
       }
     })
   },
@@ -130,7 +133,8 @@ export default {
                       render: this.iconFilter,
                       _checked: false,
                       editting: false,
-                      attCount: 22
+                      attCount: 22,
+                      children: []
                     }
                   ]
                 }
@@ -190,8 +194,17 @@ export default {
       })
       this.data[0].children.forEach(item1 => {
         item1.attCount = (item1.attCount || 0) + item1.children.length
+        if (item1.id === ctx.copyId) {
+          item1.expand = true
+          ctx.$emit('on-file', item1)
+        }
         item1.children.forEach(item2 => {
           item2.attCount = (item2.attCount || 0) + item2.children.length
+          if (item2.id === ctx.copyId) {
+            item1.expand = true
+            item2.expand = true
+            ctx.$emit('on-file', item2)
+          }
           item2.children.forEach(item3 => {
             item3.attCount = (item3.attCount || 0) + item3.children.length
           })
@@ -270,6 +283,7 @@ export default {
             ctx.$refs.menu.style.left = e.target.getBoundingClientRect().left + 'px'
             ctx.$refs.menu.style.top = e.target.getBoundingClientRect().top + 'px'
             ctx.item = data
+            ctx.fileNameEdit = false
             e.preventDefault()
           }
         }
@@ -296,7 +310,7 @@ export default {
           width: '100%'
         }
       }, [
-        data.editting ? a : b
+        (data.editting && !this.fileNameEdit) ? a : b
       ])
     },
     ok (root, node, data) {
@@ -361,7 +375,6 @@ export default {
     },
     // 计数
     intiCount (value, count) {
-      debugger
       this.data[0].children.forEach(item => {
         if (item.id === value) {
           item.attCount = count + item.children.length
@@ -385,46 +398,50 @@ export default {
     move () {
       this.$refs.TransferAlbum.open()
     },
-    copy () {
-      this.$http.post('/rest/api/album/albumCopy?albumId=' + this.item.id).then((res) => {
+    edit () {
+      if (this.item.id !== 'all') {
+        this.item.editting = true
+      }
+    },
+    initCopyId (value) {
+      var ctx = this
+      this.data[0].children.forEach(item => {
+        item.children.forEach(item1 => {
+          if (item1.id === value) {
+            ctx.copyId = item.id
+          }
+          item1.children.forEach(item2 => {
+            if (item2.id === value) {
+              ctx.copyId = item1.id
+            }
+          })
+        })
+      })
+    },
+    copy (type, id) {
+      this.initCopyId(id || this.item.id)
+      this.$http.post('/rest/api/album/albumCopy?albumId=' + (id || this.item.id)).then((res) => {
         if (res.success) {
-          this.$Message.success('复制成功')
-          this.get()
+          if (!id || type === 'end') {
+            this.$Message.success('复制成功')
+            this.get()
+          }
         } else {
           this.$Message.error(res.msg)
         }
       })
     },
-    edit () {
-      var ctx = this
-      if (this.item.id !== 'all') {
-        this.item.editting = true
-        this.data[0].children.forEach(row => {
-          if (row.nodeKey === ctx.item.nodeKey) {
-            ctx.data[0].expand = true
-          }
-          row.children.forEach(row1 => {
-            if (row1.nodeKey === ctx.item.nodeKey) {
-              row.expand = true
-            } else {
-              row1.children.forEach(row2 => {
-                if (row2.nodeKey === ctx.item.nodeKey) {
-                  row1.expand = true
-                }
-              })
-            }
-          })
-        })
-      }
-    },
-    del () {
+    del (type, id) {
+      this.initCopyId(id || this.item.id)
       let data = {
         _method: 'delete'
       }
-      this.$http.post('/rest/api/album/detail/' + this.item.id, qs.stringify(data)).then((res) => {
+      this.$http.post('/rest/api/album/detail/' + (id || this.item.id), qs.stringify(data)).then((res) => {
         if (res.success) {
-          this.$Message.success('删除成功')
-          this.get()
+          if (!id || type === 'end') {
+            this.$Message.success('删除成功')
+            this.get()
+          }
           this.$emit('on-del', this.item.id)
         } else {
           this.$Message.success(res.msg)

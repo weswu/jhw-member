@@ -81,7 +81,7 @@ export default {
       this.$refs.detail.open()
     },
     tableUpdate (a, b) {
-      this.sortable(a, b, 'paymentconfig', 'paymentId')
+      this.sortable(a, b, 'paymentconfig')
     },
     // 过滤
     editFilter (h, params) {

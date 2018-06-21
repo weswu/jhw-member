@@ -87,7 +87,7 @@ Vue.prototype.url = function (e) {
  * @date: 2018-5-18
  * @desc: 排序
 */
-Vue.prototype.sortable = function (a, b, url, id) {
+Vue.prototype.sortable = function (a, b, url) {
   let objA = this.list[a]
   let objB = this.list[b]
   let sortA = this.list[a].sort
@@ -96,8 +96,8 @@ Vue.prototype.sortable = function (a, b, url, id) {
     sortA = this.list[a].lorder
     sortB = this.list[b].lorder
   }
-  this.sortPost(this.list[a][id], sortB, url)
-  this.sortPost(this.list[b][id], sortA, url)
+  this.sortPost(this.list[a].edittingCell.id, sortB, url)
+  this.sortPost(this.list[b].edittingCell.id, sortA, url)
   if (url === 'link') {
     objA.lorder = sortB
     objB.lorder = sortA
@@ -164,7 +164,7 @@ Vue.prototype.cellSort = (vm, h, params) => {
         on: {
           click: () => {
             if (params.index > 0) {
-              vm.sortable(params.index, params.index - 1, params.row.edittingCell.api, params.row.edittingCell.id)
+              vm.sortable(params.index, params.index - 1, params.row.edittingCell.api)
             }
           }
         }
@@ -184,8 +184,8 @@ Vue.prototype.cellSort = (vm, h, params) => {
         },
         on: {
           click: () => {
-            if (params.index < vm.list.pageSize - 1) {
-              vm.sortable(params.index, params.index + 1, params.row.edittingCell.api, params.row.edittingCell.id)
+            if (params.index < vm.list.length - 1) {
+              vm.sortable(params.index, params.index + 1, params.row.edittingCell.api)
             }
           }
         }

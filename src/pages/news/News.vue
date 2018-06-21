@@ -249,7 +249,7 @@ export default {
       this.$router.push({ path: '/news/add' })
     },
     tableUpdate (a, b) {
-      this.sortable(a, b, 'news', 'newsId')
+      this.sortable(a, b, 'news')
     },
     // 搜索
     clearInput () {

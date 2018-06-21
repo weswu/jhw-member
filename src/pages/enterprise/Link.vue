@@ -56,6 +56,22 @@ export default {
             api: 'link',
             id: 'Link_000000000000000000000000102'
           }
+        },
+        {
+          name: '李五2',
+          state: null,
+          url: 'g.cn',
+          userId: 'User_000000000000000000000000082',
+          linkId: 'Link_000000000000000000000000102',
+          lorder: 2,
+          lanId: 1,
+          image: null,
+          edittingCell: {
+            name: false,
+            url: false,
+            api: 'link',
+            id: 'Link_000000000000000000000000102'
+          }
         }
       ]
     }
@@ -85,7 +101,7 @@ export default {
       this.$refs.detail.open()
     },
     tableUpdate (a, b) {
-      this.sortable(a, b, 'link', 'linkId')
+      this.sortable(a, b, 'link')
     },
     // 过滤
     editFilter (h, params) {
