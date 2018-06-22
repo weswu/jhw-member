@@ -182,6 +182,7 @@ export default {
               row.children.push({
                 title: item2.name,
                 id: item2.albumId,
+                selected: false,
                 render: this.iconFilter,
                 _checked: false,
                 editting: false,
@@ -210,6 +211,7 @@ export default {
           })
         })
       })
+      if (ctx.copyId === 'all') ctx.$emit('on-file', this.data[0])
     },
     search () {
       if (this.name) {
@@ -276,6 +278,13 @@ export default {
         },
         on: {
           click: () => {
+            root.find(el => {
+              if (el.node.id === data.id) {
+                el.node.selected = true
+              } else {
+                el.node.selected = false
+              }
+            })
             this.ok(root, node, data)
           },
           contextmenu: (e) => {
@@ -314,10 +323,6 @@ export default {
       ])
     },
     ok (root, node, data) {
-      root.find(el => {
-        el.node.selected = false
-      })
-      data.selected = true
       let breadList = [
         { value: 'all', text: '全部图片' }
       ]
@@ -406,6 +411,9 @@ export default {
     initCopyId (value) {
       var ctx = this
       this.data[0].children.forEach(item => {
+        if (item.id === value) {
+          ctx.copyId = 'all'
+        }
         item.children.forEach(item1 => {
           if (item1.id === value) {
             ctx.copyId = item.id

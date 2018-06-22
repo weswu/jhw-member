@@ -38,7 +38,14 @@ import qs from 'qs'
 import JPagination from '@/components/group/j-pagination'
 export default {
   props: {
-    menu: Array
+    menu: {
+      type: Array,
+      default () {
+        return [
+          { value: 'all', text: '全部图片' }
+        ]
+      }
+    }
   },
   components: {
     JPagination

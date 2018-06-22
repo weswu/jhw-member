@@ -44,7 +44,7 @@ export default {
     }
   },
   computed: {
-    ...mapState(['layoutId', 'lanId'])
+    ...mapState(['layoutId', 'lanId', 'staticList'])
   },
   watch: {
     layoutId () {
@@ -74,6 +74,11 @@ export default {
     getPcNav () {
       if (this.layoutId) {
         this.searchData.layoutId = this.layoutId
+        this.staticList.forEach(item => {
+          if (item.layoutId === this.layoutId) {
+            this.searchData.lanId = item.language
+          }
+        })
         this.$http.get('/rest/pc/api/navigator/list?' + qs.stringify(this.searchData)).then((res) => {
           if (res.success) {
             this.list = res.attributes.data

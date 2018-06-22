@@ -143,7 +143,7 @@ const store = new Vuex.Store({
           let data = res.attributes.data
           if (data) {
             data.headimg = null
-            data.enterprise.addresslist = data.enterprise.address && data.enterprise.address.split(',')
+            data.enterprise.addresslist = !data.enterprise.address ? ['8a9e457e63a5e4c00163a5fa47ca0008'] : data.enterprise.address.split(',')
             this.dispatch('getAccountInfo', data.userId)
           }
           this.commit('setUser', data || {

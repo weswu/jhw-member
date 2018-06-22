@@ -19,7 +19,7 @@
             <DatePicker type="date" placeholder="选择时间" v-model="user.enterprise.regTime" @on-change="user.enterprise.regTime=$event"></DatePicker>
           </FormItem>
           <span class="title">联系信息：</span>
-          <FormItem label="单位地址：" prop="enterprise.address">
+          <FormItem label="单位地址：" prop="enterprise.addresslist">
             <Cascader :data="areaList" v-model="user.enterprise.addresslist" style="width: 450px;"></Cascader>
           </FormItem>
           <FormItem label="详细地址：" prop="address">
@@ -92,8 +92,8 @@ export default {
         'enterprise.legalPre': [
           { required: true, message: '法人不能为空', trigger: 'blur' }
         ],
-        'enterprise.address': [
-          { required: true, message: '单位地址不能为空', trigger: 'blur' }
+        'enterprise.addresslist': [
+          { required: true, type: 'array', message: '单位地址不能为空', trigger: 'blur' }
         ],
         address: [
           { required: true, message: '详细地址不能为空', trigger: 'blur' }
@@ -104,8 +104,7 @@ export default {
         cellphone: [
           { required: true, message: '手机不能为空', trigger: 'blur' }
         ]
-      },
-      address: ['8a9e457e63a5e4c00163a5fa47ca0008']
+      }
     }
   },
   created () {

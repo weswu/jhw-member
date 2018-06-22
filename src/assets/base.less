@@ -94,6 +94,36 @@ a.primary{
     font-size: 12px;
   }
 }
+// 面包屑导航
+.picture_panel{
+  border: 1px solid #e9e9e9;
+  border-bottom: none;
+  .picture_header{
+    background: #f5f6fa;
+    height: 36px;
+    line-height: 36px;
+    border-bottom: 1px solid #e9e9e9;
+    .ivu-breadcrumb{
+      padding-left: 21px;
+      font-size: 12px;
+      .icon-tupian1{
+        padding-right: 3px;
+        font-size: 14px;
+      }
+      span{
+        font-weight: normal;
+        color: #bfbfc0;
+        margin: 0 3px;
+        cursor: pointer;
+      }
+      a{
+        font-size: 12px;
+        color: #a8a8a8;
+        font-weight: normal;
+      }
+    }
+  }
+}
 // 通用
 .j_product_import_download{
   .ivu-checkbox-group-item{
@@ -600,11 +630,6 @@ a.primary{
   }
 }
 
-// Input
-.ivu-input,.ivu-input-number{
-  border: 1px solid #c9c9c9;
-  box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
-}
 //Select
 .ivu-select{
   .ivu-select-dropdown{
@@ -668,35 +693,6 @@ a.primary{
 }
 .ivu-message{
   top: 40% !important;
-}
-// 表单
-.ivu-form{
-  .ivu-form-item{
-    margin-bottom: 7px;
-    &.submit{
-      padding-top: 11px;
-    }
-  }
-  .ivu-form-item-error{
-    margin-bottom: 24px;
-  }
-  .ivu-input-wrapper{
-    max-width: 450px;
-  }
-  .ivu-select{
-    max-width: 450px;
-  }
-  .ivu-cascader{
-    max-width: 450px
-  }
-  .ivu-select{
-    .ivu-select-selection{
-      border: 1px solid #c9c9c9;
-    }
-  }
-  .formitem_left{
-    display: inline-block;
-  }
 }
 // 标签切换
 .ivu-tabs{
@@ -774,39 +770,6 @@ a.primary{
   form{
     .ivu-input-wrapper,.ivu-select{
       width: 250px;
-    }
-  }
-}
-.ivu-modal-mask{
-  background: none;
-}
-.ivu-modal{
-  box-shadow: 0 1px 6px rgba(0, 0, 0, 0.2);
-  .ivu-modal-content{
-    border-radius: 0px;
-    .ivu-modal-header{
-      background: @background-gray-color;
-      border-bottom: none;
-      .ivu-modal-header-inner{
-        color: @title-color;
-      }
-    }
-    .ivu-modal-footer{
-      background: @background-gray-color;
-      border-top: none;
-      overflow: hidden;
-      button{
-        float: right;
-      }
-      .ivu-btn-primary{
-        border: 1px solid @info-color;
-        background: @info-color;
-      }
-      .ivu-btn-text{
-        border: 1px solid @info-color;
-        color: @info-color;
-        margin-left: 10px;
-      }
     }
   }
 }
@@ -960,8 +923,4 @@ a.primary{
       cursor: text;
     }
   }
-}
-// 提示框样式
-.move-notice-enter-active,.move-notice-leave-active {
-  animation-duration: 0.8s;
 }

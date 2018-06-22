@@ -80,7 +80,7 @@
               </Row>
             </div>
             <Row type="flex" justify="start" class="picture_warpper">
-              <Col :xs="12" :sm="8" :md="6" :lg="4" v-for="item in fileList" :key="item.id" class="pic_item" v-if="searchData.page === 1">
+              <Col :xs="12" :sm="8" :md="6" :lg="4" v-for="item in fileList" :key="item.id" class="pic_item" v-if="searchData.page === 1" ref="file">
                 <div class="box" @click="fileClick(item)" @dblclick="filedbClick(item)" @contextmenu.prevent="filemore($event, item)">
                   <div class="file" :class="{hover: item._checked}">
                     <i class="iconfont icon-weibiaoti5"></i>
@@ -92,7 +92,7 @@
                   <div class="size">{{item.attCount || 0}}&nbsp;项</div>
                 </div>
               </Col>
-              <Col :xs="12" :sm="8" :md="6" :lg="4"  v-for="(item, index) in list" :key="index" class="pic_item">
+              <Col :xs="12" :sm="8" :md="6" :lg="4"  v-for="(item, index) in list" :key="index" class="pic_item" ref="pic">
                 <div class="box" @click="selected(item)" @contextmenu.prevent="more($event, item)">
                   <Card dis-hover :class="{hover: item._checked}">
                     <img :src="$store.state.status.IMG_HOST + item.serverPath | picUrl(5)" :alt="item.filename" @error="imgError($event, item)">
@@ -176,8 +176,8 @@ export default {
       breadList: [
         { value: 'all', text: '全部图片' }
       ],
-      listTest: [],
-      list: this.$store.state.status.test_album,
+      list: [],
+      listTest: this.$store.state.status.test_album,
       total: 0,
       searchData: {
         page: 1,
@@ -209,9 +209,73 @@ export default {
         ctx.list.forEach(item => {
           item.editting = false
         })
-        ctx.$refs.category.fileNameEdit = false
       }
     })
+    // 鼠标框选
+    window.document.onmousedown = (e) => {
+      let startX = (e.x || e.clientX)
+      let startY = (e.y || e.clientY)
+      if (e.stopPropagation) {
+        e.stopPropagation()
+      } else {
+        e.cancelBubble = true
+      }
+      if (e.preventDefault) {
+        e.preventDefault()
+      } else {
+        e.returnValue = false
+      }
+      console.log('x-' + startX + '  y-' + startY)
+      let isSelect = true
+      let selDiv = document.createElement('div')
+      selDiv.style.cssText = 'position:absolute;width:0px;height:0px;font-size:0px;margin:0px;padding:0px;border:1px dashed #0099FF;background-color:#C3D5ED;z-index:1000;filter:alpha(opacity:60);opacity:0.6;display:none;'
+      selDiv.id = 'selectDiv'
+      document.body.appendChild(selDiv)
+      selDiv.style.left = startX + 'px'
+      selDiv.style.top = startY + 'px'
+      let _x = null
+      let _y = null
+      document.onmousemove = (evt) => {
+        if (isSelect) {
+          if (selDiv.style.display === 'none') {
+            selDiv.style.display = ''
+          }
+          _x = (evt.x || evt.clientX)
+          _y = (evt.y || evt.clientY)
+          selDiv.style.left = Math.min(_x, startX) + 'px'
+          selDiv.style.top = Math.min(_y, startY) + 'px'
+          selDiv.style.width = Math.abs(_x - startX) + 'px'
+          selDiv.style.height = Math.abs(_y - startY) + 'px'
+          this.$refs.pic && this.$refs.pic.forEach((item, index) => {
+            this.initMouse(startX, startY, _x, _y, item)
+          })
+          this.$refs.file && this.$refs.file.forEach((item, index) => {
+            this.initMouse(startX, startY, _x, _y, item)
+          })
+        }
+      }
+      window.document.onmouseup = (e) => {
+        let endX = (e.x || e.clientX)
+        let endY = (e.y || e.clientY)
+        console.log('x-' + endX + '  y-' + endY)
+        isSelect = false
+        if (selDiv) {
+          document.body.removeChild(selDiv)
+        }
+        if (startX !== endX && startY !== endY) {
+          this.$refs.pic && this.$refs.pic.forEach((item, index) => {
+            if (this.initMouse(startX, startY, endX, endY, item)) this.list[index]._checked = true
+            item.$el.firstChild.setAttribute('class', 'box')
+          })
+          this.$refs.file && this.$refs.file.forEach((item, index) => {
+            if (this.initMouse(startX, startY, endX, endY, item)) this.fileList[index]._checked = true
+            item.$el.firstChild.setAttribute('class', 'box')
+          })
+          this.initSelected()
+        }
+        window.document.onmousemove = document.onmouseup = null
+      }
+    }
   },
   methods: {
     get () {
@@ -233,6 +297,29 @@ export default {
         }
       })
     },
+    initMouse (startX, startY, endX, endY, item) {
+      let left = item.$el.offsetLeft
+      let top = item.$el.offsetTop
+      let width = item.$el.offsetWidth
+      let height = item.$el.offsetHeight
+      let isSelect = true
+      if (startX > endX) {
+        if (left > startX || (left + width) < endX) isSelect = false
+      } else {
+        if (left > endX || (left + width) < startX) isSelect = false
+      }
+      if (startY > endY) {
+        if (top > startY || (top + height) < endY) isSelect = false
+      } else {
+        if (top > endY || (top + height) < startY) isSelect = false
+      }
+      if (isSelect) {
+        item.$el.firstChild.setAttribute('class', 'box hover')
+      } else {
+        item.$el.firstChild.setAttribute('class', 'box')
+      }
+      return isSelect
+    },
     picName (src) {
       if (!src) return ''
       let arr = src.split('.')
@@ -247,6 +334,7 @@ export default {
       this.attId = res.data.id
       this.breadList = res.breadList
       this.fileList = res.data.children
+      this.searchData.page = 1
       this.get()
     },
     changeFile (data) {
@@ -285,16 +373,11 @@ export default {
       })
     },
     fileClick (item) {
-      var ctx = this
       if (item) item._checked = !item._checked
-      this.fileids = ''
-      this.fileList.forEach((item, index) => {
-        if (item._checked) {
-          ctx.fileids = ctx.fileids ? (ctx.fileids + ',' + item.id) : item.id
-        }
-      })
+      this.initSelected()
     },
     filenameChange (item) {
+      this.$refs.category.fileNameEdit = false
       let data = {
         model: JSON.stringify({
           id: item.id,
@@ -465,10 +548,8 @@ export default {
       var ctx = this
       setTimeout(function () {
         ctx.$refs.uploadImg.clearFiles()
-        ctx.$Notice.success({
-          title: '替换成功',
-          desc: '图片10分钟后生效，请耐心等待'
-        })
+        ctx.$Message.success('替换成功')
+        ctx.item.serverPath = ctx.item.serverPath + '?0'
       }, 1000)
     },
     refurbish () {
@@ -477,10 +558,7 @@ export default {
       }
       this.$http.post('/rest/api/album/single/refurbish', qs.stringify(data)).then((res) => {
         if (res.success) {
-          this.$Notice.success({
-            title: '刷新成功',
-            desc: '图片10分钟后生效，请耐心等待'
-          })
+          this.$Message.success('刷新成功')
           this.item.serverPath = this.item.serverPath + '?0'
         } else {
           this.$Message.error(res.msg)
@@ -497,30 +575,33 @@ export default {
       e.target.onerror = null
     },
     // 批量
-    selected (item) {
+    initSelected () {
       var ctx = this
-      if (item) item._checked = !item._checked
       this.ids = ''
       this.list.forEach((item, index) => {
         if (item._checked) {
           ctx.ids = ctx.ids ? (ctx.ids + ',' + item.attId) : item.attId
         }
       })
-    },
-    handleSelectAll () {
-      if (!this.toggle) {
-        this.ids = ''
-      }
-      this.list.forEach((item, index) => {
-        item._checked = this.toggle
-        if (this.toggle) {
-          if (index === 0) {
-            this.ids = item.attId
-          } else {
-            this.ids = this.ids + ',' + item.attId
-          }
+      this.fileids = ''
+      this.fileList.forEach((item, index) => {
+        if (item._checked) {
+          ctx.fileids = ctx.fileids ? (ctx.fileids + ',' + item.id) : item.id
         }
       })
+    },
+    selected (item) {
+      if (item) item._checked = !item._checked
+      this.initSelected()
+    },
+    handleSelectAll () {
+      this.list.forEach((item, index) => {
+        item._checked = this.toggle
+      })
+      this.fileList.forEach((item, index) => {
+        item._checked = this.toggle
+      })
+      this.initSelected()
     },
     delAll (e) {
       if (e === 'item') {
@@ -677,11 +758,18 @@ export default {
         display: flex;
         flex-flow: column;
         height: 100%;
+        border: 1px solid transparent;
+        &.hover{
+          border: 1px dashed #ddd;
+        }
         // 文件
         .file{
           flex: 1;
           align-items: center;
           display: flex;
+          &.hover{
+            background: #e4e4e4;
+          }
         }
         .icon-weibiaoti5{
           color: #79d3fb;
@@ -806,36 +894,6 @@ export default {
     .ivu-btn{
       height: 32px;
       padding: 0 10px;
-    }
-  }
-}
-// 面包屑导航
-.picture_panel{
-  border: 1px solid #e9e9e9;
-  border-bottom: none;
-  .picture_header{
-    background: #f5f6fa;
-    height: 36px;
-    line-height: 36px;
-    border-bottom: 1px solid #e9e9e9;
-    .ivu-breadcrumb{
-      padding-left: 21px;
-      font-size: 12px;
-      .icon-tupian1{
-        padding-right: 3px;
-        font-size: 14px;
-      }
-      span{
-        font-weight: normal;
-        color: #bfbfc0;
-        margin: 0 3px;
-        cursor: pointer;
-      }
-      a{
-        font-size: 12px;
-        color: #a8a8a8;
-        font-weight: normal;
-      }
     }
   }
 }
