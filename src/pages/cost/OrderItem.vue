@@ -37,18 +37,12 @@ export default {
         { title: '操作', className: 'j_table_operate', width: 70, render: this.renderOperate }
       ],
       list: [],
-      total: 0
+      total: 0,
+      getCount: 0
     }
   },
   created () {
-    if (!window.token) {
-      var ctx = this
-      setTimeout(function () {
-        ctx.get()
-      }, 1000)
-    } else {
-      this.get()
-    }
+    this.get()
   },
   methods: {
     get () {
@@ -61,6 +55,13 @@ export default {
         if (res.code === 0) {
           this.total = res.data.totalElements
           this.list = res.data.content
+          this.getCount = 0
+        } else if (res.code === 5 && this.getCount < 5) {
+          var ctx = this
+          setTimeout(function () {
+            ctx.getCount += 1
+            ctx.get()
+          }, 1000)
         }
       })
     },

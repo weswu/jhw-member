@@ -16,7 +16,10 @@
           </Poptip>
 
           <span>(网站编号：{{item.id}}&nbsp;&nbsp;/&nbsp;&nbsp;语言：<span v-if="item.language === '1'">中文</span><span v-if="item.language === '2'">英文</span>)</span>
-          <span class="type" v-if="!item.bind.address">未上线</span>
+          <!-- 状态 -->
+          <span class="type" v-if="item.state === '0'">审核中</span>
+          <span class="type" v-else-if="item.state === '3'" style="background: #d0021b;">审核未通过</span>
+          <span class="type" v-else-if="!item.bind.address">未上线</span>
         </p>
         <p>
           <a :href="item.url" target="_blank" class="url">{{item.url}}</a>
@@ -116,6 +119,7 @@ export default {
         {
           id: '99',
           new: true,
+          state: '3',
           bind: {
             address: ''
           }
@@ -127,7 +131,8 @@ export default {
         begin: '1',
         end: '2'
       },
-      onlineCount: 0
+      onlineCount: 0,
+      getCount: 0
     }
   },
   computed: {
@@ -136,14 +141,7 @@ export default {
     })
   },
   created () {
-    if (!window.token) {
-      var ctx = this
-      setTimeout(function () {
-        ctx.get()
-      }, 1000)
-    } else {
-      this.get()
-    }
+    this.get()
   },
   methods: {
     get () {
@@ -166,9 +164,14 @@ export default {
           this.list = res.attributes.data
           this.total = res.attributes.count
           this.onlineCount = res.attributes.onlineCount
+          this.getCount = 0
         } else {
-          if (res.msg === '未登录') {
-            this.get()
+          if (res.msgType === 'notLogin' && this.getCount < 5) {
+            var ctx = this
+            setTimeout(function () {
+              ctx.getCount += 1
+              ctx.get()
+            }, 1000)
           } else {
             this.$Message.error(res.msg)
           }

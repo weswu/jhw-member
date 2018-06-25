@@ -68,6 +68,9 @@ export default new Router({
     { path: '/shop_refund', component: require('@/pages/shop/Refund').default },
     { path: '/coupon', component: require('@/pages/shop/Coupon').default },
     { path: '/coupon/:id', component: require('@/pages/shop/CouponDetail').default },
+    // 网站界面管理
+    { path: '/pc', component: require('@/pages/pc/Pc').default },
+    { path: '/pc_create', component: require('@/pages/pc/PcCreate').default },
     // default
     { path: '*', redirect: '/' }
   ]

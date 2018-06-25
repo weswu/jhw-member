@@ -229,6 +229,13 @@ const state = {
       { text: '基础规则', value: '1' }
     ]
   },
+  menuPc: {
+    title: '网站界面管理',
+    menu: [
+      { text: '我的网站', value: 'pc' },
+      { text: '创建网站', value: 'pc_create' }
+    ]
+  },
   test_album: [
     {
       state: '01',

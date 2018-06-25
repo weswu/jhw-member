@@ -4,34 +4,38 @@
       <Icon :class="rotateIcon" :style="{margin: '10px 10px 0'}" type="navicon" size="20"></Icon>
     </Header>
     <Menu theme="dark" width="auto" :class="menuitemClasses" :active-name="activeName" @on-select="mrouter" accordion>
-        <Tooltip content="首页" placement="right" :transfer="transfer" :disabled="disabled">
-            <MenuItem name="index">
-                  <i class="iconfont icon-ai-home"></i>
-                  <span>首页</span>
-            </MenuItem>
+      <Tooltip content="首页" placement="right" :transfer="transfer" :disabled="disabled">
+        <MenuItem name="index">
+          <i class="iconfont icon-ai-home"></i>
+          <span>首页</span>
+        </MenuItem>
+      </Tooltip>
+      <Submenu :name="item.name" v-for="(item, index) in navList" :key="index">
+        <template slot="title">
+          <Tooltip :content="item.text" placement="right" :transfer="transfer" :disabled="disabled">
+            <i :class="'iconfont icon-' + item.icon"></i>
+            <span>{{item.text}}</span>
+          </Tooltip>
+        </template>
+        <Tooltip v-for="(row, i) in item.children" :key="i" :content="row.text" placement="right" :transfer="transfer" :disabled="disabled">
+          <MenuItem :name="row.name">
+            <i :class="'iconfont icon-' + row.icon"></i>
+            <span>{{row.text}}</span>
+          </MenuItem>
         </Tooltip>
-        <Submenu :name="item.name" v-for="(item, index) in navList" :key="index">
-            <template slot="title">
-              <Tooltip :content="item.text" placement="right" :transfer="transfer" :disabled="disabled">
-                <i :class="'iconfont icon-' + item.icon"></i>
-                <span>{{item.text}}</span>
-              </Tooltip>
-            </template>
-            <Tooltip v-for="(row, i) in item.children" :key="i" :content="row.text" placement="right" :transfer="transfer" :disabled="disabled">
-                <MenuItem :name="row.name">
-                      <i :class="'iconfont icon-' + row.icon"></i>
-                      <span>{{row.text}}</span>
-                </MenuItem>
-            </Tooltip>
-        </Submenu>
-        <Tooltip :content="item.text" placement="right" v-for="item in navList2" :key="item.name" :transfer="transfer" :disabled="disabled">
-            <a :href="item.url" target="_blank">
-              <MenuItem :name="item.name">
-                  <i :class="'iconfont icon-' + item.icon"></i>
-                  <span>{{item.text}}</span>
-              </MenuItem>
-            </a>
-        </Tooltip>
+      </Submenu>
+      <Tooltip :content="item.text" placement="right" v-for="item in navList2" :key="item.name" :transfer="transfer" :disabled="disabled">
+        <MenuItem :name="item.name" v-if="!item.url">
+          <i :class="'iconfont icon-' + item.icon"></i>
+          <span>{{item.text}}</span>
+        </MenuItem>
+        <a :href="item.url" target="_blank" v-if="item.url">
+          <MenuItem :name="item.name">
+            <i :class="'iconfont icon-' + item.icon"></i>
+            <span>{{item.text}}</span>
+          </MenuItem>
+        </a>
+      </Tooltip>
     </Menu>
   </Sider>
 </template>
@@ -69,10 +73,9 @@ export default {
         }
       ],
       navList2: [
-        { name: 'tianchong',
+        { name: 'pc',
           icon: 'diannao-tianchong',
-          text: '网站界面管理',
-          url: 'http://pc.jihui88.com/pc/index.html'
+          text: '网站界面管理'
         },
         { name: 'xiaochengxu',
           icon: 'xiaochengxu',

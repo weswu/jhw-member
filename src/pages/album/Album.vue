@@ -79,27 +79,27 @@
                 </Col>
               </Row>
             </div>
-            <Row type="flex" justify="start" class="picture_warpper">
-              <Col :xs="12" :sm="8" :md="6" :lg="4" v-for="item in fileList" :key="item.id" class="pic_item" v-if="searchData.page === 1" ref="file">
-                <div class="box" @click="fileClick(item)" @dblclick="filedbClick(item)" @contextmenu.prevent="filemore($event, item)">
-                  <div class="file" :class="{hover: item._checked}">
-                    <i class="iconfont icon-weibiaoti5"></i>
+            <Row type="flex" justify="start" class="picture_warpper" data-id="frame">
+              <Col :xs="12" :sm="8" :md="6" :lg="4" v-for="item in fileList" :key="item.id" class="pic_item" v-if="searchData.page === 1" ref="file" data-id="frame">
+                <div class="box" @click.stop="fileClick(item)" @dblclick="filedbClick(item)" @contextmenu.prevent="filemore($event, item)" data-id="frame">
+                  <div class="file" :class="{hover: item._checked}" data-id="frame">
+                    <i class="iconfont icon-weibiaoti5" data-id="frame"></i>
                   </div>
-                  <div class="title" :class="{hover: item._checked && !item.editting}">
+                  <div class="title" :class="{hover: item._checked && !item.editting}" data-id="frame">
                     <span><Input v-model="item.title" @on-blur="filenameChange(item)" v-if="item.editting && $refs.category.fileNameEdit"/></span>
-                    <span v-if="!item.editting || !$refs.category.fileNameEdit">{{item.title}}</span>
+                    <span v-if="!item.editting || !$refs.category.fileNameEdit" data-id="frame">{{item.title}}</span>
                   </div>
-                  <div class="size">{{item.attCount || 0}}&nbsp;项</div>
+                  <div class="size" data-id="frame">{{item.attCount || 0}}&nbsp;项</div>
                 </div>
               </Col>
-              <Col :xs="12" :sm="8" :md="6" :lg="4"  v-for="(item, index) in list" :key="index" class="pic_item" ref="pic">
-                <div class="box" @click="selected(item)" @contextmenu.prevent="more($event, item)">
-                  <Card dis-hover :class="{hover: item._checked}">
+              <Col :xs="12" :sm="8" :md="6" :lg="4"  v-for="(item, index) in list" :key="index" class="pic_item" ref="pic" data-id="frame">
+                <div class="box" @click.stop="selected(item)" @contextmenu.prevent="more($event, item)" data-id="frame">
+                  <Card dis-hover :class="{hover: item._checked}" data-id="frame">
                     <img :src="$store.state.status.IMG_HOST + item.serverPath | picUrl(5)" :alt="item.filename" @error="imgError($event, item)">
                   </Card>
-                  <div class="title" :class="{hover: item._checked && !item.editting}">
+                  <div class="title" :class="{hover: item._checked && !item.editting}" data-id="frame">
                     <span><Input v-model="item.filename2" @on-blur="nameChange(item)" v-if="item.editting"/></span>
-                    <span v-if="!item.editting">{{item.filename2}} <span class="postfix">{{item.serverPath | postfix}}</span> </span>
+                    <span v-if="!item.editting" data-id="frame">{{item.filename2}} <span class="postfix">{{item.serverPath | postfix}}</span> </span>
                   </div>
                 </div>
               </Col>
@@ -210,70 +210,81 @@ export default {
           item.editting = false
         })
       }
+      ctx.list.forEach(item => {
+        item._checked = false
+      })
+      ctx.fileList.forEach(item => {
+        item._checked = false
+      })
+      ctx.initSelected()
     })
     // 鼠标框选
     window.document.onmousedown = (e) => {
-      let startX = (e.x || e.clientX)
-      let startY = (e.y || e.clientY)
-      if (e.stopPropagation) {
-        e.stopPropagation()
-      } else {
-        e.cancelBubble = true
-      }
-      if (e.preventDefault) {
-        e.preventDefault()
-      } else {
-        e.returnValue = false
-      }
-      console.log('x-' + startX + '  y-' + startY)
-      let isSelect = true
-      let selDiv = document.createElement('div')
-      selDiv.style.cssText = 'position:absolute;width:0px;height:0px;font-size:0px;margin:0px;padding:0px;border:1px dashed #0099FF;background-color:#C3D5ED;z-index:1000;filter:alpha(opacity:60);opacity:0.6;display:none;'
-      selDiv.id = 'selectDiv'
-      document.body.appendChild(selDiv)
-      selDiv.style.left = startX + 'px'
-      selDiv.style.top = startY + 'px'
-      let _x = null
-      let _y = null
-      document.onmousemove = (evt) => {
-        if (isSelect) {
-          if (selDiv.style.display === 'none') {
-            selDiv.style.display = ''
+      if (e.target.dataset.id === 'frame') {
+        let startX = (e.x || e.clientX)
+        let startY = (e.y || e.clientY)
+        if (e.stopPropagation) {
+          e.stopPropagation()
+        } else {
+          e.cancelBubble = true
+        }
+        if (e.preventDefault) {
+          e.preventDefault()
+        } else {
+          e.returnValue = false
+        }
+        console.log('x-' + startX + '  y-' + startY)
+        let isSelect = true
+        let selDiv = document.createElement('div')
+        selDiv.style.cssText = 'position:absolute;width:0px;height:0px;font-size:0px;margin:0px;padding:0px;border:1px dashed #0099FF;background-color:#C3D5ED;z-index:1000;filter:alpha(opacity:60);opacity:0.6;display:none;'
+        selDiv.id = 'selectDiv'
+        document.body.appendChild(selDiv)
+        selDiv.style.left = startX + 'px'
+        selDiv.style.top = startY + 'px'
+        let _x = null
+        let _y = null
+        document.onmousemove = (evt) => {
+          if (isSelect) {
+            if (selDiv.style.display === 'none') {
+              selDiv.style.display = ''
+            }
+            _x = (evt.x || evt.clientX)
+            _y = (evt.y || evt.clientY)
+            selDiv.style.left = Math.min(_x, startX) + 'px'
+            selDiv.style.top = Math.min(_y, startY) + 'px'
+            selDiv.style.width = Math.abs(_x - startX) + 'px'
+            selDiv.style.height = Math.abs(_y - startY) + 'px'
+            this.$refs.pic && this.$refs.pic.forEach((item, index) => {
+              this.initMouse(startX, startY, _x, _y, item)
+            })
+            this.$refs.file && this.$refs.file.forEach((item, index) => {
+              this.initMouse(startX, startY, _x, _y, item)
+            })
           }
-          _x = (evt.x || evt.clientX)
-          _y = (evt.y || evt.clientY)
-          selDiv.style.left = Math.min(_x, startX) + 'px'
-          selDiv.style.top = Math.min(_y, startY) + 'px'
-          selDiv.style.width = Math.abs(_x - startX) + 'px'
-          selDiv.style.height = Math.abs(_y - startY) + 'px'
-          this.$refs.pic && this.$refs.pic.forEach((item, index) => {
-            this.initMouse(startX, startY, _x, _y, item)
-          })
-          this.$refs.file && this.$refs.file.forEach((item, index) => {
-            this.initMouse(startX, startY, _x, _y, item)
-          })
         }
-      }
-      window.document.onmouseup = (e) => {
-        let endX = (e.x || e.clientX)
-        let endY = (e.y || e.clientY)
-        console.log('x-' + endX + '  y-' + endY)
-        isSelect = false
-        if (selDiv) {
-          document.body.removeChild(selDiv)
+        window.document.onmouseup = (e) => {
+          let endX = (e.x || e.clientX)
+          let endY = (e.y || e.clientY)
+          console.log('x-' + endX + '  y-' + endY)
+          isSelect = false
+          if (selDiv) {
+            document.body.removeChild(selDiv)
+          }
+          if (startX !== endX && startY !== endY) {
+            this.$refs.pic && this.$refs.pic.forEach((item, index) => {
+              if (this.initMouse(startX, startY, endX, endY, item)) this.list[index]._checked = true
+              item.$el.firstChild.setAttribute('class', 'box')
+            })
+            this.$refs.file && this.$refs.file.forEach((item, index) => {
+              if (this.initMouse(startX, startY, endX, endY, item)) this.fileList[index]._checked = true
+              item.$el.firstChild.setAttribute('class', 'box')
+            })
+            this.initSelected()
+          }
+          if (startX === endX && startY === endY) {
+          }
+          window.document.onmousemove = document.onmouseup = null
         }
-        if (startX !== endX && startY !== endY) {
-          this.$refs.pic && this.$refs.pic.forEach((item, index) => {
-            if (this.initMouse(startX, startY, endX, endY, item)) this.list[index]._checked = true
-            item.$el.firstChild.setAttribute('class', 'box')
-          })
-          this.$refs.file && this.$refs.file.forEach((item, index) => {
-            if (this.initMouse(startX, startY, endX, endY, item)) this.fileList[index]._checked = true
-            item.$el.firstChild.setAttribute('class', 'box')
-          })
-          this.initSelected()
-        }
-        window.document.onmousemove = document.onmouseup = null
       }
     }
   },

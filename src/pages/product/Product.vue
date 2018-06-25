@@ -125,8 +125,8 @@ export default {
         { title: '是否上架', sortable: true, key: 'isMarketable', width: 102, render: this.isMarketableFilter },
         { title: '排序', className: 'j_table_sort', sortable: true, key: 'sort', minWidth: 125, render: this.sortFilter }
       ],
-      list: [],
-      listTest: [
+      listTest: [],
+      list: [
         {
           productId: '555',
           name: 'ccc',
@@ -221,7 +221,8 @@ export default {
     initCol (e) {
       var ctx = this
       this.columns = [
-        { className: 'j_table_checkbox', width: 44, render: this.checkboxFilter }
+        { type: 'selection', className: 'j_table_checkbox', width: 44 },
+        { className: 'j_table_san_pin', width: 0, render: this.checkboxFilter }
       ]
       this.columns2.forEach(col => {
         this.myShowSelect.forEach(item => {
@@ -266,18 +267,7 @@ export default {
       })
     },
     handleSelectAll () {
-      var ctx = this
-      this.ids = ''
-      this.list.forEach(item => {
-        item._checked = ctx.toggle
-        if (ctx.toggle) {
-          if (!ctx.ids) {
-            ctx.ids = item.productId
-          } else {
-            ctx.ids = ctx.ids + ',' + item.productId
-          }
-        }
-      })
+      this.$refs.selection.$refs.dragable.selectAll(this.toggle)
     },
     delAll () {
       if (!this.ids) {
@@ -396,177 +386,154 @@ export default {
           }))
         }
       }
-      let div = [
-        h('Checkbox', {
+      return h('Row', {
+        props: {
+          type: 'flex',
+          align: 'middle',
+          justify: 'center'
+        }
+      }, [
+        h('Col', {
           props: {
-            value: params.row._checked
-          },
-          on: {
-            input: (val) => {
-              ctx.list[params.index]._checked = val
-              ctx.ids = ''
-              ctx.list.forEach(item => {
-                if (item._checked) {
-                  if (!ctx.ids) {
-                    ctx.ids = item.productId
-                  } else {
-                    ctx.ids = ctx.ids + ',' + item.productId
-                  }
-                }
-              })
-            }
+            span: '16'
           }
-        }),
-        h('Row', {
+        }, data),
+        h('Col', {
           props: {
-            type: 'flex',
-            align: 'middle',
-            justify: 'center'
+            span: '8'
           }
         }, [
-          h('Col', {
-            props: {
-              span: '16'
-            }
-          }, data),
-          h('Col', {
-            props: {
-              span: '8'
-            }
-          }, [
-            h('i', {
-              class: {
-                'none': true,
-                'iconfont': true,
-                'icon-bianji2': true
-              },
-              on: {
-                click: () => {
-                  this.$Modal.confirm({
-                    width: 250,
-                    render: (h) => {
-                      return h('div', [
-                        h('div', [
-                          h('span', {
-                            class: {
-                              proThreeType: true
+          h('i', {
+            class: {
+              'none': true,
+              'iconfont': true,
+              'icon-bianji2': true
+            },
+            on: {
+              click: () => {
+                this.$Modal.confirm({
+                  width: 250,
+                  render: (h) => {
+                    return h('div', [
+                      h('div', [
+                        h('span', {
+                          class: {
+                            proThreeType: true
+                          }
+                        }, '精品：'),
+                        h('RadioGroup', {
+                          props: {
+                            value: params.row.isBest
+                          },
+                          on: {
+                            input: (val) => {
+                              params.row.isBest = val
+                              let data = {
+                                model: JSON.stringify({
+                                  id: params.row.productId,
+                                  isBest: params.row.isBest,
+                                  editField: true
+                                }),
+                                _method: 'put'
+                              }
+                              ctx.fixedSubmit(data, params.row.productId)
                             }
-                          }, '精品：'),
-                          h('RadioGroup', {
+                          }
+                        }, [
+                          h('Radio', {
                             props: {
-                              value: params.row.isBest
-                            },
-                            on: {
-                              input: (val) => {
-                                params.row.isBest = val
-                                let data = {
-                                  model: JSON.stringify({
-                                    id: params.row.productId,
-                                    isBest: params.row.isBest,
-                                    editField: true
-                                  }),
-                                  _method: 'put'
-                                }
-                                ctx.fixedSubmit(data, params.row.productId)
-                              }
+                              label: '01'
                             }
-                          }, [
-                            h('Radio', {
-                              props: {
-                                label: '01'
-                              }
-                            }, '是'),
-                            h('Radio', {
-                              props: {
-                                label: '00'
-                              }
-                            }, '否')
-                          ])
-                        ]),
-                        h('div', [
-                          h('span', {
-                            class: {
-                              proThreeType: true
-                            }
-                          }, '新品：'),
-                          h('RadioGroup', {
+                          }, '是'),
+                          h('Radio', {
                             props: {
-                              value: params.row.isNew
-                            },
-                            on: {
-                              input: (val) => {
-                                params.row.isNew = val
-                                let data = {
-                                  model: JSON.stringify({
-                                    id: params.row.productId,
-                                    isNew: params.row.isNew,
-                                    editField: true
-                                  }),
-                                  _method: 'put'
-                                }
-                                ctx.fixedSubmit(data, params.row.productId)
-                              }
+                              label: '00'
                             }
-                          }, [
-                            h('Radio', {
-                              props: {
-                                label: '01'
+                          }, '否')
+                        ])
+                      ]),
+                      h('div', [
+                        h('span', {
+                          class: {
+                            proThreeType: true
+                          }
+                        }, '新品：'),
+                        h('RadioGroup', {
+                          props: {
+                            value: params.row.isNew
+                          },
+                          on: {
+                            input: (val) => {
+                              params.row.isNew = val
+                              let data = {
+                                model: JSON.stringify({
+                                  id: params.row.productId,
+                                  isNew: params.row.isNew,
+                                  editField: true
+                                }),
+                                _method: 'put'
                               }
-                            }, '是'),
-                            h('Radio', {
-                              props: {
-                                label: '00'
-                              }
-                            }, '否')
-                          ])
-                        ]),
-                        h('div', [
-                          h('span', {
-                            class: {
-                              proThreeType: true
+                              ctx.fixedSubmit(data, params.row.productId)
                             }
-                          }, '热销：'),
-                          h('RadioGroup', {
+                          }
+                        }, [
+                          h('Radio', {
                             props: {
-                              value: params.row.isHot
-                            },
-                            on: {
-                              input: (val) => {
-                                params.row.isHot = val
-                                let data = {
-                                  model: JSON.stringify({
-                                    id: params.row.productId,
-                                    isHot: params.row.isHot,
-                                    editField: true
-                                  }),
-                                  _method: 'put'
-                                }
-                                ctx.fixedSubmit(data, params.row.productId)
-                              }
+                              label: '01'
                             }
-                          }, [
-                            h('Radio', {
-                              props: {
-                                label: '01'
+                          }, '是'),
+                          h('Radio', {
+                            props: {
+                              label: '00'
+                            }
+                          }, '否')
+                        ])
+                      ]),
+                      h('div', [
+                        h('span', {
+                          class: {
+                            proThreeType: true
+                          }
+                        }, '热销：'),
+                        h('RadioGroup', {
+                          props: {
+                            value: params.row.isHot
+                          },
+                          on: {
+                            input: (val) => {
+                              params.row.isHot = val
+                              let data = {
+                                model: JSON.stringify({
+                                  id: params.row.productId,
+                                  isHot: params.row.isHot,
+                                  editField: true
+                                }),
+                                _method: 'put'
                               }
-                            }, '是'),
-                            h('Radio', {
-                              props: {
-                                label: '00'
-                              }
-                            }, '否')
-                          ])
+                              ctx.fixedSubmit(data, params.row.productId)
+                            }
+                          }
+                        }, [
+                          h('Radio', {
+                            props: {
+                              label: '01'
+                            }
+                          }, '是'),
+                          h('Radio', {
+                            props: {
+                              label: '00'
+                            }
+                          }, '否')
                         ])
                       ])
-                    }
-                  })
-                }
+                    ])
+                  }
+                })
               }
-            })
-          ])
+            }
+          })
         ])
-      ]
-      return h('div', div)
+      ])
     },
     indexFilter (h, params) {
       return this.index2(this, h, params)
@@ -900,6 +867,21 @@ export default {
   }
   td{
     height: 98px
+  }
+  .ivu-table-body{
+    .j_table_san_pin{
+      .ivu-row-flex{
+        position: absolute;
+        left: 11px;
+        margin-top: -10px;
+        .ivu-col-span-16{
+          width: 20px
+        }
+        .ivu-col-span-8{
+          width: 20px;
+        }
+      }
+    }
   }
 }
 .j_product {
