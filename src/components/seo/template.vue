@@ -41,6 +41,7 @@
 
 <script>
 import qs from 'qs'
+import { mapState } from 'vuex'
 export default {
   data () {
     return {
@@ -54,6 +55,14 @@ export default {
       active: '0',
       detail: {},
       data: []
+    }
+  },
+  computed: {
+    ...mapState(['lanId'])
+  },
+  watch: {
+    lanId () {
+      this.get()
     }
   },
   created () {

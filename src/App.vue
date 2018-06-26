@@ -1,9 +1,9 @@
 <template>
   <div id="JHW"  class="layout">
     <Layout>
-        <Header/>
+        <Header v-show="win !== 'small'"/>
         <Layout class="j_layout ivu-layout-has-sider">
-            <Sider/>
+            <Sider v-show="win !== 'small'"/>
             <router-view/>
         </Layout>
     </Layout>
@@ -11,6 +11,7 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
 import Header from '@/components/common/header'
 import Sider from '@/components/common/sider'
 export default {
@@ -19,7 +20,16 @@ export default {
     Sider
   },
   name: 'App',
+  computed: {
+    ...mapState(['win'])
+  },
   created () {
+    let params = window.location.search.substr(1).split('&')
+    params.forEach(item => {
+      if (item.split('=')[0] === 'win') {
+        this.$store.commit('setWin', item.split('=')[1])
+      }
+    })
     try {
       document.body.removeChild(document.getElementById('app-loading'))
       setTimeout(function () {

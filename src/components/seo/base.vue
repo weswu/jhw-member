@@ -51,6 +51,9 @@ export default {
       if (this.active === 'pc') {
         this.getPcNav()
       }
+    },
+    lanId () {
+      this.get()
     }
   },
   created () {

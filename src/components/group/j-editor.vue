@@ -105,10 +105,10 @@ export default {
       var ctx = this
       this.imgAlbum = false
       if (this.imgUpdate === 'update') {
-        this.img.src = 'http://dfwjjingtai.b0.upaiyun.com/' + e.src
+        this.img.src = 'http://img.jihui88.com/' + e.src
       } else {
         for (var i = 0; i < this.imgList.length; i++) {
-          var pic = 'http://dfwjjingtai.b0.upaiyun.com/' + this.imgList[i]['serverPath']
+          var pic = 'http://img.jihui88.com/' + this.imgList[i]['serverPath']
           ctx.editor.execCommand('inserthtml', '<img src="' + pic + '" alt="' + this.imgList[i].filename + '">', true)
         }
       }

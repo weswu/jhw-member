@@ -4,138 +4,149 @@ import status from './status'
 import qs from 'qs'
 Vue.use(Vuex)
 
-const store = new Vuex.Store({
-  state: {
-    user: {
-      name: '未登录',
-      username: '未登录',
-      addTime: 1272102123858,
-      enterprise: {}
-    },
-    userInfo: {
-      noReaderMsg: 0
-    },
-    lanId: '1',
-    uid: ['0', '0', '0'],
-    // 列表数据
-    productCategory: [],
-    newsCategory: [],
-    albumCategory: [],
-    messageList: [],
-    memberRankList: [],
-    memberAttrList: [],
-    tagList: [],
-    areaList: [],
-    // 站点
-    staticList: [],
-    layoutId: '',
-    // 记录操作习惯
-    customData: {
-      isCollapsed: true,
-      linkList: [
-        { value: 'static', text: '站点数据管理', icon: 'icon-shuju' },
-        { value: 'member', text: '会员管理', icon: 'icon-Group' },
-        { value: 'shop', text: '订单管理', icon: 'icon-dingdandaifukuan' }
-      ],
-      productShow: ['序号', '产品图片', '产品名称', '产品型号', '产品分类', '添加时间', '是否上架', '排序', '二维码'],
-      shopShow: ['序号', '订单编号', '用户名', '订单总额', '订单状态', '付款状态', '配送状态', '支付方式', '配送方式', '下单时间'],
-      homeSort: [
-        { value: 'static', text: '我的网站', status: '01', type: '01' },
-        { value: 'link', text: '链接', status: '01', type: '00' },
-        { value: 'order', text: '订单', status: '01', type: '01' },
-        { value: 'message', text: '留言', status: '00', type: '01' },
-        { value: 'service', text: '服务', status: '00', type: '01' }
-      ]
-    }
+const state = {
+  user: {
+    name: '未登录',
+    username: '未登录',
+    addTime: 1272102123858,
+    enterprise: {}
   },
-  getters: {
-    user: state => state.user,
-    userInfo: state => state.userInfo,
-    lanId: state => state.lanId,
-    // 分类
-    productCategory: state => state.productCategory,
-    newsCategory: state => state.newsCategory,
-    albumCategory: state => state.albumCategory,
-    // 列表
-    messageList: state => state.messageList,
-    memberRankList: state => state.memberRankList,
-    memberAttrList: state => state.memberAttrList,
-    tagList: state => state.tagList,
-    areaList: state => state.areaList,
-    // 站点
-    staticList: state => state.staticList,
-    layoutId: state => state.layoutId,
-    customData: state => state.customData
+  userInfo: {
+    noReaderMsg: 0
   },
-  mutations: {
-    setUser (state, user) {
-      state.user = user
-    },
-    setUserInfo (state, userInfo) {
-      state.userInfo = userInfo
-    },
-    setAccountInfo (state, data) {
-      state.user.headimg = data.headimg
-    },
-    setProductCategory (state, productCategory) {
-      state.productCategory = productCategory
-    },
-    setNewsCategory (state, newsCategory) {
-      state.newsCategory = newsCategory
-    },
-    setAlbumCategory (state, albumCategory) {
-      state.albumCategory = albumCategory
-    },
-    setMessageList (state, messageList) {
-      state.messageList = messageList
-    },
-    setMemberRankList (state, memberRankList) {
-      state.memberRankList = memberRankList
-    },
-    setMemberAttrList (state, memberAttrList) {
-      state.memberAttrList = memberAttrList
-    },
-    setTagList (state, tagList) {
-      state.tagList = tagList
-    },
-    setAreaList (state, areaList) {
-      state.areaList = areaList
-    },
-    setStaticList (state, staticList) {
-      state.staticList = staticList
-    },
-    setLayoutId (state, layoutId) {
-      state.layoutId = layoutId
-    },
-    setLanId (state, lanId) {
-      state.lanId = lanId
-    },
-    setCustomData (state, customData) {
-      state.customData = customData
-    },
-    // 全局唯一标识
-    nextUid (state) {
-      let index = state.uid.length
-      let digit
-      while (index) {
-        index--
-        digit = state.uid[index].charCodeAt(0) // 从低位开始循环
-        if (digit === 57) { //  /*'9'*/如果低位计算到了9，改位从A开始计算
-          state.uid[index] = 'A'
-          return
-        }
-        if (digit === 90) { //   /*'Z'*/如果该位计算到Z，则从0开始计算
-          state.uid[index] = '0'
-        } else {
-          state.uid[index] = String.fromCharCode(digit + 1) // 下一个字符
-          return
-        }
-        if (index === 1) {
-          state.uid.unshift('0') // 如果每位字符上的都发生了改变，则在高位前面用‘0’补充
-        }
+  lanId: '1',
+  uid: ['0', '0', '0'],
+  // 列表数据
+  productCategory: [],
+  newsCategory: [],
+  albumCategory: [],
+  messageList: [],
+  memberRankList: [],
+  memberAttrList: [],
+  tagList: [],
+  areaList: [],
+  // 站点
+  staticList: [],
+  layoutId: '',
+  win: '',
+  // 记录操作习惯
+  customData: {
+    isCollapsed: true,
+    linkList: [
+      { value: 'static', text: '站点数据管理', icon: 'icon-shuju' },
+      { value: 'member', text: '会员管理', icon: 'icon-Group' },
+      { value: 'shop', text: '订单管理', icon: 'icon-dingdandaifukuan' }
+    ],
+    productShow: ['序号', '产品图片', '产品名称', '产品型号', '产品分类', '添加时间', '是否上架', '排序', '二维码'],
+    shopShow: ['序号', '订单编号', '用户名', '订单总额', '订单状态', '付款状态', '配送状态', '支付方式', '配送方式', '下单时间'],
+    homeSort: [
+      { value: 'static', text: '我的网站', status: '01', type: '01' },
+      { value: 'link', text: '链接', status: '01', type: '00' },
+      { value: 'order', text: '订单', status: '01', type: '01' },
+      { value: 'message', text: '留言', status: '00', type: '01' },
+      { value: 'service', text: '服务', status: '00', type: '01' }
+    ]
+  }
+}
+
+const getters = {
+  user: state => state.user,
+  userInfo: state => state.userInfo,
+  lanId: state => state.lanId,
+  // 分类
+  productCategory: state => state.productCategory,
+  newsCategory: state => state.newsCategory,
+  albumCategory: state => state.albumCategory,
+  // 列表
+  messageList: state => state.messageList,
+  memberRankList: state => state.memberRankList,
+  memberAttrList: state => state.memberAttrList,
+  tagList: state => state.tagList,
+  areaList: state => state.areaList,
+  // 站点
+  staticList: state => state.staticList,
+  layoutId: state => state.layoutId,
+  win: state => state.win,
+  customData: state => state.customData
+}
+
+const mutations = {
+  setUser (state, user) {
+    state.user = user
+  },
+  setUserInfo (state, userInfo) {
+    state.userInfo = userInfo
+  },
+  setAccountInfo (state, data) {
+    state.user.headimg = data.headimg
+  },
+  setProductCategory (state, productCategory) {
+    state.productCategory = productCategory
+  },
+  setNewsCategory (state, newsCategory) {
+    state.newsCategory = newsCategory
+  },
+  setAlbumCategory (state, albumCategory) {
+    state.albumCategory = albumCategory
+  },
+  setMessageList (state, messageList) {
+    state.messageList = messageList
+  },
+  setMemberRankList (state, memberRankList) {
+    state.memberRankList = memberRankList
+  },
+  setMemberAttrList (state, memberAttrList) {
+    state.memberAttrList = memberAttrList
+  },
+  setTagList (state, tagList) {
+    state.tagList = tagList
+  },
+  setAreaList (state, areaList) {
+    state.areaList = areaList
+  },
+  setStaticList (state, staticList) {
+    state.staticList = staticList
+  },
+  setLayoutId (state, layoutId) {
+    state.layoutId = layoutId
+  },
+  setLanId (state, lanId) {
+    state.lanId = lanId
+  },
+  setWin (state, win) {
+    state.win = win
+  },
+  setCustomData (state, customData) {
+    state.customData = customData
+  },
+  // 全局唯一标识
+  nextUid (state) {
+    let index = state.uid.length
+    let digit
+    while (index) {
+      index--
+      digit = state.uid[index].charCodeAt(0) // 从低位开始循环
+      if (digit === 57) { //  /*'9'*/如果低位计算到了9，改位从A开始计算
+        state.uid[index] = 'A'
+        return
+      }
+      if (digit === 90) { //   /*'Z'*/如果该位计算到Z，则从0开始计算
+        state.uid[index] = '0'
+      } else {
+        state.uid[index] = String.fromCharCode(digit + 1) // 下一个字符
+        return
+      }
+      if (index === 1) {
+        state.uid.unshift('0') // 如果每位字符上的都发生了改变，则在高位前面用‘0’补充
       }
     }
-  },
+  }
+}
+
+const store = new Vuex.Store({
+  state,
+  getters,
+  mutations,
   actions: {
     getUser ({commit, state}) {
       this._vm.$http.get('/rest/api/user/detail').then((res) => {
@@ -152,7 +163,7 @@ const store = new Vuex.Store({
             addTime: 1272102123858,
             enterprise: {}
           })
-          this.dispatch('getStaticList')
+          if (state.staticList.length === 0) this.dispatch('getStaticList')
         } else {
           this._vm.$Message.success(res.msg)
         }
@@ -369,7 +380,6 @@ const store = new Vuex.Store({
       })
     },
     lanIdChange ({dispatch, commit}, lanId) {
-      this.commit('setLanId', lanId)
       window.localStorage.setItem('lanId', lanId)
       return this._vm.$http.get('/rest/api/user/changeLan?lanId=' + lanId).then((res) => {
         if (res.success) {

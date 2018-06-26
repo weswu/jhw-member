@@ -125,8 +125,8 @@ export default {
         { title: '是否上架', sortable: true, key: 'isMarketable', width: 102, render: this.isMarketableFilter },
         { title: '排序', className: 'j_table_sort', sortable: true, key: 'sort', minWidth: 125, render: this.sortFilter }
       ],
-      listTest: [],
-      list: [
+      list: [],
+      listTest: [
         {
           productId: '555',
           name: 'ccc',

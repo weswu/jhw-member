@@ -28,7 +28,8 @@ axios.interceptors.response.use(res => {
   }
   if (!res.data.success) {
     if (res.data.msg === '未登录' || res.data.msg === '未登陆') {
-      if (location.port !== '8080') window.location.href = 'http://www.jihui88.com/member/login.html?backURL=' + window.location.origin + window.location.pathname
+      window.localStorage.setItem('lanId', '1')
+      // if (location.port !== '8080') window.location.href = 'http://www.jihui88.com/member/login.html?backURL=' + window.location.origin + window.location.pathname
     }
   }
   iView.LoadingBar.finish()

@@ -1,5 +1,5 @@
 <template>
-  <Sider id="J_Menu_Bar" ref="side1" hide-trigger collapsible :collapsed-width="0" v-model="isCollapsed" width="180">
+  <Sider id="J_Menu_Bar" ref="side1" hide-trigger collapsible :collapsed-width="0" v-model="isCollapsed" width="180" v-show="win !== 'small' || detail">
     <div class="title">
       <span v-if="!detail">{{status[data].title || 'Basic Table'}}</span>
       <span v-else @click="back" class="back"><i class="iconfont icon-fanhui"></i>返回</span>
@@ -39,9 +39,7 @@ export default {
     }
   },
   computed: {
-    ...mapState({
-      status: state => state.status
-    }),
+    ...mapState(['status', 'win']),
     rotateIcon () {
       return [
         'rotate',

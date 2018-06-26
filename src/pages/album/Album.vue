@@ -210,13 +210,16 @@ export default {
           item.editting = false
         })
       }
-      ctx.list.forEach(item => {
-        item._checked = false
-      })
-      ctx.fileList.forEach(item => {
-        item._checked = false
-      })
-      ctx.initSelected()
+      // 点击空白关闭选中
+      if (e.target.innerHTML.indexOf('div') > -1) {
+        ctx.list.forEach(item => {
+          item._checked = false
+        })
+        ctx.fileList.forEach(item => {
+          item._checked = false
+        })
+        ctx.initSelected()
+      }
     })
     // 鼠标框选
     window.document.onmousedown = (e) => {

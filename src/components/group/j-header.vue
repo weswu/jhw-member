@@ -6,7 +6,7 @@
           <span class="title">{{title}}<span v-if="count">拥有积分：{{count}}分</span></span>
         </Col>
         <Col>
-          <Select v-model="$store.state.lanId" class="primary" @on-change="lanChange" style="width:106px" v-if="lan">
+          <Select v-model="$store.state.lanId" class="primary" @on-change="lanChange" style="width:106px" v-show="lan">
             <Option v-for="item in lanList" :value="item.value" :key="item.value">{{ item.text }}</Option>
           </Select>
           <Select v-model="$store.state.layoutId" class="primary" @on-change="layoutChange" style="width:167px" v-if="website">
@@ -54,7 +54,6 @@ export default {
       })
     },
     layoutChange (e) {
-      console.log('layout:' + e)
       window.localStorage.setItem('layoutId', e)
       this.$emit('on-layout', e)
     }
