@@ -26,8 +26,15 @@ export default {
   created () {
     let params = window.location.search.substr(1).split('&')
     params.forEach(item => {
-      if (item.split('=')[0] === 'win') {
-        this.$store.commit('setWin', item.split('=')[1])
+      let arr = item.split('=')
+      if (arr[0] === 'win') {
+        this.$store.commit('setWin', arr[1])
+      }
+      if (arr[0] === 'layoutId') {
+        window.localStorage.setItem('layoutId', arr[1])
+      }
+      if (arr[0] === 'lanId') {
+        window.localStorage.setItem('lanId', arr[1])
       }
     })
     try {

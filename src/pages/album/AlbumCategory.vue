@@ -507,7 +507,7 @@ export default {
       &::after{
         content: '';
         position: absolute;
-        background: url(http://www.jihui88.com/member_new/static/img/dashed2.png);
+        background: url(http://www.jihui88.com/manage_v4/static/img/dashed2.png);
         background-repeat: repeat-x;
         background-size: 3px;
         top: 43%;
@@ -546,7 +546,7 @@ export default {
           height: 100%;
           width: 1px;
           z-index: 9;
-          background: url(http://www.jihui88.com/member_new/static/img/dashed.png);
+          background: url(http://www.jihui88.com/manage_v4/static/img/dashed.png);
           background-repeat: repeat-y;
           background-size: 1px;
         }

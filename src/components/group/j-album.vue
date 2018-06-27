@@ -3,6 +3,7 @@
     v-model="modal" :width="width"
     :title="title"
     @on-ok="ok"
+    @on-cancel="cancel"
     cancelText="取消">
     <Layout class="ivu-layout-has-sider">
     <Cateogy @on-change="categoryChange"/>
@@ -14,13 +15,9 @@
             <Button class="search" @click="get">搜索</Button>
           </Col>
           <Col>
-            <Upload ref="upload" :action="'/commonutil/uploadUtil2?username=' + $store.state.user.username + '&replace=00&attId=&id=' + attId"
-              :multiple="multiple"
-              name="Filedata"
-              :max-size="2048"
-              :on-success="handleSuccess">
-              <Button type="info"><i class="iconfont icon-shangchuan"></i>本地上传</Button>
-            </Upload>
+            <JUpload :multiple="multiple" :id="albumId" @on-success="handleSuccess">
+              <Button type="info" solt="content"><i class="iconfont icon-shangchuan"></i>本地上传</Button>
+            </JUpload>
           </Col>
         </Row>
       </div>
@@ -45,6 +42,7 @@
 import qs from 'qs'
 import Cateogy from '@/pages/album/AlbumCategory'
 import JPagination from '@/components/group/j-pagination'
+import JUpload from '@/components/group/j-upload'
 export default {
   props: {
     title: {
@@ -58,11 +56,16 @@ export default {
     multiple: {
       type: Boolean,
       default: false
+    },
+    type: {
+      type: String,
+      default: ''
     }
   },
   components: {
     Cateogy,
-    JPagination
+    JPagination,
+    JUpload
   },
   data () {
     return {
@@ -118,12 +121,13 @@ export default {
         pageSize: 20
       },
       detail: {},
-      attId: 'all'
+      imglist: [],
+      albumId: 'all'
     }
   },
   methods: {
     get () {
-      this.$http.get('/rest/api/album/attr/list/' + this.attId + '?' + qs.stringify(this.searchData)).then((res) => {
+      this.$http.get('/rest/api/album/attr/list/' + this.albumId + '?' + qs.stringify(this.searchData)).then((res) => {
         if (res.success) {
           let data = res.attributes.data
           data.forEach(item => {
@@ -140,6 +144,9 @@ export default {
       this.modal = true
       this.get()
     },
+    cancel () {
+      this.modal = false
+    },
     // 功能
     clearInput () {
       if (this.searchData.filename === '') {
@@ -147,37 +154,53 @@ export default {
       }
     },
     categoryChange (e) {
-      this.attId = e.data.id
+      this.albumId = e.data.id
       this.get()
     },
-    handleSuccess (res, file) {
-      let pic = res.split(',')[0]
-      let src = pic.split('http://img.jihui88.com/')[1]
-      let obj = {
-        id: pic[1],
-        src: src.replace(/_5/g, '')
-      }
-      this.$emit('on-change', obj)
+    handleSuccess (res) {
+      this.$emit('on-change', res)
       this.get()
       if (!this.multiple) this.modal = false
-      var ctx = this
-      setTimeout(function () {
-        ctx.$refs.upload.clearFiles()
-      }, 1000)
+    },
+    // 编辑器 选中的图片
+    initList () {
+      this.list.forEach(function (item) {
+        item._checked = false
+      })
     },
     // 完成
     select (e) {
-      this.list.forEach(item => {
-        item._checked = false
-      })
-      e._checked = true
-      this.detail = {
-        id: e.attId,
-        src: e.serverPath
+      e._checked = !e._checked
+      if (this.type === 'multiple') {
+        this.imglist = []
+        this.list.forEach(item => {
+          if (item._checked) {
+            this.imglist.push(item)
+          }
+        })
+      } else {
+        this.list.forEach(item => {
+          if (item.attId !== e.attId) {
+            item._checked = false
+          }
+        })
+        this.detail = {}
+        if (e._checked) {
+          this.detail = {
+            id: e.attId,
+            src: e.serverPath
+          }
+        }
       }
     },
     ok () {
-      this.$emit('on-change', this.detail)
+      if (this.type === 'multiple') {
+        // 图片添加
+        this.$emit('on-change', this.imglist)
+      } else {
+        this.detail.id && this.$emit('on-change', this.detail)
+      }
+      this.initList()
       this.modal = false
     }
   }

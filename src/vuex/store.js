@@ -35,7 +35,7 @@ const state = {
     linkList: [
       { value: 'static', text: '站点数据管理', icon: 'icon-shuju' },
       { value: 'member', text: '会员管理', icon: 'icon-Group' },
-      { value: 'shop', text: '订单管理', icon: 'icon-dingdandaifukuan' }
+      { value: 'product', text: '产品列表', icon: 'icon-liebiao1' }
     ],
     productShow: ['序号', '产品图片', '产品名称', '产品型号', '产品分类', '添加时间', '是否上架', '排序', '二维码'],
     shopShow: ['序号', '订单编号', '用户名', '订单总额', '订单状态', '付款状态', '配送状态', '支付方式', '配送方式', '下单时间'],

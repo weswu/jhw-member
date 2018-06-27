@@ -12,20 +12,31 @@
         </Breadcrumb>
       </div>
     </div>
-    <div class="modal-upload-list">
+    <div class="modal-upload-list j_scroll">
       <ul ref="menu" class="menu j_panel">
         <li @click="restoreImg('item')">还原</li>
         <li @click="cleanAll">清空回收站</li>
         <li @click="delAll('item')">批量删除</li>
         <li @click="selectAll">批量选择</li>
       </ul>
+      <div class="modal-upload-item file"
+        v-for="item in albumList"
+        :key="item.url"
+        :class="{active: item._checked}"
+        v-if="searchData.page === 1"
+        @click="select(item)" @contextmenu.prevent="more($event, item)">
+        <i class="iconfont icon-weibiaoti5"></i>
+        <div class="modal-upload-item-cover">
+          {{item.name}}
+        </div>
+      </div>
       <div class="modal-upload-item" v-for="item in list" :key="item.url" :class="{active: item._checked}" @click="select(item)" @contextmenu.prevent="more($event, item)">
         <img :src="$store.state.status.IMG_HOST+item.serverPath | picUrl(5)">
         <div class="modal-upload-item-cover">
           {{item.filename}}
         </div>
       </div>
-      <div class="j_empty" v-if="list.length === 0">
+      <div class="j_empty" v-if="(list.length + albumList.length) === 0">
         暂无数据
       </div>
     </div>
@@ -53,6 +64,30 @@ export default {
   data () {
     return {
       modal: false,
+      albumList: [],
+      albumListTest: [
+        {
+          'name': '产品批量上传',
+          'state': '01',
+          'type': '05',
+          'tag': null,
+          'enterpriseId': 'Enterp_0000000000000000000049090',
+          'adesc': null,
+          'userId': 'User_000000000000000000000001220',
+          'albumId': 'Album_00000000000000000000008251',
+          'parentId': null,
+          'mainPic': null,
+          'belongId': 'Enterp_0000000000000000000049090',
+          'attachList': null,
+          'addTime': null,
+          'blongType': 'AP',
+          'attCount': null,
+          'picCount': null,
+          'flashList': null,
+          'albumId2': '8251',
+          _checked: false
+        }
+      ],
       list: [],
       listTest: [
         {
@@ -101,6 +136,7 @@ export default {
       },
       id: 'all',
       ids: '',
+      albumIds: '',
       item: {},
       toggle: false,
       active: 4
@@ -128,10 +164,27 @@ export default {
         }
       })
     },
+    getCate () {
+      this.albumIds = ''
+      this.$http.get('/rest/api/album/recycle/list').then((res) => {
+        if (res.success) {
+          let data = res.attributes.data
+          data.forEach(item => {
+            item._checked = false
+          })
+          this.list = data
+          this.total = res.attributes.count
+          this.get()
+        } else {
+          this.$Message.error(res.msg)
+        }
+      })
+    },
     open (id) {
       this.modal = true
       this.id = id
       this.get()
+      this.getCate()
     },
     cancel () {
       this.modal = false
@@ -143,43 +196,87 @@ export default {
     },
     // 批量操作
     restoreImg (e) {
-      if (e === 'item') {
+      if (this.item.attId) {
         this.ids = this.ids + ',' + this.item.attId
+      } else {
+        this.albumIds = this.albumIds + ',' + this.item.albumId
       }
-      if (!this.ids) {
-        return this.$Message.error('未选择')
-      }
-      this.$http.post('/rest/api/album/restoreImg?attIds=' + this.ids).then((res) => {
+      let count = 0
+      if (this.ids.length > 10) count += 1
+      if (this.albumIds.length > 10) count += 1
+      this.ids.length > 10 && this.$http.post('/rest/api/album/restoreImg?attIds=' + this.ids).then((res) => {
         if (res.success) {
-          this.$Message.success('还原成功')
+          count -= 1
+          if (count === 0) this.$Message.success('还原成功')
           this.get()
           this.$emit('on-change')
         } else {
           this.$Message.error(res.msg)
         }
       })
-    },
-    cleanAll () {
-      this.$http.post('/rest/api/album/attCleanAll').then((res) => {
+      this.albumIds.length > 10 && this.$http.post('/rest/api/album/restore?albumIds=' + this.albumIds).then((res) => {
         if (res.success) {
-          this.$Message.success('清空回收站成功')
-          this.list = []
+          count -= 1
+          if (count === 0) this.$Message.success('还原成功')
+          this.getCate()
+          this.$emit('on-cate-change')
         } else {
           this.$Message.error(res.msg)
         }
       })
     },
-    delAll (e) {
-      if (e === 'item') {
-        this.ids = this.ids + ',' + this.item.attId
-      }
-      if (!this.ids) {
-        return this.$Message.error('未选择')
-      }
-      this.$http.post('/rest/api/album/attBatchDel?attIds=' + this.ids).then((res) => {
+    cleanAll () {
+      let count = 0
+      if (this.list.length > 0) count += 1
+      if (this.albumList.length > 0) count += 1
+      this.list.length > 0 && this.$http.post('/rest/api/album/attCleanAll').then((res) => {
         if (res.success) {
-          this.$Message.success('删除成功')
+          count -= 1
+          if (count === 0) this.$Message.success('清空回收站成功')
+          this.list = []
+        } else {
+          this.$Message.error(res.msg)
+        }
+      })
+      if (this.albumList.length > 0) {
+        let albumIds = ''
+        this.albumList.forEach(item => {
+          albumIds = albumIds ? (albumIds + ',' + item.albumId) : item.albumId
+        })
+        this.$http.post('/rest/api/album/recycleDel?albumIds=' + albumIds).then((res) => {
+          if (res.success) {
+            count -= 1
+            if (count === 0) this.$Message.success('清空回收站成功')
+            this.albumList = []
+          } else {
+            this.$Message.error(res.msg)
+          }
+        })
+      }
+    },
+    delAll (e) {
+      if (this.item.attId) {
+        this.ids = this.ids + ',' + this.item.attId
+      } else {
+        this.albumIds = this.albumIds + ',' + this.item.albumId
+      }
+      let count = 0
+      if (this.ids.length > 10) count += 1
+      if (this.albumIds.length > 10) count += 1
+      this.ids.length > 10 && this.$http.post('/rest/api/album/attBatchDel?attIds=' + this.ids).then((res) => {
+        if (res.success) {
+          count -= 1
+          if (count === 0) this.$Message.success('删除成功')
           this.get()
+        } else {
+          this.$Message.error(res.msg)
+        }
+      })
+      this.albumIds.length > 10 && this.$http.post('/rest/api/album/recycleDel?albumIds=' + this.albumIds).then((res) => {
+        if (res.success) {
+          count -= 1
+          if (count === 0) this.$Message.success('删除成功')
+          this.getCate()
         } else {
           this.$Message.error(res.msg)
         }
@@ -197,24 +294,29 @@ export default {
     },
     select (e) {
       if (e) e._checked = !e._checked
-      this.ids = ''
+      this.idsChange()
+    },
+    selectAll () {
+      this.toggle = !this.toggle
       this.list.forEach((item, index) => {
+        item._checked = this.toggle
+      })
+      this.albumList.forEach((item, index) => {
+        item._checked = this.toggle
+      })
+      this.idsChange()
+    },
+    idsChange () {
+      this.ids = ''
+      this.list.forEach(item => {
         if (item._checked) {
           this.ids = this.ids ? (this.ids + ',' + item.attId) : item.attId
         }
       })
-    },
-    selectAll () {
-      this.toggle = !this.toggle
-      this.ids = ''
-      this.list.forEach((item, index) => {
-        item._checked = this.toggle
-        if (this.toggle) {
-          if (index === 0) {
-            this.ids = item.attId
-          } else {
-            this.ids = this.ids + ',' + item.attId
-          }
+      this.albumIds = ''
+      this.albumList.forEach(item => {
+        if (item._checked) {
+          this.albumIds = this.albumIds ? (this.albumIds + ',' + item.albumId) : item.albumId
         }
       })
     }

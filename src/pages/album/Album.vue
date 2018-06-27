@@ -9,12 +9,9 @@
           <li @click="copyAll('item')">复制</li>
           <li @click="moveAll('item')">移动</li>
           <li @click="delAll('item')">删除</li>
-          <Upload ref="uploadImg" :action="'/commonutil/uploadUtil2?username=' + $store.state.user.username + '&replace=01&attId=' + item.attId + '&id=' + attId"
-            name="Filedata"
-            :max-size="2048"
-            :on-success="handleSuccessImg">
-            <li>替换图片</li>
-          </Upload>
+          <JUpload :show="false" :replace="'01'" :id="attId" :attId="item.attId" @on-success="handleSuccess">
+            <li slot="content">替换图片</li>
+          </JUpload>
           <li @click="refurbish">刷新</li>
           <li v-clipboard:copy="item.url2" v-clipboard:success="copy">复制图片的代码</li>
           <li v-clipboard:copy="item.url3" v-clipboard:success="copy" style="border:none;">复制链接的代码</li>
@@ -24,14 +21,9 @@
           <div class="j_search">
             <Row type="flex" justify="space-between">
               <Col>
-                <Upload ref="upload" :action="'/commonutil/uploadUtil2?username=' + $store.state.user.username + '&replace=00&attId=&id=' + attId"
-                  name="Filedata"
-                  multiple
-                  :max-size="2048"
-                  :on-success="handleSuccess"
-                  style="display: inline-block;margin-right: 5px;">
-                  <Button type="info"><i class="iconfont icon-shangchuan"></i>上传图片到当前目录</Button>
-                </Upload>
+                <JUpload :multiple="true" :id="attId" @on-success="get" style="display: inline-block;margin-right: 5px;">
+                  <Button type="info" slot="content"><i class="iconfont icon-shangchuan"></i>上传图片到当前目录</Button>
+                </JUpload>
                 <Button class="info" @click="add"><i class="iconfont icon-wenjianjia"></i>新建相册</Button>
                 <Button class="info" @click="recycle"><i class="iconfont icon-huishouzhan"></i>回收站</Button>
               </Col>
@@ -117,7 +109,7 @@
       </Layout>
     </Content>
     <Add ref="add" @on-change="categoryChange"/>
-    <Recycle ref="recycle" :menu="breadList" @on-change="get"/>
+    <Recycle ref="recycle" :menu="breadList" @on-cate-change="categoryChange" @on-change="get"/>
     <Watermark ref="watermark"/>
     <Modal
       width="276"
@@ -146,6 +138,7 @@ import { mapState } from 'vuex'
 import JHeader from '@/components/group/j-header'
 import Cateogy from '@/pages/album/AlbumCategory'
 import JPagination from '@/components/group/j-pagination'
+import JUpload from '@/components/group/j-upload'
 import Add from '@/pages/album/Add'
 import Recycle from '@/pages/album/Recycle'
 import Watermark from '@/pages/album/Watermark'
@@ -155,6 +148,7 @@ export default {
     JHeader,
     Cateogy,
     JPagination,
+    JUpload,
     Add,
     Recycle,
     Watermark,
@@ -445,13 +439,6 @@ export default {
     categoryChange () {
       this.$refs.category.get()
     },
-    handleSuccess (res, file) {
-      var ctx = this
-      setTimeout(function () {
-        ctx.$refs.upload.clearFiles()
-      }, 1000)
-      this.get()
-    },
     recycle () {
       this.$refs.recycle.open(this.attId)
     },
@@ -558,13 +545,9 @@ export default {
         }
       })
     },
-    handleSuccessImg (res) {
-      var ctx = this
-      setTimeout(function () {
-        ctx.$refs.uploadImg.clearFiles()
-        ctx.$Message.success('替换成功')
-        ctx.item.serverPath = ctx.item.serverPath + '?0'
-      }, 1000)
+    handleSuccess (res, file) {
+      this.$Message.success('替换成功')
+      this.item.serverPath = this.item.serverPath + '?0'
     },
     refurbish () {
       let data = {
@@ -744,13 +727,6 @@ export default {
     .ivu-poptip,.ivu-poptip-rel{
       width: 100%
     }
-  }
-  // 上传
-  .ivu-upload-list{
-    position: absolute;
-    z-index: 99;
-    background: #fff;
-    border: 1px solid #f0f0f0;
   }
   .ivu-layout-footer{
     height: auto;

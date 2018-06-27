@@ -31,13 +31,11 @@
           <span class="red">步骤二：</span>进行批量上传产品表格前，请先把产品图片上传好
         </div>
         <Button type="primary" @click="uploadPic" style="margin-bottom:16px;">上传产品图片</Button>
-        <Upload ref="upload" :action="'/commonutil/uploadUtil2?username=' + $store.state.user.username + '&replace=00&attId=&id=' + albumId" style="display:none"
-          name="Filedata"
-          multiple
-          :max-size="2048"
-          :on-success="handleSuccess">
-          <div id="productUpload">上传</div>
-        </Upload>
+        <JUpload :multiple="true" :id="albumId" @on-success="handleSuccess" style="display:none">
+          <span slot="content">
+            <div id="productUpload">上传</div>
+          </span>
+        </JUpload>
         <div class="j_tip">
           <span class="red">步骤三：</span>提交填写好的产品表格
         </div>
@@ -65,10 +63,12 @@ import qs from 'qs'
 import { mapState } from 'vuex'
 import MenuBar from '@/components/common/menu_bar'
 import JHeader from '@/components/group/j-header'
+import JUpload from '@/components/group/j-upload'
 export default {
   components: {
     MenuBar,
-    JHeader
+    JHeader,
+    JUpload
   },
   data () {
     return {
@@ -77,7 +77,7 @@ export default {
         { value: 'name', text: '产品名称' },
         { value: 'prodtype', text: '产品型号' },
         { value: 'category', text: '产品分类' },
-        { value: 'picName', text: '产品主图名称' },
+        { value: 'picName', text: '产品图片' },
         { value: 'proddesc', text: '产品内容' },
         { value: 'detail1', text: '产品描述' },
         { value: 'detail2', text: '产品卖点' },
@@ -100,11 +100,6 @@ export default {
       albumId: 'all',
       name: '未选择任何文件'
     }
-  },
-  create () {
-    this.$store.dispatch('getAlbumCategory').then(res => {
-      this.initData()
-    })
   },
   computed: {
     ...mapState({

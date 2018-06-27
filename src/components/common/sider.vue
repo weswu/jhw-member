@@ -3,7 +3,7 @@
     <Header :style="{padding: 0}" class="layout-header-bar" @click.native="collapsedSider">
       <Icon :class="rotateIcon" :style="{margin: '10px 10px 0'}" type="navicon" size="20"></Icon>
     </Header>
-    <Menu theme="dark" width="auto" :class="menuitemClasses" :active-name="activeName" @on-select="mrouter" accordion>
+    <Menu theme="dark" width="auto" :class="menuitemClasses" :active-name="activeName" :open-names="open" @on-select="mrouter" accordion>
       <Tooltip content="首页" placement="right" :transfer="transfer" :disabled="disabled">
         <MenuItem name="index">
           <i class="iconfont icon-ai-home"></i>
@@ -48,8 +48,9 @@ export default {
       transfer: true,
       disabled: false,
       activeName: 'index',
+      open: [],
       navList: [
-        { name: 'renyuan',
+        { name: '1',
           icon: 'fl-renyuan',
           text: '账号信息',
           children: [
@@ -58,7 +59,7 @@ export default {
             { name: 'point', icon: 'jifen', text: '积分管理' }
           ]
         },
-        { name: 'shuju',
+        { name: '2',
           icon: 'fl-shuju',
           text: '数据管理中心',
           children: [
@@ -108,6 +109,16 @@ export default {
         'menu-item',
         this.customData.isCollapsed ? 'collapsed-menu' : ''
       ]
+    }
+  },
+  created () {
+    if (this.$route.meta.open) this.open = this.$route.meta.open.split('')
+    if (this.$route.meta.parent) {
+      if (this.$route.path === '/category/news') {
+        this.activeName = 'news'
+      } else {
+        this.activeName = this.$route.meta.parent
+      }
     }
   },
   methods: {

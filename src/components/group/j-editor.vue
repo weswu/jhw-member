@@ -1,7 +1,7 @@
 <template>
   <div>
     <script :id='id' type='text/plain'></script>
-    <JAlbum ref="ablum" @on-change="insertImg"/>
+    <JAlbum ref="ablum" :type="imgUpdate" @on-change="insertImg"/>
   </div>
 </template>
 <script>
@@ -18,12 +18,11 @@ export default {
   data () {
     return {
       id: '000',
-      imgAlbum: false,
       editor: null,
       imageEdit: false,
       width: '131px',
       imgWidth: '115px',
-      imgUpdate: '',
+      imgUpdate: 'multiple',
       config: {
         toolbars: [
           ['fullscreen', 'source', '|', 'undo', 'redo', '|', 'fontsize', '|', 'blockquote', 'horizontal', '|', 'removeformat', 'formatmatch', 'link', 'unlink'],
@@ -61,11 +60,8 @@ export default {
       ctx.editor.setContent(ctx.content || '<p><br/></p>') // 确保UE加载完成后，放入内容。
       window.UE.dom.domUtils.on(document.getElementsByClassName('edui-for-insertimage')[0], 'click', function (e) {
         // e为事件对象，this为被点击元素对戏那个
-        ctx.imgUpdate = ''
-        if (!ctx.imgAlbum) {
-          ctx.$refs.ablum.open()
-          ctx.imgAlbum = true
-        }
+        ctx.imgUpdate = 'multiple'
+        ctx.$refs.ablum.open()
       })
     })
     // 图片替换
@@ -78,13 +74,9 @@ export default {
           ctx.img.className.indexOf('edui-faked-music') === -1 && ctx.img.src.indexOf('http://maps.google.com/maps/api/staticmap') === -1 &&
           !ctx.img.getAttribute('anchorname') && !ctx.img.getAttribute('word_img')) {
           setTimeout(function () {
-            window.$('.edui-default .edui-clickable1').click(function () {
+            window.document.getElementsByClassName('edui-clickable1')[0].addEventListener('click', function (e) {
               ctx.imgUpdate = 'update'
-              ctx.$refs.imgRef.initList()
-              if (!ctx.imgAlbum) {
-                ctx.$refs.ablum.open()
-                ctx.imgAlbum = true
-              }
+              ctx.$refs.ablum.open()
             })
           }, 500)
         }
@@ -98,18 +90,15 @@ export default {
     setUEContent (data) { // 设置内容方法
       this.editor.setContent(data)
     },
-    selectImg (data) {
-      this.imgList = data
-    },
     insertImg (e) {
       var ctx = this
-      this.imgAlbum = false
       if (this.imgUpdate === 'update') {
         this.img.src = 'http://img.jihui88.com/' + e.src
       } else {
-        for (var i = 0; i < this.imgList.length; i++) {
-          var pic = 'http://img.jihui88.com/' + this.imgList[i]['serverPath']
-          ctx.editor.execCommand('inserthtml', '<img src="' + pic + '" alt="' + this.imgList[i].filename + '">', true)
+        let imgList = e
+        for (var i = 0; i < imgList.length; i++) {
+          var pic = 'http://img.jihui88.com/' + imgList[i]['serverPath']
+          ctx.editor.execCommand('inserthtml', '<img src="' + pic + '" alt="' + imgList[i].filename + '">', true)
         }
       }
     }

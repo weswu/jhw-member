@@ -254,12 +254,11 @@
               <FormItem label="配送费用："> <span class="red">￥0元</span> </FormItem>
               <FormItem label="物流编号/图片：">
                 <Input v-model="shippingSet.deliverySn" style="max-width:262px;"></Input>
-                <Upload ref="upload" :action="'/commonutil/uploadUtil2?username=' + $store.state.user.username + '&replace=00&attId=&id=all'" style="display: inline-block;"
-                  name="Filedata"
-                  :max-size="2048"
-                  :on-success="handleSuccess">
-                  <a class="a_underline j_unit">上传图片</a>
-                </Upload>
+                <JUpload @on-success="handleSuccess" style="display: inline-block;">
+                  <span slot="content">
+                    <a class="a_underline j_unit">上传图片</a>
+                  </span>
+                </JUpload>
               </FormItem>
               <FormItem label="收货地区：">
                 <Cascader :data="areaList" v-model="address"></Cascader>
@@ -301,6 +300,7 @@ import { mapState } from 'vuex'
 import MenuBar from '@/components/common/menu_bar'
 import JHeader from '@/components/group/j-header'
 import Detail from '@/components/shopDetail/detail'
+import JUpload from '@/components/group/j-upload'
 import OrderItemSet from '@/components/shopDetail/orderItemSet'
 import PaymentSet from '@/components/shopDetail/paymentSet'
 import ShippingSet from '@/components/shopDetail/shippingSet'
@@ -310,6 +310,7 @@ export default {
     MenuBar,
     JHeader,
     Detail,
+    JUpload,
     OrderItemSet,
     PaymentSet,
     ShippingSet,
@@ -435,12 +436,8 @@ export default {
     activeChange (e) {
       this.active = e
     },
-    handleSuccess (res, file) {
-      var ctx = this
-      this.shippingSet.deliverySn = file.src
-      setTimeout(function () {
-        ctx.$refs.upload.clearFiles()
-      }, 1000)
+    handleSuccess (res) {
+      this.shippingSet.deliverySn = res.src
     },
     print (e) {
       let print = document.getElementById(e)
