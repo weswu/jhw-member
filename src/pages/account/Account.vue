@@ -177,7 +177,7 @@ export default {
         }
       ],
       width: '348',
-      src: 'http://www.jihui88.com/member/login.html?backURL=http://www.jihui88.com/member/qqRedirect.html&scope=snsapi_login_quick',
+      src: 'http://www.jihui88.com/manage_v4/login.html?backURL=http://www.jihui88.com/member/qqRedirect.html&scope=snsapi_login_quick',
       open: false,
       email: '',
       ablumToggle: false
@@ -207,7 +207,7 @@ export default {
       var data = e.data || {}
       if (data.type === 1) {
         // 处理iframe  src地址和隐藏弹出框
-        ctx.src = 'http://www.jihui88.com/member/login.html?backURL=http://' + location.host + '/redirect&scope=snsapi_login_quick'
+        ctx.src = 'http://www.jihui88.com/manage_v4/login.html?backURL=http://' + location.host + '/redirect&scope=snsapi_login_quick'
         ctx.close()
         ctx.get()
       }
@@ -298,7 +298,7 @@ export default {
       if (bindType !== 'weixin') {
         this.open = true
       }
-      this.src = 'http://www.jihui88.com/member/login.html?addBind=1&bindType=' + bindType + '&page=bind&isAccount=1&scope=snsapi_login_quick&backURL=http://www.jihui88.com/member/qqRedirect.html'
+      this.src = 'http://www.jihui88.com/manage_v4/login.html?addBind=1&bindType=' + bindType + '&page=bind&isAccount=1&scope=snsapi_login_quick&backURL=http://www.jihui88.com/member/qqRedirect.html'
     },
     close () {
       this.open = false

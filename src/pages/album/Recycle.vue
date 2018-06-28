@@ -166,15 +166,13 @@ export default {
     },
     getCate () {
       this.albumIds = ''
-      this.$http.get('/rest/api/album/recycle/list').then((res) => {
+      this.$http.get('/rest/api/album/recycle/list?parentId=' + this.id).then((res) => {
         if (res.success) {
           let data = res.attributes.data
           data.forEach(item => {
             item._checked = false
           })
-          this.list = data
-          this.total = res.attributes.count
-          this.get()
+          this.albumList = data
         } else {
           this.$Message.error(res.msg)
         }

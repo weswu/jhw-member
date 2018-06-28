@@ -12,9 +12,9 @@ import './assets/base.less'
 import './utils/filters'
 import './utils/fun'
 // 百度编辑器
-import './../static/ueditor1_4_3/ueditor.config.js'
-import './../static/ueditor1_4_3/ueditor.all.min.js'
-import './../static/ueditor1_4_3/lang/zh-cn/zh-cn.js'
+import './../platform/ueditor1_4_3/ueditor.config.js'
+import './../platform/ueditor1_4_3/ueditor.all.min.js'
+import './../platform/ueditor1_4_3/lang/zh-cn/zh-cn.js'
 Vue.use(iView)
 // ajax
 Vue.prototype.$http = Axios

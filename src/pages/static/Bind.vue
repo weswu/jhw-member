@@ -7,7 +7,7 @@
         <div class="j_search">
           <Button class="grey" @click="active = item.value" v-for="(item, index) in btns" :key="index" :class="{primary: active === item.value}">{{item.text}}</Button>
         </div>
-        <div v-if="active === '0'" style="margin-bottom:20px">
+        <div v-if="active === '0'" style="padding-bottom: 20px;">
           <div class="j_tip" style="margin-top: 9px;">
             温馨提醒：还没有域名? <a :href="'http://buy.jihui88.com/#/?tab=tab1&layoutId='+$store.state.layoutId" target="_blank" class="a_underline" style="padding: 0 5px;">点击前往购买</a>
             进入页面后点击基础类里的申请域名。
@@ -16,7 +16,7 @@
           <div class="j_tip">
             <span class="red">第<span class="count">1</span>步：</span><span class="grey">空间选择</span>
           </div>
-          <Form :model="detail" :label-width="0">
+          <Form :model="detail" :label-width="0" style="padding-bottom: 10px;">
             <FormItem>
               <Select v-model="detail.country" class="w144">
                 <Option value="cn">国内</Option>
@@ -82,7 +82,7 @@
             </div>
           </Form>
         </div>
-        <div v-if="active === '1'">
+        <div v-if="active === '1'" style="padding-bottom: 20px;">
           <div class="j_tip" style="margin-top: 9px;">
             二级域名(长度最小为6，最长为20的小写英文字母或数字组合)。&nbsp;(请求帮助QQ：260404208)
           </div>

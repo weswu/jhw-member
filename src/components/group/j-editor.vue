@@ -38,8 +38,8 @@ export default {
         allowDivTransToP: false,
         catchRemoteImageEnable: false, // 防止远程抓取图片
         enterTag: 'br', // 去掉自动添加的p和br标签
-        UEDITOR_HOME_URL: './static/ueditor1_4_3/',
-        serverUrl: './static/ueditor1_4_3/'
+        UEDITOR_HOME_URL: './platform/ueditor1_4_3/',
+        serverUrl: './platform/ueditor1_4_3/'
       }
     }
   },

@@ -870,9 +870,12 @@ export default {
   }
   .ivu-table-body{
     .j_table_san_pin{
+      .ivu-table-cell{
+        position: relative;overflow: visible;
+      }
       .ivu-row-flex{
         position: absolute;
-        left: 11px;
+        left: -33px;
         margin-top: -10px;
         .ivu-col-span-16{
           width: 20px

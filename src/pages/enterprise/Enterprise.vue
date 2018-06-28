@@ -60,7 +60,7 @@
         <Button type="primary" size="small" @click="submit">保存</Button>
       </Footer>
     </Layout>
-    <Map ref="map"/>
+    <Map ref="map" v-if="isMap"/>
   </Layout>
 </template>
 
@@ -76,15 +76,17 @@ export default {
     MenuBar, JHeader, JImage, Map
   },
   computed: {
-    ...mapState({
-      user: state => state.user,
-      areaList: state => state.areaList,
-      lanId: state => state.lanId,
-      lanList: state => state.status.lanList
-    })
+    ...mapState(['user', 'areaList'])
+  },
+  watch: {
+    user: () => {
+      // debugger
+    }
   },
   data () {
     return {
+      isMap: false,
+      userModel: {},
       rules: {
         'enterprise.name': [
           { required: true, message: '公司全称不能为空', trigger: 'blur' }
@@ -111,13 +113,21 @@ export default {
     if (this.areaList.length === 0) {
       this.$store.dispatch('getAreaList')
     }
+    this.initUser()
   },
   methods: {
+    initUser () {
+      // this.userModel = JSON.parse(JSON )
+    },
     picChange (e) {
       this.user.enterprise.logo = e.src
     },
     map () {
-      this.$refs.map.open()
+      if (!this.isMap) {
+        this.isMap = true
+      } else {
+        this.$refs.map.open()
+      }
     },
     submit () {
       this.$refs['model'].validate((valid) => {

@@ -664,7 +664,6 @@ export default {
       this.belongModel = true
     },
     moveAll2 () {
-      this.belongModel = false
       if (this.ids) {
         this.$http.post('/rest/api/album/attr/img/move?attIds=' + this.ids + '&belongId=' + this.belongId).then((res) => {
           if (res.success) {
@@ -689,6 +688,7 @@ export default {
             if (res.success) {
               if (list.length === index + 1) {
                 ctx.$Message.success('相册转移成功')
+                ctx.$refs.category.initCopyId(id)
                 ctx.$refs.category.get()
               }
             } else {
@@ -697,6 +697,7 @@ export default {
           })
         })
       }
+      this.belongModel = false
     }
   }
 }

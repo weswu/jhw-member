@@ -85,7 +85,7 @@ export default {
     initData () {
       var ctx = this
       this.list = this.$store.state.albumCategory
-      this.data = [
+      this.dataTest = [
         {
           title: '全部图片',
           id: 'all',
@@ -96,7 +96,7 @@ export default {
           children: []
         }
       ]
-      this.dataTest = [
+      this.data = [
         {
           title: '全部图片',
           id: 'all',
@@ -507,7 +507,7 @@ export default {
       &::after{
         content: '';
         position: absolute;
-        background: url(http://www.jihui88.com/manage_v4/static/img/dashed2.png);
+        background: url(http://www.jihui88.com/manage_v4/platform/img/dashed2.png);
         background-repeat: repeat-x;
         background-size: 3px;
         top: 43%;
@@ -546,7 +546,7 @@ export default {
           height: 100%;
           width: 1px;
           z-index: 9;
-          background: url(http://www.jihui88.com/manage_v4/static/img/dashed.png);
+          background: url(http://www.jihui88.com/manage_v4/platform/img/dashed.png);
           background-repeat: repeat-y;
           background-size: 1px;
         }

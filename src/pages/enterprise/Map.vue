@@ -8,7 +8,7 @@
       <Button type="text" size="large" @click="cancel">取消</Button>
       <Button type="primary" size="large" @click="submit('modalForm')">保存</Button>
     </div>
-    <Input v-model="keyword" placeholder="关键词: 如杭州" style="margin-bottom:10px"></Input>
+    <Input v-model="keyword" placeholder="关键词: 如杭州" style="margin-bottom:10px" class="w180"></Input>
     <baidu-map class="map" :center="center" :zoom="15" ak="YOUR_APP_KEY" @click="clickMap($event)" @ready="handler">
       <bm-marker :position="center" :dragging="true" :clicking="true" animation="BMAP_ANIMATION_BOUNCE" @dragend="dragend($event)"></bm-marker>
       <bm-navigation anchor="BMAP_ANCHOR_TOP_RIGHT"></bm-navigation>
@@ -39,6 +39,9 @@ export default {
     ...mapState({
       user: state => state.user
     })
+  },
+  created () {
+    this.modal = true
   },
   methods: {
     handler ({BMap, map}) {

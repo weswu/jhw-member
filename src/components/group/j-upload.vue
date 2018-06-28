@@ -39,7 +39,7 @@ export default {
       var ctx = this
       setTimeout(function () {
         ctx.$refs.upload.clearFiles()
-      }, 5000)
+      }, 3000)
       let obj = {}
       if (res !== null) {
         obj = {
