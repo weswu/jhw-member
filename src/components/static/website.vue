@@ -3,7 +3,7 @@
     <div class="j_tip" style="margin-top: 13px;">由于互联网信息管理法规，发布网站需要验证你的手机号信息。 <a href="#/account" class="a_underline">立即验证</a></div>
     <Button icon="plus" class="orange" @click="add">创建新网站</Button> 你有{{onlineCount}}个网站上线了
     <ul class="static_info j_scroll">
-      <li class="item" v-for="item in list" :key="item.id">
+      <li class="item" v-for="(item, index) in list" :key="item.id">
         <p>
           <span class="name">{{item.seoTitle}}</span>
           <Poptip placement="right" class="j_poptip_confirm_edit"
@@ -44,7 +44,7 @@
               <Poptip placement="right" width="200"
                 confirm
                 title="是否删除?"
-                @on-ok="del(item.id)">
+                @on-ok="del(item.id, index)">
                 <li> 删除网站 </li>
               </Poptip>
 
@@ -137,7 +137,8 @@ export default {
   },
   computed: {
     ...mapState({
-      lanList: state => state.status.lanList
+      lanList: state => state.status.lanList,
+      staticList: state => state.staticList
     })
   },
   created () {
@@ -235,15 +236,17 @@ export default {
         }
       })
     },
-    del (id) {
+    del (id, index) {
       this.$http.delete('/rest/pc/api/baseLayout/detail/' + id).then((res) => {
         if (res.success) {
           this.$Message.success('删除成功')
-          for (let i = 0; i < this.list.length; i++) {
-            if (this.list[i].id === id) {
-              this.list.splice(i, 1)
+          this.list.splice(index, 1)
+          for (let i = 0; i < this.staticList.length; i++) {
+            if (this.staticList[i].id === id) {
+              this.staticList.splice(i, 1)
             }
           }
+          this.$store.commit('setStaticList', this.staticList)
           this.total -= 1
         } else {
           this.$Message.success(res.msg)

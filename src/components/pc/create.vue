@@ -24,6 +24,7 @@
 
 <script>
 import qs from 'qs'
+import { mapState } from 'vuex'
 import JPagination from '@/components/group/j-pagination'
 export default {
   components: {
@@ -39,6 +40,9 @@ export default {
         sort: 'addTime!desc'
       }
     }
+  },
+  computed: {
+    ...mapState(['staticList'])
   },
   created () {
     this.get()
@@ -91,6 +95,8 @@ export default {
       this.$http.post('/rest/pc/api/baseLayout/detail', qs.stringify(data)).then((res) => {
         if (res.success) {
           this.$Message.success('添加成功')
+          this.staticList.push(res.attributes.data)
+          this.$store.commit('setStaticList', this.staticList)
           this.$emit('on-change')
         } else {
           this.$Message.error(res.msg)

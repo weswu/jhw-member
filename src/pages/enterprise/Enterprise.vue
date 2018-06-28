@@ -76,17 +76,20 @@ export default {
     MenuBar, JHeader, JImage, Map
   },
   computed: {
-    ...mapState(['user', 'areaList'])
+    ...mapState({
+      userModel: state => state.user,
+      areaList: state => state.areaList
+    })
   },
   watch: {
-    user: () => {
-      // debugger
+    userModel () {
+      this.initUser()
     }
   },
   data () {
     return {
       isMap: false,
-      userModel: {},
+      user: {},
       rules: {
         'enterprise.name': [
           { required: true, message: '公司全称不能为空', trigger: 'blur' }
@@ -117,7 +120,7 @@ export default {
   },
   methods: {
     initUser () {
-      // this.userModel = JSON.parse(JSON )
+      this.user = JSON.parse(JSON.stringify(this.userModel))
     },
     picChange (e) {
       this.user.enterprise.logo = e.src

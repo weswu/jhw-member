@@ -26,9 +26,7 @@ export default {
     UE
   },
   computed: {
-    ...mapState({
-      'user': state => state.user
-    })
+    ...mapState(['user'])
   },
   data () {
     return {}
