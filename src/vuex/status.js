@@ -141,7 +141,7 @@ const state = {
     ]
   },
   menu_product_detail: {
-    title: '返回',
+    title: '产品详情',
     menu: [
       { text: '产品基本信息', value: '0' },
       { text: '电脑端产品内容', value: '1' },
@@ -167,6 +167,7 @@ const state = {
     ]
   },
   menu_news_detail: {
+    title: '新闻详情',
     menu: [
       { text: '新闻基本信息', value: '0' },
       { text: '新闻内容', value: '1' },

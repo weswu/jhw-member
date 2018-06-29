@@ -1,5 +1,5 @@
 <template>
-  <Layout class="j_layout ivu-layout-has-sider j_recruit">
+  <Layout class="ivu-layout-has-sider j_recruit">
     <MenuBar :data="'menuEnter'" :active="'recruit'"/>
     <Layout class="j_layout_content">
       <JHeader :title="'招聘管理'"/>

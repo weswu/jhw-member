@@ -196,6 +196,7 @@ export default {
               name: false,
               prodtype: false,
               sort: false,
+              qrShow: false,
               api: 'product',
               id: item.productId
             }
@@ -659,6 +660,11 @@ export default {
               },
               style: {
                 width: '120px'
+              },
+              on: {
+                'on-popper-show': () => {
+                  params.row.edittingCell.qrShow = true
+                }
               }
             }, [
               h('span', {
@@ -683,7 +689,7 @@ export default {
                 style: {
                   maxHeight: '250px'
                 }
-              }, data)
+              }, params.row.edittingCell.qrShow ? data : '')
             ])
           ]))
         }

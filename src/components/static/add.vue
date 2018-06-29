@@ -3,7 +3,7 @@
     v-model="modal"
     title="创建网站"
     @on-cancel="cancel">
-    <Create/>
+    <Create v-if="show"/>
   </Modal>
 </template>
 
@@ -15,12 +15,14 @@ export default {
   },
   data () {
     return {
-      modal: false
+      modal: false,
+      show: false
     }
   },
   methods: {
     open () {
       this.modal = true
+      if (!this.show) this.show = true
     },
     cancel () {
       this.modal = false

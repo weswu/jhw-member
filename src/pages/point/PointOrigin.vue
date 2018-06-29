@@ -1,5 +1,5 @@
 <template>
-  <Layout class="j_layout ivu-layout-has-sider j_point_origin">
+  <Layout class="ivu-layout-has-sider j_point_origin">
     <MenuBar :data="'menuPoint'" :active="'point_origin'"/>
     <Layout class="j_layout_content">
       <JHeader :title="'积分来源'" :count="count"/>

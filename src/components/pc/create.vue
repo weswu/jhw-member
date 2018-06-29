@@ -95,7 +95,7 @@ export default {
       this.$http.post('/rest/pc/api/baseLayout/detail', qs.stringify(data)).then((res) => {
         if (res.success) {
           this.$Message.success('添加成功')
-          this.staticList.push(res.attributes.data)
+          this.staticList.splice(0, 0, res.attributes.data)
           this.$store.commit('setStaticList', this.staticList)
           this.$emit('on-change')
         } else {

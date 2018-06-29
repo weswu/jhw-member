@@ -1,5 +1,5 @@
 <template>
-  <Layout class="j_layout ivu-layout-has-sider j_static">
+  <Layout class="ivu-layout-has-sider j_static">
     <MenuBar :data="'menuStatic'" :active="'static'"/>
     <Layout class="j_layout_content">
       <JHeader :title="'站点数据管理'"/>

@@ -1,7 +1,7 @@
 <template>
-  <Sider id="J_Menu_Bar" ref="side1" hide-trigger collapsible :collapsed-width="0" v-model="isCollapsed" width="180" v-show="win !== 'small' || detail">
+  <Sider id="J_Menu_Bar" ref="side1" hide-trigger collapsible :collapsed-width="0" v-model="isCollapsed" width="180" v-if="win !== 'small' || detail">
     <div class="title">
-      <span v-if="!detail">{{status[data].title || 'Basic Table'}}</span>
+      <span v-if="win === 'small' || !detail">{{status[data].title || 'Basic Table'}}</span>
       <span v-else @click="back" class="back"><i class="iconfont icon-fanhui"></i>返回</span>
     </div>
     <div @click="collapsedSider" :class="rotateIcon">

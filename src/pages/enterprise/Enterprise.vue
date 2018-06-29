@@ -1,5 +1,5 @@
 <template>
-  <Layout class="j_layout ivu-layout-has-sider j_enterprise">
+  <Layout class="ivu-layout-has-sider j_enterprise">
     <MenuBar :data="'menuEnter'" :active="'enterprise'"/>
     <Layout class="j_layout_content j_form_detail">
       <JHeader :title="'基本资料'" :lan="true" :tip="'请完善以下信息，方便我们更好的为您服务'"/>
@@ -60,7 +60,17 @@
         <Button type="primary" size="small" @click="submit">保存</Button>
       </Footer>
     </Layout>
-    <Map ref="map" v-if="isMap"/>
+    <Modal class-name="j_map_modal"
+      v-model="modal"
+      width="650"
+      title="地图定位"
+      @on-cancel="cancel">
+      <div slot="footer">
+        <Button type="text" size="large" @click="cancel">取消</Button>
+        <Button type="primary" size="large" @click="submitMap">保存</Button>
+      </div>
+      <Map ref="map" v-if="isMap"/>
+    </Modal>
   </Layout>
 </template>
 
@@ -88,6 +98,7 @@ export default {
   },
   data () {
     return {
+      modal: false,
       isMap: false,
       user: {},
       rules: {
@@ -126,11 +137,16 @@ export default {
       this.user.enterprise.logo = e.src
     },
     map () {
+      this.modal = true
       if (!this.isMap) {
         this.isMap = true
-      } else {
-        this.$refs.map.open()
       }
+    },
+    cancel () {
+      this.modal = false
+    },
+    submitMap () {
+      this.$refs.map.submit()
     },
     submit () {
       this.$refs['model'].validate((valid) => {
@@ -163,6 +179,7 @@ export default {
       this.$http.post('/rest/api/enterprise/detail/' + this.user.enterprise.enterpriseId, qs.stringify(data)).then((res) => {
         if (res.success) {
           this.$Message.success('保存成功')
+          this.$store.commit('setUser', this.user)
         } else {
           this.$Message.error(res.msg)
         }
@@ -189,6 +206,11 @@ export default {
         padding-top: 7px;
       }
     }
+  }
+}
+.j_map_modal{
+  .map{
+    height: 450px
   }
 }
 </style>

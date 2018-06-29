@@ -1,5 +1,5 @@
 <template>
-  <Layout class="j_layout ivu-layout-has-sider">
+  <Layout class="ivu-layout-has-sider">
     <MenuBar :data="'menuMember'" :active="'member'"/>
     <Layout class="j_layout_content">
       <Content>

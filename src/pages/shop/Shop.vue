@@ -1,5 +1,5 @@
 <template>
-  <Layout class="j_layout ivu-layout-has-sider j_shop">
+  <Layout class="ivu-layout-has-sider j_shop">
     <MenuBar :data="'menuShop'" :active="'shop'"/>
     <Layout class="j_layout_content">
       <JHeader :title="'订单列表'"/>

@@ -1,5 +1,5 @@
 <template>
-  <Layout class="j_layout ivu-layout-has-sider">
+  <Layout class="ivu-layout-has-sider">
     <MenuBar :data="'menuEvaluate'" :detail="true" :active="'0'"  @on-change="activeChange"/>
     <Layout class="j_layout_content">
       <Content>

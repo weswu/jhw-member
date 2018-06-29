@@ -83,7 +83,7 @@
       </div>
     </JDialog>
     <Again ref="again"/>
-    <Add ref="add" @on-change="addChange"/>
+    <Add ref="add" @on-change="get"/>
   </div>
 </template>
 
@@ -101,7 +101,8 @@ export default {
       default () {
         return {
           page: 1,
-          pageSize: 4
+          pageSize: 4,
+          sortType: 'desc'
         }
       }
     }
@@ -181,10 +182,6 @@ export default {
     },
     add () {
       this.$refs.add.open()
-    },
-    addChange () {
-      this.searchData.page = 1
-      this.get()
     },
     again (id) {
       this.$refs.again.open(id)

@@ -1,5 +1,5 @@
 <template>
-  <Layout class="j_layout ivu-layout-has-sider j_sitemap">
+  <Layout class="ivu-layout-has-sider j_sitemap">
     <MenuBar :data="'menuStatic'" :active="'sitemap'"/>
     <Layout class="j_layout_content">
       <JHeader :title="'Sitemap生成'" :type="true" :tip="tip" :website="true"/>

@@ -28,7 +28,8 @@ export default {
       tabActive: '0',
       searchData: {
         page: 1,
-        pageSize: 2
+        pageSize: 2,
+        sortType: 'desc'
       }
     }
   },

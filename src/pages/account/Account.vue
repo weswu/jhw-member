@@ -1,5 +1,5 @@
 <template>
-  <Layout class="j_layout ivu-layout-has-sider j_account">
+  <Layout class="ivu-layout-has-sider j_account">
       <MenuBar :data="'menuAccount'" :active="'account'"/>
       <Layout class="j_layout_content">
         <JHeader :title="'安全设置'"/>

@@ -1,5 +1,5 @@
 <template>
-  <Layout class="j_layout ivu-layout-has-sider">
+  <Layout class="ivu-layout-has-sider">
     <MenuBar :data="'menuShop'" :active="'shop_refund'"/>
     <Layout class="j_layout_content">
       <JHeader :title="'商品退货管理'"/>

@@ -343,7 +343,7 @@ const store = new Vuex.Store({
       })
     },
     getStaticList ({commit, state}) {
-      return this._vm.$http.get('/rest/pc/api/baseLayout/list?page=1&pageSize=100').then(res => {
+      return this._vm.$http.get('/rest/pc/api/baseLayout/list?page=1&pageSize=100&sortType=desc').then(res => {
         if (res.success) {
           this.commit('setStaticList', res.attributes.data)
           if (res.attributes.data.length > 0) {

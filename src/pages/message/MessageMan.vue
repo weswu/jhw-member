@@ -1,5 +1,5 @@
 <template>
-  <Layout class="j_layout ivu-layout-has-sider j_messageMan">
+  <Layout class="ivu-layout-has-sider j_messageMan">
     <MenuBar :data="'menuMessage'" :active="'messageMan'"/>
     <Layout class="j_layout_content">
       <Content>

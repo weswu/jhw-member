@@ -1,5 +1,5 @@
 <template>
-  <Layout class="j_layout ivu-layout-has-sider j_pc">
+  <Layout class="ivu-layout-has-sider j_pc">
     <MenuBar :data="'menuPc'" :active="'pc'"/>
     <Layout class="j_layout_content">
       <JHeader :title="'我的网站'" ></JHeader>

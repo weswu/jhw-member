@@ -1,20 +1,12 @@
 <template>
-  <Modal class-name="j_map"
-    v-model="modal"
-    width="650"
-    title="地图定位"
-    @on-cancel="cancel">
-    <div slot="footer">
-      <Button type="text" size="large" @click="cancel">取消</Button>
-      <Button type="primary" size="large" @click="submit('modalForm')">保存</Button>
-    </div>
+  <div class="j_map" style="width:100%;">
     <Input v-model="keyword" placeholder="关键词: 如杭州" style="margin-bottom:10px" class="w180"></Input>
-    <baidu-map class="map" :center="center" :zoom="15" ak="YOUR_APP_KEY" @click="clickMap($event)" @ready="handler">
+    <baidu-map class="map" :center="center" :zoom="15" ak="YOUR_APP_KEY" @click="clickMap($event)" @ready="handler" style="width:100%;">
       <bm-marker :position="center" :dragging="true" :clicking="true" animation="BMAP_ANIMATION_BOUNCE" @dragend="dragend($event)"></bm-marker>
       <bm-navigation anchor="BMAP_ANCHOR_TOP_RIGHT"></bm-navigation>
       <bm-local-search :keyword="keyword" :auto-viewport="true" :panel="false"></bm-local-search>
     </baidu-map>
-  </Modal>
+  </div>
 </template>
 
 <script>
@@ -30,7 +22,6 @@ export default {
   },
   data () {
     return {
-      modal: false,
       keyword: '',
       center: {lng: 120.229355, lat: 30.2145}
     }
@@ -39,9 +30,6 @@ export default {
     ...mapState({
       user: state => state.user
     })
-  },
-  created () {
-    this.modal = true
   },
   methods: {
     handler ({BMap, map}) {
@@ -52,12 +40,6 @@ export default {
         this.center.lng = this.user.enterprise.mapaddress.split(',')[0]
         this.center.lat = this.user.enterprise.mapaddress.split(',')[1]
       }
-    },
-    open () {
-      this.modal = true
-    },
-    cancel () {
-      this.modal = false
     },
     dragend (e) {
       this.center.lng = e.point.lng
@@ -87,10 +69,6 @@ export default {
 </script>
 
 <style lang="less">
-.j_map{
-  .map {
-    width:100%;
-    height:450px;
-  }
+.map {
 }
 </style>

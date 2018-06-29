@@ -1,5 +1,5 @@
 <template>
-  <Layout class="j_layout ivu-layout-has-sider">
+  <Layout class="ivu-layout-has-sider">
     <MenuBar :data="'menuShop'" :active="'shop_pay'"/>
     <Layout class="j_layout_content j_sort">
       <JHeader :title="'支付方式管理'"/>

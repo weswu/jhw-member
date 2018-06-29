@@ -1,12 +1,15 @@
 <template>
-  <div :class="{j_head: tip, j_head2: type}">
+  <div :class="{j_head: tip, j_head2: type}" v-if="$store.state.win !== 'small'">
     <div class="j_header">
       <Row type="flex" justify="space-between">
         <Col>
           <span class="title">{{title}}<span v-if="count">拥有积分：{{count}}分</span></span>
         </Col>
         <Col>
-          <Select v-model="$store.state.lanId" class="primary" @on-change="lanChange" style="width:106px" v-show="lan">
+          <Select v-model="$store.state.lanId" class="primary" @on-change="lanChange" style="width:106px" v-show="lan" v-if="lanHidden">
+            <Option v-for="item in lanList" :value="item.value" :key="item.value">{{ item.text }}</Option>
+          </Select>
+          <Select v-model="$store.state.lanId" class="primary" @on-change="lanChange" style="width:106px" v-if="!lanHidden && lan">
             <Option v-for="item in lanList" :value="item.value" :key="item.value">{{ item.text }}</Option>
           </Select>
           <Select v-model="$store.state.layoutId" class="primary" @on-change="layoutChange" style="width:167px" v-if="website">
@@ -29,6 +32,10 @@ export default {
       default: '标题'
     },
     lan: {
+      type: Boolean,
+      default: false
+    },
+    lanHidden: {
       type: Boolean,
       default: false
     },

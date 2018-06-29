@@ -81,7 +81,7 @@ export default {
         { name: 'xiaochengxu',
           icon: 'xiaochengxu',
           text: '小程序界面管理',
-          url: 'http://pc.jihui88.com/rest/site/299/applets'
+          url: 'http://buy.jihui88.com/#/'
         },
         { name: 'fenxiao',
           icon: 'fenxiao',

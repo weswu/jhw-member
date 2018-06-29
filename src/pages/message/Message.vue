@@ -1,5 +1,5 @@
 <template>
-  <Layout class="j_layout ivu-layout-has-sider j_message">
+  <Layout class="ivu-layout-has-sider j_message">
     <MenuBar :data="'menuMessage'" :active="'message'+(pageName?('/'+pageName):'')"/>
     <Layout class="j_layout_content">
       <Content>

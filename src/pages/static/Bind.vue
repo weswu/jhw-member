@@ -1,5 +1,5 @@
 <template>
-  <Layout class="j_layout ivu-layout-has-sider j_bind">
+  <Layout class="ivu-layout-has-sider j_bind">
     <MenuBar :data="'menuStatic'" :active="'bind'"/>
     <Layout class="j_layout_content">
       <JHeader :title="'域名绑定'" :website="true"/>

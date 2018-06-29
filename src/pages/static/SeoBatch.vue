@@ -1,5 +1,5 @@
 <template>
-  <Layout class="j_layout ivu-layout-has-sider j_static_batch">
+  <Layout class="ivu-layout-has-sider j_static_batch">
     <MenuBar :data="'menuStatic'" :active="'seo_batch'"/>
     <Layout class="j_layout_content">
       <JHeader :title="'批量提交'" :type="true" :tip="'温馨提醒：向各大搜索引擎提交网址，可以加快网站被搜索引擎收录。 一个网站只需提交一次（首页），搜索引擎会自动收录网页。 不保证一定能收录您提交的网站。'"/>

@@ -71,6 +71,8 @@ export default new Router({
     // 网站界面管理
     { path: '/pc', component: require('@/pages/pc/Pc').default, meta: { parent: 'pc' } },
     { path: '/pc_create', component: require('@/pages/pc/PcCreate').default, meta: { parent: 'pc' } },
+    // 其它项目用
+    { path: '/map', component: require('@/pages/enterprise/Map').default },
     // default
     { path: '*', redirect: '/' }
   ]

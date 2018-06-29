@@ -1,5 +1,5 @@
 <template>
-  <Layout class="j_layout ivu-layout-has-sider j_static">
+  <Layout class="ivu-layout-has-sider j_static">
     <MenuBar :data="'menuStatic'" :active="'third_party_statistics'"/>
     <Layout class="j_layout_content">
       <JHeader :title="'第三方统计'"

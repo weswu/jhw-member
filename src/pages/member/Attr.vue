@@ -1,5 +1,5 @@
 <template>
-  <Layout class="j_layout ivu-layout-has-sider j_member_attr">
+  <Layout class="ivu-layout-has-sider j_member_attr">
     <MenuBar :data="'menuMember'" :active="'member_attr'"/>
     <Layout class="j_layout_content">
       <JHeader :title="'会员属性配置'"/>

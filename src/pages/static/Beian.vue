@@ -1,5 +1,5 @@
 <template>
-  <Layout class="j_layout ivu-layout-has-sider j_beian">
+  <Layout class="ivu-layout-has-sider j_beian">
     <MenuBar :data="'menuStatic'" :active="'beian'"/>
     <Layout class="j_layout_content j_form_detail">
       <JHeader :title="'域名备案'" :website="true"/>
@@ -15,18 +15,18 @@
         </div>
 
         <div v-if="active === '0'">
-          <Form :model="detail" :label-width="0" ref="model">
+          <Form :model="bindDetail" :label-width="0" ref="model">
             <FormItem>
-              <Input v-model="detail.enterprise.icp" placeholder="填写ICP备案号" style="width:250px;"></Input>
+              <Input v-model="bindDetail.icp" placeholder="填写ICP备案号" style="width:250px;"></Input>
             </FormItem>
             <FormItem>
-              <Input v-model="detail.enterprise.psr" placeholder="填写网安备案号" style="width:250px;"></Input>
+              <Input v-model="bindDetail.psr" placeholder="填写网安备案号" style="width:250px;"></Input>
             </FormItem>
             <FormItem>
-              <Input v-model="detail.webinfo.seccurityLink" placeholder="填写网安备案链接地址" style="width:250px;"></Input>
+              <Input v-model="bindDetail.seccurityLink" placeholder="填写网安备案链接地址" style="width:250px;"></Input>
             </FormItem>
           </Form>
-          <Button type="primary" size="small" @click="submit" style="margin-top:20px;">提交</Button>
+          <Button type="primary" size="small" @click="submitBind" style="margin-top:20px;">提交</Button>
         </div>
 
         <a href="https://beian.aliyun.com/?utm_content=se_1351982" target="_blank"><Button type="info" class="w130" v-if="active === '1'">查看教程</Button></a>
@@ -46,7 +46,7 @@
               </Poptip>
               <span>（备注：填写您申请好的域名）</span></div>
             <FormItem label="域名：">
-              <Input v-model="bindDetail.address" placeholder="填写您的域名"></Input>
+              <Input v-model="bindDetail.address" placeholder="填写您的域名" @on-change="bindAddressChange = true"></Input>
             </FormItem>
             <div class="j_beian_title">域名证书：
               <Poptip trigger="hover" placement="right">
@@ -152,15 +152,12 @@
           </Form>
         </div>
       </Content>
-      <Footer v-if="active === '0'">
-        <Button type="primary" size="small" @click="submit1">提交</Button>
-      </Footer>
       <Footer v-if="active === '2'">
         <Button type="primary" size="small" @click="submit">提交</Button>
       </Footer>
     </Layout>
     <Detail ref="beianDetail"/>
-    <JAlbum ref="ablum" @on-change="picChange"/>
+    <JAlbum ref="ablum" v-if="active === '2'" @on-change="picChange"/>
   </Layout>
 </template>
 
@@ -195,7 +192,8 @@ export default {
         webinfo: {}
       },
       bindDetail: {},
-      uploadText: ''
+      uploadText: '',
+      bindAddressChange: false
     }
   },
   computed: {
@@ -203,13 +201,11 @@ export default {
   },
   watch: {
     layoutId () {
-      if (this.active === '2') {
-        this.getBind()
-      }
+      this.getBind()
     }
   },
   created () {
-    this.get()
+    this.getBind()
   },
   methods: {
     get () {
@@ -222,9 +218,11 @@ export default {
       })
     },
     getBind () {
-      this.$http.get('/rest/pc/api/bind/detail/' + this.layoutId).then((res) => {
+      this.layoutId && this.$http.get('/rest/pc/api/bind/detail/' + this.layoutId).then((res) => {
         if (res.success) {
           this.bindDetail = res.attributes.data
+        } else {
+          this.$Message.error(res.msg)
         }
       })
     },
@@ -233,8 +231,8 @@ export default {
     },
     activeChange (e) {
       this.active = e
-      if (e === '2') {
-        this.getBind()
+      if (e === '2' && !this.detail.profileId) {
+        this.get()
       }
     },
     picChange (e) {
@@ -245,18 +243,21 @@ export default {
       this.uploadText = e
       this.$refs.ablum.open()
     },
-    submit1 () {
+    submitBind (tip) {
       // 域名提交
       if (this.bindDetail.id) {
         let bindDetail = {
           model: JSON.stringify(this.bindDetail),
           _method: 'put'
         }
-        this.$http.post('/rest/api/bind/detail/' + this.bindDetail.id, qs.stringify(bindDetail)).then((res) => {
+        this.$http.post('/rest/pc/api/bind/detail/' + this.bindDetail.id, qs.stringify(bindDetail)).then((res) => {
           if (res.success) {
-            console.log('域名保存成功')
+            this.bindAddressChange = false
+            if (tip !== 'tip') this.$Message.success('保存成功')
           }
         })
+      } else {
+        this.$Message.info('请选择站点')
       }
     },
     submit () {
@@ -271,7 +272,9 @@ export default {
           this.$Message.error(res.msg)
         }
       })
-      this.submit1()
+      if (this.bindAddressChange) {
+        this.submitBind('tip')
+      }
     }
   }
 }

@@ -1,8 +1,8 @@
 <template>
-  <div id="JHW"  class="layout">
+  <div id="JHW" :class="{small: win ==='small'}">
     <Layout>
         <Header v-show="win !== 'small'"/>
-        <Layout class="j_layout ivu-layout-has-sider">
+        <Layout class="j_layout ivu-layout-has-sider" :class="{detail: detail}">
             <Sider v-show="win !== 'small'"/>
             <router-view/>
         </Layout>
@@ -23,6 +23,11 @@ export default {
   computed: {
     ...mapState(['win'])
   },
+  data () {
+    return {
+      detail: false
+    }
+  },
   created () {
     let params = window.location.search.substr(1).split('&')
     params.forEach(item => {
@@ -37,6 +42,9 @@ export default {
         window.localStorage.setItem('lanId', arr[1])
       }
     })
+    if (this.$route.path.indexOf('/product/') > -1 || this.$route.path.indexOf('/news/') > -1) {
+      this.detail = true
+    }
     try {
       document.body.removeChild(document.getElementById('app-loading'))
       setTimeout(function () {

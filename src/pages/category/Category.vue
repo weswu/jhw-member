@@ -1,5 +1,5 @@
 <template>
-  <Layout class="j_layout ivu-layout-has-sider j_category">
+  <Layout class="ivu-layout-has-sider j_category">
     <MenuBar :data="'menu_' + $route.params.id" :active="'category/' + $route.params.id"/>
     <Layout class="j_layout_content">
       <Content>
