@@ -28,7 +28,7 @@ const state = {
   // 站点
   staticList: [],
   layoutId: '',
-  win: '',
+  win: '', // 小于400的窗口
   // 记录操作习惯
   customData: {
     isCollapsed: true,

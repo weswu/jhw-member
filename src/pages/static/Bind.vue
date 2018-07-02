@@ -136,7 +136,7 @@ export default {
       })
     },
     saveIcp () {
-      this.$http.post('/rest/pc/api/bind/saveIcp', qs.stringify({icp: this.detail.icp})).then((res) => {
+      this.$http.post('/rest/pc/api/bind/saveIcp', qs.stringify({icp: this.detail.icp, layoutId: this.layoutId})).then((res) => {
         if (res.success) {
           this.$Message.success('保存成功')
         } else {
@@ -145,7 +145,7 @@ export default {
       })
     },
     savePsr () {
-      this.$http.post('/rest/pc/api/bind/savePsr', qs.stringify({psr: this.detail.psr})).then((res) => {
+      this.$http.post('/rest/pc/api/bind/savePsr', qs.stringify({psr: this.detail.psr, layoutId: this.layoutId})).then((res) => {
         if (res.success) {
           this.$Message.success('保存成功')
         } else {
@@ -154,7 +154,7 @@ export default {
       })
     },
     saveSeccurityLink () {
-      this.$http.post('/rest/pc/api/bind/saveSeccurityLink', qs.stringify({seccurityLink: this.detail.seccurityLink})).then((res) => {
+      this.$http.post('/rest/pc/api/bind/saveSeccurityLink', qs.stringify({seccurityLink: this.detail.seccurityLink, layoutId: this.layoutId})).then((res) => {
         if (res.success) {
           this.$Message.success('保存成功')
         } else {
@@ -164,17 +164,10 @@ export default {
     },
     submit () {
       let data = {
-        model: JSON.stringify({
-          id: this.detail.id,
-          address: this.detail.address,
-          type: this.detail.type,
-          state: this.detail.state,
-          country: this.detail.country,
-          secondDomain: this.detail.secondDomain
-        }),
+        model: JSON.stringify(this.detail),
         _method: 'put'
       }
-      this.$http.post('/rest/pc/api/bind/detail/' + this.layoutId, qs.stringify(data)).then((res) => {
+      this.$http.post('/rest/pc/api/bind/detail/' + this.detail.id, qs.stringify(data)).then((res) => {
         if (res.success) {
           this.$Message.success('保存成功')
         } else {

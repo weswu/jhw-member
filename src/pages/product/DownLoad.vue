@@ -29,7 +29,7 @@
             <tr>
               <th>
                 表格模板内容：需要的请“打勾”，再点下载。温馨提醒（如需下载下面的内容，请先选择好所属的网站编号）
-                <Select v-model="layoutId" class="small" style="width:111px">
+                <Select v-model="layoutId" class="small" style="width:120px">
                   <Option v-for="item in staticList" :value="item.layoutId" :key="item.layoutId" :label="item.label">
                     <span>网站编号：{{ item.layoutId }}</span>
                   </Option>

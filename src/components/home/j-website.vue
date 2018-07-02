@@ -57,11 +57,11 @@ export default {
       if (e === '0') {
         console.log('0')
       } else if (e === '1') {
-        window.location.href = 'http://buy.jihui88.com/#/'
+        window.location.href = 'http://buy.jihui88.com/#/?ids=297e2669613f7026016140f7276b0017'
       } else if (e === '2') {
-        window.location.href = 'http://buy.jihui88.com/#/'
+        window.location.href = 'http://buy.jihui88.com/#/?ids=297e2669613f7026016140f98df40026'
       } else if (e === '3') {
-        window.location.href = 'http://buy.jihui88.com/#/'
+        window.location.href = 'http://buy.jihui88.com/#/?ids=297e2669613f7026016140f8ed260020'
       } else if (e === '4') {
         window.location.href = 'http://buy.jihui88.com/#/?tab=tab1'
       } else if (e === '5') {

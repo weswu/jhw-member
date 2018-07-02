@@ -195,7 +195,7 @@ const state = {
     menu: [
       { text: '订单管理', value: 'shop' },
       { text: '商品相关配置', value: 'shop_config' },
-      { text: '支持方式管理', value: 'shop_pay' },
+      { text: '支付方式管理', value: 'shop_pay' },
       { text: '物流公司管理', value: 'shop_delivery' },
       { text: '物流单据设置', value: 'shop_bill' },
       { text: '商品退货管理', value: 'shop_refund' },

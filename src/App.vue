@@ -1,5 +1,5 @@
 <template>
-  <div id="JHW" :class="{small: win ==='small'}">
+  <div id="JHW" :class="{small: win === 'small', webapp: win === 'mobile'}">
     <Layout>
         <Header v-show="win !== 'small'"/>
         <Layout class="j_layout ivu-layout-has-sider" :class="{detail: detail}">
@@ -25,14 +25,17 @@ export default {
   },
   data () {
     return {
-      detail: false
+      detail: false,
+      winDefault: ''
     }
   },
   created () {
+    // 界面编辑用
     let params = window.location.search.substr(1).split('&')
     params.forEach(item => {
       let arr = item.split('=')
       if (arr[0] === 'win') {
+        this.winDefault = 'small'
         this.$store.commit('setWin', arr[1])
       }
       if (arr[0] === 'layoutId') {
@@ -44,6 +47,20 @@ export default {
     })
     if (this.$route.path.indexOf('/product/') > -1 || this.$route.path.indexOf('/news/') > -1) {
       this.detail = true
+    }
+    // web版本
+    if (/Android|webOS|iPhone|iPod|BlackBerry/i.test(navigator.userAgent)) {
+      this.$store.commit('setWin', 'mobile')
+    } else {
+      window.onresize = () => {
+        return (() => {
+          if (document.body.clientWidth < 700) {
+            this.$store.commit('setWin', 'mobile')
+          } else {
+            this.$store.commit('setWin', this.winDefault)
+          }
+        })()
+      }
     }
     try {
       document.body.removeChild(document.getElementById('app-loading'))

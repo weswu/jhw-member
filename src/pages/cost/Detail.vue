@@ -22,7 +22,7 @@
       </Row>
       <Row>
         <Col span="12">到期时间：{{detail.endTime | time}}</Col>
-        <Col span="12">支持来源：
+        <Col span="12">支付来源：
           <span v-if="detail.payType === 'WX'">微信支付</span>
           <span v-else-if="detail.payType === 'ALI'">支付宝支付</span>
           <span v-else-if="detail.payType === 'BANK'">银行卡支付</span>

@@ -104,9 +104,7 @@ export default {
         { title: '下单时间', key: 'addTime', ellipsis: true, width: 150 },
         { title: '来源（网站编号）', key: 'layoutId' }
       ],
-      list: [
-        {}
-      ],
+      list: [],
       searchData: {
         page: 1,
         pageSize: 10,
