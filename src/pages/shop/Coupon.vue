@@ -57,7 +57,8 @@ export default {
         { title: '已使用', width: 75, key: 'gainUseCount' },
         { title: '操作', className: 'j_table_operate', width: 120, render: this.renderOperate }
       ],
-      list: [
+      list: [],
+      listTest: [
         {
           gainCount: 2,
           gainMemberCount: 1,

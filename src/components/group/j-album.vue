@@ -70,8 +70,8 @@ export default {
   data () {
     return {
       modal: false,
-      listTest: [],
-      list: [
+      list: [],
+      listTest: [
         {
           state: '01',
           type: '01',

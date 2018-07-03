@@ -179,7 +179,7 @@ export default {
     return {
       btns: [
         { text: '基本信息', value: '0' },
-        { text: '自动备案（备案在阿里云）', value: '1' },
+        { text: '自助备案（备案在阿里云）', value: '1' },
         { text: '代理备案', value: '2' }
       ],
       active: '0',
