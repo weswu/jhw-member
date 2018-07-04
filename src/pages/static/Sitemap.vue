@@ -52,9 +52,9 @@
 
         <hr/>
         <p class="j_sitemap_tip">
-          一般来说，搜索引擎蜘蛛（Spider）会跟着链接爬行到你网站的所有网页。<br/>
+          一般来说，搜索引擎蜘蛛（Spider）会跟着链接爬行到您网站的所有网页。<br/>
           但是很多时候，由于种种原因，并不是所有网页都能被收录进搜索引擎数据库。<br/>
-          Sitemap就允许站长提供给搜索引擎一个网站地图，列出你所有需要被抓取的网页及重要性级别。
+          Sitemap就允许站长提供给搜索引擎一个网站地图，列出您所有需要被抓取的网页及重要性级别。
         </p>
         <Button class="info" @click="url('/seo_batch')">批量提交Sitemap</Button>
       </Content>

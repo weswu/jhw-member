@@ -1,12 +1,14 @@
 <template>
   <Row id="J_Header" type="flex" justify="space-between">
-    <div class="logo">
-      <a href="http://www.jihui88.com"><img src="http://img.jihui88.com/upload/w/w5/www2/picture/2017/07/05/54b68a5c-fdd2-4842-9e1e-b88d1c403f28.png" height="30" alt=""></a>
-    </div>
-    <Badge count="体验版 v4" class="badge-primary"></Badge>
-    <Col span="16" class="userInfo">
+    <Col>
+      <div class="logo">
+        <a href="http://www.jihui88.com"><img src="http://img.jihui88.com/upload/w/w5/www2/picture/2017/07/05/54b68a5c-fdd2-4842-9e1e-b88d1c403f28.png" height="30" alt=""></a>
+      </div>
+      <Badge count="体验版 v4" class="badge-primary"></Badge>
+    </Col>
+    <Col class="userInfo">
       <a href="#/" class="header_link">首页</a>
-      <a href="#/" class="header_link">服务反馈</a>
+      <a href="javascript:;" class="header_link" @click="openFeedback">服务反馈</a>
       <Dropdown placement="bottom" class="j_dropdown_message" @on-visible-change="messageChange">
         <a href="#/message" class="header_link">
           <i class="iconfont icon-tixing2"><span class="badge">{{userInfo.noReaderMsg}}</span></i>
@@ -59,14 +61,17 @@
       <span class="border"></span>
     </Col>
     <Detail ref="detail"/>
+    <Feedback ref="feedback"/>
   </Row>
 </template>
 
 <script>
 import { mapState, mapActions } from 'vuex'
+import Feedback from '@/components/home/j-feedback'
 import Detail from '@/pages/message/Detail'
 export default {
   components: {
+    Feedback,
     Detail
   },
   data () {
@@ -120,6 +125,9 @@ export default {
         this.getMessage()
         this.message = true
       }
+    },
+    openFeedback () {
+      this.$refs.feedback.open()
     }
   }
 }
@@ -134,7 +142,7 @@ export default {
   background: #383d41;
   .logo{
     float:left;
-    width: 120px;
+    width: 120px;    height: 50px;
     border-right: 1px solid #000;
     img{
       height: 36px;

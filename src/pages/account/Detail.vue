@@ -4,7 +4,7 @@
     :title="title"
     @on-cancel="cancel">
     <div slot="footer">
-      <Button type="text" size="large" @click="cancel()">取消</Button>
+      <Button type="text" size="large" @click="cancel">取消</Button>
       <Button type="primary" size="large" @click="ok('modalForm')">确定</Button>
     </div>
     <div class="j_tip" v-if="model.memberId">

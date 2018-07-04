@@ -35,14 +35,14 @@
             </div>
             <div class="j_tip">
               <span class="red">第<span class="count">2</span>步：</span>
-              <span class="grey">请在此输入你已经拥有的自定义域名。审核(或清除)周期大概2个工作日。</span>
+              <span class="grey">请在此输入您已经拥有的自定义域名。审核(或清除)周期大概2个工作日。</span>
             </div>
             <FormItem>
               <Input v-model="detail.address" placeholder="填写主域名"></Input> <Button class="submit" @click="submit">提交</Button>
             </FormItem>
             <div class="j_tip">
               <span class="red">第<span class="count">3</span>步：</span>
-              <span class="grey">域名解析 (注意：请确保你的自定义域名解析正确，域名设置变动一般需要几个小时生效，最长可达2天)</span>
+              <span class="grey">域名解析 (注意：请确保您的自定义域名解析正确，域名设置变动一般需要几个小时生效，最长可达2天)</span>
             </div>
             <table class="j_table" style="max-width:460px;color: #aaa;">
               <tbody>

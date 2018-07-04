@@ -56,8 +56,8 @@
             <Row type="flex">
               <Col span="4" class="flex-left">备用邮箱</Col>
               <Col span="14">
-                <span v-if="user.email">您已绑定了邮箱{{user.email | limitEmail}} [机汇网发送的各类系统、营销、服务通知将发送到您的备用邮箱。]</span>
-                <span v-else>您可以绑定邮箱, 机汇网发送的各类系统、营销、服务通知将发送到您的备用邮箱。</span>
+                <span v-if="user.email">您已绑定了邮箱{{user.email | limitEmail}} [可用于找回您的密码。]</span>
+                <span v-else>您可以绑定邮箱, 可用于找回您的密码</span>
               </Col>
               <Col span="6" class="flex-right">
                 <span class="success" v-if="user.email"><i class="iconfont icon-dagou"></i>已设置</span>
@@ -265,7 +265,7 @@ export default {
         // 解绑
         this.$Modal.confirm({
           title: '重新绑定',
-          content: '你确定要解绑并重新绑定吗?',
+          content: '您确定要解绑并重新绑定吗?',
           onOk: () => {
             ctx.$http.post('/rest/api/user/oauthUnBind', qs.stringify({
               model: JSON.stringify({

@@ -113,7 +113,6 @@ export default {
       })
     },
     getDetail (item) {
-      this.modal = true
       let desc = ''
       item.fdbk_intro1k.forEach(item => {
         desc += item + '<br/>'
@@ -123,6 +122,7 @@ export default {
       this.$http.get('/rest/api/crm/detail/' + item.fdbk_id).then(res => {
         if (res.success) {
           this.detail.content = res.attributes.data
+          this.modal = true
         } else {
           this.$Message.error(res.msg)
         }

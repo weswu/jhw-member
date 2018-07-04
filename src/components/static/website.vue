@@ -1,7 +1,7 @@
 <template>
   <div class="j_static_website">
-    <div class="j_tip" style="margin-top: 13px;">由于互联网信息管理法规，发布网站需要验证你的手机号信息。 <a href="#/account" class="a_underline">立即验证</a></div>
-    <Button icon="plus" class="orange" @click="add">创建新网站</Button> 你有{{onlineCount}}个网站上线了
+    <div class="j_tip" style="margin-top: 13px;">由于互联网信息管理法规，发布网站需要验证您的手机号信息。 <a href="#/account" class="a_underline">立即验证</a></div>
+    <Button icon="plus" class="orange" @click="add">创建新网站</Button> 您有{{onlineCount}}个网站上线了
     <ul class="static_info j_scroll">
       <li class="item" v-for="(item, index) in list" :key="item.id">
         <p>

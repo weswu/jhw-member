@@ -10,19 +10,19 @@
             温馨提醒：
             <span v-if="active === '0'">请完善备案信息，方便网站“界面编辑”调取。备案主要是为了规范网络安全化，维护网站经营者的合法权益，保障网民的合法利益。</span>
             <span v-if="active === '1'">备案只针对国内的空间，放国外不需要备案。如有问题，请咨询：QQ：260404208</span>
-            <span v-if="active === '2'">为了更好的帮你备案，请提交以下相关资料（备案只针对国内的空间，放国外不需要备案。）如有问题，请咨询：QQ：260404208</span>
+            <span v-if="active === '2'">为了更好的帮您备案，请提交以下相关资料（备案只针对国内的空间，放国外不需要备案。）如有问题，请咨询：QQ：260404208</span>
           </div>
         </div>
 
         <div v-if="active === '0'">
-          <Form :model="bindDetail" :label-width="0" ref="model">
-            <FormItem>
+          <Form :model="bindDetail" :label-width="150" ref="model">
+            <FormItem label="ICP备案号：">
               <Input v-model="bindDetail.icp" placeholder="填写ICP备案号" style="width:250px;"></Input>
             </FormItem>
-            <FormItem>
+            <FormItem label="网安备案号：">
               <Input v-model="bindDetail.psr" placeholder="填写网安备案号" style="width:250px;"></Input>
             </FormItem>
-            <FormItem>
+            <FormItem label="网安备案链接地址：">
               <Input v-model="bindDetail.seccurityLink" placeholder="填写网安备案链接地址" style="width:250px;"></Input>
             </FormItem>
           </Form>
