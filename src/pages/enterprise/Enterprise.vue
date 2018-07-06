@@ -39,7 +39,7 @@
           <FormItem label="姓名：" prop="name">
             <Input v-model="user.name" placeholder="请输入姓名"></Input>
           </FormItem>
-          <FormItem label="手机：" prop="name">
+          <FormItem label="手机：" prop="cellphone">
             <Input v-model="user.cellphone" placeholder="请输入手机"></Input>
           </FormItem>
           <FormItem label="Email：">

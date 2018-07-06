@@ -293,7 +293,7 @@ export default {
   }
   form.j_scroll{
     height: calc(100vh - 400px);
-    overflow-y: scroll;
+    overflow-y: auto;
     .ivu-input-wrapper{
       width: 250px;
     }

@@ -16,6 +16,7 @@ export default new Router({
     { path: '/point', component: require('@/pages/point/Point').default, meta: { open: '1', parent: 'point' } },
     { path: '/point_goods', component: require('@/pages/point/PointGoods').default, meta: { open: '1', parent: 'point' } },
     { path: '/point_origin', component: require('@/pages/point/PointOrigin').default, meta: { open: '1', parent: 'point' } },
+    { path: '/poster_list', component: require('@/pages/point/Poster').default, meta: { open: '1', parent: 'point' } },
     // 消息
     { path: '/message', component: require('@/pages/message/Message').default },
     { path: '/message/:id', component: require('@/pages/message/Message').default },
@@ -47,7 +48,7 @@ export default new Router({
     { path: '/evaluate/:id', component: require('@/pages/product/Evaluate').default, meta: { open: '2', parent: 'product' } },
     // 新闻
     { path: '/news', component: require('@/pages/news/News').default, meta: { open: '2', parent: 'news' } },
-    { path: '/news/:id', component: require('@/pages/news/Detail').default, meta: { open: '2', parent: 'news' } },
+    { path: '/news/:id', component: require('@/pages/news/NewsDetail').default, meta: { open: '2', parent: 'news' } },
     // 相册
     { path: '/album', component: require('@/pages/album/Album').default, meta: { open: '2', parent: 'album' } },
     // 会员管理

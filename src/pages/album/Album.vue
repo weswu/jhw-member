@@ -88,6 +88,11 @@
                 <div class="box" @click.stop="selected(item)" @contextmenu.prevent="more($event, item)" data-id="frame">
                   <Card dis-hover :class="{hover: item._checked}" data-id="frame">
                     <img :src="$store.state.status.IMG_HOST + item.serverPath | picUrl(5)" :alt="item.filename" @error="imgError($event, item)">
+
+                    <div class="sort">
+                      <i class="iconfont icon-zuojiantou" @click.stop="prev(item, index)" v-if="index !== 0"></i>
+                      <i class="iconfont icon-youjiantou" @click.stop="next(item, index)" v-if="index !== list.length - 1"></i>
+                    </div>
                   </Card>
                   <div class="title" :class="{hover: item._checked && !item.editting}" data-id="frame">
                     <span><Input v-model="item.filename2" @on-blur="nameChange(item)" v-if="item.editting"/></span>
@@ -571,6 +576,35 @@ export default {
       }
       e.target.onerror = null
     },
+    prev (item, index) {
+      let obj = this.list[index - 1]
+      this.sortinit(obj.attId, item.sort)
+      this.sortinit(item.attId, obj.sort)
+      this.list.splice(index + 1, 0, obj)
+      this.list.splice(index - 1, 1)
+    },
+    next (item, index) {
+      let obj = this.list[index + 1]
+      this.sortinit(obj.attId, item.sort)
+      this.sortinit(item.attId, obj.sort)
+      this.list.splice(index + 2, 0, item)
+      this.list.splice(index, 1)
+    },
+    sortinit (id, sort) {
+      let data = {
+        model: JSON.stringify({
+          id: id,
+          sort: sort,
+          editField: true
+        }),
+        _method: 'put'
+      }
+      this.$http.post('/rest/api/album/attr/img/detail/' + id, qs.stringify(data)).then((res) => {
+        if (!res.success) {
+          this.$Message.error(res.msg)
+        }
+      })
+    },
     // 批量
     initSelected () {
       var ctx = this
@@ -704,10 +738,6 @@ export default {
 </script>
 
 <style lang="less">
-.picture_warpper::-webkit-scrollbar-track{background-color: transparent;}
-.picture_warpper::-webkit-scrollbar{width: 6px;height: 6px;}
-.picture_warpper::-webkit-scrollbar-thumb{background-color: #dedee4;}
-.picture_warpper::-webkit-scrollbar-corner {background-color: transparent;}
 .j_album{
   .menu{
     display: none;
@@ -736,7 +766,7 @@ export default {
   .picture_warpper{
     width: 100%;
     overflow: hidden;
-    overflow-y: scroll;
+    overflow-y: auto;
     padding: 0 10px;
     .pic_item{
       display:flex;
@@ -752,6 +782,15 @@ export default {
         border: 1px solid transparent;
         &.hover{
           border: 1px dashed #ddd;
+        }
+        &:hover{
+          .ivu-card{
+            background: #e4e4e4;
+          }
+          .sort{
+            opacity: 1;
+            transition: all 0.2s ease-in-out;
+          }
         }
         // 文件
         .file{
@@ -797,6 +836,26 @@ export default {
             border: 1px solid #b3b3b3;
             vertical-align: middle;
           }
+        }
+      }
+      .sort{
+        opacity: 0;
+        background: #ccc;
+        position: absolute;
+        bottom: 0;left: 0;
+        width: 100%;
+        border-radius: 6px;height: 29px;
+        line-height: 29px;
+        i{
+          color: #fff;
+          padding: 0 10px;
+          font-size: 18px;
+        }
+        .icon-zuojiantou{
+          float: left
+        }
+        .icon-youjiantou{
+          float: right
         }
       }
       .title{

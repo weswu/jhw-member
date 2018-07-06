@@ -41,6 +41,6 @@ export default {
 <style lang="less">
 .j_static .static_info{
   height: calc(100vh - 347px);
-  overflow-y: scroll;
+  overflow-y: auto;
 }
 </style>

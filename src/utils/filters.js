@@ -86,3 +86,11 @@ Vue.filter('picUrl', function (src, number) {
 Vue.filter('postfix', function (src) {
   return '.' + src.split('.')[1].split('?')[0]
 })
+/*
+ * @author: wes
+ * @date: 2018-6-12
+ * @desc: 图片名字
+*/
+Vue.filter('http', function (src) {
+  return src.indexOf('http') > -1 ? src : ('http://' + src)
+})

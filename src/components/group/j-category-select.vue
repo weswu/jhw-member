@@ -143,7 +143,7 @@ export default {
     padding: 0;
     .ivu-select-dropdown-list{
       max-height: 340px;
-      overflow-y: scroll;
+      overflow-y: auto;
     }
   }
   .icon-xialajiantou{

@@ -97,7 +97,8 @@ const state = {
     menu: [
       { text: '积分列表', value: 'point' },
       { text: '积分兑换', value: 'point_goods' },
-      { text: '积分规则', value: 'point_origin' }
+      { text: '积分规则', value: 'point_origin' },
+      { text: '推广', value: 'poster_list' }
     ]
   },
   menuMessage: {

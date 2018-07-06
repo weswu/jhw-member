@@ -147,9 +147,10 @@ export default {
   background: #2d303c;
   height: 100%;
   transition: none;
-  overflow-y: scroll;
+  overflow-y: auto;
   overflow-x: hidden;
   &::-webkit-scrollbar{width: 0;}
+  .ivu-tooltip,.ivu-tooltip-rel{width: 100%}
   .layout-header-bar{
     background: #414659;
     height: 40px;
@@ -198,7 +199,6 @@ export default {
        margin-right: 0;
        display: inline-block;
        overflow: hidden;
-       width: 130px;
        text-overflow: ellipsis;
        white-space: nowrap;
        vertical-align: middle;
@@ -226,9 +226,6 @@ export default {
       .ivu-menu-item {
         padding-left: 10px !important;
         transition: none;
-        span{
-          width: 120px;
-        }
       }
     }
     // 二级菜单打开
@@ -243,6 +240,9 @@ export default {
   .collapsed-menu {
     span{
       width: 0;
+    }
+    .iconfont {
+      width: 100%;
     }
     .ivu-icon{
       display: none

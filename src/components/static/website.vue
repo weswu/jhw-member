@@ -22,7 +22,7 @@
           <span class="type" v-else-if="!item.bind.address">未上线</span>
         </p>
         <p>
-          <a :href="item.url" target="_blank" class="url">{{item.url}}</a>
+          <a :href="item.url | http" target="_blank" class="url">{{item.url}}</a>
           <span class="time" v-if="item.endTime">(到期时间：{{item.endTime | time}})</span>
           <Poptip trigger="hover" placement="top" class="j_poptip_ul" v-if="!item.new">
             <a href="javascript:;" class="buy">购买</a>
@@ -115,6 +115,7 @@ export default {
   },
   data () {
     return {
+      cccc: 'cnxaee.com',
       list: [],
       listTest: [
         {

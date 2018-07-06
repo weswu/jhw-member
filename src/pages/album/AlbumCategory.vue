@@ -85,7 +85,7 @@ export default {
     initData () {
       var ctx = this
       this.list = this.$store.state.albumCategory
-      this.dataTest = [
+      this.data = [
         {
           title: '全部图片',
           id: 'all',
@@ -96,7 +96,7 @@ export default {
           children: []
         }
       ]
-      this.data = [
+      this.dataTest = [
         {
           title: '全部图片',
           id: 'all',
