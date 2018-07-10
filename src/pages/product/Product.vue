@@ -69,8 +69,9 @@
           <Checkbox v-model="toggle" @on-change="handleSelectAll(toggle)"/>
           <Button type="ghost" size="small" @click="delAll">删除</Button>
           <Button type="ghost" size="small" @click="copyAll">复制</Button>
-          <Button type="ghost" size="small" @click="displayAll('01')">上架</Button>
-          <Button type="ghost" size="small" @click="displayAll('00')">下架</Button>
+          <Button type="ghost" size="small" @click="displayAll('00')">隐藏</Button>
+          <Button type="ghost" size="small" @click="marketableAll('01')">上架</Button>
+          <Button type="ghost" size="small" @click="marketableAll('00')">下架</Button>
           <Button type="ghost" size="small" @click="categoryAll">转移分类</Button>
         </span>
       </JPagination>
@@ -112,7 +113,7 @@ export default {
   data () {
     return {
       myShowSelect: this.$store.state.customData.productShow,
-      myShowList: ['序号', '产品图片', '产品名称', '产品型号', '产品价格', '产品分类', '添加时间', '是否上架', '排序', '二维码'],
+      myShowList: ['序号', '产品图片', '产品名称', '产品型号', '产品价格', '产品分类', '添加时间', '显示／隐藏', '是否上架', '排序', '二维码'],
       columns: [],
       columns2: [
         { type: 'index2', className: 'j_table_index', title: '序号', align: 'center', width: 60, render: this.indexFilter },
@@ -122,6 +123,7 @@ export default {
         { title: '产品价格', minWidth: 90, render: this.priceFilter },
         { title: '产品分类', className: 'j_table_category', sortable: true, key: 'category', width: 160, render: this.categoryFilter },
         { title: '添加时间', sortable: true, key: 'addTime', minWidth: 105, render: this.dataFilter },
+        { title: '显示／隐藏', sortable: true, key: 'isdisplay', width: 113, render: this.isdisplayFilter },
         { title: '是否上架', sortable: true, key: 'isMarketable', width: 102, render: this.isMarketableFilter },
         { title: '排序', className: 'j_table_sort', sortable: true, key: 'sort', minWidth: 125, render: this.sortFilter }
       ],
@@ -233,6 +235,12 @@ export default {
         })
       })
       this.columns.push({ title: '操作', className: 'j_table_operate', width: 156, render: this.renderOperate })
+      if (this.$store.state.customData.productShow.indexOf('是否上架') === -1 && this.myShowSelect.indexOf('是否上架') > -1) {
+        this.$Notice.open({
+          title: '是否上架',
+          desc: '只针对电商版使用'
+        })
+      }
       this.$store.state.customData.productShow = this.myShowSelect
       if (e === 'ok') this.$store.dispatch('SAVE_CUSTOM_DATA')
     },
@@ -296,7 +304,20 @@ export default {
         }
       })
     },
-    displayAll (e) {
+    displayAll () {
+      if (!this.ids) {
+        return this.$Message.error('未选择')
+      }
+      this.$http.post('/rest/api/product/batch/display', qs.stringify({ids: this.ids})).then((res) => {
+        if (res.success) {
+          this.$Message.success('隐藏成功')
+          this.get()
+        } else {
+          this.$Message.error(res.msg)
+        }
+      })
+    },
+    marketableAll (e) {
       if (!this.ids) {
         return this.$Message.error('未选择')
       }
@@ -739,72 +760,15 @@ export default {
       })
     },
     dataFilter (h, params) {
-      let format = this.dateFormat(params.row.addTime)
-      return h('div', format)
+      return h('div', this.dateFormat(params.row.addTime))
     },
     isMarketableFilter (h, params) {
-      var ctx = this
-      return h('div', [
-        h('span', params.row.isMarketable ? '是' : '否'),
-        h('i', {
-          class: {
-            'none': true,
-            'iconfont': true,
-            'icon-bianji2': true
-          },
-          on: {
-            click: () => {
-              params.row.isMarketable = !params.row.isMarketable
-              let data = {
-                model: JSON.stringify({
-                  id: params.row.productId,
-                  isMarketable: params.row.isMarketable,
-                  editField: true
-                }),
-                _method: 'put'
-              }
-              ctx.$http.post('/rest/api/product/detail/' + params.row.productId, qs.stringify(data)).then((res) => {
-                if (res.success) {
-                } else {
-                  ctx.$Message.error(res.msg)
-                }
-              })
-            }
-          }
-        })
-      ])
+      let option = [true, false]
+      return this.cellRadio(this, h, params, option)
     },
-    topproductFilter (h, params) {
-      var ctx = this
-      return h('div', [
-        h('span', params.row.topproduct === '01' ? '是' : '否'),
-        h('i', {
-          class: {
-            'none': true,
-            'iconfont': true,
-            'icon-bianji2': true
-          },
-          on: {
-            click: () => {
-              params.row.topproduct = params.row.topproduct === '01' ? '00' : '01'
-              let data = {
-                model: JSON.stringify({
-                  id: params.row.productId,
-                  topproduct: params.row.topproduct,
-                  editField: true
-                }),
-                _method: 'put'
-              }
-              ctx.$http.post('/rest/api/product/detail/' + params.row.productId, qs.stringify(data)).then((res) => {
-                if (res.success) {
-                } else {
-                  ctx.$Message.error(res.msg)
-                }
-              })
-            }
-          }
-        })
-      ])
+    isdisplayFilter (h, params) {
+      let option = ['1', '0', '显示', '隐藏']
+      return this.cellRadio(this, h, params, option)
     },
     sortFilter (h, params) {
       return this.cellEdit(this, h, params)

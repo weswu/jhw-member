@@ -83,10 +83,10 @@ export default {
     return {
       active: 'promotion',
       btns: [
-        { text: '知识类', value: 'promotion' },
+        { text: '促销类', value: 'promotion' },
         { text: '产品类', value: 'product' },
-        { text: '促销类', value: 'person' },
-        { text: '人物类', value: 'knowledge' }
+        { text: '人物类', value: 'person' },
+        { text: '知识类', value: 'knowledge' }
       ],
       list: [],
       pic: '',

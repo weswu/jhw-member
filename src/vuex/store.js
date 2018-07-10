@@ -12,7 +12,7 @@ const state = {
     enterprise: {}
   },
   userInfo: {
-    noReaderMsg: 0
+    noReaderMsg: 2
   },
   lanId: '1',
   uid: ['0', '0', '0'],
@@ -20,7 +20,12 @@ const state = {
   productCategory: [],
   newsCategory: [],
   albumCategory: [],
-  messageList: [],
+  messageList: [
+    {
+      title: 'ccc',
+      recvState: '00'
+    }
+  ],
   memberRankList: [],
   memberAttrList: [],
   tagList: [],
@@ -37,7 +42,7 @@ const state = {
       { value: 'member', text: '会员管理', icon: 'icon-Group' },
       { value: 'product', text: '产品列表', icon: 'icon-liebiao1' }
     ],
-    productShow: ['序号', '产品图片', '产品名称', '产品型号', '产品分类', '添加时间', '是否上架', '排序', '二维码'],
+    productShow: ['序号', '产品图片', '产品名称', '产品型号', '产品分类', '添加时间', '显示／隐藏', '排序', '二维码'],
     shopShow: ['序号', '订单编号', '用户名', '订单总额', '订单状态', '付款状态', '配送状态', '支付方式', '配送方式', '下单时间'],
     homeSort: [
       { value: 'static', text: '我的网站', status: '01', type: '01' },

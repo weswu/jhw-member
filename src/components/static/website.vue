@@ -115,7 +115,6 @@ export default {
   },
   data () {
     return {
-      cccc: 'cnxaee.com',
       list: [],
       listTest: [
         {
@@ -144,7 +143,14 @@ export default {
     })
   },
   created () {
-    this.get()
+    if (!window.token) {
+      var ctx = this
+      setTimeout(function () {
+        ctx.get()
+      }, 500)
+    } else {
+      this.get()
+    }
   },
   methods: {
     get () {
@@ -169,7 +175,7 @@ export default {
           this.onlineCount = res.attributes.onlineCount
           this.getCount = 0
         } else {
-          if (res.msgType === 'notLogin' && this.getCount < 5) {
+          if (res.msgType === 'notLogin' && this.getCount < 3) {
             var ctx = this
             setTimeout(function () {
               ctx.getCount += 1

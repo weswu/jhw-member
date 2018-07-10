@@ -1,10 +1,8 @@
 <template>
   <div class="j_pc_create_item">
+    <Button type="info" @click="add">新建空白网站</Button>
     <div class="static_list">
       <Card dis-hover v-for="(item, index) in list" :key="index">
-        <div class="text" @click="add(item)" v-if="index === 0 && searchData.page === 1">
-          新建空白网站
-        </div>
         <img :src="'http://dfwjjingtai.b0.upaiyun.com/'+item.pic">
         <div class="container" v-if="!(index === 0 && searchData.page === 1)">
           <div class="bg"></div>
@@ -49,25 +47,9 @@ export default {
   },
   methods: {
     get () {
-      this.searchData.page === 1 ? this.searchData.pageSize = 8 : this.searchData.pageSize = 9
       this.$http.get('/rest/pc/index/list?' + qs.stringify(this.searchData)).then((res) => {
         if (res.success) {
-          let data = res.attributes.data
-          if (this.searchData.page === 1) {
-            data.splice(0, 0, {
-              title: '我的网站',
-              seoTitle: '我的网站',
-              language: '1',
-              grade: 1,
-              name: '我的网站',
-              cellphone: '',
-              categoryId: '7',
-              entName: '',
-              areaPath: '',
-              pic: 'upload//a//a1//admin//picture//2018//04//10/6443c6f9-c107-48e3-8588-004e2bf4c3cf.jpg'
-            })
-          }
-          this.list = data
+          this.list = res.attributes.data
           this.total = res.attributes.count
         } else {
           this.$Message.error(res.msg)
@@ -76,18 +58,29 @@ export default {
     },
     add (item) {
       let obj = {
-        title: item.title,
-        seoTitle: item.seoTitle,
-        language: item.language,
-        grade: item.grade,
-        name: item.name,
+        title: '我的网站',
+        seoTitle: '我的网站',
+        language: '1',
+        grade: 1,
+        name: '我的网站',
         cellphone: '',
-        categoryId: item.categoryId,
+        categoryId: '7',
         entName: '',
         areaPath: ''
       }
       if (item.id) {
-        obj.copyId = parseInt(item.id)
+        obj = {
+          title: item.title,
+          seoTitle: item.seoTitle,
+          language: item.language,
+          grade: item.grade,
+          name: item.name,
+          cellphone: '',
+          categoryId: item.categoryId,
+          entName: '',
+          areaPath: '',
+          copyId: item.id
+        }
       }
       let data = {
         model: JSON.stringify(obj)
@@ -167,19 +160,6 @@ export default {
             }
           }
         }
-      }
-    }
-    .text{
-      background-color: #fff;
-      padding-top: 28%;
-      text-align: center;
-      font-size: 14px;
-      width: 100%;
-      height: 100%;
-      position: absolute;
-      cursor: pointer;
-      &:hover{
-        color: #ff5241;
       }
     }
   }

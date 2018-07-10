@@ -39,7 +39,7 @@ export default {
     }
   },
   computed: {
-    ...mapState(['status', 'win']),
+    ...mapState(['status', 'win', 'userInfo']),
     rotateIcon () {
       return [
         'rotate',
@@ -55,7 +55,7 @@ export default {
   },
   created () {
     if (this.data === 'menuMessage') {
-      this.status[this.data].menu[1].count = this.$store.state.userInfo.noReaderMsg
+      this.status[this.data].menu[1].count = this.userInfo.noReaderMsg
     }
   },
   methods: {

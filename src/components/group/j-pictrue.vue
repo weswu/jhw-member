@@ -18,10 +18,10 @@
         重新上传
       </div>
     </li>
-    <li class="j_picture_item add" v-if="list && list.length < 10">
+    <li class="j_picture_item add" v-if="list && list.length < 20">
       <i class="iconfont icon-plus-add" @click="open"></i>
     </li>
-    <JAlbum ref="ablum" @on-change="picChange" v-if="toggle"/>
+    <JAlbum ref="ablum" :multiple="multiple" :type="'multiple'" @on-change="picChange" v-if="toggle"/>
   </ul>
 </template>
 

@@ -28,8 +28,8 @@ export default {
   computed: {
     ...mapState(['user'])
   },
-  data () {
-    return {}
+  watch: {
+    user () {}
   },
   methods: {
     submit () {

@@ -281,3 +281,36 @@ Vue.prototype.cellEdit = (vm, h, params) => {
     ])
   ])
 }
+
+Vue.prototype.cellRadio = (vm, h, params, option) => {
+  return h('div', [
+    h('span', params.row[params.column.key] === option[0] ? option[2] || '是' : option[3] || '否'),
+    h('i', {
+      class: {
+        'none': true,
+        'iconfont': true,
+        'icon-bianji2': true
+      },
+      on: {
+        click: () => {
+          params.row[params.column.key] = params.row.topproduct === option[0] ? option[1] : option[0]
+          let model = {
+            id: params.row.edittingCell.id,
+            editField: true
+          }
+          model[params.column.key] = params.row[params.column.key]
+          let data = {
+            model: JSON.stringify(model),
+            _method: 'put'
+          }
+          vm.$http.post('/rest/api/' + params.row.edittingCell.api + '/detail/' + params.row.edittingCell.id, qs.stringify(data)).then((res) => {
+            if (res.success) {
+            } else {
+              vm.$Message.error(res.msg)
+            }
+          })
+        }
+      }
+    })
+  ])
+}

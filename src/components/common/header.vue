@@ -19,7 +19,7 @@
           </div>
           <ul>
             <li v-for="(item, index) in messageList" :key="index" v-if="index<5">
-              <div class="title" @click="detail(item.messageId)">
+              <div class="title" @click="detail(item)">
                 {{item.title}}
               </div>
               <p>
@@ -81,7 +81,7 @@ export default {
     }
   },
   computed: {
-    ...mapState(['user', 'userInfo', 'messageList'])
+    ...mapState(['user', 'userInfo', 'messageList', 'status'])
   },
   created () {
     this.$store.commit('setLanId', window.localStorage.getItem('lanId') || '1')
@@ -117,8 +117,13 @@ export default {
       ifr.style.display = 'none'
       document.getElementById('JHW').appendChild(ifr)
     },
-    detail (id) {
-      this.$refs.detail.open(id)
+    detail (item) {
+      this.$refs.detail.open(item.messageId)
+      if (this.userInfo.noReaderMsg > 0) {
+        this.userInfo.noReaderMsg -= 1
+        this.status['menuMessage'].menu[1].count = this.userInfo.noReaderMsg
+      }
+      if (this.userInfo.noReaderMsg > 4) this.getMessage()
     },
     messageChange () {
       if (this.messageList.length === 0 && !this.message) {

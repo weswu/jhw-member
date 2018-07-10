@@ -277,11 +277,13 @@ export default {
       if (e === '4') this.editor4 = true
     },
     // 产品图片
-    imgChange (item, index) {
+    imgChange (list, index) {
       if (index === 0 || index > 0) {
-        this.imgList[index].src = item.src
+        this.imgList[index].src = list[0].serverPath
       } else {
-        this.imgList.push({id: item.id, src: item.src})
+        list.forEach(item => {
+          this.imgList.push({id: item.attId, src: item.serverPath})
+        })
       }
     },
     prevImg (index) {

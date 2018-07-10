@@ -39,6 +39,7 @@
 
 <script>
 import qs from 'qs'
+import { mapState } from 'vuex'
 import MenuBar from '@/components/common/menu_bar'
 import JHeader from '@/components/group/j-header'
 import JPagination from '@/components/group/j-pagination'
@@ -94,6 +95,9 @@ export default {
     this.get()
     this.changeTableColumns()
   },
+  computed: {
+    ...mapState(['userInfo', 'status'])
+  },
   watch: {
     '$route' (to, from) {
       this.pageName = to.params.id
@@ -138,7 +142,7 @@ export default {
         { title: '类型', key: 'type', width: 150, render: this.typeFilter }
       ]
       if (this.searchData.type === '03') {
-        this.columns.splice(3, 0, { title: '来源（网站编号）', key: '', width: 100 })
+        this.columns.splice(3, 0, { title: '来源（网站编号）', key: 'layoutId', width: 100, render: this.layoutFilter })
         let columns2 = [
           { title: '发送人', key: 'fromName' },
           { title: '来源ip', key: 'ip' },
@@ -232,6 +236,11 @@ export default {
           },
           on: {
             click: () => {
+              if (params.row.recvState === '00') {
+                this.userInfo.noReaderMsg -= 1
+                params.row.recvState = '01'
+                this.status['menuMessage'].menu[1].count = this.userInfo.noReaderMsg
+              }
               this.$refs.detail.open(params.row.messageId)
             }
           }
@@ -267,12 +276,20 @@ export default {
         }, params.row.ip && '加入黑名单')
       ])
     },
+    layoutFilter (h, params) {
+      return h('span', params.row.layoutId || '-')
+    },
     renderOperate (h, params) {
       var ctx = this
       return h('div', [
         h('a', {
           on: {
             click: () => {
+              if (params.row.recvState === '00') {
+                this.userInfo.noReaderMsg -= 1
+                params.row.recvState = '01'
+                this.status['menuMessage'].menu[1].count = this.userInfo.noReaderMsg
+              }
               this.$refs.detail.open(params.row.messageId)
             }
           }

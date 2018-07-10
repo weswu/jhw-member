@@ -89,7 +89,7 @@
                   <Card dis-hover :class="{hover: item._checked}" data-id="frame">
                     <img :src="$store.state.status.IMG_HOST + item.serverPath | picUrl(5)" :alt="item.filename" @error="imgError($event, item)">
 
-                    <div class="sort">
+                    <div class="sort" v-if="searchData.sortField === 'sort'">
                       <i class="iconfont icon-zuojiantou" @click.stop="prev(item, index)" v-if="index !== 0"></i>
                       <i class="iconfont icon-youjiantou" @click.stop="next(item, index)" v-if="index !== list.length - 1"></i>
                     </div>
@@ -168,8 +168,8 @@ export default {
     return {
       pic: '',
       sortList: [
+        { value: 'sort', label: '默认' },
         { value: 'uploadTime', label: '时间' },
-        { value: 'sort', label: '大小' },
         { value: 'filename', label: '名称' }
       ],
       breadList: [
@@ -182,7 +182,7 @@ export default {
         page: 1,
         pageSize: 18,
         filename: '',
-        sortField: 'uploadTime',
+        sortField: 'sort',
         searchType: '1',
         sortType: 'desc'
       },

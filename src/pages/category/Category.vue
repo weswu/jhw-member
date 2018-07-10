@@ -144,7 +144,7 @@ export default {
       }
       this.$http.post('/rest/api/news/batch/del', qs.stringify({ids: this.ids})).then((res) => {
         if (res.success) {
-          this.$Message.success(res.msg || '删除成功')
+          this.$Message.success('删除成功')
           this.get()
           this.ids = ''
         } else {

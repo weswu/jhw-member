@@ -72,8 +72,8 @@
             <Checkbox v-model="toggle" @on-change="handleSelectAll(toggle)"/>
             <Button type="ghost" size="small" @click="delAll">删除</Button>
             <Button type="ghost" size="small" @click="copyAll">复制</Button>
-            <Button type="ghost" size="small" @click="displayAll('01')">上架</Button>
-            <Button type="ghost" size="small" @click="displayAll('00')">下架</Button>
+            <Button type="ghost" size="small" @click="displayAll('01')">显示</Button>
+            <Button type="ghost" size="small" @click="displayAll('00')">隐藏</Button>
             <Button type="ghost" size="small" @click="categoryAll">转移分类</Button>
           </span>
         </JPagination>
@@ -112,7 +112,7 @@ export default {
         { title: '新闻标题', className: 'text-color', sortable: true, key: 'title', minWidth: 120, render: this.titleFilter },
         { title: '新闻分类', className: 'j_table_category', sortable: true, key: 'category', minWidth: 160, render: this.categoryFilter },
         { title: '添加时间', sortable: true, key: 'addTime', minWidth: 105, render: this.dataFilter },
-        { title: '是否上架', sortable: true, key: 'display', minWidth: 105, render: this.displayFilter },
+        { title: '显示／隐藏', sortable: true, key: 'display', minWidth: 113, render: this.displayFilter },
         { title: '是否置顶', minWidth: 90, render: this.topnewsFilter },
         { title: '排序', className: 'j_table_sort', sortable: true, key: 'sort', minWidth: 125, render: this.sortFilter },
         { title: '操作', className: 'j_table_operate', align: 'left', width: 160, render: this.renderOperate }
@@ -291,7 +291,7 @@ export default {
       }
       this.$http.post('/rest/api/news/batch/del', qs.stringify({ids: this.ids})).then((res) => {
         if (res.success) {
-          this.$Message.success(res.msg || '删除成功')
+          this.$Message.success('删除成功')
           this.get()
         } else {
           this.$Message.error(res.msg)
@@ -317,7 +317,7 @@ export default {
       }
       this.$http.post('/rest/api/news/display', qs.stringify({newsIds: this.ids, display: display})).then((res) => {
         if (res.success) {
-          this.$Message.success(display === '01' ? '上架成功' : '下架成功')
+          this.$Message.success(display === '01' ? '已显示' : '已隐藏')
           this.get()
         } else {
           this.$Message.error(res.msg)
@@ -374,68 +374,12 @@ export default {
       return h('div', this.dateFormat(params.row.addTime))
     },
     displayFilter (h, params) {
-      var ctx = this
-      return h('div', [
-        h('span', params.row.display === '01' ? '是' : '否'),
-        h('i', {
-          class: {
-            'none': true,
-            'iconfont': true,
-            'icon-bianji2': true
-          },
-          on: {
-            click: () => {
-              params.row.display = params.row.display === '01' ? '00' : '01'
-              let data = {
-                model: JSON.stringify({
-                  id: params.row.newsId,
-                  display: params.row.display
-                }),
-                _method: 'put'
-              }
-              this.$http.post('/rest/api/news/detail/' + params.row.newsId, qs.stringify(data)).then((res) => {
-                if (res.success) {
-                  ctx.$Message.success('修改成功')
-                } else {
-                  ctx.$Message.error(res.msg)
-                }
-              })
-            }
-          }
-        })
-      ])
+      let option = ['01', '00', '显示', '隐藏']
+      return this.cellRadio(this, h, params, option)
     },
     topnewsFilter (h, params) {
-      var ctx = this
-      return h('div', [
-        h('span', params.row.topnews === '01' ? '是' : '否'),
-        h('i', {
-          class: {
-            'none': true,
-            'iconfont': true,
-            'icon-bianji2': true
-          },
-          on: {
-            click: () => {
-              params.row.topnews = params.row.topnews === '01' ? '00' : '01'
-              let data = {
-                model: JSON.stringify({
-                  id: params.row.newsId,
-                  topnews: params.row.topnews
-                }),
-                _method: 'put'
-              }
-              this.$http.post('/rest/api/news/detail/' + params.row.newsId, qs.stringify(data)).then((res) => {
-                if (res.success) {
-                  ctx.$Message.success('修改成功')
-                } else {
-                  ctx.$Message.error(res.msg)
-                }
-              })
-            }
-          }
-        })
-      ])
+      let option = ['01', '00']
+      return this.cellRadio(this, h, params, option)
     },
     sortFilter (h, params) {
       return this.cellEdit(this, h, params)

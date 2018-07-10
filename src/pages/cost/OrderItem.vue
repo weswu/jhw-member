@@ -42,7 +42,14 @@ export default {
     }
   },
   created () {
-    this.get()
+    if (!window.token) {
+      var ctx = this
+      setTimeout(function () {
+        ctx.get()
+      }, 500)
+    } else {
+      this.get()
+    }
   },
   methods: {
     get () {
@@ -56,7 +63,7 @@ export default {
           this.total = res.data.totalElements
           this.list = res.data.content
           this.getCount = 0
-        } else if (res.code === 5 && this.getCount < 5) {
+        } else if (res.code === 5 && this.getCount < 3) {
           var ctx = this
           setTimeout(function () {
             ctx.getCount += 1

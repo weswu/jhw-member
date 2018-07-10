@@ -159,7 +159,14 @@ export default {
     },
     handleSuccess (res) {
       this.$emit('on-change', res)
-      this.get()
+      if (this.type === 'multiple') {
+        var ctx = this
+        setTimeout(function () {
+          ctx.get()
+        }, 1000)
+      } else {
+        this.get()
+      }
       if (!this.multiple) this.modal = false
     },
     // 编辑器 选中的图片
@@ -215,10 +222,7 @@ export default {
   }
   // 上传
   .ivu-upload-list{
-    position: absolute;
-    z-index: 99;
-    background: #fff;
-    border: 1px solid #f0f0f0;
+    right: 0
   }
   .j_album_category {
     height: 508px;
