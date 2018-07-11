@@ -142,7 +142,7 @@ export default {
       if (!this.ids) {
         return this.$Message.error('未选择')
       }
-      this.$http.post('/rest/api/news/batch/del', qs.stringify({ids: this.ids})).then((res) => {
+      this.$http.post('/rest/api/category/batchDel', qs.stringify({categoryIds: this.ids})).then((res) => {
         if (res.success) {
           this.$Message.success('删除成功')
           this.get()

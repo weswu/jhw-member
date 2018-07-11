@@ -50,7 +50,8 @@ export default {
   computed: {
     ...mapState({
       lanList: state => state.status.lanList,
-      staticList: state => state.staticList
+      staticList: state => state.staticList,
+      user: state => state.user
     })
   },
   methods: {
@@ -58,6 +59,9 @@ export default {
       var ctx = this
       this.$store.dispatch('lanIdChange', e).then((res) => {
         ctx.$emit('on-change', e)
+        ctx.$store.dispatch('getEnterprise').then((res) => {
+          ctx.$emit('on-enterprise', e)
+        })
       })
     },
     layoutChange (e) {

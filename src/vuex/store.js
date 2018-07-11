@@ -154,7 +154,6 @@ const store = new Vuex.Store({
           let data = res.attributes.data
           if (data) {
             data.headimg = null
-            data.enterprise.addresslist = !data.enterprise.address ? ['8a9e457e63a5e4c00163a5fa47ca0008'] : data.enterprise.address.split(',')
             this.dispatch('getAccountInfo', data.userId)
           }
           this.commit('setUser', data || {
@@ -163,9 +162,20 @@ const store = new Vuex.Store({
             addTime: 1272102123858,
             enterprise: {}
           })
+          this.dispatch('getEnterprise')
           if (state.staticList.length === 0) this.dispatch('getStaticList')
         } else {
           this._vm.$Message.success(res.msg)
+        }
+      })
+    },
+    getEnterprise ({commit, state}) {
+      return this._vm.$http.get('/rest/api/enterprise/detail').then((res) => {
+        if (res.success) {
+          let data = res.attributes.data
+          data.addresslist = !data.address ? ['8a9e457e63a5e4c00163a5fa47ca0008'] : data.address.split(',')
+          state.user.enterprise = data
+          this.commit('setUser', state.user)
         }
       })
     },
@@ -383,7 +393,7 @@ const store = new Vuex.Store({
       window.localStorage.setItem('lanId', lanId)
       return this._vm.$http.get('/rest/api/user/changeLan?lanId=' + lanId).then((res) => {
         if (res.success) {
-          this.dispatch('getUser')
+          // this.dispatch('getEnterprise')
         } else {
           this._vm.$Message.success(res.msg)
         }

@@ -2,7 +2,7 @@
   <Layout class="ivu-layout-has-sider j_enterprise">
     <MenuBar :data="'menuEnter'" :active="'enterprise'"/>
     <Layout class="j_layout_content j_form_detail">
-      <JHeader :title="'基本资料'" :lan="true" :tip="'请完善以下信息，方便我们更好的为您服务'"/>
+      <JHeader :title="'基本资料'" :lan="true" :tip="'请完善以下信息，方便我们更好的为您服务'" @on-enterprise="initUser"/>
       <Content>
         <Form :model="user" :rules="rules" :label-width="130" ref="model">
           <span class="title" style="margin-top:0px;">基本信息：</span>

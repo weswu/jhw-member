@@ -138,14 +138,14 @@ export default {
         { type: 'selection', className: 'j_table_checkbox', width: 44 },
         { type: 'index2', title: '序号', align: 'center', width: 60, render: this.indexFilter },
         { title: '标题内容', key: 'title', ellipsis: true, render: this.titleFilter },
-        { title: '提交时间', key: 'addTime', width: 150, render: this.dataFilter },
-        { title: '类型', key: 'type', width: 150, render: this.typeFilter }
+        { title: '提交时间', key: 'addTime', width: 135, render: this.dataFilter },
+        { title: '类型', key: 'type', width: 90, render: this.typeFilter }
       ]
       if (this.searchData.type === '03') {
         this.columns.splice(3, 0, { title: '来源（网站编号）', key: 'layoutId', width: 100, render: this.layoutFilter })
         let columns2 = [
-          { title: '发送人', key: 'fromName' },
-          { title: '来源ip', key: 'ip' },
+          { title: '发送人', key: 'fromName', ellipsis: true },
+          { title: '来源ip', key: 'ip', ellipsis: true },
           { title: '操作', className: 'j_table_operate', width: 155, render: this.renderOperate }
         ]
         columns2.forEach(item => {
@@ -346,9 +346,9 @@ export default {
 <style lang="less">
 .j_message{
   .state-unread{
-    width: 20px;
+    margin-right: 10px;
     display: inline-block;
-    font-size: 16px;
+    font-size: 14px;
     color: #a0a0a0;
   }
   .ivu-table-row td:nth-child(2) .ivu-table-cell{

@@ -90,7 +90,7 @@ export default {
           this.$Message.success('添加成功')
           this.staticList.splice(0, 0, res.attributes.data)
           this.$store.commit('setStaticList', this.staticList)
-          this.$emit('on-change')
+          this.$emit('on-change', res.attributes.data)
         } else {
           this.$Message.error(res.msg)
         }

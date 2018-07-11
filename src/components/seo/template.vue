@@ -72,11 +72,17 @@ export default {
     get () {
       this.$http.get('/rest/api/seoTemplate/list').then((res) => {
         if (res.success) {
-          this.data.push(res.attributes.commonList)
-          this.data.push(res.attributes.news_categoryList)
-          this.data.push(res.attributes.product_categoryList)
-          this.data.push(res.attributes.news_detailList)
-          this.data.push(res.attributes.product_detailList)
+          let data = res.attributes
+          if (!data.commonList.page) data.commonList.page = 'common'
+          if (!data.news_categoryList.page) data.news_categoryList.page = 'news_category'
+          if (!data.product_categoryList.page) data.product_categoryList.page = 'product_category'
+          if (!data.news_detailList.page) data.news_detailList.page = 'news_detail'
+          if (!data.product_detailList.page) data.product_detailList.page = 'product_detail'
+          this.data.push(data.commonList)
+          this.data.push(data.news_categoryList)
+          this.data.push(data.product_categoryList)
+          this.data.push(data.news_detailList)
+          this.data.push(data.product_detailList)
           this.detail = this.data[0]
         } else {
           this.$Message.error(res.msg)

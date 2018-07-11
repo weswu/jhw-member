@@ -2,7 +2,7 @@
   <Layout class="ivu-layout-has-sider j_company">
     <MenuBar :data="'menuEnter'" :active="'company'"/>
     <Layout class="j_layout_content j_form_detail">
-      <JHeader :title="'公司简介'" :lan="true"/>
+      <JHeader :title="'公司简介'" :lan="true" @on-enterprise="change"/>
       <Content>
         <UE :content='user.enterprise.edesc' ref='ue'></UE>
       </Content>
@@ -28,10 +28,10 @@ export default {
   computed: {
     ...mapState(['user'])
   },
-  watch: {
-    user () {}
-  },
   methods: {
+    change () {
+      this.$refs.ue.setUEContent(this.user.enterprise.edesc)
+    },
     submit () {
       this.user.enterprise.edesc = this.$refs.ue.getUEContent()
       let data = {
