@@ -19,7 +19,7 @@
           </div>
           <ul>
             <li v-for="(item, index) in messageList" :key="index" v-if="index<5">
-              <div class="title" @click="detail(item)">
+              <div class="title" @click="detail(item, index)">
                 {{item.title}}
               </div>
               <p>
@@ -117,11 +117,12 @@ export default {
       ifr.style.display = 'none'
       document.getElementById('JHW').appendChild(ifr)
     },
-    detail (item) {
+    detail (item, index) {
       this.$refs.detail.open(item.messageId)
       if (this.userInfo.noReaderMsg > 0) {
         this.userInfo.noReaderMsg -= 1
         this.status['menuMessage'].menu[1].count = this.userInfo.noReaderMsg
+        this.messageList.splice(index, 1)
       }
       if (this.userInfo.noReaderMsg > 4) this.getMessage()
     },

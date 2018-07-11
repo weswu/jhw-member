@@ -12,7 +12,7 @@ const state = {
     enterprise: {}
   },
   userInfo: {
-    noReaderMsg: 2
+    noReaderMsg: 0
   },
   lanId: '1',
   uid: ['0', '0', '0'],
@@ -20,12 +20,7 @@ const state = {
   productCategory: [],
   newsCategory: [],
   albumCategory: [],
-  messageList: [
-    {
-      title: 'ccc',
-      recvState: '00'
-    }
-  ],
+  messageList: [],
   memberRankList: [],
   memberAttrList: [],
   tagList: [],

@@ -1,10 +1,10 @@
 <template>
   <div class="j_pc_create_item">
-    <Button type="info" @click="add">新建空白网站</Button>
+    <Button icon="plus" class="orange" @click="add">新建空白网站</Button>
     <div class="static_list">
       <Card dis-hover v-for="(item, index) in list" :key="index">
         <img :src="'http://dfwjjingtai.b0.upaiyun.com/'+item.pic">
-        <div class="container" v-if="!(index === 0 && searchData.page === 1)">
+        <div class="container">
           <div class="bg"></div>
           <div class="btn">
             <a :href="'http://pc.jihui88.com/pc/demo.html?layoutId='+item.id" target="_blank">查看</a>

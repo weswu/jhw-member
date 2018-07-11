@@ -16,7 +16,7 @@
           </Col>
           <Col>
             <JUpload :multiple="multiple" :id="albumId" @on-success="handleSuccess">
-              <Button type="info" slot="content"><i class="iconfont icon-shangchuan"></i>本地上传</Button>
+              <Button type="info" slot="content"><i class="iconfont icon-shangchuan"></i>上传图片到当前目录</Button>
             </JUpload>
           </Col>
         </Row>

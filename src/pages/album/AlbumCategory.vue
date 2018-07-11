@@ -37,7 +37,7 @@ export default {
           title: '全部图片',
           id: 'all',
           expand: true, // 展开节点
-          selected: false, // 选中节点
+          selected: true, // 选中节点
           editting: false, // 修改
           render: this.iconFilter,
           children: []
@@ -90,7 +90,7 @@ export default {
           title: '全部图片',
           id: 'all',
           expand: true, // 展开节点
-          selected: false, // 选中节点
+          selected: true, // 选中节点
           editting: false, // 修改
           render: this.iconFilter,
           children: []
