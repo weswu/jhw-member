@@ -85,12 +85,23 @@ export default {
   },
   created () {
     this.$store.commit('setLanId', window.localStorage.getItem('lanId') || '1')
-    this.getUser()
+    if (window.location.search.substr(1).indexOf('&lanId=') > -1) {
+      var vm = this
+      this.$store.dispatch('lanIdChange', window.localStorage.getItem('lanId')).then((res) => {
+        vm.get()
+      })
+    } else {
+      this.get()
+    }
     this.getUserInfo()
     this.getCustomData()
   },
   methods: {
-    ...mapActions(['getUser', 'getUserInfo', 'getMessage', 'getCustomData']),
+    ...mapActions(['getUser', 'getUserInfo', 'getMessage', 'getCustomData', 'getEnterprise']),
+    get () {
+      this.getUser()
+      this.getEnterprise()
+    },
     signout () {
       // 新版PC注销操作
       this.ilogout('iframepclogout', 'http://pc.jihui88.com/rest/api/user/logout')

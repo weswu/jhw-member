@@ -2,7 +2,7 @@
   <Layout class="ivu-layout-has-sider j_enterprise">
     <MenuBar :data="'menuEnter'" :active="'enterprise'"/>
     <Layout class="j_layout_content j_form_detail">
-      <JHeader :title="'基本资料'" :lan="true" :tip="'请完善以下信息，方便我们更好的为您服务'" @on-enterprise="initUser"/>
+      <JHeader :title="'基本资料'" :lan="true" :tip="'请完善以下信息，方便我们更好的为您服务'" @on-user="initUser" @on-enterprise="initUser"/>
       <Content>
         <Form :model="user" :rules="rules" :label-width="130" ref="model">
           <span class="title" style="margin-top:0px;">基本信息：</span>
@@ -52,7 +52,7 @@
             </Select>
           </FormItem>
           <FormItem label="职务：">
-            <Input v-model="user.position" placeholder="请输入Email"></Input>
+            <Input v-model="user.position" placeholder="请输入职务"></Input>
           </FormItem>
         </Form>
       </Content>
@@ -87,13 +87,19 @@ export default {
   },
   computed: {
     ...mapState({
-      userModel: state => state.user,
       areaList: state => state.areaList
-    })
+    }),
+    userModel () {
+      return this.$store.state.user
+    }
   },
   watch: {
     userModel () {
-      this.initUser()
+      var vm = this
+      setTimeout(function () {
+        vm.initUser()
+      }, 500)
+      console.log('user init')
     }
   },
   data () {

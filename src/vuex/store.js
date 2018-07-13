@@ -8,6 +8,7 @@ const state = {
   user: {
     name: '未登录',
     username: '未登录',
+    headimg: null,
     addTime: 1272102123858,
     enterprise: {}
   },
@@ -149,20 +150,18 @@ const store = new Vuex.Store({
   mutations,
   actions: {
     getUser ({commit, state}) {
-      this._vm.$http.get('/rest/api/user/detail').then((res) => {
+      return this._vm.$http.get('/rest/api/user/detail').then((res) => {
         if (res.success) {
           let data = res.attributes.data
-          if (data) {
-            data.headimg = null
-            this.dispatch('getAccountInfo', data.userId)
-          }
+          if (data) data.enterprise = state.user.enterprise
+          if (!state.user.headimg) this.dispatch('getAccountInfo', data.userId)
           this.commit('setUser', data || {
             name: '未登录',
             username: '未登录',
+            headimg: null,
             addTime: 1272102123858,
             enterprise: {}
           })
-          this.dispatch('getEnterprise')
           if (state.staticList.length === 0) this.dispatch('getStaticList')
         } else {
           this._vm.$Message.success(res.msg)

@@ -59,6 +59,9 @@ export default {
       var ctx = this
       this.$store.dispatch('lanIdChange', e).then((res) => {
         ctx.$emit('on-change', e)
+        ctx.$store.dispatch('getUser').then((res) => {
+          ctx.$emit('on-user', e)
+        })
         ctx.$store.dispatch('getEnterprise').then((res) => {
           ctx.$emit('on-enterprise', e)
         })

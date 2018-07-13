@@ -293,7 +293,7 @@ Vue.prototype.cellRadio = (vm, h, params, option) => {
       },
       on: {
         click: () => {
-          params.row[params.column.key] = params.row.topproduct === option[0] ? option[1] : option[0]
+          params.row[params.column.key] = params.row[params.column.key] === option[0] ? option[1] : option[0]
           let model = {
             id: params.row.edittingCell.id,
             editField: true

@@ -69,7 +69,8 @@
           <Checkbox v-model="toggle" @on-change="handleSelectAll(toggle)"/>
           <Button type="ghost" size="small" @click="delAll">删除</Button>
           <Button type="ghost" size="small" @click="copyAll">复制</Button>
-          <Button type="ghost" size="small" @click="displayAll('00')">隐藏</Button>
+          <Button type="ghost" size="small" @click="displayAll('On')">显示</Button>
+          <Button type="ghost" size="small" @click="displayAll('Off')">隐藏</Button>
           <Button type="ghost" size="small" @click="marketableAll('01')">上架</Button>
           <Button type="ghost" size="small" @click="marketableAll('00')">下架</Button>
           <Button type="ghost" size="small" @click="categoryAll">转移分类</Button>
@@ -304,13 +305,13 @@ export default {
         }
       })
     },
-    displayAll () {
+    displayAll (e) {
       if (!this.ids) {
         return this.$Message.error('未选择')
       }
-      this.$http.post('/rest/api/product/batch/display', qs.stringify({ids: this.ids})).then((res) => {
+      this.$http.post('/rest/api/product/batch/display' + e, qs.stringify({ids: this.ids})).then((res) => {
         if (res.success) {
-          this.$Message.success('隐藏成功')
+          this.$Message.success(e === 'On' ? '显示成功' : '隐藏成功')
           this.get()
         } else {
           this.$Message.error(res.msg)
