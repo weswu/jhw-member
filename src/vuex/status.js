@@ -238,6 +238,13 @@ const state = {
       { text: '创建网站', value: 'pc_create' }
     ]
   },
+  menuMini: {
+    title: '小程序界面管理',
+    menu: [
+      { text: '基础版', value: 'basis' },
+      { text: '高级版', value: 'senior' }
+    ]
+  },
   test_album: [
     {
       state: '01',

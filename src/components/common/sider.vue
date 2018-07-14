@@ -78,10 +78,9 @@ export default {
           icon: 'diannao-tianchong',
           text: '网站界面管理'
         },
-        { name: 'xiaochengxu',
+        { name: 'basis',
           icon: 'xiaochengxu',
-          text: '小程序界面管理',
-          url: 'http://buy.jihui88.com/#/'
+          text: '小程序界面管理'
         },
         { name: 'fenxiao',
           icon: 'fenxiao',
