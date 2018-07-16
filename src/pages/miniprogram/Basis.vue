@@ -12,10 +12,10 @@
               <Radio label="02">微信小程序（电商版）</Radio>
             </RadioGroup>
           </FormItem>
-          <div class="content" v-if="detail.state !== '00'">
+          <div class="j_panel_box" v-if="detail.state !== '00'">
             <div v-if="detail.state === '01'">
               微信小程序（展示版）简介：更好的宣传您的品牌和产品<br/>
-              案例：步阳智能锁、玩美者净醛墙饰、美人到家
+              案例：步阳智能锁、玩美者净醛木墙饰、美人到家
             </div>
             <div v-if="detail.state === '02'">
               微信小程序（电商版）简介：品牌和产品宣传并有简单基础的购买功能<br/>
@@ -56,10 +56,4 @@ export default {
 </script>
 
 <style lang="less">
-.j_mini_program .content{
-  padding: 22px;border: 1px solid #ddd;
-  Button{
-    margin: 10px 0 20px 0
-  }
-}
 </style>

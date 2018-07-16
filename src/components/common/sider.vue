@@ -45,8 +45,8 @@ import { mapState } from 'vuex'
 export default {
   data () {
     return {
-      transfer: true,
-      disabled: false,
+      transfer: true, // 是否将弹层放置于 body 内，它将不受父级样式影响
+      disabled: false, // 是否禁用提示框
       activeName: 'index',
       open: [],
       navList: [
@@ -119,6 +119,12 @@ export default {
         this.activeName = this.$route.meta.parent
       }
     }
+  },
+  mounted () {
+    var vm = this
+    setTimeout(function () {
+      vm.disabled = !vm.customData.isCollapsed
+    }, 1000)
   },
   methods: {
     collapsedSider () {

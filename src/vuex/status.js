@@ -120,7 +120,8 @@ const state = {
       { text: 'Sitemap生成', value: 'sitemap' },
       { text: '批量提交', value: 'seo_batch' },
       { text: '第三方统计', value: 'third_party_statistics' },
-      { text: '便捷登录配置', value: 'convenient' }
+      { text: '便捷登录配置', value: 'convenient' },
+      { text: '附件存储服务', value: 'storage_service' }
     ]
   },
   menuEnter: {

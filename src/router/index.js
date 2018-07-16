@@ -31,6 +31,7 @@ export default new Router({
     { path: '/seo_batch', component: require('@/pages/static/SeoBatch').default, meta: { open: '2', parent: 'static' } },
     { path: '/third_party_statistics', component: require('@/pages/static/ThirdPartyStatistics').default, meta: { open: '2', parent: 'static' } },
     { path: '/convenient', component: require('@/pages/static/Convenient').default, meta: { open: '2', parent: 'static' } },
+    { path: '/storage_service', component: require('@/pages/static/StorageService').default, meta: { open: '2', parent: 'static' } },
     // 企业
     { path: '/enterprise', component: require('@/pages/enterprise/Enterprise').default, meta: { open: '2', parent: 'enterprise' } },
     { path: '/company', component: require('@/pages/enterprise/Company').default, meta: { open: '2', parent: 'enterprise' } },

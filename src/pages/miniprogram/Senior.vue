@@ -2,7 +2,7 @@
   <Layout class="ivu-layout-has-sider j_mini_program">
     <MenuBar :data="'menuMini'" :active="'senior'"/>
     <Layout class="j_layout_content">
-      <JHeader :title="'高级版'" :type="true"/>
+      <JHeader :title="'高级版'"/>
       <Content>
         <div class="j_search">
           <Button class="grey" @click="active = item.value" v-for="(item, index) in btns" :key="index" :class="{primary: active === item.value}">{{item.text}}</Button>
@@ -19,11 +19,11 @@
               <Radio label="01">微信小程序（高级功能版）</Radio>
             </RadioGroup>
           </FormItem>
-          <div class="content" v-if="detail.state !== '00'">
+          <div class="j_panel_box" v-if="detail.state !== '00'">
             <div>
               微信小程序（高级功能版）简介：独立后台，数据与电脑网站机汇网不同步<br/>
               功能清单：优惠券、分销中心、整点秒杀、拼团、线下预约核销、裂变拆“红包”、积分商城<br/>
-              案例：案例：永康快购、机汇网科技
+              案例：永康快购、机汇网科技
             </div>
             <a href="http://buy.jihui88.com/#/?ids=8a9e457e647f4260016492ed6c1c003a" target="_blank"><Button type="primary" v-if="detail.state === '01'">点击购买</Button></a>
             <div>
@@ -67,12 +67,6 @@ export default {
 
 <style lang="less">
 .j_mini_program{
- .content{
-  padding: 22px;border: 1px solid #ddd;
-    Button{
-      margin: 10px 0 20px 0
-    }
-  }
   .login{
     margin-top: 9px;
     a{
