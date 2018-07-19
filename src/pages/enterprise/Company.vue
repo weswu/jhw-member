@@ -12,8 +12,8 @@
     </Layout>
   </Layout>
 </template>
-
 <script>
+// import Iconfont from 'http://at.alicdn.com/t/font_594793_25yayd6j51n.js'
 import qs from 'qs'
 import { mapState } from 'vuex'
 import MenuBar from '@/components/common/menu_bar'

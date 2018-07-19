@@ -35,7 +35,9 @@ export default {
         { title: '页面地址', key: 'page', render: this.pageFilter },
         { title: '操作', className: 'j_table_operate', width: 100, render: this.renderOperate }
       ],
-      list: [],
+      list: [
+        {}
+      ],
       total: 0,
       searchData: {
         page: 1,

@@ -2,10 +2,12 @@
   <div>
     <script :id='id' type='text/plain'></script>
     <JAlbum ref="ablum" :type="imgUpdate" @on-change="insertImg"/>
+    <Attachment ref="attachment" @on-change="insertFile"/>
   </div>
 </template>
 <script>
 import JAlbum from '@/components/group/j-album'
+import Attachment from '@/components/attachment/at-file'
 export default {
   props: {
     content: {},
@@ -13,7 +15,8 @@ export default {
     eHeight: {}
   },
   components: {
-    JAlbum
+    JAlbum,
+    Attachment
   },
   data () {
     return {
@@ -27,7 +30,7 @@ export default {
         toolbars: [
           ['fullscreen', 'source', '|', 'undo', 'redo', '|', 'fontsize', '|', 'blockquote', 'horizontal', '|', 'removeformat', 'formatmatch', 'link', 'unlink'],
           ['bold', 'italic', 'underline', 'forecolor', 'backcolor', '|', 'indent', '|', 'justifyleft', 'justifycenter', 'justifyright', 'justifyjustify', '|', 'rowspacingtop', 'rowspacingbottom', 'lineheight', '|', 'insertorderedlist', 'insertunorderedlist', '|', 'imagenone', 'imageleft', 'imageright', 'imagecenter'],
-          ['fontfamily', 'letterspacing', '|', 'fontborder', 'strikethrough', 'superscript', 'subscript', 'autotypeset', 'pasteplain', '|', 'insertimage', 'emotion', 'map', '|', 'inserttable', 'searchreplace']
+          ['fontfamily', 'letterspacing', '|', 'fontborder', 'strikethrough', 'superscript', 'subscript', 'autotypeset', 'pasteplain', '|', 'insertimage', 'emotion', 'map', '|', 'inserttable', 'searchreplace', 'attachment']
         ],
         elementPathEnabled: false,
         wordCount: false,
@@ -63,6 +66,10 @@ export default {
         ctx.imgUpdate = 'multiple'
         ctx.$refs.ablum.open()
       })
+      // 附件点击
+      window.UE.dom.domUtils.on(document.getElementsByClassName('edui-for-attachment')[0], 'click', function (e) {
+        ctx.$refs.attachment.open()
+      })
     })
     // 图片替换
     this.editor.addListener('selectionchange', function (editor, causeByUi) {
@@ -91,16 +98,65 @@ export default {
       this.editor.setContent(data || '<p><br/></p>')
     },
     insertImg (e) {
-      var ctx = this
+      let vm = this
       if (this.imgUpdate === 'update') {
         this.img.src = 'http://img.jihui88.com/' + e.src
       } else {
         let imgList = e
         for (var i = 0; i < imgList.length; i++) {
           var pic = 'http://img.jihui88.com/' + imgList[i]['serverPath']
-          ctx.editor.execCommand('inserthtml', '<img src="' + pic + '" alt="' + imgList[i].filename + '">', true)
+          vm.editor.execCommand('inserthtml', '<img src="' + pic + '" alt="' + imgList[i].filename + '">', true)
         }
       }
+    },
+    getFileIcon (url) {
+      var ext = url.substr(url.lastIndexOf('.') + 1).toLowerCase()
+      let maps = {
+        'rar': 'icon_rar.gif',
+        'zip': 'icon_rar.gif',
+        'tar': 'icon_rar.gif',
+        'gz': 'icon_rar.gif',
+        'bz2': 'icon_rar.gif',
+        'doc': 'icon_doc.gif',
+        'docx': 'icon_doc.gif',
+        'pdf': 'icon_pdf.gif',
+        'mp3': 'icon_mp3.gif',
+        'xls': 'icon_xls.gif',
+        'chm': 'icon_chm.gif',
+        'ppt': 'icon_ppt.gif',
+        'pptx': 'icon_ppt.gif',
+        'avi': 'icon_mv.gif',
+        'rmvb': 'icon_mv.gif',
+        'wmv': 'icon_mv.gif',
+        'flv': 'icon_mv.gif',
+        'swf': 'icon_mv.gif',
+        'rm': 'icon_mv.gif',
+        'exe': 'icon_exe.gif',
+        'psd': 'icon_psd.gif',
+        'txt': 'icon_txt.gif',
+        'jpg': 'icon_jpg.gif',
+        'png': 'icon_jpg.gif',
+        'jpeg': 'icon_jpg.gif',
+        'gif': 'icon_jpg.gif',
+        'ico': 'icon_jpg.gif',
+        'bmp': 'icon_jpg.gif'
+      }
+      return maps[ext] ? maps[ext] : maps['txt']
+    },
+    insertFile (data) {
+      let vm = this
+      let html = ''
+      let icon = ''
+      let URL = vm.editor.getOpt('UEDITOR_HOME_URL')
+      let iconDir = URL + (URL.substr(URL.length - 1) === '/' ? '' : '/') + 'dialogs/attachment/fileTypeImages/'
+      data.forEach(item => {
+        icon = iconDir + vm.getFileIcon(item.serverPath)
+        html += '<p style="line-height: 16px;">' +
+          '<img style="vertical-align: middle; margin-right: 2px;" src="' + icon + '"/>' +
+          '<a style="font-size:12px; color:#0066cc;" href="' + item.serverPath + '" title="' + item.filename + '">' + item.filename + '</a>' +
+          '</p>'
+      })
+      vm.editor.execCommand('inserthtml', html)
     }
   },
   destroyed () {

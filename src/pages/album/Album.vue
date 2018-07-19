@@ -87,7 +87,7 @@
               <Col :xs="12" :sm="8" :md="6" :lg="4"  v-for="(item, index) in list" :key="index" class="pic_item" ref="pic" data-id="frame">
                 <div class="box" @click.stop="selected(item)" @contextmenu.prevent="more($event, item)" data-id="frame">
                   <Card dis-hover :class="{hover: item._checked}" data-id="frame">
-                    <img :src="$store.state.status.IMG_HOST + item.serverPath | picUrl(5)" :alt="item.filename" @error="imgError($event, item)">
+                    <img :src="$store.state.status.IMG_HOST + item.serverPath | picUrl(5)" :alt="item.filename" @error="imgError($event, item)"/>
 
                     <div class="sort" v-if="searchData.sortField === 'sort'">
                       <i class="iconfont icon-zuojiantou" @click.stop="prev(item, index)" v-if="index !== 0"></i>
