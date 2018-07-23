@@ -17,10 +17,7 @@
 <script>
 export default {
   props: {
-    albumId: {
-      type: String,
-      default: ''
-    }
+    albumId: {}
   },
   data () {
     return {

@@ -42,10 +42,10 @@
             <br/>
             机汇云提供1GB的免费空间，用于存放网站附件，如上传数量、文档大小、格式无法满足，请选择阿里云或者七牛云。<br/>
             <br/>
-            <div class="jhyun_progress" hidden>
+            <div class="jhyun_progress">
               空间占用量：
               <Progress :percent="percent" :stroke-width="6" hide-info ></Progress>
-              <span class="number">{{number}}M</span>
+              <span class="disk">{{diskCapacity}}M</span>
               <span class="gb">1GB</span>
             </div><br/>
             <span class="a_underline" @click="openAt">附件管理</span>
@@ -68,7 +68,7 @@
         </Form>
       </Content>
     </Layout>
-    <Attachment ref="attachment"/>
+    <Attachment ref="attachment" @on-disk="get"/>
   </Layout>
 </template>
 
@@ -90,7 +90,7 @@ export default {
         name: 'jhyun'
       },
       list: [],
-      number: 0,
+      diskCapacity: 0,
       percent: 0
     }
   },
@@ -108,8 +108,8 @@ export default {
               this.detail = JSON.parse(JSON.stringify(item))
             }
           })
-          this.number = res.attributes.number
-          this.percent = res.attributes.number / 1024
+          this.diskCapacity = res.attributes.diskCapacity
+          this.percent = this.diskCapacity / 1024 * 100
         }
       })
     },
@@ -161,7 +161,7 @@ export default {
       background: #e7ae5f
     }
   }
-  .number{
+  .disk{
     position: absolute;
     margin-left: -109px;
     bottom: 12px;

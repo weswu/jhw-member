@@ -219,6 +219,7 @@
               </FormItem>
             </div>
           </div>
+          <!-- 订单支付 -->
           <div :hidden="active !== '3'" style="max-width: 1000px;">
             <div class="span12">
               <FormItem label="订单编号：">{{detail.orderSn}}</FormItem>
@@ -233,7 +234,7 @@
                 </Select>
               </FormItem>
               <FormItem label="物流公司：">
-                <Select v-model="shippingSet.deliveryCorpName" class="w144 border">
+                <Select v-model="shippingSet.deliveryCorpName" class="w144 border" filterable>
                   <Option :value="item.name" v-for="item in deliverycorp" :key="item.corpId">{{item.name}}</Option>
                 </Select>
               </FormItem>
@@ -286,9 +287,16 @@
         <Button type="primary" size="small" @click="shippingSave" v-if="active === '2'"
           :disabled="detail.orderStatus === 'completed' || detail.orderStatus === 'invalid' || detail.paymentStatus === 'paid' ||
            detail.paymentStatus === 'partRefund' || detail.paymentStatus === 'refunded'">保存</Button>
-        <Button type="primary" size="small" @click="deliverySnEdit"
-          v-if="active === '3' && detail.orderStatus !== 'completed' && detail.orderStatus !== 'invalid' && detail.shippingStatus === 'shipped'">修改</Button>
-        <Button type="primary" size="small" @click="printDelivery" v-if="active === '3'">打印物流单据</Button>
+        <!-- 订单发货 -->
+        <div v-if="active === '3'">
+          <Button type="primary" size="small" @click="deliverySnEdit"
+            v-if="detail.orderStatus !== 'completed' && detail.orderStatus !== 'invalid' && detail.shippingStatus !== 'shipped'">发货</Button>
+          <Button type="primary" size="small" @click="deliverySnEdit"
+            v-if="detail.orderStatus !== 'completed' && detail.orderStatus !== 'invalid' && detail.shippingStatus === 'shipped'">修改</Button>
+          <Button type="primary" size="small" @click="deliveryCompleted"
+            v-if="detail.orderStatus === 'processed' && detail.shippingStatus === 'shipped'">订单完成</Button>
+          <Button type="primary" size="small" @click="printDelivery">打印物流单据</Button>
+        </div>
       </Footer>
     </Layout>
   </Layout>
@@ -357,8 +365,8 @@ export default {
           }
         },
         { title: '购买数量', key: 'productQuantity' },
-        { title: '已发货数', key: 'totalDeliveryQuantity' },
-        { title: '本次发货数', key: 'productQuantity' }
+        { title: '已发货数', key: 'deliveryQuantity' },
+        { title: '本次发货数', key: 'totalDeliveryQuantity' }
       ]
     }
   },
@@ -404,6 +412,11 @@ export default {
           this.payment.paymentId = data.paymentConfig.paymentId
           // 物流-数据
           this.shippingSet = data.shippingSet[0] || {deliveryType: {}}
+          if (this.shippingSet.deliveryType === null) {
+            this.shippingSet.deliveryType = {
+              typeId: data.deliveryType ? data.deliveryType.typeId : ''
+            }
+          }
           this.address = this.shippingSet.shipAreaPath ? this.shippingSet.shipAreaPath.split(',') : []
           this.count = data.orderItemSet.length || 0
         }
@@ -463,6 +476,7 @@ export default {
         }
       })
     },
+    // ------------------- 订单发货 -----------------
     // 物流-保存
     deliverySnEdit () {
       let data = {
@@ -480,6 +494,15 @@ export default {
       this.$http.post('/rest/api/orderShipping/deliverySnEdit', qs.stringify(data)).then((res) => {
         if (res.success) {
           this.$Message.success('保存成功')
+        } else {
+          this.$Message.error(res.msg)
+        }
+      })
+    },
+    deliveryCompleted () {
+      this.$http.post('/rest/api/order/completed/' + this.id).then(res => {
+        if (res.success) {
+          this.$Message.success(res.msg || '订单完成')
         } else {
           this.$Message.error(res.msg)
         }

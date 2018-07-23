@@ -19,8 +19,8 @@
           </Col>
           <Col>
             <a href="#/storage_service" class="a_underline">配置附件上传类型</a>
-            <JUpload :albumId="searchData.albumId" @on-success="get" style="display: inline-block;margin-left: 7px;">
-              <Button type="info" slot="content"><i class="iconfont icon-shangchuan"></i>上传附件到当前目录</Button>
+            <JUpload :albumId="searchData.belongId" @on-success="get" style="display: inline-block;margin-left: 7px;">
+              <Button type="info" slot="content" @click="config"><i class="iconfont icon-shangchuan"></i>上传附件到当前目录</Button>
             </JUpload>
           </Col>
         </Row>
@@ -140,10 +140,11 @@ export default {
       searchData: {
         page: 1,
         pageSize: 20,
-        albumId: ''
+        type: 'attachment',
+        belongId: ''
       },
       item: {},
-      imglist: []，
+      imglist: [],
       hasConfig: false
     }
   },
@@ -185,8 +186,15 @@ export default {
       }
     },
     categoryChange (e) {
-      this.searchData.albumId = e.data.id
+      this.searchData.belongId = e.data.id
       this.get()
+    },
+    config (e) {
+      if (!this.hasConfig) {
+        this.$Message.info('请配置附件上传类型')
+        e.preventDefault()
+        e.stopPropagation()
+      }
     },
     // 右击
     more (e, item) {
@@ -201,7 +209,18 @@ export default {
       this.$Message.success('复制成功')
     },
     del () {
-      this.$Message.success('功能更新中')
+      let data = {
+        _method: 'delete'
+      }
+      this.$http.post('/rest/pc/api/att/detail/' + this.item.attId, qs.stringify(data)).then((res) => {
+        if (res.success) {
+          this.$Message.success('删除成功')
+          this.get()
+          this.$emit('on-disk')
+        } else {
+          this.$Message.error(res.msg)
+        }
+      })
     },
     // 完成
     select (e) {
@@ -216,6 +235,7 @@ export default {
     ok () {
       // 文档添加
       this.$emit('on-change', this.imglist)
+      this.$emit('on-disk')
       // 取消选中的图片
       this.list.forEach(function (item) {
         item._checked = false

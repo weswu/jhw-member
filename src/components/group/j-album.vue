@@ -66,7 +66,44 @@ export default {
   data () {
     return {
       modal: false,
-      list: [],
+      list: [
+        {
+          state: '01',
+          type: '01',
+          content: null,
+          sort: 64,
+          filename: 'timg.jpg',
+          userId: 'User_000000000000000000000000082',
+          belongId: null,
+          serverPath: 'upload//g//g2//ggggfj//picture//2017//06//01/2be1866b-8f23-42a3-b34e-2cc5cfcbe2f9.jpg',
+          attId: 'Attach_0000000000000000001353018',
+          belongType: 'AD',
+          storeType: null,
+          serverIp: '125.120.83.147',
+          filedesc: null,
+          uploadTime: 1496296124960,
+          technicView: null,
+          linkUrl: null
+        },
+        {
+          state: '01',
+          type: '01',
+          content: null,
+          sort: 63,
+          filename: '大逃杀.jpg',
+          userId: 'User_000000000000000000000000082',
+          belongId: null,
+          serverPath: 'upload//g//g2//ggggfj//picture//2017//06//01/94526c88-cd49-4a3f-a75e-b6a4d29b3378.jpg',
+          attId: 'Attach_0000000000000000001353022',
+          belongType: 'AD',
+          storeType: null,
+          serverIp: '125.120.83.147',
+          filedesc: null,
+          uploadTime: 1496300661556,
+          technicView: null,
+          linkUrl: null
+        }
+      ],
       total: 0,
       searchData: {
         page: 1,

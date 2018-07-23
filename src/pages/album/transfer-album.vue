@@ -67,6 +67,6 @@ export default {
 </script>
 <style >
   .transfer-album{
-    z-index: 1001
+    z-index: 1001 !important;
   }
 </style>

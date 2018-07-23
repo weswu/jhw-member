@@ -278,7 +278,9 @@ export default {
     },
     // 产品图片
     imgChange (list, index) {
-      if (index === 0 || index > 0) {
+      if (index === 'add') {
+        this.imgList.push(list[0])
+      } else if (index === 0 || index > 0) {
         this.imgList[index].src = list[0].src
       } else {
         list.forEach(item => {

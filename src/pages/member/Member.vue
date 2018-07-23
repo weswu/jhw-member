@@ -65,7 +65,7 @@ export default {
         { title: '用户名', key: 'name', className: 'text-color', ellipsis: true, render: this.nameFilter },
         { title: '会员等级', key: 'memberRank', render: this.rankFilter },
         { title: '邮箱', key: 'email' },
-        { title: '注册时间', key: 'addTime' },
+        { title: '注册时间', width: 147, key: 'addTime' },
         { title: '状态', key: 'isAccountEnabled', width: 70, render: this.typeFilter },
         { title: '来源：网站编号', key: 'layoutId' },
         { title: '操作', className: 'j_table_operate', width: 120, render: this.renderOperate }

@@ -93,7 +93,7 @@ export default {
       columns: [],
       columns2: [
         { type: 'index2', title: '序号', align: 'center', width: 60, render: this.indexFilter },
-        { title: '订单编号', key: 'orderSn', ellipsis: true, width: 100 },
+        { title: '订单编号', key: 'orderSn', ellipsis: true, width: 130 },
         { title: '用户名', ellipsis: true, render: this.nameFilter },
         { title: '订单总额', render: this.totalFilter },
         { title: '订单状态', render: this.orderStatusFilter },

@@ -19,14 +19,14 @@ export default {
                 height: '50px'
               },
               attrs: {
-                src: this.$store.state.status.IMG_HOST + this.picUrl(params.row.product.picUrl5, 5)
+                src: params.row.product.picUrl5
               }
             })
           }
         },
         { title: '商品名称', ellipsis: true, key: 'productName' },
-        { title: '产品型号', key: 'product.prodtype' },
-        { title: '价格', key: 'product.price' },
+        { title: '产品型号', key: 'productSn' },
+        { title: '价格', key: 'productPrice' },
         {
           title: '购买选项',
           ellipsis: true,

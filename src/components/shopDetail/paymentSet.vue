@@ -3,54 +3,70 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
 export default {
   props: {
     data: {}
   },
+  computed: {
+    ...mapState({
+      paymentStatus: state => state.status.paymentStatus,
+      paymentType: state => state.status.paymentType
+    })
+  },
   data () {
     return {
       columns: [
-        { title: '发货编号', key: 'shippingSn' },
-        { title: '配送方式名称', key: 'deliveryTypeName' },
-        { title: '物流公司名称', key: 'deliveryCorpName' },
-        { title: '物流编号', render: this.comFilter },
-        { title: '物流费用', key: 'deliveryFee' },
-        { title: '收货人姓名', key: 'shipName' },
-        { title: '收货地区', key: 'shipArea' },
-        { title: '发货时间', key: 'addTime' }
-      ]
-    }
-  },
-  methods: {
-    comFilter (h, params) {
-      return h('a', {
-        on: {
-          click: () => {
-            this.$Message.info('更新中')
-            this.$http.get('/rest/api/comm/shop/avatardata?com=' + params.row.com + '&nuId=' + params.row.deliverySn).then((res) => {
-              if (res.success) {
-                let data = res.attributes.data
-                let li = []
-                data.forEach(item => {
-                  li.push(h('li', [
-                    h('span', item.content),
-                    h('span', item.time)
-                  ]))
-                })
-                this.$Modal.confirm({
-                  title: '物流编号：' + params.row.deliverySn,
-                  width: 450,
-                  render: (h) => {
-                    return h('ul', li)
-                  }
-                })
-              } else {
-                this.$Message.error(res.msg)
+        { title: '支付编号', key: 'tradeNo' },
+        {
+          title: '支付类型',
+          render: (h, params) => {
+            let text = ''
+            this.paymentType.forEach(item => {
+              if (item.value === params.row.paymentType) {
+                text = item.text
               }
             })
+            return h('span', text)
+          }
+        },
+        { title: '支付方式', key: 'paymentConfigName' },
+        {
+          title: '支付金额',
+          render: (h, params) => {
+            return h('span', '￥' + params.row.totalAmount + '元')
+          }
+        },
+        {
+          title: '支付手续费',
+          render: (h, params) => {
+            return h('span', '￥' + params.row.paymentFee + '元')
+          }
+        },
+        { title: '付款人', key: 'payer' },
+        {
+          title: '支付状态',
+          render: (h, params) => {
+            let text = ''
+            this.paymentStatus.forEach(item => {
+              if (item.value === params.row.paymentStatus) {
+                text = item.text
+              }
+            })
+            if (params.row.paymentStatus === 'success') {
+              text = '已完成'
+            }
+            return h('span', text)
+          }
+        },
+        {
+          title: '支付时间',
+          width: 135,
+          render: (h, params) => {
+            return h('span', this.dateFormat(params.row.addTime))
           }
         }
-      }, '[查看物流信息]')
+      ]
     }
   }
 }

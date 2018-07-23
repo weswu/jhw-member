@@ -10,7 +10,7 @@ export default {
   },
   computed: {
     ...mapState({
-      orderLogType: state => state.status.paymentType
+      orderLogType: state => state.status.orderLogType
     })
   },
   data () {
@@ -28,9 +28,15 @@ export default {
             return h('span', text)
           }
         },
-        { title: '操作员', key: 'operator' },
+        {
+          title: '操作员',
+          key: 'operator',
+          render: (h, params) => {
+            return h('span', params.row.operator || '无')
+          }
+        },
         { title: '日志信息', key: 'info' },
-        { title: '操作日间', key: 'addTime' }
+        { title: '操作日间', key: 'addTime', width: 150 }
       ]
     }
   }

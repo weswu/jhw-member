@@ -19,7 +19,6 @@
 </template>
 
 <script>
-import qs from 'qs'
 import Add from '@/components/attachment/at-file-add'
 export default {
   components: {
@@ -75,7 +74,7 @@ export default {
         }
       ]
       this.list.forEach(item => {
-        if (!item.parentId) {
+        if (!item.belongId) {
           this.data[0].children.push({
             title: item.name,
             id: item.albumId,
@@ -90,7 +89,7 @@ export default {
       })
       this.data[0].children.forEach(item => {
         ctx.list.forEach(item2 => {
-          if (item.id === item2.parentId) {
+          if (item.id === item2.belongId) {
             item.children.push({
               title: item2.name,
               id: item2.albumId,
@@ -107,7 +106,7 @@ export default {
       this.data[0].children.forEach(item => {
         item.children.forEach(row => {
           ctx.list.forEach(item2 => {
-            if (row.id === item2.parentId) {
+            if (row.id === item2.belongId) {
               row.children.push({
                 title: item2.name,
                 id: item2.albumId,
@@ -217,10 +216,7 @@ export default {
       this.$refs.add.open(this.list, this.item)
     },
     del (type) {
-      let data = {
-        _method: 'delete'
-      }
-      this.$http.post('/rest/pc/api/album/attachment/del/' + this.item.id, qs.stringify(data)).then((res) => {
+      this.$http.post('/rest/pc/api/album/attachment/del/' + this.item.id).then((res) => {
         if (res.success) {
           this.$Message.success('删除成功')
           this.get()
