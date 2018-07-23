@@ -1,24 +1,26 @@
 <template>
   <Modal class-name="j_file_upload"
-    v-model="modal" width="800" title="上传文件"
+    v-model="modal" width="800" title="上传附件"
     @on-ok="ok"
     @on-cancel="cancel"
     cancelText="取消">
     <Layout class="ivu-layout-has-sider">
       <ul ref="menu" class="menu j_panel">
         <li v-clipboard:copy="item.serverPath" v-clipboard:success="copy" style="border:none;">复制链接</li>
+        <li @click="del">删除</li>
       </ul>
     <Cateogy ref="category" @on-change="categoryChange"/>
     <Content>
       <div class="j_search">
         <Row type="flex" justify="space-between">
           <Col>
-            <Input v-model="searchData.name" class="w144" clearable placeholder="搜索文档名称" @on-change="clearInput"></Input>
+            <Input v-model="searchData.name" class="w144" clearable placeholder="搜索附件名称" @on-change="clearInput"></Input>
             <Button class="search" @click="get">搜索</Button>
           </Col>
           <Col>
-            <JUpload :albumId="albumId" @on-success="get">
-              <Button type="info" slot="content"><i class="iconfont icon-shangchuan"></i>上传文档到当前目录</Button>
+            <a href="#/storage_service" class="a_underline">配置附件上传类型</a>
+            <JUpload :albumId="searchData.albumId" @on-success="get" style="display: inline-block;margin-left: 7px;">
+              <Button type="info" slot="content"><i class="iconfont icon-shangchuan"></i>上传附件到当前目录</Button>
             </JUpload>
           </Col>
         </Row>
@@ -138,11 +140,11 @@ export default {
       searchData: {
         page: 1,
         pageSize: 20,
-        belongId: ''
+        albumId: ''
       },
       item: {},
-      imglist: [],
-      albumId: ''
+      imglist: []，
+      hasConfig: false
     }
   },
   mounted () {
@@ -162,6 +164,7 @@ export default {
           })
           this.list = data || []
           this.total = res.attributes.count
+          this.hasConfig = res.attributes.hasConfig
         } else {
           this.$Message.error(res.msg)
         }
@@ -182,7 +185,7 @@ export default {
       }
     },
     categoryChange (e) {
-      this.albumId = e.data.id
+      this.searchData.albumId = e.data.id
       this.get()
     },
     // 右击
@@ -196,6 +199,9 @@ export default {
     },
     copy () {
       this.$Message.success('复制成功')
+    },
+    del () {
+      this.$Message.success('功能更新中')
     },
     // 完成
     select (e) {
@@ -222,26 +228,6 @@ export default {
 
 <style lang="less">
 .j_file_upload{
-  .menu{
-    display: none;
-    position: fixed;
-    left: 0;
-    top: 0;
-    z-index: 99;
-    width: 159px;
-    border: 1px solid #e0e0e0;
-    background: #f0f0f0;
-    border-radius: 5px;
-    li{
-      border-bottom: 1px solid #dfdfdf;
-      color: #4c4a46;padding: 4px 0 4px 15px;
-      cursor: pointer;
-      width: 157px;
-    }
-    .ivu-poptip,.ivu-poptip-rel{
-      width: 100%
-    }
-  }
   // 上传
   .ivu-upload-list{
     right: 0
@@ -250,7 +236,8 @@ export default {
     height: 508px;
   }
   .ivu-tree{
-    height: 416px !important;
+    height: 391px !important;
+    margin-bottom: 5px;
   }
   .ivu-layout-content{
     margin-left: 10px

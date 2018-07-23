@@ -41,7 +41,7 @@ export default new Router({
     { path: '/category/:id', component: require('@/pages/category/Category').default, meta: { open: '2', parent: 'product' } },
     // 产品
     { path: '/product', component: require('@/pages/product/Product').default, meta: { open: '2', parent: 'product' } },
-    { path: '/product/:id', component: require('@/pages/product/Detail').default, meta: { open: '2', parent: 'product' } },
+    { path: '/product/:id', component: require('@/pages/product/ProductDetail').default, meta: { open: '2', parent: 'product' } },
     { path: '/product_import', component: require('@/pages/product/Import').default, meta: { open: '2', parent: 'product' } },
     { path: '/product_download', component: require('@/pages/product/DownLoad').default, meta: { open: '2', parent: 'product' } },
     // 评价

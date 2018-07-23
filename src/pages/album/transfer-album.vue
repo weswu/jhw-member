@@ -1,6 +1,7 @@
 <template>
   <Modal
     v-model="modal"
+    class-name="transfer-album"
     width="430"
     :title="'移动相册'"
     @on-cancel="cancel">
@@ -64,3 +65,8 @@ export default {
   }
 }
 </script>
+<style >
+  .transfer-album{
+    z-index: 1001
+  }
+</style>

@@ -1,10 +1,12 @@
 <template>
   <Upload ref="upload" :action="'/rest/pc/api/upload/uploadAttachment?albumId=' + albumId"
     :headers="headers"
+    :format="['doc','docx','ppt','pptx','xls','xlsx','rtf','wps','et','dps','pdf','txt']"
     :multiple="true"
     :show-upload-list="true"
     name="Filedata"
     :max-size="10240"
+    :on-format-error="handleFormatError"
     :on-success="handleSuccess"
     :on-exceeded-size="handleMaxSize"
     :before-upload="handleBeforeUpload">
@@ -34,7 +36,7 @@ export default {
     handleSuccess (res, file) {
       var ctx = this
       setTimeout(function () {
-        ctx.$refs.upload.clearFiles()
+        ctx && ctx.$refs.upload.clearFiles()
       }, 3000)
       if (res.success) {
         this.$emit('on-success', res.attributes)
@@ -44,8 +46,9 @@ export default {
     },
     handleFormatError (file) {
       this.$Notice.warning({
-        title: '文档' + file.name + '格式不正确',
-        desc: '我们支持以下格式的文档上传：<br/>MS Office文档：doc，docx，ppt，pptx，xls，xlsx，rtf，<br/>WPS office系列：wps，et，dps，<br/>PDF：pdf<br>纯文本：txt'
+        title: '文档【' + file.name + '】格式不正确',
+        desc: '我们支持以下格式的文档上传：<br/>MS Office文档：doc，docx，ppt，pptx，xls，xlsx，rtf，<br/>WPS office系列：wps，et，dps，<br/>PDF：pdf<br>纯文本：txt',
+        duration: 6
       })
     },
     handleMaxSize (file) {

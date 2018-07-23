@@ -5,7 +5,7 @@
     </li>
     <li class="add" @click="add"><i class="iconfont icon--jia"></i></li>
     <Tool ref="tool" :selected="customData.linkList"/>
-    <JAlbum ref="album" :multiple="true" v-if="isAlbum"/>
+    <JAlbum ref="album" v-if="isAlbum"/>
     <addAlbum ref="addAlbum"/>
     <Recycle ref="recycle"/>
   </ul>

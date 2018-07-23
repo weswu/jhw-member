@@ -38,7 +38,7 @@
           </FormItem>
           <br/>
           <FormItem label="产品图片：">
-            <JPictrue :list="imgList" :multiple="true" :type="'product'"
+            <JPictrue :list="imgList" :type="'product'"
             @on-change="imgChange"
             @on-prev="prevImg"
             @on-next="nextImg"
@@ -279,10 +279,10 @@ export default {
     // 产品图片
     imgChange (list, index) {
       if (index === 0 || index > 0) {
-        this.imgList[index].src = list[0].serverPath
+        this.imgList[index].src = list[0].src
       } else {
         list.forEach(item => {
-          this.imgList.push({id: item.attId, src: item.serverPath})
+          this.imgList.push({id: item.id, src: item.src})
         })
       }
     },

@@ -15,7 +15,7 @@ export default {
   props: {
     multiple: {
       type: Boolean,
-      default: false
+      default: true
     },
     show: {
       type: Boolean,
@@ -36,19 +36,19 @@ export default {
   },
   methods: {
     handleSuccess (res, file) {
-      var ctx = this
-      setTimeout(function () {
-        ctx.$refs.upload.clearFiles()
-      }, 3000)
-      let obj = {}
       if (res !== null) {
-        obj = {
+        this.$emit('on-success', {
           id: res.split(',')[1],
           src: res.split(',')[0].split('http://img.jihui88.com/')[1].replace(/_5/g, ''),
           name: res.split(',')[2]
-        }
+        })
       }
-      this.$emit('on-success', obj)
+      var ctx = this
+      if (this) {
+        setTimeout(function () {
+          ctx.$refs.upload.clearFiles()
+        }, 3000)
+      }
     },
     handleMaxSize (file) {
       this.$Notice.warning({

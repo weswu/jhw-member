@@ -31,7 +31,7 @@
           <span class="red">步骤二：</span>进行批量上传产品表格前，请先把产品图片上传好
         </div>
         <Button type="primary" @click="uploadPic" style="margin-bottom:16px;">上传产品图片</Button>
-        <JUpload :multiple="true" :id="albumId" @on-success="handleSuccess" style="height: 0px;">
+        <JUpload :id="albumId" @on-success="handleSuccess" style="height: 0px;">
           <span slot="content">
             <div id="productUpload" style="display:none">上传</div>
           </span>

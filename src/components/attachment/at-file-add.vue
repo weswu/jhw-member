@@ -2,10 +2,10 @@
   <JDialog ref="dialog" :title="title" :width="520" :tip="tip" @on-ok="ok" :okText="'提交'">
     <Form ref="modalForm" :model="detail" :label-width="120" slot="content">
       <FormItem label="上级分类：">
-        <CategorySelect :list="list" :isDefalut="true" @on-change="change"/>
+        <CategorySelect :categoryId="detail.parentId" :list="list" :isDefalut="true" @on-change="change"/>
       </FormItem>
       <FormItem label="文件名称：">
-        <Input v-model="detail.name" placeholder="请输入文件名称"></Input>
+        <Input v-model="detail.title" placeholder="请输入文件名称"></Input>
       </FormItem>
     </Form>
   </JDialog>
@@ -14,11 +14,8 @@
 <script>
 import qs from 'qs'
 import JDialog from '@/components/group/j-dialog'
-import CategorySelect from '@/pages/album/CategorySelect'
+import CategorySelect from '@/components/group/j-category-select'
 export default {
-  props: {
-    list: Array
-  },
   components: {
     JDialog,
     CategorySelect
@@ -28,12 +25,14 @@ export default {
       title: '',
       tip: '<span class="red">温馨提醒</span>：未选择分类表示添加的是顶级分类',
       id: '',
-      detail: {}
+      detail: {},
+      list: []
     }
   },
   methods: {
-    open (e) {
-      if (e.albumId) {
+    open (data, e) {
+      this.initList(data)
+      if (e) {
         this.detail = e
         this.title = '修改文件'
       } else {
@@ -42,17 +41,65 @@ export default {
       }
       this.$refs.dialog.open()
     },
+    initList (data) {
+      this.list = []
+      let list = []
+      // 1级
+      data.forEach(item => {
+        if (!item.parentId) {
+          item.isroot = false // 根目录和三角
+          item.expand = true // 三角图标展开-关闭
+          item.bg = false // 层级背景颜色
+          item.grade = '1'
+          item.categoryId = item.albumId
+          item.belongId = item.parentId
+          list.push(item)
+        }
+      })
+      // 2级
+      data.forEach(row => {
+        list.forEach((item, index) => {
+          if (item.grade === '1' && (row.parentId === item.albumId)) {
+            item.isroot = true
+            row.isroot = false
+            row.hidden = false // 显示隐藏
+            row.expand = true
+            row.bg = false
+            row.grade = '2'
+            row.categoryId = row.albumId
+            row.belongId = row.parentId
+            list.splice(index + 1, 0, row)
+          }
+        })
+      })
+      // 3级
+      data.forEach(row => {
+        list.forEach((item, index) => {
+          if (item.grade === '2' && (row.parentId === item.albumId)) {
+            item.isroot = true
+            row.isroot = false
+            row.hidden = false
+            row.bg = false
+            row.grade = '3'
+            row.categoryId = row.albumId
+            row.belongId = row.parentId
+            list.splice(index + 1, 0, row)
+          }
+        })
+      })
+      this.list = list
+    },
     change (e) {
       this.detail.belongId = e
     },
     ok () {
       let url = 'insert'
-      if (this.detail.albumId) {
-        url = 'save/' + this.detail.albumId
+      if (this.detail.id) {
+        url = 'save/' + this.detail.id
       }
       let data = {
         belongId: this.detail.belongId,
-        name: this.detail.name
+        name: this.detail.title
       }
       this.$http.post('/rest/pc/api/album/attachment/' + url, qs.stringify(data)).then((res) => {
         if (res.success) {

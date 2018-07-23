@@ -265,7 +265,7 @@ export default {
       })
     },
     deliveryFilter (h, params) {
-      return h('span', params.row.shippingSet && params.row.shippingSet[0].deliveryTypeName)
+      return h('span', params.row.shippingSet[0] && params.row.shippingSet[0].deliveryTypeName)
     },
     renderOperate (h, params) {
       var ctx = this

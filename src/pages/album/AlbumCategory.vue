@@ -15,6 +15,7 @@
       <li @click="del">删除</li>
     </ul>
     <Tree ref="tree" :data="data" class="j_scroll"></Tree>
+    <span class="a_normal" @click="add">新建分类</span>
     <Add ref="add" @on-change="get"/>
     <TransferAlbum ref="TransferAlbum" :item="item" @on-change="get"/>
   </div>
@@ -289,8 +290,9 @@ export default {
           },
           contextmenu: (e) => {
             ctx.$refs.menu.style.display = 'block'
-            ctx.$refs.menu.style.left = e.target.getBoundingClientRect().left + 'px'
-            ctx.$refs.menu.style.top = e.target.getBoundingClientRect().top + 'px'
+            let dom = e.target.getBoundingClientRect()
+            ctx.$refs.menu.style.left = dom.left + dom.width / 2 + 'px'
+            ctx.$refs.menu.style.top = dom.top + dom.height / 2 + 'px'
             ctx.item = data
             ctx.fileNameEdit = false
             e.preventDefault()
@@ -461,124 +463,4 @@ export default {
 </script>
 
 <style lang="less">
-.j_album_category{
-  width: 227px;
-  flex: 0 0 227px;
-  background: #ebedf1;
-  padding: 10px;
-  .title{
-    color:#737373;padding: 10px 0;font-size:14px;
-  }
-  .ivu-tree-arrow{
-    position: relative;
-    z-index: 11;
-    vertical-align: sub;
-  }
-  .ivu-icon-arrow-right-b{
-    font-family: "iconfont" !important;
-    color: #6f6f6f;
-    transform: none;
-    background: #ebedf1;
-    &:before{
-      content: "\e60c";
-    }
-  }
-  .ivu-tree-arrow-open{
-    .ivu-icon-arrow-right-b{
-      &:before{
-        content: "\e61a";
-      }
-    }
-  }
-  .ivu-tree{
-    height: calc(100vh - 238px);
-    overflow: auto;
-    overflow-x: hidden;
-  }
-  .ivu-tree ul {
-    line-height: 1.3;
-    .ivu-input{
-      padding: 0px 10px;
-      height: 26px;
-    }
-    .item{
-      position: relative;
-      padding: 2px 0;
-      &::after{
-        content: '';
-        position: absolute;
-        background: url(http://www.jihui88.com/manage_v4/platform/img/dashed2.png);
-        background-repeat: repeat-x;
-        background-size: 3px;
-        top: 43%;
-        left: -10px;
-        width: 10px;
-        height: 1px;
-        z-index: 10;
-      }
-      .ivu-tree-title{
-        border-radius: 0px;
-        color: #595959;
-        border: 1px solid #ebedf1;
-      }
-      .ivu-tree-title-selected, .ivu-tree-title-selected:hover,.ivu-tree-title:hover {
-        background-color: #ffecc0;
-        border: 1px solid #ffce83;
-        box-sizing: border-box;
-      }
-    }
-    li ul {
-      &:last-child{
-        li{
-          &::before{
-            height: 13px;
-          }
-        }
-      }
-      li{
-        position: relative;
-        margin: 0;
-        padding-left: 5px;
-        &::before{
-          content: '';
-          position: absolute;
-          left: 10px;
-          height: 100%;
-          width: 1px;
-          z-index: 9;
-          background: url(http://www.jihui88.com/manage_v4/platform/img/dashed.png);
-          background-repeat: repeat-y;
-          background-size: 1px;
-        }
-        .ivu-tree-title span{
-          display: inline-block;
-          overflow: hidden;
-          text-overflow: ellipsis;
-          white-space: nowrap;
-          width: 129px;
-          vertical-align: text-bottom;
-        }
-        .ivu-input{
-          width: 164px;
-        }
-        ul li{
-          .ivu-tree-title span{
-            width: 106px;
-          }
-          .ivu-input{
-            width: 141px;
-          }
-          ul li{
-            .ivu-tree-title span{
-              width: 83px;
-            }
-            .ivu-input{
-              width: 118px;
-            }
-          }
-        }
-      }
-    }
-  }
-}
 </style>

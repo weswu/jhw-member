@@ -254,7 +254,7 @@
               <FormItem label="配送费用："> <span class="red">￥0元</span> </FormItem>
               <FormItem label="物流编号/图片：">
                 <Input v-model="shippingSet.deliverySn" style="max-width:262px;"></Input>
-                <JUpload @on-success="handleSuccess" style="display: inline-block;">
+                <JUpload :multiple="false" @on-success="handleSuccess" style="display: inline-block;">
                   <span slot="content">
                     <a class="a_underline j_unit">上传图片</a>
                   </span>
@@ -403,8 +403,8 @@ export default {
           }
           this.payment.paymentId = data.paymentConfig.paymentId
           // 物流-数据
-          this.shippingSet = data.shippingSet[0] || {}
-          this.address = this.shippingSet.shipAreaPath.split(',')
+          this.shippingSet = data.shippingSet[0] || {deliveryType: {}}
+          this.address = this.shippingSet.shipAreaPath ? this.shippingSet.shipAreaPath.split(',') : []
           this.count = data.orderItemSet.length || 0
         }
       })

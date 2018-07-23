@@ -1,5 +1,5 @@
 <template>
-  <Layout class="ivu-layout-has-sider j_static">
+  <Layout class="ivu-layout-has-sider j_storage_service">
     <MenuBar :data="'menuStatic'" :active="'storage_service'"/>
     <Layout class="j_layout_content">
       <JHeader :title="'附件存储服务'" :type="true" :tip="tip" :website="true"/>
@@ -40,9 +40,17 @@
             PDF：pdf<br/>
             纯文本：txt<br/>
             <br/>
-            如上传数量、文档大小、格式无法满足，请选择阿里云或者七牛云
+            机汇云提供1GB的免费空间，用于存放网站附件，如上传数量、文档大小、格式无法满足，请选择阿里云或者七牛云。<br/>
+            <br/>
+            <div class="jhyun_progress" hidden>
+              空间占用量：
+              <Progress :percent="percent" :stroke-width="6" hide-info ></Progress>
+              <span class="number">{{number}}M</span>
+              <span class="gb">1GB</span>
+            </div><br/>
+            <span class="a_underline" @click="openAt">附件管理</span>
           </div>
-          <div v-if="detail.name !== ''" style="margin-top:10px">
+          <div v-if="detail.name === 'aliyun' || detail.name === 'qiniuyun'" style="margin-top:10px">
             <FormItem label="AppId：">
               <Input v-model="detail.appid" class="w244"></Input>
             </FormItem>
@@ -55,11 +63,12 @@
             <FormItem label="地域节点：" v-if="detail.name === 'aliyun'">
               <Input v-model="detail.endpoint" class="w244"></Input>
             </FormItem>
-            <Button type="primary" @click="submit" style="margin-top:17px">保存设置</Button>
           </div>
+          <Button type="primary" @click="submit" style="margin-top:17px" v-if="detail.name !== ''">保存设置</Button>
         </Form>
       </Content>
     </Layout>
+    <Attachment ref="attachment"/>
   </Layout>
 </template>
 
@@ -67,22 +76,22 @@
 import qs from 'qs'
 import MenuBar from '@/components/common/menu_bar'
 import JHeader from '@/components/group/j-header'
-import Website from '@/components/static/website'
-import Xiaochengxu from '@/components/static/xiaochengxu'
+import Attachment from '@/components/attachment/at-file'
 export default {
   components: {
     MenuBar,
     JHeader,
-    Website,
-    Xiaochengxu
+    Attachment
   },
   data () {
     return {
       tip: '采用专业存储方案的好处：<br/>- 数据自动多重备份，不会因为硬件问题造成数据丢失；<br/>- 存储空间不受限制，根据业务需求自行扩展；',
       detail: {
-        name: ''
+        name: 'jhyun'
       },
-      list: []
+      list: [],
+      number: 0,
+      percent: 0
     }
   },
   created () {
@@ -99,6 +108,8 @@ export default {
               this.detail = JSON.parse(JSON.stringify(item))
             }
           })
+          this.number = res.attributes.number
+          this.percent = res.attributes.number / 1024
         }
       })
     },
@@ -109,6 +120,9 @@ export default {
           this.detail = item
         }
       })
+    },
+    openAt () {
+      this.$refs.attachment.open()
     },
     submit () {
       var ctx = this
@@ -139,8 +153,22 @@ export default {
 </script>
 
 <style lang="less">
-.j_static .static_info{
-  height: calc(100vh - 347px);
-  overflow-y: auto;
+.j_storage_service .jhyun_progress{
+  position: relative;
+  .ivu-progress{
+    width: 209px;
+    .ivu-progress-bg{
+      background: #e7ae5f
+    }
+  }
+  .number{
+    position: absolute;
+    margin-left: -109px;
+    bottom: 12px;
+  }
+  .gb{
+    color: #b3b3b3;
+    padding-left: 5px;
+  }
 }
 </style>

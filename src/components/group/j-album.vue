@@ -15,7 +15,7 @@
             <Button class="search" @click="get">搜索</Button>
           </Col>
           <Col>
-            <JUpload :multiple="multiple" :id="albumId" @on-success="handleSuccess">
+            <JUpload :id="albumId" @on-success="handleSuccess">
               <Button type="info" slot="content"><i class="iconfont icon-shangchuan"></i>上传图片到当前目录</Button>
             </JUpload>
           </Col>
@@ -53,13 +53,9 @@ export default {
       type: String,
       default: '800'
     },
-    multiple: {
-      type: Boolean,
-      default: false
-    },
     type: {
       type: String,
-      default: ''
+      default: 'single'
     }
   },
   components: {
@@ -71,56 +67,11 @@ export default {
     return {
       modal: false,
       list: [],
-      listTest: [
-        {
-          state: '01',
-          type: '01',
-          content: null,
-          sort: null,
-          filename: '路人超能2',
-          filename2: '路人超能2',
-          userId: 'User_000000000000000000000000082',
-          serverPath: 'upload//g//g2//ggggfj//picture//2017//09//15/cb9ea426-772f-4667-afc3-18ac954008d1.jpg',
-          belongId: null,
-          attId: 'Attach_0000000000000000001403056',
-          belongType: 'AD',
-          linkUrl: null,
-          storeType: null,
-          serverIp: '125.120.86.154',
-          filedesc: null,
-          uploadTime: 1505440558943,
-          technicView: null,
-          _checked: false,
-          editting: false
-        },
-        {
-          state: '01',
-          type: '01',
-          content: null,
-          sort: null,
-          filename: '路人头像3.jpg',
-          filename2: '路人头像3.jpg',
-          userId: 'User_000000000000000000000000082',
-          serverPath: 'upload//g//g2//ggggfj//picture//2017//08//22/d45b87db-460a-42ba-beee-c5551ea5a7ee.jpg',
-          belongId: null,
-          attId: 'Attach_0000000000000000001391538',
-          belongType: 'AD',
-          linkUrl: null,
-          storeType: null,
-          serverIp: '183.159.177.57',
-          filedesc: null,
-          uploadTime: 1503382354821,
-          technicView: null,
-          _checked: false,
-          editting: false
-        }
-      ],
       total: 0,
       searchData: {
         page: 1,
         pageSize: 20
       },
-      detail: {},
       imglist: [],
       albumId: 'all'
     }
@@ -158,16 +109,14 @@ export default {
       this.get()
     },
     handleSuccess (res) {
-      this.$emit('on-change', res)
-      if (this.type === 'multiple') {
-        var ctx = this
-        setTimeout(function () {
-          ctx.get()
-        }, 1000)
+      let data = []
+      if (this.type === 'many') {
+        data.push(res)
+        this.$emit('on-change', data)
       } else {
-        this.get()
+        this.$emit('on-change', res)
       }
-      if (!this.multiple) this.modal = false
+      this.modal = false
     },
     // 编辑器 选中的图片
     initList () {
@@ -178,11 +127,15 @@ export default {
     // 完成
     select (e) {
       e._checked = !e._checked
-      if (this.type === 'multiple') {
-        this.imglist = []
+      this.imglist = []
+      if (this.type === 'many') {
         this.list.forEach(item => {
           if (item._checked) {
-            this.imglist.push(item)
+            this.imglist.push({
+              id: item.attId,
+              src: item.serverPath,
+              name: item.filename
+            })
           }
         })
       } else {
@@ -191,23 +144,16 @@ export default {
             item._checked = false
           }
         })
-        this.detail = {}
-        if (e._checked) {
-          this.detail = {
-            id: e.attId,
-            src: e.serverPath
-          }
+        this.imglist = {
+          id: e.attId,
+          src: e.serverPath,
+          name: e.filename
         }
       }
     },
     ok () {
-      if (this.type === 'multiple') {
-        // 图片添加
-        this.$emit('on-change', this.imglist)
-      } else {
-        this.detail.id && this.$emit('on-change', this.detail)
-      }
-      this.initList()
+      // 图片添加
+      this.$emit('on-change', this.imglist)
       this.modal = false
     }
   }
@@ -216,10 +162,6 @@ export default {
 
 <style lang="less">
 .j_pictrue_upload{
-  z-index: 1100 !important;
-  .menu {
-    display: none !important
-  }
   // 上传
   .ivu-upload-list{
     right: 0
@@ -228,7 +170,8 @@ export default {
     height: 508px;
   }
   .ivu-tree{
-    height: 416px !important;
+    height: 391px !important;
+    margin-bottom: 5px;
   }
   .ivu-layout-content{
     margin-left: 10px

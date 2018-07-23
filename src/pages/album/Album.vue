@@ -9,7 +9,7 @@
           <li @click="copyAll('item')">复制</li>
           <li @click="moveAll('item')">移动</li>
           <li @click="delAll('item')">删除</li>
-          <JUpload :show="false" :replace="'01'" :id="attId" :attId="item.attId" @on-success="handleSuccess">
+          <JUpload :multiple="false" :show="false" :replace="'01'" :id="attId" :attId="item.attId" @on-success="handleSuccess">
             <li slot="content">替换图片</li>
           </JUpload>
           <li @click="refurbish">刷新</li>
@@ -21,7 +21,7 @@
           <div class="j_search">
             <Row type="flex" justify="space-between">
               <Col>
-                <JUpload :multiple="true" :id="attId" @on-success="get" style="display: inline-block;margin-right: 5px;">
+                <JUpload :id="attId" @on-success="get" style="display: inline-block;margin-right: 5px;">
                   <Button type="info" slot="content"><i class="iconfont icon-shangchuan"></i>上传图片到当前目录</Button>
                 </JUpload>
                 <Button class="info" @click="add"><i class="iconfont icon-wenjianjia"></i>新建相册</Button>
@@ -739,26 +739,6 @@ export default {
 
 <style lang="less">
 .j_album{
-  .menu{
-    display: none;
-    position: absolute;
-    left: 0;
-    top: 0;
-    z-index: 99;
-    width: 159px;
-    border: 1px solid #e0e0e0;
-    background: #f0f0f0;
-    border-radius: 5px;
-    li{
-      border-bottom: 1px solid #dfdfdf;
-      color: #4c4a46;padding: 4px 0 4px 15px;
-      cursor: pointer;
-      width: 157px;
-    }
-    .ivu-poptip,.ivu-poptip-rel{
-      width: 100%
-    }
-  }
   .ivu-layout-footer{
     height: auto;
     line-height: normal;

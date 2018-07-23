@@ -1,7 +1,7 @@
 <template>
   <div>
     <script :id='id' type='text/plain'></script>
-    <JAlbum ref="ablum" :type="imgUpdate" @on-change="insertImg"/>
+    <JAlbum ref="ablum" :type="imgType" @on-change="insertImg"/>
     <Attachment ref="attachment" @on-change="insertFile"/>
   </div>
 </template>
@@ -25,7 +25,7 @@ export default {
       imageEdit: false,
       width: '131px',
       imgWidth: '115px',
-      imgUpdate: 'multiple',
+      imgType: 'many',
       config: {
         toolbars: [
           ['fullscreen', 'source', '|', 'undo', 'redo', '|', 'fontsize', '|', 'blockquote', 'horizontal', '|', 'removeformat', 'formatmatch', 'link', 'unlink'],
@@ -63,7 +63,7 @@ export default {
       ctx.editor.setContent(ctx.content || '<p><br/></p>') // 确保UE加载完成后，放入内容。
       window.UE.dom.domUtils.on(document.getElementsByClassName('edui-for-insertimage')[0], 'click', function (e) {
         // e为事件对象，this为被点击元素对戏那个
-        ctx.imgUpdate = 'multiple'
+        ctx.imgType = 'many'
         ctx.$refs.ablum.open()
       })
       // 附件点击
@@ -82,7 +82,7 @@ export default {
           !ctx.img.getAttribute('anchorname') && !ctx.img.getAttribute('word_img')) {
           setTimeout(function () {
             window.document.getElementsByClassName('edui-clickable1')[0].addEventListener('click', function (e) {
-              ctx.imgUpdate = 'update'
+              ctx.imgType = 'update'
               ctx.$refs.ablum.open()
             })
           }, 500)
@@ -99,7 +99,7 @@ export default {
     },
     insertImg (e) {
       let vm = this
-      if (this.imgUpdate === 'update') {
+      if (this.imgType === 'single') {
         this.img.src = 'http://img.jihui88.com/' + e.src
       } else {
         let imgList = e
@@ -118,13 +118,14 @@ export default {
         'gz': 'icon_rar.gif',
         'bz2': 'icon_rar.gif',
         'doc': 'icon_doc.gif',
-        'docx': 'icon_doc.gif',
+        'docx': 'icon_docx.gif',
         'pdf': 'icon_pdf.gif',
         'mp3': 'icon_mp3.gif',
         'xls': 'icon_xls.gif',
+        'xlsx': 'icon_xlsx.gif',
         'chm': 'icon_chm.gif',
         'ppt': 'icon_ppt.gif',
-        'pptx': 'icon_ppt.gif',
+        'pptx': 'icon_pptx.gif',
         'avi': 'icon_mv.gif',
         'rmvb': 'icon_mv.gif',
         'wmv': 'icon_mv.gif',
@@ -139,7 +140,11 @@ export default {
         'jpeg': 'icon_jpg.gif',
         'gif': 'icon_jpg.gif',
         'ico': 'icon_jpg.gif',
-        'bmp': 'icon_jpg.gif'
+        'bmp': 'icon_jpg.gif',
+        'rtf': 'icon_rtf.gif',
+        'wps': 'icon_wps.gif',
+        'et': 'icon_et.gif',
+        'dps': 'icon_dps.gif'
       }
       return maps[ext] ? maps[ext] : maps['txt']
     },
@@ -150,10 +155,10 @@ export default {
       let URL = vm.editor.getOpt('UEDITOR_HOME_URL')
       let iconDir = URL + (URL.substr(URL.length - 1) === '/' ? '' : '/') + 'dialogs/attachment/fileTypeImages/'
       data.forEach(item => {
-        icon = iconDir + vm.getFileIcon(item.serverPath)
+        icon = 'http://www.jihui88.com/manage_v4/' + iconDir + vm.getFileIcon(item.serverPath)
         html += '<p style="line-height: 16px;">' +
           '<img style="vertical-align: middle; margin-right: 2px;" src="' + icon + '"/>' +
-          '<a style="font-size:12px; color:#0066cc;" href="' + item.serverPath + '" title="' + item.filename + '">' + item.filename + '</a>' +
+          '<a style="font-size:12px; color:#0066cc;" href="' + item.serverPath + '" target="_blank" title="' + item.filename + '">' + item.filename + '</a>' +
           '</p>'
       })
       vm.editor.execCommand('inserthtml', html)

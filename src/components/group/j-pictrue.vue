@@ -19,9 +19,9 @@
       </div>
     </li>
     <li class="j_picture_item add" v-if="list && list.length < 20">
-      <i class="iconfont icon-plus-add" @click="open"></i>
+      <i class="iconfont icon-plus-add" @click="open($event, 'add')"></i>
     </li>
-    <JAlbum ref="ablum" :multiple="multiple" :type="'multiple'" @on-change="picChange" v-if="toggle"/>
+    <JAlbum ref="ablum" :type="type === 'product' ? 'many' : type" @on-change="picChange" v-if="toggle"/>
   </ul>
 </template>
 
@@ -31,24 +31,20 @@ export default {
   props: {
     src: {},
     list: {},
-    type: {},
-    multiple: {
-      type: Boolean,
-      default: false
-    }
+    type: {}
   },
   components: {
     JAlbum
   },
   data () {
     return {
-      index: '',
+      index: 0,
       toggle: false
     }
   },
   methods: {
     open (e, index) {
-      this.index = index
+      this.index = index || 0
       this.toggle = true
       var ctx = this
       setTimeout(function () {
@@ -65,6 +61,7 @@ export default {
       this.$emit('on-del', index)
     },
     picChange (e) {
+      console.log(e[0])
       this.$emit('on-change', e, this.index)
     }
   }
