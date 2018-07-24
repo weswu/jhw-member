@@ -180,6 +180,7 @@
             </div>
           </div>
           <OrderItemSet :data="detail.orderItemSet" :hidden="active !== '1'"/>
+          <!-- 订单支付 -->
           <div :hidden="active !== '2'" style="max-width: 1000px;">
             <div class="span12">
               <FormItem label="订单编号：">{{detail.orderSn}}</FormItem>
@@ -219,7 +220,7 @@
               </FormItem>
             </div>
           </div>
-          <!-- 订单支付 -->
+          <!-- 订单发货 -->
           <div :hidden="active !== '3'" style="max-width: 1000px;">
             <div class="span12">
               <FormItem label="订单编号：">{{detail.orderSn}}</FormItem>
@@ -239,7 +240,7 @@
                 </Select>
               </FormItem>
               <FormItem label="物流费用：">
-                <Input v-model="shippingSet.totalAmount"></Input>
+                <Input v-model="shippingSet.deliveryFee"></Input>
               </FormItem>
               <FormItem label="收货人姓名：">
                 <Input v-model="shippingSet.shipName"></Input>
@@ -252,7 +253,7 @@
               </FormItem>
             </div>
             <div class="span12">
-              <FormItem label="配送费用："> <span class="red">￥0元</span> </FormItem>
+              <FormItem label="配送费用："> <span class="red">￥{{detail.paymentFee}}元</span> </FormItem>
               <FormItem label="物流编号/图片：">
                 <Input v-model="shippingSet.deliverySn" style="max-width:262px;"></Input>
                 <JUpload :multiple="false" @on-success="handleSuccess" style="display: inline-block;">
@@ -289,7 +290,7 @@
            detail.paymentStatus === 'partRefund' || detail.paymentStatus === 'refunded'">保存</Button>
         <!-- 订单发货 -->
         <div v-if="active === '3'">
-          <Button type="primary" size="small" @click="deliverySnEdit"
+          <Button type="primary" size="small" @click="deliverySave"
             v-if="detail.orderStatus !== 'completed' && detail.orderStatus !== 'invalid' && detail.shippingStatus !== 'shipped'">发货</Button>
           <Button type="primary" size="small" @click="deliverySnEdit"
             v-if="detail.orderStatus !== 'completed' && detail.orderStatus !== 'invalid' && detail.shippingStatus === 'shipped'">修改</Button>
@@ -411,7 +412,20 @@ export default {
           }
           this.payment.paymentId = data.paymentConfig.paymentId
           // 物流-数据
-          this.shippingSet = data.shippingSet[0] || {deliveryType: {}}
+          this.shippingSet = data.shippingSet[0] || {
+            deliveryType: {
+              typeId: data.deliveryType.typeId
+            },
+            shipName: data.shipName,
+            shipArea: data.shipArea,
+            shipAreaPath: data.shipAreaPath,
+            shipAddress: data.shipAddress,
+            shipZipCode: data.shipZipCode,
+            shipPhone: data.shipPhone,
+            shipMobile: data.shipMobile,
+            memo: data.memo,
+            deliveryFee: data.deliveryFee
+          }
           if (this.shippingSet.deliveryType === null) {
             this.shippingSet.deliveryType = {
               typeId: data.deliveryType ? data.deliveryType.typeId : ''
@@ -463,7 +477,17 @@ export default {
     },
     // 订单支付-保存
     shippingSave () {
-      let ship = Object.assign(this.shipping, this.payment)
+      this.payment.id = this.shipping.orderId
+      let ship = Object.assign(this.shipping, {
+        orderId: this.shipping.orderId,
+        payment_bankName: this.payment.bankName,
+        payment_paymentType: this.payment.paymentType,
+        payment_totalAmount: this.payment.totalAmount,
+        payment_memo: this.payment.memo,
+        payment_bankAccount: this.payment.bankAccount,
+        payment_paymentConfig_id: this.payment.paymentId,
+        payment_payer: this.payment.payer
+      })
       let data = {
         model: JSON.stringify(ship),
         _method: 'put'
@@ -478,6 +502,43 @@ export default {
     },
     // ------------------- 订单发货 -----------------
     // 物流-保存
+    deliverySave () {
+      let list = []
+      this.shipping.orderItemSet.forEach(item => {
+        list.push({
+          productQuantity: item.productQuantity,
+          productId: item.product.productId,
+          skuCode: item.skuCode
+        })
+      })
+      let ship = Object.assign(this.shipping, {
+        orderId: this.shipping.orderId,
+        typeId: this.shippingSet.deliveryType.typeId,
+        shipping_deliveryCorpName: this.shippingSet.deliveryCorpName,
+        shipping_deliveryFee: this.shippingSet.deliveryFee,
+        shipping_shipName: this.shippingSet.shipName,
+        shipping_shipAddress: this.shippingSet.shipAddress,
+        shipping_shipPhone: this.shippingSet.shipPhone,
+        shipping_deliverySn: this.shippingSet.deliverySn,
+        shipping_shipZipCode: this.shippingSet.shipZipCode,
+        shipping_shipMobile: this.shippingSet.shipMobile,
+        shipping_memo: this.shippingSet.memo,
+        shipping_shipAreaPath: this.address.join(),
+        deliveryItemSet: this.shippingSet.deliveryItemSet || list
+      })
+      let data = {
+        model: JSON.stringify(ship),
+        _method: 'put'
+      }
+      this.$http.post('/rest/api/orderShipping/detail/' + this.shipping.orderId, qs.stringify(data)).then((res) => {
+        if (res.success) {
+          this.$Message.success('保存成功')
+          this.detail.shippingStatus = 'shipped'
+        } else {
+          this.$Message.error(res.msg)
+        }
+      })
+    },
     deliverySnEdit () {
       let data = {
         id: this.detail.orderId, // orderId
@@ -500,7 +561,7 @@ export default {
       })
     },
     deliveryCompleted () {
-      this.$http.post('/rest/api/order/completed/' + this.id).then(res => {
+      this.$http.post('/rest/api/order/completed/' + this.shipping.orderId).then(res => {
         if (res.success) {
           this.$Message.success(res.msg || '订单完成')
         } else {

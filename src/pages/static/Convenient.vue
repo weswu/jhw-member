@@ -42,10 +42,10 @@
               <Radio label="00">否</Radio>
             </RadioGroup>
           </FormItem>
-          <FormItem label="微信登录应用AppId：" :label-width="130" v-if="detail.oauthQqState === '01'">
+          <FormItem label="QQ登录应用AppId：" :label-width="130" v-if="detail.oauthQqState === '01'">
             <Input v-model="detail.oauthQqAppId" class="w244"></Input>
           </FormItem>
-          <FormItem label="微信登录应用密钥：" :label-width="130" v-if="detail.oauthQqState === '01'">
+          <FormItem label="QQ登录应用密钥：" :label-width="130" v-if="detail.oauthQqState === '01'">
             <Input v-model="detail.oauthQqSecret" class="w244"></Input>
           </FormItem>
           <FormItem class="submit" :label-width="1">

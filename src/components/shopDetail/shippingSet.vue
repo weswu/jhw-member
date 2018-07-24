@@ -46,7 +46,7 @@ export default {
                   let li = []
                   data.forEach(item => {
                     li.push(h('li', [
-                      h('span', item.content),
+                      h('span', item.context),
                       h('span', item.time || '')
                     ]))
                   })
@@ -54,7 +54,11 @@ export default {
                     title: '物流编号：' + params.row.deliverySn,
                     width: 450,
                     render: (h) => {
-                      return h('ul', li)
+                      return h('ul', {
+                        style: {
+                          paddingTop: '20px'
+                        }
+                      }, li)
                     }
                   })
                 } else {

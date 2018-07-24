@@ -25,7 +25,12 @@ export default {
           }
         },
         { title: '商品名称', ellipsis: true, key: 'productName' },
-        { title: '产品型号', key: 'productSn' },
+        {
+          title: '产品型号',
+          render: (h, params) => {
+            return h('span', params.row.product.prodtype)
+          }
+        },
         { title: '价格', key: 'productPrice' },
         {
           title: '购买选项',
