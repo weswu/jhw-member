@@ -30,7 +30,7 @@ export default {
         toolbars: [
           ['fullscreen', 'source', '|', 'undo', 'redo', '|', 'fontsize', '|', 'blockquote', 'horizontal', '|', 'removeformat', 'formatmatch', 'link', 'unlink'],
           ['bold', 'italic', 'underline', 'forecolor', 'backcolor', '|', 'indent', '|', 'justifyleft', 'justifycenter', 'justifyright', 'justifyjustify', '|', 'rowspacingtop', 'rowspacingbottom', 'lineheight', '|', 'insertorderedlist', 'insertunorderedlist', '|', 'imagenone', 'imageleft', 'imageright', 'imagecenter'],
-          ['fontfamily', 'letterspacing', '|', 'fontborder', 'strikethrough', 'superscript', 'subscript', 'autotypeset', 'pasteplain', '|', 'insertimage', 'emotion', 'map', '|', 'inserttable', 'searchreplace', 'attachment']
+          ['fontfamily', 'letterspacing', '|', 'fontborder', 'strikethrough', 'superscript', 'subscript', 'autotypeset', 'pasteplain', '|', 'insertimage', 'emotion', 'map', 'insertvideo', '|', 'inserttable', 'searchreplace', 'attachment']
         ],
         elementPathEnabled: false,
         wordCount: false,
@@ -42,7 +42,8 @@ export default {
         catchRemoteImageEnable: false, // 防止远程抓取图片
         enterTag: 'br', // 去掉自动添加的p和br标签
         UEDITOR_HOME_URL: './platform/ueditor1_4_3/',
-        serverUrl: './platform/ueditor1_4_3/'
+        serverUrl: './platform/ueditor1_4_3/',
+        themePath: 'http://www.jihui88.com/manage_v4/platform/ueditor1_4_3/themes/'
       }
     }
   },
@@ -82,7 +83,7 @@ export default {
           !ctx.img.getAttribute('anchorname') && !ctx.img.getAttribute('word_img')) {
           setTimeout(function () {
             window.document.getElementsByClassName('edui-clickable1')[0].addEventListener('click', function (e) {
-              ctx.imgType = 'update'
+              ctx.imgType = 'single'
               ctx.$refs.ablum.open()
             })
           }, 500)
@@ -102,11 +103,10 @@ export default {
       if (this.imgType === 'single') {
         this.img.src = 'http://img.jihui88.com/' + e.src
       } else {
-        let imgList = e
-        for (var i = 0; i < imgList.length; i++) {
-          var pic = 'http://img.jihui88.com/' + imgList[i]['serverPath']
-          vm.editor.execCommand('inserthtml', '<img src="' + pic + '" alt="' + imgList[i].filename + '">', true)
-        }
+        e.forEach(item => {
+          var pic = 'http://img.jihui88.com/' + item.src
+          vm.editor.execCommand('inserthtml', '<img src="' + pic + '" alt="' + item.name + '">', true)
+        })
       }
     },
     getFileIcon (url) {

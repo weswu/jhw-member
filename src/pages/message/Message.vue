@@ -87,14 +87,6 @@ export default {
       toggle: false
     }
   },
-  created () {
-    this.pageName = this.$route.params.id
-    this.searchData.recvState = this.pageName || ''
-    this.searchData.page = 1
-    this.searchData.type = this.$route.query.type || ''
-    this.get()
-    this.changeTableColumns()
-  },
   computed: {
     ...mapState(['userInfo', 'status'])
   },
@@ -105,7 +97,18 @@ export default {
       this.searchData.page = 1
       this.get()
       this.changeTableColumns()
+    },
+    userInfo (to, from) {
+      this.status['menuMessage'].menu[1].count = this.userInfo.noReaderMsg
     }
+  },
+  created () {
+    this.pageName = this.$route.params.id
+    this.searchData.recvState = this.pageName || ''
+    this.searchData.page = 1
+    this.searchData.type = this.$route.query.type || ''
+    this.get()
+    this.changeTableColumns()
   },
   methods: {
     get () {
@@ -237,9 +240,11 @@ export default {
           on: {
             click: () => {
               if (params.row.recvState === '00') {
-                this.userInfo.noReaderMsg -= 1
                 params.row.recvState = '01'
-                this.status['menuMessage'].menu[1].count = this.userInfo.noReaderMsg
+                if (this.userInfo.noReaderMsg > 0) {
+                  this.userInfo.noReaderMsg -= 1
+                  this.status['menuMessage'].menu[1].count = this.userInfo.noReaderMsg
+                }
               }
               this.$refs.detail.open(params.row.messageId)
             }
@@ -286,9 +291,11 @@ export default {
           on: {
             click: () => {
               if (params.row.recvState === '00') {
-                this.userInfo.noReaderMsg -= 1
                 params.row.recvState = '01'
-                this.status['menuMessage'].menu[1].count = this.userInfo.noReaderMsg
+                if (this.userInfo.noReaderMsg > 0) {
+                  this.userInfo.noReaderMsg -= 1
+                  this.status['menuMessage'].menu[1].count = this.userInfo.noReaderMsg
+                }
               }
               this.$refs.detail.open(params.row.messageId)
             }

@@ -131,7 +131,7 @@
                 {{detail.shipPhone}}
               </FormItem>
               <FormItem label="用户名：">
-                {{detail.shipName}}
+                {{detail.memberObj.name || detail.memberObj.username}}
               </FormItem>
               <FormItem label="预存款余额：">
                 {{detail.memberObj.deposit}}
@@ -479,13 +479,14 @@ export default {
     shippingSave () {
       this.payment.id = this.shipping.orderId
       let ship = Object.assign(this.shipping, {
+        id: this.shipping.orderId,
         orderId: this.shipping.orderId,
         payment_bankName: this.payment.bankName,
         payment_paymentType: this.payment.paymentType,
         payment_totalAmount: this.payment.totalAmount,
         payment_memo: this.payment.memo,
         payment_bankAccount: this.payment.bankAccount,
-        payment_paymentConfig_id: this.payment.paymentId,
+        paymentConfig_id: this.payment.paymentId,
         payment_payer: this.payment.payer
       })
       let data = {
@@ -495,6 +496,8 @@ export default {
       this.$http.post('/rest/api/orderPayment/detail/' + this.shipping.orderId, qs.stringify(data)).then((res) => {
         if (res.success) {
           this.$Message.success('保存成功')
+          this.get()
+          this.getShipping()
         } else {
           this.$Message.error(res.msg)
         }
@@ -512,6 +515,7 @@ export default {
         })
       })
       let ship = Object.assign(this.shipping, {
+        id: this.shipping.orderId,
         orderId: this.shipping.orderId,
         typeId: this.shippingSet.deliveryType.typeId,
         shipping_deliveryCorpName: this.shippingSet.deliveryCorpName,
@@ -533,7 +537,8 @@ export default {
       this.$http.post('/rest/api/orderShipping/detail/' + this.shipping.orderId, qs.stringify(data)).then((res) => {
         if (res.success) {
           this.$Message.success('保存成功')
-          this.detail.shippingStatus = 'shipped'
+          this.get()
+          this.getShipping()
         } else {
           this.$Message.error(res.msg)
         }

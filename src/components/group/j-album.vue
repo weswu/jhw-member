@@ -66,7 +66,8 @@ export default {
   data () {
     return {
       modal: false,
-      list: [
+      list: [],
+      listTest: [
         {
           state: '01',
           type: '01',
@@ -83,7 +84,8 @@ export default {
           filedesc: null,
           uploadTime: 1496296124960,
           technicView: null,
-          linkUrl: null
+          linkUrl: null,
+          _checked: false
         },
         {
           state: '01',
@@ -101,7 +103,8 @@ export default {
           filedesc: null,
           uploadTime: 1496300661556,
           technicView: null,
-          linkUrl: null
+          linkUrl: null,
+          _checked: false
         }
       ],
       total: 0,
@@ -191,6 +194,7 @@ export default {
     ok () {
       // 图片添加
       this.$emit('on-change', this.imglist)
+      this.initList()
       this.modal = false
     }
   }

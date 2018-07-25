@@ -17,8 +17,8 @@
                 <FormItem label="订单编号：" class="formitem_left">
                   <Input v-model="searchData.orderSn" class="w180" clearable></Input>
                 </FormItem>
-                <FormItem label="用户名：" class="formitem_left">
-                  <Input v-model="searchData.name" class="w180" clearable></Input>
+                <FormItem label="会员账号：" class="formitem_left">
+                  <Input v-model="searchData.username" class="w180" clearable></Input>
                 </FormItem>
                 <FormItem label="收货人：" class="formitem_left">
                   <Input v-model="searchData.shipName" class="w180" clearable></Input>
@@ -32,19 +32,19 @@
                 <FormItem label="配送状态：" class="formitem_left">
                   <Select v-model="searchData.shippingStatus" class="w180">
                     <Option value="">请选择</Option>
-                    <Option :value="item.value" v-for="item in shippingStatus" :key="item.value">{{item.text}}</Option>
+                    <Option :value="item.value" v-for="item in shippingStatus1" :key="item.value">{{item.text}}</Option>
                   </Select>
                 </FormItem>
                 <FormItem label="付款状态：" class="formitem_left">
                   <Select v-model="searchData.paymentStatus" class="w180">
                     <Option value="">请选择</Option>
-                    <Option :value="item.value" v-for="item in paymentStatus" :key="item.value">{{item.text}}</Option>
+                    <Option :value="item.value" v-for="item in paymentStatus1" :key="item.value">{{item.text}}</Option>
                   </Select>
                 </FormItem>
                 <FormItem label="订单状态：" class="formitem_left">
                   <Select v-model="searchData.orderStatus" class="w180">
                     <Option value="">请选择</Option>
-                    <Option :value="item.value" v-for="item in orderStatus" :key="item.value">{{item.text}}</Option>
+                    <Option :value="item.value" v-for="item in orderStatus1" :key="item.value">{{item.text}}</Option>
                   </Select>
                 </FormItem>
               </Form>
@@ -113,7 +113,29 @@ export default {
       total: 0,
       // 批量
       toggle: false,
-      ids: ''
+      ids: '',
+      shippingStatus1: [
+        { text: '未发货', value: '0' },
+        { text: '部分发贫', value: '1' },
+        { text: '已发货', value: '2' },
+        { text: '部分退货', value: '3' },
+        { text: '已退货', value: '4' },
+        { text: '无配送', value: '5' }
+      ],
+      paymentStatus1: [
+        { text: '未支付', value: '0' },
+        { text: '部分支付', value: '1' },
+        { text: '已支付', value: '2' },
+        { text: '部分退款', value: '3' },
+        { text: '全额退款', value: '4' }
+      ],
+      orderStatus1: [
+        { text: '未处理', value: '0' },
+        { text: '已处理', value: '1' },
+        { text: '已完成', value: '2' },
+        { text: '已作废', value: '3' },
+        { text: '已取消', value: '4' }
+      ]
     }
   },
   computed: {
@@ -216,7 +238,7 @@ export default {
       return h('span', params.index + (this.searchData.page - 1) * this.searchData.pageSize + 1)
     },
     nameFilter (h, params) {
-      return h('span', (params.row.memberObj && params.row.memberObj.name) || params.row.shipName)
+      return h('span', params.row.memberObj.name || params.row.memberObj.username)
     },
     totalFilter (h, params) {
       return h('span', {

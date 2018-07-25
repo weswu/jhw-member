@@ -3,7 +3,7 @@
     <MenuBar :data="'menu_product'" :active="'product'"/>
     <Layout class="j_layout_content">
       <Content>
-        <JHeader :title="'产品列表'" :lan="true" @on-change="get"/>
+        <JHeader :title="'产品列表'" :lan="true" @on-change="lanChange"/>
         <div class="j_search">
           <Row type="flex" justify="space-between">
             <Col>
@@ -215,8 +215,8 @@ export default {
     tableUpdate (a, b) {
       this.sortable(a, b, 'product')
     },
-    lanRefresh () {
-      this.searchData.page = 1
+    lanChange () {
+      this.$store.dispatch('getCategory', 'product')
       this.get()
     },
     myShow () {

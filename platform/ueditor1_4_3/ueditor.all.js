@@ -1,7 +1,7 @@
 /*!
  * UEditor
  * version: ueditor
- * build: Thu Jul 19 2018 13:48:34 GMT+0800 (中国标准时间)
+ * build: Wed Jul 25 2018 17:39:51 GMT+0800 (中国标准时间)
  */
 
 (function(){
@@ -24760,34 +24760,39 @@ UE.plugin.register('insertfile', function (){
     function getFileIcon(url){
         var ext = url.substr(url.lastIndexOf('.') + 1).toLowerCase(),
             maps = {
-                "rar":"icon_rar.gif",
-                "zip":"icon_rar.gif",
-                "tar":"icon_rar.gif",
-                "gz":"icon_rar.gif",
-                "bz2":"icon_rar.gif",
-                "doc":"icon_doc.gif",
-                "docx":"icon_doc.gif",
-                "pdf":"icon_pdf.gif",
-                "mp3":"icon_mp3.gif",
-                "xls":"icon_xls.gif",
-                "chm":"icon_chm.gif",
-                "ppt":"icon_ppt.gif",
-                "pptx":"icon_ppt.gif",
-                "avi":"icon_mv.gif",
-                "rmvb":"icon_mv.gif",
-                "wmv":"icon_mv.gif",
-                "flv":"icon_mv.gif",
-                "swf":"icon_mv.gif",
-                "rm":"icon_mv.gif",
-                "exe":"icon_exe.gif",
-                "psd":"icon_psd.gif",
-                "txt":"icon_txt.gif",
-                "jpg":"icon_jpg.gif",
-                "png":"icon_jpg.gif",
-                "jpeg":"icon_jpg.gif",
-                "gif":"icon_jpg.gif",
-                "ico":"icon_jpg.gif",
-                "bmp":"icon_jpg.gif"
+              'rar': 'icon_rar.gif',
+              'zip': 'icon_rar.gif',
+              'tar': 'icon_rar.gif',
+              'gz': 'icon_rar.gif',
+              'bz2': 'icon_rar.gif',
+              'doc': 'icon_doc.gif',
+              'docx': 'icon_docx.gif',
+              'pdf': 'icon_pdf.gif',
+              'mp3': 'icon_mp3.gif',
+              'xls': 'icon_xls.gif',
+              'xlsx': 'icon_xlsx.gif',
+              'chm': 'icon_chm.gif',
+              'ppt': 'icon_ppt.gif',
+              'pptx': 'icon_pptx.gif',
+              'avi': 'icon_mv.gif',
+              'rmvb': 'icon_mv.gif',
+              'wmv': 'icon_mv.gif',
+              'flv': 'icon_mv.gif',
+              'swf': 'icon_mv.gif',
+              'rm': 'icon_mv.gif',
+              'exe': 'icon_exe.gif',
+              'psd': 'icon_psd.gif',
+              'txt': 'icon_txt.gif',
+              'jpg': 'icon_jpg.gif',
+              'png': 'icon_jpg.gif',
+              'jpeg': 'icon_jpg.gif',
+              'gif': 'icon_jpg.gif',
+              'ico': 'icon_jpg.gif',
+              'bmp': 'icon_jpg.gif',
+              'rtf': 'icon_rtf.gif',
+              'wps': 'icon_wps.gif',
+              'et': 'icon_et.gif',
+              'dps': 'icon_dps.gif'
             };
         return maps[ext] ? maps[ext]:maps['txt'];
     }
@@ -24817,8 +24822,6 @@ UE.plugin.register('insertfile', function (){
         }
     }
 });
-
-
 
 
 // plugins/xssFilter.js
@@ -29029,8 +29032,18 @@ UE.ui = baidu.editor.ui = {};
                         dialogs = editor.ui._dialogs;
                     if (img && img.tagName == 'IMG') {
                         var dialogName = 'insertimageDialog';
+                        var html1 = '<span class="nobr-img-auto-width" onclick=$$._onImgAutoWidthClick()><span class="edui-clickable nobr-icon-edit '+(img.style.width=='100%'? 'nobr-icon-edit-mask' : '')+'"></span><span style="vertical-align: super;">'+(img.style.width=='100%'? '取消自适应' : '自适应屏幕宽度')+'</span></span>'
+                            + '<span class="edui-clickable line"></span>'
+                        var html2 = '<hr style="margin:15px 5px;border-top: 1px solid #eee;"/>'
+                        + '<div><span class="nobr-left">宽度：</span><input type="text" onkeyup=$$._onImgWidthChange() class="nobr-input nobr-input-style nobr-img-width" value="'+img.width+'" autofocus />'
+                        + '<span class="nobr-left" style="padding-left: 20px;">高度：</span><input type="text" onkeyup=$$._onImgHeightChange() class="nobr-input nobr-input-style nobr-img-height" value="'+img.height+'" autofocus /></div>'
+                        + '<br/><div><span class="nobr-left">图片描述：</span><input type="text" style="width:158px" onkeyup=$$._onImgAltChange() class="nobr-input nobr-img-alt" value="'+img.getAttribute('alt')+'" autofocus /></div>'
+                        var text1 = '替换图片'
                         if (img.className.indexOf("edui-faked-video") != -1 || img.className.indexOf("edui-upload-video") != -1) {
                             dialogName = "insertvideoDialog"
+                            html1 = ''
+                            html2 = ''
+                            text1 = '修改视频'
                         }
                         if (img.className.indexOf("edui-faked-webapp") != -1) {
                             dialogName = "webappDialog"
@@ -29065,9 +29078,8 @@ UE.ui = baidu.editor.ui = {};
                         // wes
                         if(!img.getAttribute('alt') || img.getAttribute('alt') == 'undefined'){img.setAttribute('alt','')}
                         str = '<nobr><div style="padding:5px">'
-                            + '<span class="nobr-img-auto-width" onclick=$$._onImgAutoWidthClick()><span class="edui-clickable nobr-icon-edit '+(img.style.width=='100%'? 'nobr-icon-edit-mask' : '')+'"></span><span style="vertical-align: super;">'+(img.style.width=='100%'? '取消自适应' : '自适应屏幕宽度')+'</span></span>'
-                            + '<span class="edui-clickable line"></span>'
-                            + '<span onclick="$$._onImgEditButtonClick(\'' + dialogName + '\');" class="edui-clickable edui-clickable1" title="替换图片"></span>'
+                            + html1
+                            + '<span onclick="$$._onImgEditButtonClick(\'' + dialogName + '\');" class="edui-clickable edui-clickable1" title="' + text1 + '"></span>'
                             + '<span class="edui-clickable line"></span>'
                             + '<span onclick=$$._onImgSetFloat("left") class="edui-clickable edui-clickable2" title="居左对齐"></span>'
                             + '<span onclick=$$._onImgSetFloat("center") class="edui-clickable edui-clickable3" title="居中对齐"></span>'
@@ -29076,12 +29088,8 @@ UE.ui = baidu.editor.ui = {};
                             + '<span onclick=$$._onImgShadowClick() class="edui-clickable edui-clickable5" title="添加阴影"></span>'
                             + '<span onclick=$$._onImgBorderClick() class="edui-clickable edui-clickable6" title="添加边框"></span>'
                             + '<span onclick=$$._onImgRadiusClick() class="edui-clickable edui-clickable7" title="变为圆形"></span>'
-                            + '<hr style="margin:15px 5px;border-top: 1px solid #eee;"/>'
-                            + '<div><span class="nobr-left">宽度：</span><input type="text" onkeyup=$$._onImgWidthChange() class="nobr-input nobr-input-style nobr-img-width" value="'+img.width+'" autofocus />'
-                            + '<span class="nobr-left" style="padding-left: 20px;">高度：</span><input type="text" onkeyup=$$._onImgHeightChange() class="nobr-input nobr-input-style nobr-img-height" value="'+img.height+'" autofocus /></div>'
-                            + '<br/><div><span class="nobr-left">图片描述：</span><input type="text" style="width:158px" onkeyup=$$._onImgAltChange() class="nobr-input nobr-img-alt" value="'+img.getAttribute('alt')+'" autofocus /></div>'
+                            + html2
                           + '</div></nobr>';
-
 
                         !html && (html = popup.formatHtml(str))
 

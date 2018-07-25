@@ -279,7 +279,9 @@ export default {
     // 产品图片
     imgChange (list, index) {
       if (index === 'add') {
-        this.imgList.push(list[0])
+        list.forEach(item => {
+          this.imgList.push({id: item.id, src: item.src})
+        })
       } else if (index === 0 || index > 0) {
         this.imgList[index].src = list[0].src
       } else {
@@ -436,7 +438,7 @@ export default {
         }
       })
       this.detail.photo2 = JSON.stringify(imageListStore)
-      // this.detail.productImageListStore = JSON.stringify(imageListStore)
+      this.detail.productImageListStore = JSON.stringify(imageListStore)
       this.detail.taglist = ''
       // 编辑器
       if (this.$refs.ue1) this.detail.proddesc = this.$refs.ue1.getUEContent()
