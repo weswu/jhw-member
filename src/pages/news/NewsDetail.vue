@@ -55,6 +55,14 @@
       </Content>
       <Footer>
         <Button type="primary" size="small" @click="submit('modalForm')">保存</Button>
+        <Poptip placement="bottom" class="j_poptip_ul">
+          <Button type="ghost" size="small">预览</Button>
+          <ul slot="content" style="max-height: 250px;">
+            <li v-for="(item, index) in staticList" :key="index">
+              <a :href="'http://pc.jihui88.com/rest/site/'+item.layoutId+'/nd?itemId='+$route.params.id" target="_blank">网站编号：{{item.layoutId}}</a>
+            </li>
+          </ul>
+        </Poptip>
       </Footer>
     </Layout>
   </Layout>
@@ -97,6 +105,7 @@ export default {
   computed: {
     ...mapState({
       menuBarList: state => state.status.menu_news_detail,
+      staticList: state => state.staticList,
       newsCategory: state => state.newsCategory
     })
   },
