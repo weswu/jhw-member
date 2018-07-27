@@ -3,7 +3,8 @@
     <div class="j_search">
       <Button class="mormal" @click="activeChange(item.value)" v-for="(item, index) in btns" :key="index" :class="{active: active === item.value}">{{item.text}}</Button>
       <div class="j_tip" style="margin-top: 2px;">
-        温馨提醒：此项设置包括（首页、产品展示页、新闻展示页、自定义页等导航页面的设置），“基本栏目模板配置”一旦保存，会覆盖所有的页面，请慎用。
+        温馨提醒：此项设置包括（
+        <span v-if="active === '0'">首页、产品展示页、新闻展示页、自定义页等导航页面</span><span v-if="active === '1'">新闻分类页</span><span v-if="active === '2'">产品分类页</span><span v-if="active === '3'">新闻详细页</span><span v-if="active === '4'">产品详细页</span>的设置），“{{btns[active].text}}”一旦保存，会覆盖所有的页面，请慎用。
       </div>
     </div>
     <Form :model="detail" :label-width="105" ref="model">
@@ -91,7 +92,11 @@ export default {
     },
     activeChange (e) {
       this.active = e
-      this.detail = this.data[e]
+      this.detail = this.data[e] || {
+        seoTitle: '',
+        seoKey: '',
+        seoDescription: ''
+      }
     },
     importSeo (e) {
       let data = {

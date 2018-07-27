@@ -2,7 +2,7 @@
   <Layout class="ivu-layout-has-sider j_news">
     <MenuBar :data="'menu_news'" :active="'news'"/>
     <Layout class="j_layout_content">
-      <JHeader :title="'新闻列表'" :lan="true" @on-change="lanRefresh"/>
+      <JHeader :title="'新闻列表'" :lan="true" @on-change="lanChange"/>
       <Content>
         <div class="j_search">
           <Row type="flex" justify="space-between">
@@ -241,8 +241,8 @@ export default {
       })
     },
     // 功能
-    lanRefresh () {
-      this.searchData.page = 1
+    lanChange () {
+      this.$store.dispatch('getCategory', 'news')
       this.get()
     },
     add () {

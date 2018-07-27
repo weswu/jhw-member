@@ -3,7 +3,7 @@
     <Header :style="{padding: 0}" class="layout-header-bar" @click.native="collapsedSider">
       <Icon :class="rotateIcon" :style="{margin: '10px 10px 0'}" type="navicon" size="20"></Icon>
     </Header>
-    <Menu theme="dark" width="auto" :class="menuitemClasses" :active-name="activeName" :open-names="open" @on-select="mrouter" accordion>
+    <Menu ref="menu" theme="dark" width="auto" :class="menuitemClasses" :active-name="activeName" :open-names="open" @on-select="mrouter" accordion>
       <Tooltip content="首页" placement="right" :transfer="transfer" :disabled="disabled">
         <MenuItem name="index">
           <i class="iconfont icon-ai-home"></i>
@@ -110,15 +110,13 @@ export default {
       ]
     }
   },
-  created () {
-    if (this.$route.meta.open) this.open = this.$route.meta.open.split('')
-    if (this.$route.meta.parent) {
-      if (this.$route.path === '/category/news') {
-        this.activeName = 'news'
-      } else {
-        this.activeName = this.$route.meta.parent
-      }
+  watch: {
+    $route (to, from) {
+      this.initRoute(to)
     }
+  },
+  created () {
+    this.initRoute(this.$route)
   },
   mounted () {
     var vm = this
@@ -127,6 +125,19 @@ export default {
     }, 1000)
   },
   methods: {
+    initRoute (to) {
+      if (to.meta.parent) {
+        if (to.path === '/category/news') {
+          this.activeName = 'news'
+        } else {
+          this.activeName = to.meta.parent
+        }
+      }
+      this.open = to.meta.open ? to.meta.open.split('') : []
+      this.$nextTick(() => {
+        this.$refs.menu.updateOpened()
+      })
+    },
     collapsedSider () {
       this.$refs.side1.toggleCollapse()
       this.disabled = !this.customData.isCollapsed

@@ -60,7 +60,12 @@
               </Poptip>
               <span>（备注：上传域名证书给我们）</span></div>
             <FormItem label="域名证书：">
-              <Input v-model="detail.enterprise.domainCertPic" placeholder="上传域名证书" @on-focus="upload('enterprise.domainCertPic')"></Input>
+              <Poptip trigger="hover" placement="right">
+                <Input v-model="detail.enterprise.domainCertPic" clearable placeholder="上传域名证书" @on-focus="upload('enterprise.domainCertPic')"></Input>
+                <div class="certPic" slot="content">
+                  <img :src="'http://img.jihui88.com/' + detail.enterprise.domainCertPic" @error="imgError"/>
+                </div>
+              </Poptip>
             </FormItem>
             <div class="j_beian_title">营业执照：
               <Poptip trigger="hover" placement="right">
@@ -73,7 +78,12 @@
                 </div>
               </Poptip><span>（备注：上传营业执照给我们）</span></div>
             <FormItem label="营业执照：">
-              <Input v-model="detail.enterprise.certPic" placeholder="上传营业执照" @on-focus="upload('enterprise.certPic')"></Input>
+              <Poptip trigger="hover" placement="right">
+                <Input v-model="detail.enterprise.certPic" clearable placeholder="上传营业执照" @on-focus="upload('enterprise.certPic')"></Input>
+                <div class="certPic" slot="content">
+                  <img :src="'http://img.jihui88.com/' + detail.enterprise.certPic" @error="imgError"/>
+                </div>
+              </Poptip>
             </FormItem>
             <div class="j_beian_title">上传法人身份正反<em v-if="type === '00'">（有负责人也需）</em>电子版：
               <Poptip trigger="hover" placement="right">
@@ -85,17 +95,37 @@
               </Poptip>
               <span>（备注：法人必须上传<em v-if="type === '00'">，如有负责人也需上传</em>）</span></div>
             <FormItem label="法人身份证正面：" class="formitem_left">
-              <Input v-model="detail.emergency.certFrontPic" placeholder="选择文件：法人身份证正面" @on-focus="upload('emergency.certFrontPic')"></Input>
+              <Poptip trigger="hover" placement="right">
+                <Input v-model="detail.emergency.certFrontPic" clearable placeholder="选择文件：法人身份证正面" @on-focus="upload('emergency.certFrontPic')"></Input>
+                <div class="certPic" slot="content">
+                  <img :src="'http://img.jihui88.com/' + detail.emergency.certFrontPic" @error="imgError"/>
+                </div>
+              </Poptip>
             </FormItem>
             <FormItem label="负责人身份证正面：" class="formitem_left" v-if="type === '00'">
-              <Input v-model="detail.principal.certFrontPic" placeholder="选择文件：负责人身份证正面" @on-focus="upload('principal.certFrontPic')"></Input>
+              <Poptip trigger="hover" placement="right">
+                <Input v-model="detail.principal.certFrontPic" clearable placeholder="选择文件：负责人身份证正面" @on-focus="upload('principal.certFrontPic')"></Input>
+                <div class="certPic" slot="content">
+                  <img :src="'http://img.jihui88.com/' + detail.principal.certFrontPic" @error="imgError"/>
+                </div>
+              </Poptip>
             </FormItem>
             <br/>
             <FormItem label="法人身份证反面：" class="formitem_left">
-              <Input v-model="detail.emergency.certReversePic" placeholder="选择文件：法人身份证反面" @on-focus="upload('emergency.certReversePic')"></Input>
+              <Poptip trigger="hover" placement="right">
+                <Input v-model="detail.emergency.certReversePic" clearable placeholder="选择文件：法人身份证反面" @on-focus="upload('emergency.certReversePic')"></Input>
+                <div class="certPic" slot="content">
+                  <img :src="'http://img.jihui88.com/' + detail.emergency.certReversePic" @error="imgError"/>
+                </div>
+              </Poptip>
             </FormItem>
             <FormItem label="负责人身份证反面：" class="formitem_left" v-if="type === '00'">
-              <Input v-model="detail.principal.certReversePic" placeholder="选择文件：负责人身份证反面" @on-focus="upload('principal.certReversePic')"></Input>
+              <Poptip trigger="hover" placement="right">
+                <Input v-model="detail.principal.certReversePic" clearable placeholder="选择文件：负责人身份证反面" @on-focus="upload('principal.certReversePic')"></Input>
+                <div class="certPic" slot="content">
+                  <img :src="'http://img.jihui88.com/' + detail.principal.certReversePic" @error="imgError"/>
+                </div>
+              </Poptip>
             </FormItem>
             <!-- 幕布照 -->
             <div class="j_beian_title">幕布照（<em v-if="type === '01'">法</em><em v-if="type === '00'">负责</em>人）：
@@ -103,10 +133,20 @@
               <span v-if="type === '01'">（备注：必须上传）</span>
               <a href="javascript:;" class="a_underline a_underline_tow" @click="add">填写幕布照邮寄地址</a></div>
             <FormItem label="法人幕布照：" v-if="type === '01'">
-              <Input v-model="detail.enterprise.legalPersonBust" placeholder="选择文件：法人幕布照" @on-focus="upload('enterprise.legalPersonBust')"></Input>
+              <Poptip trigger="hover" placement="right">
+                <Input v-model="detail.enterprise.legalPersonBust" clearable placeholder="选择文件：法人幕布照" @on-focus="upload('enterprise.legalPersonBust')"></Input>
+                <div class="certPic" slot="content">
+                  <img :src="'http://img.jihui88.com/' + detail.enterprise.legalPersonBust" @error="imgError"/>
+                </div>
+              </Poptip>
             </FormItem>
             <FormItem label="负责人幕布照：" v-if="type === '00'">
-              <Input v-model="detail.enterprise.legalPersonBust" placeholder="选择文件：负责人幕布照" @on-focus="upload('enterprise.legalPersonBust')"></Input>
+              <Poptip trigger="hover" placement="right">
+                <Input v-model="detail.enterprise.legalPersonBust" clearable placeholder="选择文件：负责人幕布照" @on-focus="upload('enterprise.legalPersonBust')"></Input>
+                <div class="certPic" slot="content">
+                  <img :src="'http://img.jihui88.com/' + detail.enterprise.legalPersonBust" @error="imgError"/>
+                </div>
+              </Poptip>
             </FormItem>
             <!-- 手持身份证 -->
             <div class="j_beian_title">手持身份证照片（<em v-if="type === '01'">法</em><em v-if="type === '00'">负责</em>人）：
@@ -118,10 +158,20 @@
               </Poptip><span>（备注：必需上传）</span>
             </div>
             <FormItem label="负责人手持身份证照片：" v-if="type === '00'">
-              <Input v-model="detail.principal.certHandPic" placeholder="选择文件：负责人的手持身份证照片" @on-focus="upload('principal.certHandPic')"></Input>
+              <Poptip trigger="hover" placement="right">
+                <Input v-model="detail.principal.certHandPic" clearable placeholder="选择文件：负责人的手持身份证照片" @on-focus="upload('principal.certHandPic')"></Input>
+                <div class="certPic" slot="content">
+                  <img :src="'http://img.jihui88.com/' + detail.principal.certHandPic" @error="imgError"/>
+                </div>
+              </Poptip>
             </FormItem>
             <FormItem label="法人手持身份证照片：" v-if="type === '01'">
-              <Input v-model="detail.emergency.certHandPic" placeholder="选择文件：法人的手持身份证照片" @on-focus="upload('emergency.certHandPic')"></Input>
+              <Poptip trigger="hover" placement="right">
+                <Input v-model="detail.emergency.certHandPic" clearable placeholder="选择文件：法人的手持身份证照片" @on-focus="upload('emergency.certHandPic')"></Input>
+                <div class="certPic" slot="content">
+                  <img :src="'http://img.jihui88.com/' + detail.emergency.certHandPic" @error="imgError"/>
+                </div>
+              </Poptip>
             </FormItem>
 
             <div class="j_beian_title">手机号码：<span>（备注：法人必填<em v-if="type === '00'">，如有负责人也需要</em>）</span></div>
@@ -147,7 +197,12 @@
               <span>（备注：下载核验单请联系微信/手机：150-5858-6617，核验单下载打印后，盖好公章，然后拍照上传）</span>
             </div>
             <FormItem label="上传核验单：" style="margin-bottom:30px;">
-              <Input v-model="detail.webinfo.checkPic" placeholder="选择文件：核验单" @on-focus="upload('enterprise.webinfo.checkPic')"></Input>
+              <Poptip trigger="hover" placement="right">
+                <Input v-model="detail.webinfo.checkPic" clearable placeholder="选择文件：核验单" @on-focus="upload('webinfo.checkPic')"></Input>
+                <div class="certPic" slot="content">
+                  <img :src="'http://img.jihui88.com/' + detail.webinfo.checkPic" @error="imgError"/>
+                </div>
+              </Poptip>
             </FormItem>
           </Form>
         </div>
@@ -240,8 +295,13 @@ export default {
       this.detail[obj[0]][obj[1]] = e.src
     },
     upload (e) {
+      debugger
       this.uploadText = e
       this.$refs.ablum.open()
+    },
+    imgError (e) {
+      e.target.src = 'http://img.jihui88.com/upload/j/j2/jihui/picture/2018/07/27/2242dbcc-9807-45a6-a080-c94b12c1bc82.jpg'
+      e.target.onerror = null
     },
     submitBind (tip) {
       // 域名提交
