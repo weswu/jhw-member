@@ -19,7 +19,7 @@
             <FormItem label="来源：">
               <Input v-model="detail.origin" placeholder="请输入来源"></Input>
             </FormItem>
-            <FormItem label="作者">
+            <FormItem label="作者：">
               <Input v-model="detail.author" placeholder="请输入作者"></Input>
             </FormItem>
             <FormItem label="文章属性：">
@@ -185,4 +185,14 @@ export default {
 </script>
 
 <style lang="less">
+.j_news_detail{
+  .j_poptip_ul .ivu-poptip-body li{
+    padding: 0;
+    a{
+      color: #595959;
+      padding: 8px 15px;
+      display: block;
+    }
+  }
+}
 </style>

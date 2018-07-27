@@ -41,8 +41,8 @@ export default {
         allowDivTransToP: false,
         catchRemoteImageEnable: false, // 防止远程抓取图片
         enterTag: 'br', // 去掉自动添加的p和br标签
-        UEDITOR_HOME_URL: './platform/ueditor1_4_3/',
-        serverUrl: './platform/ueditor1_4_3/',
+        UEDITOR_HOME_URL: 'http://www.jihui88.com/manage_v4/platform/ueditor1_4_3/',
+        serverUrl: 'http://www.jihui88.com/manage_v4/platform/ueditor1_4_3/',
         themePath: 'http://www.jihui88.com/manage_v4/platform/ueditor1_4_3/themes/'
       }
     }

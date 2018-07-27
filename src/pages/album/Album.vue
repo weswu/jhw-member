@@ -43,7 +43,6 @@
                   </div>
                 </Poptip>
                 <Button class="info" @click="watermark"><i class="iconfont icon-tupian3"></i>设置水印</Button>
-                <Button class="info" @click="importProductCategory" style="padding: 6px 5px;margin-right:0px;">一键载入产品分类名称</Button>
               </Col>
             </Row>
           </div>

@@ -226,7 +226,7 @@ export default {
       var ctx = this
       this.columns = [
         { type: 'selection', className: 'j_table_checkbox', width: 44 },
-        { className: 'j_table_san_pin', width: 0, render: this.checkboxFilter }
+        { className: 'j_table_san_pin', width: 1, render: this.checkboxFilter }
       ]
       this.columns2.forEach(col => {
         this.myShowSelect.forEach(item => {
