@@ -295,7 +295,6 @@ export default {
       this.detail[obj[0]][obj[1]] = e.src
     },
     upload (e) {
-      debugger
       this.uploadText = e
       this.$refs.ablum.open()
     },

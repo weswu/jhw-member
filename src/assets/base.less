@@ -638,7 +638,7 @@ a.primary{
     border-radius: 0;
     box-shadow: none;
     border: 1px solid @border-color-split;
-    z-index: 1000;
+    z-index: 1002; // 高于自定义弹出框
   }
   &.border{
     .ivu-select-selection{
@@ -749,7 +749,7 @@ a.primary{
 
 //对敌框
 .j_dialog{
-  z-index: 1060;
+  z-index: 1001; // 高于默认弹出框
   .ivu-modal {
     top: 186px;
   }

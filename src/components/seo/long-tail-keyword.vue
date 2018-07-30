@@ -127,11 +127,12 @@ export default {
       this.list.splice(this.list.length - 1, 1)
     },
     select (item) {
+      var vm = this
       this.$http.post('/rest/api/keywords/savaName', qs.stringify({keywords: item})).then((res) => {
         if (res.success) {
-          this.$Message.success('msg')
+          vm.$Message.success('添加成功')
         } else {
-          this.$Message.error(res.msg)
+          vm.$Message.error(res.msg)
         }
       })
     },
@@ -202,12 +203,10 @@ export default {
           }
         })
       })
-      let data = {
-        keywordsList: a + '-!-' + b + '-!-' + c + '-!-' + d + '-!-' + e + '-!-' + f
-      }
-      this.$http.get('/rest/api/keywords/generateKeywords', qs.stringify(data)).then((res) => {
+      let data = a + '-!-' + b + '-!-' + c + '-!-' + d + '-!-' + e + '-!-' + f
+      this.$http.get('/rest/api/keywords/generateKeywords?keywordsList=' + data).then((res) => {
         if (res.success) {
-          if (res.attributes.data === 0) {
+          if (res.attributes.data === 0 || res.attributes.data === '0') {
             this.$Message.success('导出失败，请检查数据!')
           } else {
             window.open(res.attributes.data)
