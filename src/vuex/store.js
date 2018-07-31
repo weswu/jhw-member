@@ -46,6 +46,16 @@ const state = {
       { value: 'order', text: '订单', status: '01', type: '01' },
       { value: 'message', text: '留言', status: '00', type: '01' },
       { value: 'service', text: '服务', status: '00', type: '01' }
+    ],
+    mobileLink: [
+      {url: '/pages/order/order', text: '订单管理', icon: 'icon-dingdandaifukuan'},
+      {url: '/pages/member/member', text: '会员管理', icon: 'icon-Group'}
+    ],
+    mobileSort: [
+      {text: '我的产品', value: 'product', checked: true},
+      {text: '订单管理', value: 'order', checked: true},
+      {text: '常用工具', value: 'tool', checked: true},
+      {text: '数据管理中心', value: 'data', checked: true}
     ]
   }
 }
