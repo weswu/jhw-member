@@ -2,8 +2,8 @@
   <JDialog ref="dialog" :title="'分类'" :width="620" :tip="tip" @on-ok="ok" :okText="'提交'">
     <Form ref="modalForm" :model="detail" :label-width="80" slot="content" class="j_category_detail">
       <FormItem label="上级分类：">
-        <CategorySelect v-if="$route.params.id === 'product' || $route.params.id === 'news'" :categoryId="detail.belongId" :list="$store.state[$route.params.id+'Category']" @on-change="categoryChange" :isDefalut="true"/>
-        <CategorySelect v-else :categoryId="detail.belongId" :list="list" @on-change="categoryChange" :isDefalut="true"/>
+        <CategorySelect ref="categorySelect" v-if="$route.params.id === 'product' || $route.params.id === 'news'" :categoryId="detail.belongId" :list="$store.state[$route.params.id+'Category']" @on-change="categoryChange" :isDefalut="true"/>
+        <CategorySelect ref="categorySelect" v-else :categoryId="detail.belongId" :list="list" @on-change="categoryChange" :isDefalut="true"/>
       </FormItem>
       <FormItem label="分类名称：">
         <Input v-model="detail.name" placeholder="请输入分类名称" style="width: 100%;"></Input>
@@ -40,10 +40,14 @@ export default {
             let data = res.attributes.data
             if (!data.belongId) data.belongId = ''
             this.detail = data
+            this.$refs.categorySelect.initCate(data.belongId)
           }
         })
       } else {
-        this.detail = {}
+        this.detail = {
+          belongId: ''
+        }
+        this.$refs.categorySelect.initCate('')
       }
     },
     categoryChange (e) {

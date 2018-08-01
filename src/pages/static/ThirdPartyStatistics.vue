@@ -61,7 +61,14 @@ export default {
       })
     },
     submit () {
-      this.$http.post('/rest/pc/api/analysis/detail', qs.stringify(this.detail)).then((res) => {
+      let data = {
+        analysisId: this.detail.analysisId,
+        analysisHeadState: this.detail.analysisHeadState,
+        analysisHeadContent: this.detail.analysisHeadContent || '',
+        analysisTailState: this.detail.analysisTailState,
+        analysisTailContent: this.detail.analysisTailContent || ''
+      }
+      this.$http.post('/rest/pc/api/analysis/save', qs.stringify(data)).then((res) => {
         if (res.success) {
           this.$Message.success('保存成功')
         } else {

@@ -113,7 +113,7 @@ export default {
         { title: '新闻分类', className: 'j_table_category', sortable: true, key: 'category', minWidth: 160, render: this.categoryFilter },
         { title: '添加时间', sortable: true, key: 'addTime', minWidth: 105, render: this.dataFilter },
         { title: '显示／隐藏', sortable: true, key: 'display', minWidth: 113, render: this.displayFilter },
-        { title: '是否置顶', minWidth: 90, render: this.topnewsFilter },
+        { title: '是否置顶', minWidth: 90, key: 'topnews', render: this.topnewsFilter },
         { title: '排序', className: 'j_table_sort', sortable: true, key: 'sort', minWidth: 125, render: this.sortFilter },
         { title: '操作', className: 'j_table_operate', align: 'left', width: 160, render: this.renderOperate }
       ],

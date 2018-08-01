@@ -43,14 +43,9 @@ export default {
   watch: {
     categoryId: {
       handler () {
-        var ctx = this
-        this.data.forEach(item => {
-          if (item.categoryId === ctx.categoryId) {
-            ctx.name = item.name
-          }
-        })
-        this.initBg(this.categoryId)
-      }
+        this.initCate(this.categoryId)
+      },
+      deep: true
     },
     list: {
       handler () {
@@ -62,6 +57,16 @@ export default {
     this.init()
   },
   methods: {
+    initCate (categoryId) {
+      var ctx = this
+      this.data.forEach(item => {
+        if (item.categoryId === categoryId) {
+          ctx.name = item.name
+        }
+      })
+      if (!categoryId) this.name = ''
+      this.initBg(categoryId)
+    },
     init () {
       var ctx = this
       setTimeout(function () {

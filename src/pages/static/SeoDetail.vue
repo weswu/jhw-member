@@ -6,7 +6,6 @@
     @on-cancel="cancel">
     <div slot="footer">
       <Button type="text" size="large" @click="cancel">取消</Button>
-      <Button type="text" size="large" @click="publish" v-if="type !== 'page'">发布</Button>
       <Button type="primary" size="large" @click="submit('modalForm')">保存</Button>
     </div>
     <Form ref="modalForm" :model="model" :label-width="90" class="seo_detail" v-if="modal">
@@ -76,6 +75,7 @@ export default {
   data () {
     return {
       modal: false,
+      page: '',
       model: {
         title: '',
         keywords: '',
@@ -103,10 +103,11 @@ export default {
     open (id, type) {
       this.modal = true
       this.type = type
+      this.page = id
       if (type === 'page') {
         this.$http.get('/rest/pc/api/navigator/detail/' + id).then((res) => {
           if (res.success) {
-            this.model = res.attributes.data
+            this.model = res.attributes.data || {}
             this.model.title = this.model.seoTitle || ''
             this.model.keywords = this.model.seoKeywords || ''
             this.model.description = this.model.seoDescription || ''
@@ -117,7 +118,7 @@ export default {
       } else {
         this.$http.get('/rest/api/seo/detail/' + id).then((res) => {
           if (res.success) {
-            this.model = res.attributes.data
+            this.model = res.attributes.data || {}
           } else {
             this.$Message.error(res.msg)
           }
@@ -126,30 +127,6 @@ export default {
     },
     cancel () {
       this.modal = false
-    },
-    publish () {
-      let id = this.model.seoId
-      let page = this.model.page
-      var url = 'type=page&thisPage='
-      if (this.type === 'product') {
-        url = 'type=detail&thisPage=product&productId=' + id
-      } else if (this.type === 'news') {
-        url = 'type=detail&thisPage=news&newsId=' + id
-      } else if (this.type === 'cate_product') {
-        url = 'type=category&thisPage=product'
-      } else if (this.type === 'cate_news') {
-        url = 'type=category&thisPage=news'
-      } else {
-        url = url + page
-      }
-      this.$http.post('/rest/static1/' + this.$store.state.user.username + '/publish?' + url).then((res) => {
-        if (res === '') {
-          this.$Message.success('发布成功')
-          this.modal = false
-        } else {
-          this.$Message.error('发布失败')
-        }
-      })
     },
     getKey () {
       if (this.list === 0) {
@@ -193,11 +170,14 @@ export default {
       if (this.type === 'page') {
         return this.navHttp()
       }
+      if (!this.model.seoId) {
+        this.model.page = this.page
+      }
       let data = {
         model: JSON.stringify(this.model),
         _method: 'put'
       }
-      this.$http.post('/rest/api/seo/detail/' + this.model.seoId, qs.stringify(data)).then((res) => {
+      this.$http.post('/rest/api/seo/detail/' + (this.model.seoId || this.page), qs.stringify(data)).then((res) => {
         if (res.success) {
           this.$Message.success('保存成功')
           this.modal = false
