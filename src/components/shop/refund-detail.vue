@@ -20,7 +20,7 @@
         {{detail.mobile}}
       </FormItem>
       <FormItem label="退货说明:">
-        <Input v-model="detail.amount" type="textarea" placeholder="退货说明"></Input>
+        <Input v-model="detail.buyerReason" type="textarea" placeholder="退货说明"></Input>
       </FormItem>
     </Form>
     <div slot="footer">
