@@ -18,6 +18,7 @@
 
 <script>
 import qs from 'qs'
+import { mapState } from 'vuex'
 import JPagination from '@/components/group/j-pagination'
 import Detail from '@/components/seo/inner-link-detail'
 export default {
@@ -43,11 +44,20 @@ export default {
       navList: []
     }
   },
+  computed: {
+    ...mapState(['layoutId'])
+  },
+  watch: {
+    layoutId () {
+      this.get()
+    }
+  },
   created () {
     this.get()
   },
   methods: {
     get () {
+      this.searchData.layoutId = this.$store.state.layoutId || ''
       this.$http.get('/rest/api/keywords/innerLinks/list?' + qs.stringify(this.searchData)).then((res) => {
         if (res.success) {
           this.list = res.attributes.data
@@ -128,16 +138,6 @@ export default {
     renderOperate (h, params) {
       var ctx = this
       return h('a', [
-        h('a', {
-          on: {
-            click: () => {
-              this.$refs.detail.open(params.row.keywordsId)
-            }
-          }
-        }, '修改'),
-        h('span', {
-          class: { delimiter: true }
-        }, '|'),
         h('Poptip', {
           props: {
             confirm: true,

@@ -32,15 +32,21 @@ export default {
           ['bold', 'italic', 'underline', 'forecolor', 'backcolor', '|', 'indent', '|', 'justifyleft', 'justifycenter', 'justifyright', 'justifyjustify', '|', 'rowspacingtop', 'rowspacingbottom', 'lineheight', '|', 'insertorderedlist', 'insertunorderedlist', '|', 'imagenone', 'imageleft', 'imageright', 'imagecenter'],
           ['fontfamily', 'letterspacing', '|', 'fontborder', 'strikethrough', 'superscript', 'subscript', 'autotypeset', 'pasteplain', '|', 'insertimage', 'emotion', 'map', 'insertvideo', '|', 'inserttable', 'searchreplace', 'attachment']
         ],
-        elementPathEnabled: false,
-        wordCount: false,
+        // 宽高
         initialFrameWidth: 770,
         initialFrameHeight: 600,
+        // 是否自动长高
         autoHeightEnabled: false,
+        // 是否启用元素路径
+        elementPathEnabled: false,
+        // 是否开启字数统计
+        wordCount: false,
+        // 自动保存间隔时间，单位ms
         saveInterval: 500,
+        // 阻止Div转换成P标签
         allowDivTransToP: false,
-        catchRemoteImageEnable: false, // 防止远程抓取图片
-        enterTag: 'br', // 去掉自动添加的p和br标签
+        // 防止远程抓取图片
+        catchRemoteImageEnable: false,
         UEDITOR_HOME_URL: 'http://www.jihui88.com/manage_v4/platform/ueditor1_4_3/',
         serverUrl: 'http://www.jihui88.com/manage_v4/platform/ueditor1_4_3/',
         themePath: 'http://www.jihui88.com/manage_v4/platform/ueditor1_4_3/themes/'

@@ -5,8 +5,20 @@
     <Form ref="modalForm" :model="detail" :label-width="120">
       <FormItem label="关键字名称：">
         <Input v-model="detail.keywords" placeholder="请输入关键字名称" style="width:144px;"></Input>
+        <span class="j_unit">
         <!-- 优化添加关键词库 -->
-        <span class="j_unit"><Icon type="plus-circled" size="16" color="green" style="margin-right:5px;" hidden></Icon>如："互联网"、"手机"等关键字</span>
+        <Poptip placement="bottom" width="400" style="margin-right:5px;">
+          <Icon type="plus-circled" size="16" color="green" @click="getKey"></Icon>
+          <div class="j_keyword_store" slot="content">
+            <ul>
+              <li v-for="(item, index) in keylist" :key="index" :title="item.keywords" @click="saveKey(item.keywords)">
+                {{item.keywords}}
+              </li>
+              <li class="j_keyword_empty" v-if="list.length === 0">暂无关键词</li>
+            </ul>
+          </div>
+        </Poptip>
+        如："互联网"、"手机"等关键字</span>
       </FormItem>
       <FormItem label="内部链接地址：">
         <Select v-model="detail.toReplace" class="w144" v-if="!type">
@@ -33,7 +45,8 @@ export default {
     return {
       modal: false,
       detail: {},
-      type: false
+      type: false,
+      keylist: []
     }
   },
   methods: {
@@ -42,6 +55,24 @@ export default {
     },
     cancel () {
       this.modal = false
+    },
+    getKey () {
+      if (this.keylist.length === 0) {
+        this.$http.get('/rest/api/keywords/list?pageSize=500').then((res) => {
+          if (res.success) {
+            let data = res.attributes.data
+            data.forEach(item => {
+              item._checked = false
+            })
+            this.keylist = data || []
+          } else {
+            this.$Message.error(res.msg)
+          }
+        })
+      }
+    },
+    saveKey (e) {
+      this.detail.keywords = e
     },
     ok () {
       if (!this.detail.keywords) return this.$Message.info('关键字名称不能为空')

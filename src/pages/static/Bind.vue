@@ -83,6 +83,12 @@
           </Form>
         </div>
         <div v-if="active === '1'" style="padding-bottom: 20px;">
+          <div style="margin-top: 9px;">
+            &nbsp;&nbsp;&nbsp;&nbsp;http://&nbsp;&nbsp;<Input v-model="detail.userSecondDomain" style="width: 140px"></Input>
+            <Button class="submit" @click="submit">提交</Button>
+          </div>
+        </div>
+        <div v-if="active === '2'" style="padding-bottom: 20px;">
           <div class="j_tip" style="margin-top: 9px;">
             二级域名(长度最小为6，最长为20的小写英文字母或数字组合)。&nbsp;(请求帮助QQ：260404208)
           </div>
@@ -108,7 +114,8 @@ export default {
     return {
       btns: [
         { text: '主域名绑定', value: '0' },
-        { text: '二级域名绑定', value: '1' }
+        { text: '客户二级域名绑定', value: '1' },
+        { text: '机汇网二级域名绑定', value: '2' }
       ],
       active: '0',
       detail: {

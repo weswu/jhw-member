@@ -11,10 +11,7 @@
             </FormItem>
             <CategoryList ref="category" :categorySelect="newsCategory" :type="'news'"/>
             <FormItem label="延时发布：">
-              <Select v-model="dateselect" class="border" style="width: 100px;" @on-change="dataChange">
-                <Option :value="i" v-for="i in 11" :key="i">{{i-1}}</Option>
-              </Select>
-              <DatePicker type="date" placeholder="延时发布" :value="detail.addTime" @on-change="detail.addTime=$event" style="width: 155px;"></DatePicker>
+              <DatePicker type="datetime" placeholder="延时发布" :value="detail.addTime" @on-change="detail.addTime=$event" style="width: 155px;"></DatePicker>
             </FormItem>
             <FormItem label="来源：">
               <Input v-model="detail.origin" placeholder="请输入来源"></Input>
@@ -54,7 +51,7 @@
         </Form>
       </Content>
       <Footer>
-        <Button type="primary" size="small" @click="submit('modalForm')">保存</Button>
+        <Button type="primary" size="small" @click="submit()">保存</Button>
         <Poptip placement="bottom" class="j_poptip_ul">
           <Button type="ghost" size="small">预览</Button>
           <ul slot="content" style="max-height: 250px;">
@@ -90,8 +87,6 @@ export default {
     return {
       active: '0',
       detail: {},
-      dateselect: 1,
-      addTime: new Date().getTime(),
       imagenews: false,
       topnews: false,
       editor: false,
@@ -117,7 +112,7 @@ export default {
     get () {
       if (this.$route.params.id === 'add') {
         this.detail = {
-          addTime: this.dateFormat(new Date(), 'yyyy-MM-dd'),
+          addTime: this.dateFormat(new Date(), 'yyyy-MM-dd hh:mm:ss'),
           picPath: ''
         }
       } else {
@@ -125,8 +120,7 @@ export default {
         this.$http.get('/rest/api/news/detail/' + id).then(res => {
           if (res.success) {
             this.detail = res.attributes.data
-            this.addTime = this.detail.addTime
-            this.detail.addTime = this.dateFormat(this.detail.addTime, 'yyyy-MM-dd')
+            this.detail.addTime = this.dateFormat(this.detail.addTime, 'yyyy-MM-dd hh:mm:ss')
             if (this.detail.imagenews === '01') this.imagenews = true
             if (this.detail.topnews === '01') this.topnews = true
             if (!this.detail.picPath) this.detail.picPath = ''
@@ -143,10 +137,6 @@ export default {
     categoryChange (e) {
       this.detail.category = e
     },
-    dataChange (e) {
-      this.detail.addTime = new Date(this.addTime + 24 * 60 * 60 * 1000 * (e - 1))
-      console.log(this.detail.addTime)
-    },
     imagenewsChange (e) {
       this.detail.imagenews = e ? '01' : '00'
     },
@@ -157,7 +147,8 @@ export default {
       this.detail.picPath = e.src
     },
     // 提交
-    submit (name) {
+    submit () {
+      console.log(this.detail.addTime)
       if (!this.detail.title) {
         return this.$Message.info('新闻标题不能为空')
       }

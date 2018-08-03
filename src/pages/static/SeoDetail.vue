@@ -26,7 +26,7 @@
             <br/>
             <Button type="primary" size="small" @click="saveKey('1')">确定</Button>
           </div>
-      </Poptip>
+        </Poptip>
       </FormItem>
       <FormItem label="Seo关键字：">
         <Input v-model="model.keywords" :maxlength="100" placeholder="请输入Seo关键字"></Input>
@@ -44,7 +44,7 @@
             <br/>
             <Button type="primary" size="small" @click="saveKey('2')">确定</Button>
           </div>
-      </Poptip>
+        </Poptip>
       </FormItem>
       <FormItem label="Seo描述：">
         <Input v-model="model.description" :maxlength="250" type="textarea" :autosize="{minRows: 3,maxRows: 5}" placeholder="限250字符内，加联系电话或邮件" style="width: 330px;"></Input>
@@ -62,7 +62,7 @@
             <br/>
             <Button type="primary" size="small" @click="saveKey('3')">确定</Button>
           </div>
-      </Poptip>
+        </Poptip>
       </FormItem>
     </Form>
 
@@ -116,7 +116,7 @@ export default {
           }
         })
       } else {
-        this.$http.get('/rest/api/seo/detail/' + id).then((res) => {
+        this.$http.get('/rest/api/seo/pc/detail/' + id).then((res) => {
           if (res.success) {
             this.model = res.attributes.data || {}
           } else {
@@ -129,7 +129,7 @@ export default {
       this.modal = false
     },
     getKey () {
-      if (this.list === 0) {
+      if (this.list.length === 0) {
         this.$http.get('/rest/api/keywords/list?pageSize=500').then((res) => {
           if (res.success) {
             let data = res.attributes.data
@@ -177,7 +177,7 @@ export default {
         model: JSON.stringify(this.model),
         _method: 'put'
       }
-      this.$http.post('/rest/api/seo/detail/' + (this.model.seoId || this.page), qs.stringify(data)).then((res) => {
+      this.$http.post('/rest/api/seo/pc/save/' + (this.model.seoId || this.page), qs.stringify(data)).then((res) => {
         if (res.success) {
           this.$Message.success('保存成功')
           this.modal = false
