@@ -50,10 +50,12 @@ export default {
   watch: {
     layoutId () {
       this.get()
+      this.getNav()
     }
   },
   created () {
     this.get()
+    this.getNav()
   },
   methods: {
     get () {
@@ -67,17 +69,16 @@ export default {
           this.$Message.error(res.msg)
         }
       })
-      this.getNav()
     },
     getNav () {
-      this.$http.get('/rest/api/keywords/innerLinks/add').then((res) => {
+      let data = {
+        page: 1,
+        pageSize: 100,
+        layoutId: this.layoutId
+      }
+      this.$http.get('/rest/pc/api/navigator/list?' + qs.stringify(data)).then((res) => {
         if (res.success) {
-          let obj = res.attributes.data
-          var arr = []
-          for (var item in obj) {
-            arr.push({value: item, text: obj[item]})
-          }
-          this.navList = arr
+          this.navList = res.attributes.data
         }
       })
     },
@@ -107,9 +108,9 @@ export default {
         this.navList.forEach(item => {
           option.push(h('Option', {
             props: {
-              value: item.value
+              value: item.page
             }
-          }, item.text))
+          }, item.name))
         })
         return h('Select', {
           props: {
@@ -121,6 +122,7 @@ export default {
               let data = {
                 model: JSON.stringify({
                   id: params.row.keywordsId,
+                  layoutId: this.layoutId,
                   toReplace: val
                 }),
                 _method: 'put'

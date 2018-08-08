@@ -101,6 +101,7 @@
       </div>
       <Password ref="password"/>
       <JAlbum :title="'修改头像'" ref="ablum" @on-change="picChange" v-if="ablumToggle"/>
+      <Cropimg ref="cropimg" @on-change="cropChange"/>
   </Layout>
 </template>
 
@@ -111,12 +112,14 @@ import MenuBar from '@/components/common/menu_bar'
 import JHeader from '@/components/group/j-header'
 import JAlbum from '@/components/group/j-album'
 import Password from '@/pages/account/Password'
+import Cropimg from '@/pages/account/Cropimg'
 export default {
   components: {
     MenuBar,
     JHeader,
     JAlbum,
-    Password
+    Password,
+    Cropimg
   },
   data () {
     return {
@@ -235,25 +238,35 @@ export default {
     },
     // 修改user
     picChange (e) {
-      this.user.headimg = e.src
-      this.$store.commit('setUser', this.user)
+      let user = JSON.parse(JSON.stringify(this.user))
+      user.headimg = e.src
+      this.$store.commit('setUser', user)
+      this.$refs.cropimg.open(user.headimg)
       this.changeUser({
         headimg: e.src
-      })
+      }, 'tip')
+    },
+    cropChange (src) {
+      let user = JSON.parse(JSON.stringify(this.user))
+      user.headimg = src
+      this.$store.commit('setUser', user)
+      this.changeUser({
+        headimg: src
+      }, 'tip')
     },
     input (e) {
       this.changeUser({
         nickName: this.user.nickName
       })
     },
-    changeUser (info) {
+    changeUser (info, tip) {
       let data = {
         model: JSON.stringify(info),
         _method: 'put'
       }
       this.$http.post('/rest/api/user/accountInfo/' + this.user.userId, qs.stringify(data)).then((res) => {
         if (res.success) {
-          this.$Message.success('修改成功')
+          if (tip !== 'tip') this.$Message.success('修改成功')
         } else {
           this.$Message.error(res.msg)
         }

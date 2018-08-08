@@ -491,6 +491,15 @@ export default {
       this.item = item
       this.item.url2 = '<img src="http://img.jihui88.com/' + item.serverPath + '" alt="' + item.filename + '">'
       this.item.url3 = this.$store.state.status.IMG_HOST + item.serverPath
+      // 选中未选 ， 其它已选变未选
+      if (!item._checked) {
+        this.list.forEach((row, index) => {
+          row._checked = false
+        })
+        this.fileList.forEach((row, index) => {
+          row._checked = false
+        })
+      }
       this.selected()
       this.$refs.menu.style.display = 'block'
       let dom = e.target.getBoundingClientRect()

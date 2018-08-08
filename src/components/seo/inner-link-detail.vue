@@ -22,7 +22,7 @@
       </FormItem>
       <FormItem label="内部链接地址：">
         <Select v-model="detail.toReplace" class="w144" v-if="!type">
-          <Option :value="item.value" v-for="item in list" :key="item.value">{{item.text}}</Option>
+          <Option :value="item.page" v-for="item in list" :key="item.page">{{item.name}}</Option>
         </Select>
         <Input v-model="detail.toReplace" style="width:144px;" v-if="type"></Input>
         <span class="a_underline j_unit" @click="type = !type">使用<span v-if="!type">外</span><span v-if="type">内</span>部链接</span>
@@ -76,6 +76,7 @@ export default {
     },
     ok () {
       if (!this.detail.keywords) return this.$Message.info('关键字名称不能为空')
+      this.detail.layoutId = this.$store.state.layoutId
       this.$http.post('/rest/api/keywords/innerLinks/detail', qs.stringify(this.detail)).then((res) => {
         if (res.success) {
           this.$Message.success('添加成功')
