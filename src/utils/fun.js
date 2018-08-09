@@ -314,3 +314,31 @@ Vue.prototype.cellRadio = (vm, h, params, option) => {
     })
   ])
 }
+
+Vue.prototype.cellImg = (vm, h, params) => {
+  return h('div', {
+    class: {
+      'product-img': true
+    }
+  }, [
+    h('i', {
+      class: {
+        'iconfont': true,
+        'icon-tupian': true
+      },
+      style: {
+        fontSize: '24px',
+        padding: '0',
+        display: !params.row[params.column.key] ? 'block' : 'none'
+      }
+    }),
+    h('img', {
+      style: {
+        display: params.row[params.column.key] ? 'inline-block' : 'none'
+      },
+      attrs: {
+        src: vm.$store.state.status.IMG_HOST + vm.picUrl(params.row[params.column.key], 4)
+      }
+    })
+  ])
+}

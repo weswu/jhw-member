@@ -70,6 +70,16 @@ const state = {
     { text: '订单完成', value: 'completed' },
     { text: '订单作废', value: 'invlid' }
   ],
+  // 证书分类
+  certType: [
+    { text: '基本证书', value: '01' },
+    { text: '税务登记证', value: '07' },
+    { text: '荣誉证书', value: '04' },
+    { text: '营业执照', value: '06' },
+    { text: '组织机构代码证', value: '08' },
+    { text: '实地认证', value: '09' },
+    { text: '其它证书', value: '05' }
+  ],
   // 三级导航
   menuAccount: {
     title: '账号管理',
@@ -130,7 +140,8 @@ const state = {
       { text: '基本资料', value: 'enterprise' },
       { text: '公司简介', value: 'company' },
       { text: '招聘管理', value: 'recruit' },
-      { text: '友情链接', value: 'link' }
+      { text: '友情链接', value: 'link' },
+      { text: '荣誉证书', value: 'cert' }
     ]
   },
   menu_product: {

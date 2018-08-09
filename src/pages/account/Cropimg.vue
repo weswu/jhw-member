@@ -31,7 +31,7 @@ export default {
     this.cropper1 = new Cropper(img1, {
       aspectRatio: 1,
       dragMode: 'move',
-      preview: '.preview',
+      preview: '.preview', // bug-失效 <div class="preview"></div>
       restore: false,
       center: false,
       highlight: false,
@@ -104,8 +104,10 @@ export default {
     border: 1px solid #c3c3c3;
     width: 100%;
     height: 100%;
-    img{
-        max-height: 100%;
+    text-align: center;
+    #cropimg1{
+      max-width: 100%;
+      max-height: 300px;
     }
 }
 .image-editor-con1{

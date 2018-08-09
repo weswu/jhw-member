@@ -84,7 +84,7 @@
                 </div>
               </Col>
               <Col :xs="12" :sm="8" :md="6" :lg="4"  v-for="(item, index) in list" :key="index" class="pic_item" ref="pic" data-id="frame">
-                <div class="box" @click.stop="selected(item)" @contextmenu.prevent="more($event, item)" data-id="frame">
+                <div class="box" @click.stop="selected(item)" @contextmenu.prevent="imagemore($event, item)" data-id="frame">
                   <Card dis-hover :class="{hover: item._checked}" data-id="frame">
                     <img :src="$store.state.status.IMG_HOST + item.serverPath | picUrl(5)" :alt="item.filename" @error="imgError($event, item)"/>
 
@@ -418,6 +418,16 @@ export default {
       this.$refs.category.bread(item.id)
     },
     filemore (e, item) {
+      // 其它已选变未选
+      this.ids = ''
+      this.fileids = ''
+      this.list.forEach((row, index) => {
+        row._checked = false
+      })
+      this.fileList.forEach((row, index) => {
+        row._checked = false
+      })
+      this.$refs.menu.style.display = 'none'
       this.$refs.category.$refs.menu.style.display = 'block'
       let dom = e.target.getBoundingClientRect()
       this.$refs.category.$refs.menu.style.left = dom.left + dom.width / 2 + 'px'
@@ -487,21 +497,21 @@ export default {
     picCatechange (e) {
       this.belongId = e
     },
-    more (e, item) {
+    imagemore (e, item) {
       this.item = item
       this.item.url2 = '<img src="http://img.jihui88.com/' + item.serverPath + '" alt="' + item.filename + '">'
       this.item.url3 = this.$store.state.status.IMG_HOST + item.serverPath
-      // 选中未选 ， 其它已选变未选
-      if (!item._checked) {
-        this.list.forEach((row, index) => {
-          row._checked = false
-        })
-        this.fileList.forEach((row, index) => {
-          row._checked = false
-        })
-      }
-      this.selected()
+      // 其它已选变未选
+      this.ids = ''
+      this.fileids = ''
+      this.list.forEach((row, index) => {
+        row._checked = false
+      })
+      this.fileList.forEach((row, index) => {
+        row._checked = false
+      })
       this.$refs.menu.style.display = 'block'
+      this.$refs.category.$refs.menu.style.display = 'none'
       let dom = e.target.getBoundingClientRect()
       this.$refs.menu.style.left = dom.left + dom.width / 2 + 'px'
       this.$refs.menu.style.top = dom.top + dom.height / 2 + 'px'
@@ -644,7 +654,7 @@ export default {
     },
     delAll (e) {
       if (e === 'item') {
-        this.ids = this.ids + ',' + this.item.attId
+        this.ids = this.item.attId
       }
       if (!this.ids && !this.fileids) {
         return this.$Message.error('未选择')
@@ -671,7 +681,7 @@ export default {
     },
     copyAll (e) {
       if (e === 'item') {
-        this.ids = this.ids + ',' + this.item.attId
+        this.ids = this.item.attId
       }
       if (!this.ids && !this.fileids) {
         return this.$Message.error('未选择')
@@ -698,7 +708,7 @@ export default {
     },
     moveAll (e) {
       if (e === 'item') {
-        this.ids = this.ids + ',' + this.item.attId
+        this.ids = this.item.attId
       }
       if (!this.ids && !this.fileids) {
         return this.$Message.error('未选择')

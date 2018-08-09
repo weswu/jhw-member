@@ -238,13 +238,7 @@ export default {
     },
     // 修改user
     picChange (e) {
-      let user = JSON.parse(JSON.stringify(this.user))
-      user.headimg = e.src
-      this.$store.commit('setUser', user)
-      this.$refs.cropimg.open(user.headimg)
-      this.changeUser({
-        headimg: e.src
-      }, 'tip')
+      this.$refs.cropimg.open(e.src)
     },
     cropChange (src) {
       let user = JSON.parse(JSON.stringify(this.user))

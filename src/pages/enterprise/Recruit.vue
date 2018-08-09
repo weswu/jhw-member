@@ -2,7 +2,7 @@
   <Layout class="ivu-layout-has-sider j_recruit">
     <MenuBar :data="'menuEnter'" :active="'recruit'"/>
     <Layout class="j_layout_content">
-      <JHeader :title="'招聘管理'"/>
+      <JHeader :title="'招聘管理'" :lan="true" @on-change="lanChange"/>
       <Content>
         <div class="j_search">
           <Button type="info" icon="plus" class="w130" @click="add">添加招聘</Button>
@@ -110,6 +110,10 @@ export default {
     },
     tableUpdate (a, b) {
       this.sortable(a, b, 'job')
+    },
+    lanChange () {
+      this.searchData.page = 1
+      this.get()
     },
     // 过滤
     indexFilter (h, params) {

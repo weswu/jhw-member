@@ -37,6 +37,7 @@ export default new Router({
     { path: '/company', component: require('@/pages/enterprise/Company').default, meta: { open: '2', parent: 'enterprise' } },
     { path: '/recruit', component: require('@/pages/enterprise/Recruit').default, meta: { open: '2', parent: 'enterprise' } },
     { path: '/link', component: require('@/pages/enterprise/Link').default, meta: { open: '2', parent: 'enterprise' } },
+    { path: '/cert', component: require('@/pages/enterprise/Cert').default, meta: { open: '2', parent: 'enterprise' } },
     // 分类
     { path: '/category/:id', component: require('@/pages/category/Category').default, meta: { open: '2', parent: 'product' } },
     // 产品
