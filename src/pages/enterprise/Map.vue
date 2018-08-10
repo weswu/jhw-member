@@ -1,5 +1,6 @@
 <template>
   <div class="j_map" style="width:100%;">
+    <!-- 百度地图不用了 -->
     <Input v-model="keyword" placeholder="关键词: 如杭州" style="margin-bottom:10px" class="w180"></Input>
     <baidu-map class="map" :center="center" :zoom="15" ak="YOUR_APP_KEY" @click="clickMap($event)" @ready="handler" style="width:100%;">
       <bm-marker :position="center" :dragging="true" :clicking="true" animation="BMAP_ANIMATION_BOUNCE" @dragend="dragend($event)"></bm-marker>
@@ -67,8 +68,3 @@ export default {
   }
 }
 </script>
-
-<style lang="less">
-.map {
-}
-</style>

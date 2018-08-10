@@ -80,7 +80,7 @@ import { mapState } from 'vuex'
 import MenuBar from '@/components/common/menu_bar'
 import JHeader from '@/components/group/j-header'
 import JImage from '@/components/group/j-image'
-import Map from '@/pages/enterprise/Map'
+import Map from '@/pages/enterprise/Amap'
 export default {
   components: {
     MenuBar, JHeader, JImage, Map

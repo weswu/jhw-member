@@ -63,19 +63,19 @@
           :columns="columns"
           @on-update="tableUpdate"
           @on-selection-change="handleSelectChange"/>
+          <JPagination :fixed="true" :checkbox="true" :total="total" :searchData='searchData' @on-change="get">
+            <span slot="btn">
+              <Checkbox v-model="toggle" @on-change="handleSelectAll(toggle)"/>
+              <Button type="ghost" size="small" @click="delAll">删除</Button>
+              <Button type="ghost" size="small" @click="copyAll">复制</Button>
+              <Button type="ghost" size="small" @click="displayAll('On')">显示</Button>
+              <Button type="ghost" size="small" @click="displayAll('Off')">隐藏</Button>
+              <Button type="ghost" size="small" @click="marketableAll('01')">上架</Button>
+              <Button type="ghost" size="small" @click="marketableAll('00')">下架</Button>
+              <Button type="ghost" size="small" @click="categoryAll">转移分类</Button>
+            </span>
+          </JPagination>
       </Content>
-      <JPagination :fixed="true" :checkbox="true" :total="total" :searchData='searchData' @on-change="get">
-        <span slot="btn">
-          <Checkbox v-model="toggle" @on-change="handleSelectAll(toggle)"/>
-          <Button type="ghost" size="small" @click="delAll">删除</Button>
-          <Button type="ghost" size="small" @click="copyAll">复制</Button>
-          <Button type="ghost" size="small" @click="displayAll('On')">显示</Button>
-          <Button type="ghost" size="small" @click="displayAll('Off')">隐藏</Button>
-          <Button type="ghost" size="small" @click="marketableAll('01')">上架</Button>
-          <Button type="ghost" size="small" @click="marketableAll('00')">下架</Button>
-          <Button type="ghost" size="small" @click="categoryAll">转移分类</Button>
-        </span>
-      </JPagination>
     </Layout>
     <SeoDetail ref="seoDetail"/>
     <TransferCategory ref="transferCategory" :data="categoryList" :ids="ids" :type="'product'" @on-change="get"/>
