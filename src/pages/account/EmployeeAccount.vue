@@ -22,15 +22,18 @@
         v-model="modal1"
         title="推广"
         cancelText="取消">
-        <p style="padding-bottom:10px;">注：绑定域名后可用<a href="/bind" class="viewBind">(查看绑定)</a></p>
+        <p style="padding-bottom:10px;">注：绑定域名后可用<a href="#/bind" class="viewBind">(查看绑定)</a></p>
+        <Select v-model="$store.state.layoutId" class="small" @on-change="layoutChange">
+          <Option v-for="item in staticList" :value="item.layoutId" :key="item.layoutId">网站编号：{{ item.layoutId }}</Option>
+        </Select>
         <Tabs>
           <TabPane label="手机网站推广">
-            <img :src="'http://wcd.jihui88.com/rest/comm/qrbar/create?w=130&text='+src"><br/>
+            <img :src="'http://wcd.jihui88.com/rest/comm/qrbar/create?w=130&text='+posterUrl"><br/>
             <a href="javascritp:;" class="downloadQr" target="_blank" @click="downloadQr" style="padding-left:31px;">下载二维码</a>
           </TabPane>
           <TabPane label="PC网站推广">
-            <Input v-model="url" style="width:250px"></Input>
-            <Button v-clipboard:copy="url" v-clipboard:success="copy" style="margin-left:10px;">复制</Button>
+            <Input v-model="posterUrl" style="width:250px"></Input>
+            <Button v-clipboard:copy="posterUrl" v-clipboard:success="copy" style="margin-left:10px;">复制</Button>
           </TabPane>
         </Tabs>
       </Modal>
@@ -42,10 +45,11 @@
 
 <script>
 import qs from 'qs'
+import { mapState } from 'vuex'
 import MenuBar from '@/components/common/menu_bar'
 import JHeader from '@/components/group/j-header'
 import JPagination from '@/components/group/j-pagination'
-import Detail from '@/pages/account/Detail'
+import Detail from '@/pages/account/EmployeeDetail'
 import Authority from '@/pages/account/Authority'
 export default {
   components: {
@@ -73,13 +77,16 @@ export default {
         pageSize: 10
       },
       total: 0,
-      modal1: false,
-      src: 'http://m.baidu.com?memberId=1163',
-      url: 'http://53happy.com?memberId=1163',
-      memberId: '',
       ids: '',
-      toggle: false
+      toggle: false,
+      // 推广
+      modal1: false,
+      posterUrl: '',
+      posterId: ''
     }
+  },
+  computed: {
+    ...mapState(['staticList'])
   },
   created () {
     this.get()
@@ -102,6 +109,16 @@ export default {
     },
     analysis () {
       this.$router.push({path: 'employee_account_analysis'})
+    },
+    layoutChange () {
+      var vm = this
+      let layoutId = this.$store.state.layoutId
+      this.posterUrl = 'http://pc.jihui88.com/rest/site/' + layoutId + '/index?posterId=' + this.posterId
+      this.staticList.forEach(item => {
+        if (layoutId === item.id && item.bind.address) {
+          vm.posterUrl = item.bind.address + '?posterId=' + this.posterId
+        }
+      })
     },
     // 批量操作
     handleSelectChange (status) {
@@ -134,7 +151,7 @@ export default {
       this.$Message.success('复制成功')
     },
     downloadQr () {
-      window.open('http://wcd.jihui88.com/rest/comm/qrbar/createAndDownload?w=300&text=' + this.src)
+      window.open('http://wcd.jihui88.com/rest/comm/qrbar/createAndDownload?w=300&text=' + this.posterUrl)
     },
     encodeId (target) {
       return target == null ? '' : target.replace(/^[^1-9]+/, '')
@@ -191,8 +208,8 @@ export default {
         h('a', {
           on: {
             click: () => {
-              this.src = encodeURIComponent(params.row.mobileBindUrl + '?memberId=' + ctx.encodeId(params.row.memberId))
-              this.url = params.row.pcBindUrl + '?memberId=' + ctx.encodeId(params.row.memberId)
+              this.posterId = ctx.encodeId(params.row.memberId)
+              this.layoutChange()
               this.modal1 = true
             }
           }

@@ -38,11 +38,13 @@
             <Icon type="arrow-down-b"></Icon>
         </a>
         <a href="javascript:void(0)" class="avatar header_link">
-          <i class="iconfont icon-huiyuan"></i>
+          <i class="iconfont icon-huiyuan" v-if="!$store.state.user.headimg"></i>
+          <img :src="$store.state.status.IMG_HOST+$store.state.user.headimg" v-if="$store.state.user.headimg">
         </a>
         <DropdownMenu slot="list">
           <div class="info">
-            <i class="iconfont icon-huiyuan"></i>
+            <i class="iconfont icon-huiyuan" v-if="!$store.state.user.headimg"></i>
+            <img :src="$store.state.status.IMG_HOST+$store.state.user.headimg" v-if="$store.state.user.headimg">
             <p>账号：{{user.username}}</p>
           </div>
           <Row>
@@ -214,6 +216,12 @@ export default {
           margin-bottom: 10px;
           padding: 30px 0 20px 0;
           line-height: 2.5;
+          img{
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            vertical-align: middle;
+          }
           p{
             font-size: 14px;
             font-weight: bold;
@@ -250,6 +258,12 @@ export default {
         background: #000;
         padding: 0 7px 0 8px;
         text-align: center;
+        img{
+          width: 32px;
+          height: 32px;
+          border-radius: 50%;
+          vertical-align: middle;
+        }
       }
       .icon-huiyuan{
         width: 32px;

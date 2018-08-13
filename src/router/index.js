@@ -12,6 +12,7 @@ export default new Router({
     // 费用
     { path: '/cost_order', component: require('@/pages/cost/Order').default, meta: { open: '1', parent: 'cost_order' } },
     { path: '/cost_purchased', component: require('@/pages/cost/Purchased').default, meta: { open: '1', parent: 'cost_order' } },
+    { path: '/cost_paid', component: require('@/pages/cost/Paid').default, meta: { open: '1', parent: 'cost_order' } },
     // 积分
     { path: '/point', component: require('@/pages/point/Point').default, meta: { open: '1', parent: 'point' } },
     { path: '/point_goods', component: require('@/pages/point/PointGoods').default, meta: { open: '1', parent: 'point' } },

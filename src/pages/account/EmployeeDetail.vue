@@ -69,7 +69,7 @@ export default {
       } else {
         if (this.model.rePassword !== '') {
           // 对第二个密码框单独验证
-          this.$refs.modal.validateField('rePassword')
+          this.$refs.modalForm.validateField('rePassword')
         }
         callback()
       }

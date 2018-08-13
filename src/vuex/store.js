@@ -8,7 +8,7 @@ const state = {
   user: {
     name: '未登录',
     username: '未登录',
-    headimg: null,
+    headimg: '',
     addTime: 1272102123858,
     enterprise: {}
   },
@@ -166,11 +166,12 @@ const store = new Vuex.Store({
           if (data) {
             data.enterprise = state.user.enterprise
             if (!state.user.headimg) this.dispatch('getAccountInfo', data.userId)
+            data.headimg = ''
           }
           this.commit('setUser', data || {
             name: '未登录',
             username: '未登录',
-            headimg: null,
+            headimg: '',
             addTime: 1272102123858,
             enterprise: {}
           })
