@@ -151,6 +151,7 @@ export default {
             if (res.success) {
               this.$Message.success('保存成功')
               this.$Modal.remove()
+              this.$emit('on-change')
               this.modal = false
             } else {
               this.$Message.error(res.msg)

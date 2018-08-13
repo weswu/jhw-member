@@ -88,10 +88,13 @@ export default {
           ctx.img.className.indexOf('edui-faked-music') === -1 && ctx.img.src.indexOf('http://maps.google.com/maps/api/staticmap') === -1 &&
           !ctx.img.getAttribute('anchorname') && !ctx.img.getAttribute('word_img')) {
           setTimeout(function () {
-            window.document.getElementsByClassName('edui-clickable1')[0].addEventListener('click', function (e) {
-              ctx.imgType = 'single'
-              ctx.$refs.ablum.open()
-            })
+            let array = window.document.getElementsByClassName('edui-clickable1')
+            for (var i = 0; i < array.length; i++) {
+              array[i].addEventListener('click', function (e) {
+                ctx.imgType = 'single'
+                ctx.$refs.ablum.open()
+              })
+            }
           }, 500)
         }
       }

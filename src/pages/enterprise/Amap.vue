@@ -10,7 +10,10 @@
           </tr>
           <tr>
               <td>
-                  <input id="tipinput"/>
+                  <input id="tipinput" v-model="name"/>
+              </td>
+              <td>
+                  <Button type="primary" size="small" @click="search">搜索</Button>
               </td>
           </tr>
       </table>
@@ -25,7 +28,9 @@ import { mapState } from 'vuex'
 export default {
   data () {
     return {
-      center: {lng: 120.229355, lat: 30.2145}
+      center: {lng: 120.229355, lat: 30.2145},
+      name: '',
+      placeSearch: ''
     }
   },
   computed: {
@@ -73,13 +78,13 @@ export default {
         input: 'tipinput'
       }
       var auto = new AMap.Autocomplete(autoOptions)
-      var placeSearch = new AMap.PlaceSearch({
+      this.placeSearch = new AMap.PlaceSearch({
         map: map
       }) // 构造地点查询类
       AMap.event.addListener(auto, 'select', select) // 注册监听，当选中某条记录时会触发
       function select (e) {
-        placeSearch.setCity(e.poi.adcode)
-        placeSearch.search(e.poi.name) // 关键字查询查询
+        vm.placeSearch.setCity(e.poi.adcode)
+        vm.placeSearch.search(e.poi.name) // 关键字查询查询
       }
       // 工具
       map.plugin(['AMap.ToolBar'], function () {
@@ -88,6 +93,9 @@ export default {
       if (location.href.indexOf('&guide=1') !== -1) {
         map.setStatus({scrollWheel: false})
       }
+    },
+    search () {
+      this.placeSearch.search(this.name)
     },
     submit () {
       this.user.enterprise.mapaddress = this.center.lng + ',' + this.center.lat
@@ -141,7 +149,9 @@ export default {
     font-weight: normal;
   }
   input {
+    padding: 0 3px;
     width: 170px;
+    color: #333;
   }
   .column2 {
     padding-left: 25px;

@@ -20,13 +20,16 @@
       </Layout>
       <Modal
         v-model="modal1"
-        title="推广"
+        title="员工推广"
+        width="500"
         cancelText="取消">
-        <p style="padding-bottom:10px;">注：绑定域名后可用<a href="#/bind" class="viewBind">(查看绑定)</a></p>
-        <Select v-model="$store.state.layoutId" class="small" @on-change="layoutChange">
-          <Option v-for="item in staticList" :value="item.layoutId" :key="item.layoutId">网站编号：{{ item.layoutId }}</Option>
-        </Select>
-        <Tabs>
+        <div class="j_tip" style="margin: 0 0 10px 0;">
+          注：绑定域名后可用<a href="#/bind" class="viewBind">(查看绑定)</a>
+          <Select v-model="$store.state.layoutId" class="small" @on-change="layoutChange" style="float: right;width: 130px;">
+            <Option v-for="item in staticList" :value="item.layoutId" :key="item.layoutId">网站编号：{{ item.layoutId }}</Option>
+          </Select>
+        </div>
+        <Tabs style="clear:both">
           <TabPane label="手机网站推广">
             <img :src="'http://wcd.jihui88.com/rest/comm/qrbar/create?w=130&text='+posterUrl"><br/>
             <a href="javascritp:;" class="downloadQr" target="_blank" @click="downloadQr" style="padding-left:31px;">下载二维码</a>
@@ -38,7 +41,7 @@
         </Tabs>
       </Modal>
       <Authority ref="auth"/>
-      <Detail ref="detail"/>
+      <Detail ref="detail" @on-change="get"/>
     </Tabs>
   </Layout>
 </template>

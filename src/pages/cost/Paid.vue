@@ -40,7 +40,7 @@ export default {
     return {
       columns: [
         { title: '产品名称', key: 'name', ellipsis: true, minWidth: 180 },
-        { title: '应付金额', render: this.paidPriceFilter, width: 85 },
+        { title: '应付金额', render: this.totalPriceFilter, width: 85 },
         { title: '数量', render: this.numberFilter, width: 60 },
         { title: '使用年限', key: 'year', width: 85 },
         { title: '订单创建时间', render: this.dateFilter, width: 135 },
@@ -70,12 +70,12 @@ export default {
         }
       })
     },
-    paidPriceFilter (h, params) {
+    totalPriceFilter (h, params) {
       return h('span', {
         class: {
           price: true
         }
-      }, '￥' + (params.row.paidPrice || '-'))
+      }, '￥' + (params.row.totalPrice || '-'))
     },
     numberFilter (h, params) {
       return h('span', 1)
