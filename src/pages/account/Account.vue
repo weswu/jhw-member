@@ -112,7 +112,7 @@ import MenuBar from '@/components/common/menu_bar'
 import JHeader from '@/components/group/j-header'
 import JAlbum from '@/components/group/j-album'
 import Password from '@/pages/account/Password'
-import Cropimg from '@/pages/account/Cropimg'
+import Cropimg from '@/components/common/cropimg'
 export default {
   components: {
     MenuBar,

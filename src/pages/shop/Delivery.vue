@@ -5,7 +5,7 @@
       <JHeader :title="'物流公司管理'"/>
       <Content>
         <div class="j_search">
-          <Input v-model="searchData.name" class="w180" placeholder="请输入配送名称"></Input>
+          <Input v-model="searchData.name" class="w180" placeholder="请输入配送名称" clearable @on-change="clearInput"></Input>
           <Button class="search" @click="search">搜索</Button>
         </div>
         <Table :columns="columns" :data="list" class="sort"/>
@@ -59,6 +59,12 @@ export default {
     search () {
       this.searchData.page = 1
       this.get()
+    },
+    // 搜索
+    clearInput () {
+      if (this.searchData.name === '') {
+        this.get()
+      }
     },
     // 过滤
     indexFilter (h, params) {

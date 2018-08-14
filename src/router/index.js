@@ -79,7 +79,7 @@ export default new Router({
     { path: '/basis', component: require('@/pages/miniprogram/Basis').default, meta: { parent: 'basis' } },
     { path: '/senior', component: require('@/pages/miniprogram/Senior').default, meta: { parent: 'basis' } },
     // 其它项目用
-    { path: '/map', component: require('@/pages/enterprise/Map').default },
+    { path: '/map', component: require('@/pages/enterprise/Amap').default },
     // default
     { path: '*', redirect: '/' }
   ]

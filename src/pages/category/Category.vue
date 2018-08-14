@@ -199,7 +199,7 @@ export default {
             'icon-xialajiantou': params.row.isroot && params.row.grade === '1'
           },
           style: {
-            color: '#000',
+            color: '#808080',
             display: 'block',
             transform: params.row.expand ? 'rotate(0deg)' : 'rotate(-90deg)'
           },

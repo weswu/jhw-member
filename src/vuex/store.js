@@ -26,6 +26,7 @@ const state = {
   memberAttrList: [],
   tagList: [],
   areaList: [],
+  userprivilege: [],
   // 站点
   staticList: [],
   layoutId: '',
@@ -74,6 +75,7 @@ const getters = {
   memberAttrList: state => state.memberAttrList,
   tagList: state => state.tagList,
   areaList: state => state.areaList,
+  userprivilege: state => state.userprivilege,
   // 站点
   staticList: state => state.staticList,
   layoutId: state => state.layoutId,
@@ -114,6 +116,9 @@ const mutations = {
   },
   setAreaList (state, areaList) {
     state.areaList = areaList
+  },
+  setUserprivilege (state, userprivilege) {
+    state.userprivilege = userprivilege
   },
   setStaticList (state, staticList) {
     state.staticList = staticList
@@ -361,6 +366,13 @@ const store = new Vuex.Store({
             }
           })
           this.commit('setMemberAttrList', data)
+        }
+      })
+    },
+    getUserprivilege ({commit, state}) {
+      return this._vm.$http.get('/rest/api/userprivilege/list').then(res => {
+        if (res.success) {
+          this.commit('setUserprivilege', res.attributes.data)
         }
       })
     },

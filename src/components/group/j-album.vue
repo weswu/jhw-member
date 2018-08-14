@@ -7,7 +7,7 @@
     cancelText="取消">
     <Layout class="ivu-layout-has-sider">
     <Cateogy @on-change="categoryChange"/>
-    <Content class="">
+    <Content>
       <div class="j_search">
         <Row type="flex" justify="space-between">
           <Col>
@@ -66,8 +66,8 @@ export default {
   data () {
     return {
       modal: false,
-      listTest: [],
-      list: [
+      list: [],
+      listTest: [
         {
           state: '01',
           type: '01',

@@ -14,6 +14,7 @@
               </td>
               <td>
                   <Button type="primary" size="small" @click="search">搜索</Button>
+                  <Button type="primary" size="small" @click="submit" v-if="$route.path === '/map'">保存</Button>
               </td>
           </tr>
       </table>
@@ -24,38 +25,45 @@
 <script>
 import qs from 'qs'
 import AMap from 'AMap' // 在页面中引入高德地图
-import { mapState } from 'vuex'
 export default {
   data () {
     return {
+      user: {},
       center: {lng: 120.229355, lat: 30.2145},
       name: '',
+      map: '',
+      marker: '',
       placeSearch: ''
     }
-  },
-  computed: {
-    ...mapState({
-      user: state => state.user
-    })
   },
   mounted () {
     this.loadmap() // 加载地图和相关组件
   },
   methods: {
-    loadmap () {
+    get () {
+      this.user = JSON.parse(JSON.stringify(this.$store.state.user))
       if (this.user.enterprise.mapaddress) {
         this.center.lng = parseFloat(this.user.enterprise.mapaddress.split(',')[0])
         this.center.lat = parseFloat(this.user.enterprise.mapaddress.split(',')[1])
       }
+    },
+    open () {
+      if (this.marker) {
+        this.get()
+        this.marker.setPosition([this.center.lng, this.center.lat])
+        this.map.setCenter([this.center.lng, this.center.lat])
+      }
+    },
+    loadmap () {
+      this.get()
       let center = [this.center.lng, this.center.lat]
-      var map = new AMap.Map('container', {
+      this.map = new AMap.Map('container', {
         resizeEnable: true,
         center: center, // 地图中心点
         zoom: 13 // 地图显示的缩放级别
       })
-      console.log(map)
       this.marker = new AMap.Marker({ // 添加自定义点标记
-        map: map,
+        map: this.map,
         position: center, // 基点位置
         // offset: new AMap.Pixel(-10, -33), // 相对于基点的偏移位置
         draggable: true, // 是否可拖动
@@ -64,13 +72,11 @@ export default {
       let vm = this
       // 移动标签
       this.marker.on('dragend', function (e) {
-        vm.center.lng = e.lnglat.lng
-        vm.center.lat = e.lnglat.lat
+        vm.center = e.lnglat
       })
       // 点击生成新标点
-      map.on('click', e => {
-        vm.center.lng = e.lnglat.lng
-        vm.center.lat = e.lnglat.lat
+      this.map.on('click', e => {
+        vm.center = e.lnglat
         vm.marker.setPosition([e.lnglat.lng, e.lnglat.lat])
       })
       // 输入提示
@@ -79,7 +85,7 @@ export default {
       }
       var auto = new AMap.Autocomplete(autoOptions)
       this.placeSearch = new AMap.PlaceSearch({
-        map: map
+        map: this.map
       }) // 构造地点查询类
       AMap.event.addListener(auto, 'select', select) // 注册监听，当选中某条记录时会触发
       function select (e) {
@@ -87,11 +93,11 @@ export default {
         vm.placeSearch.search(e.poi.name) // 关键字查询查询
       }
       // 工具
-      map.plugin(['AMap.ToolBar'], function () {
-        map.addControl(new AMap.ToolBar())
+      this.map.plugin(['AMap.ToolBar'], function () {
+        vm.map.addControl(new AMap.ToolBar())
       })
       if (location.href.indexOf('&guide=1') !== -1) {
-        map.setStatus({scrollWheel: false})
+        this.map.setStatus({scrollWheel: false})
       }
     },
     search () {
@@ -107,6 +113,8 @@ export default {
       this.$http.post('/rest/api/enterprise/detail/' + this.user.enterprise.enterpriseId, qs.stringify(data)).then((res) => {
         if (res.success) {
           this.$Message.success('保存成功')
+          this.$store.commit('setUser', this.user)
+          this.$emit('on-change')
         } else {
           this.$Message.error(res.msg)
         }
@@ -117,10 +125,6 @@ export default {
 </script>
 
 <style lang="less">
-.mymap {
-  width: 620px;
-  height: 450px;
-}
 .amap-marker .marker-route {
   position: absolute;
   width: 19px;
@@ -132,6 +136,10 @@ export default {
 /** 搜索 **/
 .j_amap{
   position: relative;
+  .mymap {
+    width: 650px;
+    height: 450px;
+  }
 }
 #myPageTop {
   position: absolute;

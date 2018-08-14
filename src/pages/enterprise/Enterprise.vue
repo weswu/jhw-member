@@ -69,8 +69,9 @@
         <Button type="text" size="large" @click="cancel">取消</Button>
         <Button type="primary" size="large" @click="submitMap">保存</Button>
       </div>
-      <Map ref="map" v-if="isMap"/>
+      <Map ref="map" v-if="isMap" @on-change="initUser"/>
     </Modal>
+    <Cropimg ref="cropimg" @on-change="cropChange"/>
   </Layout>
 </template>
 
@@ -81,9 +82,10 @@ import MenuBar from '@/components/common/menu_bar'
 import JHeader from '@/components/group/j-header'
 import JImage from '@/components/group/j-image'
 import Map from '@/pages/enterprise/Amap'
+import Cropimg from '@/components/common/cropimg'
 export default {
   components: {
-    MenuBar, JHeader, JImage, Map
+    MenuBar, JHeader, JImage, Map, Cropimg
   },
   computed: {
     ...mapState({
@@ -140,13 +142,19 @@ export default {
       this.user = JSON.parse(JSON.stringify(this.userModel))
     },
     picChange (e) {
-      this.user.enterprise.logo = e.src
+      this.$refs.cropimg.open(e.src)
+    },
+    cropChange (src) {
+      this.user.enterprise.logo = src
+      this.$store.commit('setUser', this.user)
+      this.setEnterprise('single')
     },
     map () {
       this.modal = true
       if (!this.isMap) {
         this.isMap = true
       }
+      this.$refs.map && this.$refs.map.open()
     },
     cancel () {
       this.modal = false
@@ -157,7 +165,6 @@ export default {
     submit () {
       this.$refs['model'].validate((valid) => {
         if (valid) {
-          this.user.enterprise.regTime = this.dateFormat(this.user.enterprise.regTime, 'yyyy-MM-dd')
           this.setUser()
           this.setEnterprise()
         }
@@ -176,7 +183,8 @@ export default {
         }
       })
     },
-    setEnterprise () {
+    setEnterprise (e) {
+      this.user.enterprise.regTime = this.dateFormat(this.user.enterprise.regTime, 'yyyy-MM-dd')
       this.user.enterprise.address = this.user.enterprise.addresslist.join()
       let data = {
         model: JSON.stringify(this.user.enterprise),
@@ -184,7 +192,7 @@ export default {
       }
       this.$http.post('/rest/api/enterprise/detail/' + this.user.enterprise.enterpriseId, qs.stringify(data)).then((res) => {
         if (res.success) {
-          this.$Message.success('保存成功')
+          if (e !== 'single') this.$Message.success('保存成功')
           this.$store.commit('setUser', this.user)
         } else {
           this.$Message.error(res.msg)

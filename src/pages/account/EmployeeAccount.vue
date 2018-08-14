@@ -24,7 +24,7 @@
         width="500"
         cancelText="取消">
         <div class="j_tip" style="margin: 0 0 10px 0;">
-          注：绑定域名后可用<a href="#/bind" class="viewBind">(查看绑定)</a>
+          注：请选择站点后再推广二维码
           <Select v-model="$store.state.layoutId" class="small" @on-change="layoutChange" style="float: right;width: 130px;">
             <Option v-for="item in staticList" :value="item.layoutId" :key="item.layoutId">网站编号：{{ item.layoutId }}</Option>
           </Select>
@@ -117,6 +117,7 @@ export default {
       var vm = this
       let layoutId = this.$store.state.layoutId
       this.posterUrl = 'http://pc.jihui88.com/rest/site/' + layoutId + '/index?posterId=' + this.posterId
+      if (this.staticList.length === 0) return this.$Message.info('未生成站点或者刷新页面')
       this.staticList.forEach(item => {
         if (layoutId === item.id && item.bind.address) {
           vm.posterUrl = item.bind.address + '?posterId=' + this.posterId

@@ -11,21 +11,33 @@
 
 <script>
 import qs from 'qs'
-import status from '@/utils/status.js'
+import { mapState } from 'vuex'
 export default {
   data () {
     return {
       modal: false,
       memberId: '',
-      data: [] // http://www.jihui88.com/rest/api/userprivilege/list
+      data: []
     }
   },
+  computed: {
+    ...mapState(['userprivilege'])
+  },
   methods: {
+    get () {
+      if (this.userprivilege.length === 0) {
+        this.$store.dispatch('getUserprivilege').then(e => {
+          this.init()
+        })
+      } else {
+        this.init()
+      }
+    },
     init () {
-      var ctx = this
-      status.userprivilege.forEach(item => {
+      var vm = this
+      this.userprivilege.forEach(item => {
         if (!item.belongId) {
-          ctx.data.push({
+          vm.data.push({
             title: item.pname,
             id: item.userprivilegeId,
             expand: false,
@@ -34,8 +46,8 @@ export default {
           })
         }
       })
-      ctx.data.forEach(item => {
-        status.userprivilege.forEach(item2 => {
+      vm.data.forEach(item => {
+        vm.userprivilege.forEach(item2 => {
           if (item.id === item2.belongId) {
             item.children.push({
               title: item2.pname,
@@ -47,9 +59,9 @@ export default {
           }
         })
       })
-      ctx.data.forEach(item => {
+      vm.data.forEach(item => {
         item.children.forEach(row => {
-          status.userprivilege.forEach(item2 => {
+          vm.userprivilege.forEach(item2 => {
             if (row.id === item2.belongId) {
               row.children.push({
                 title: item2.pname,
@@ -64,7 +76,7 @@ export default {
     open (id) {
       var ctx = this
       this.data = []
-      this.init()
+      this.get()
       this.modal = true
       this.memberId = id
       this.$http.get('/rest/api/userpriv/detail/' + id).then((res) => {

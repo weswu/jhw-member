@@ -19,7 +19,7 @@
               <Button type="info" icon="plus" class="w130" @click="url('/coupon/add')">添加优惠券</Button>
             </Col>
             <Col>
-              <Input v-model="searchData.name" class="w144" placeholder="请输入优惠券名称"></Input>
+              <Input v-model="searchData.name" class="w144" placeholder="请输入优惠券名称" clearable @on-change="clearInput"></Input>
               <Button class="search" @click="search">搜索</Button>
               <a :href="'http://www.jihui88.com/member/mem_s.html#/coupon_ent_list/'+$store.state.user.enterpriseId" target="_blank">
                 <Button class="info">领取优惠卷网址</Button>
@@ -110,6 +110,12 @@ export default {
     search () {
       this.searchData.page = 1
       this.get()
+    },
+    // 搜索
+    clearInput () {
+      if (this.searchData.name === '') {
+        this.get()
+      }
     },
     // 过滤
     indexFilter (h, params) {
