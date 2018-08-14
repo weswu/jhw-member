@@ -28,14 +28,14 @@
                 <Button class="info" @click="recycle"><i class="iconfont icon-huishouzhan"></i>回收站</Button>
               </Col>
               <Col>
-                <Input v-model="searchData.filename" class="w144" clearable placeholder="搜索图片名称" @on-change="clearInput"></Input>
+                <Input v-model="filename" class="w144" clearable placeholder="搜索图片名称" @on-change="clearInput"></Input>
                 <Button class="search" @click="search">搜索</Button>
                 <Poptip placement="bottom" class="j_poptip_confirm_edit"
                   confirm
                   @on-ok="advancedSearch">
                   <Button class="grey">高级搜索</Button>
                   <div slot="title">
-                    <Input v-model="searchData.filename" class="w244" placeholder="搜索图片"></Input><br/>
+                    <Input v-model="filename2" class="w244" placeholder="搜索图片" clearable></Input><br/>
                     <Select v-model="searchData.searchType" class="w144">
                       <Option value="1">按名称搜索</Option>
                       <Option value="2">按图片地址搜索</Option>
@@ -177,6 +177,8 @@ export default {
       list: [],
       listTest: this.$store.state.status.test_album,
       total: 0,
+      filename: '',
+      filename2: '',
       searchData: {
         page: 1,
         pageSize: 18,
@@ -458,16 +460,19 @@ export default {
     },
     // 右
     clearInput () {
-      if (this.searchData.filename === '') {
+      if (this.filename === '') {
+        this.searchData.filename = ''
         this.get()
       }
     },
     search () {
+      this.searchData.filename = this.filename
       this.searchData.searchType = '1'
       this.get()
     },
     advancedSearch () {
       this.searchData.page = 1
+      this.searchData.filename = this.filename2
       this.get()
     },
     watermark () {

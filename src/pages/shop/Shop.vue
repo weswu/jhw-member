@@ -5,7 +5,7 @@
       <JHeader :title="'订单列表'"/>
       <Content>
         <div class="j_search">
-          <Input v-model="searchData.orderSn" class="w180" clearable placeholder="请输入订单编号" @on-change="clearInput"></Input>
+          <Input v-model="orderSn" class="w180" clearable placeholder="请输入订单编号" @on-change="clearInput"></Input>
           <Button class="search" @click="search">搜索</Button>
           <Poptip placement="bottom" class="j_poptip_confirm_edit"
             confirm
@@ -105,6 +105,7 @@ export default {
         { title: '来源（网站编号）', key: 'layoutId' }
       ],
       list: [],
+      orderSn: '',
       searchData: {
         page: 1,
         pageSize: 10,
@@ -165,7 +166,8 @@ export default {
     },
     // 功能
     clearInput () {
-      if (this.searchData.orderSn === '') {
+      if (this.orderSn === '') {
+        this.searchData.orderSn = this.orderSn
         this.get()
       }
     },
@@ -173,7 +175,7 @@ export default {
       this.searchData = {
         page: 1,
         pageSize: this.searchData.pageSize,
-        orderSn: this.searchData.orderSn
+        orderSn: this.orderSn
       }
       this.get()
     },

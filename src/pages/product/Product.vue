@@ -11,7 +11,7 @@
             </Col>
             <Col>
               <span class="a_underline" @click="myShow">我的显示</span>
-              <Input v-model="searchData.name" clearable placeholder="请输入产品名称" class="w180" @on-change="clearInput"></Input>
+              <Input v-model="name" clearable placeholder="请输入产品名称" class="w180" @on-change="clearInput"></Input>
               <Button class="search" @click="search">搜索</Button>
               <Poptip placement="bottom-end" class="j_poptip_confirm_edit advancedSearch"
                 confirm
@@ -21,7 +21,7 @@
                 <div slot="title">
                   <Form :model="searchData" :label-width="110">
                     <FormItem label="名称：" class="formitem_left">
-                      <Input v-model="searchData.name" class="w180" clearable></Input>
+                      <Input v-model="searchData.name" class="w180" placeholder="请输入产品名称" clearable></Input>
                     </FormItem>
                     <FormItem label="分类：" :label-width="62" class="formitem_left">
                       <div style="width:228px">
@@ -29,7 +29,7 @@
                       </div>
                     </FormItem>
                     <FormItem label="型号：" class="formitem_left">
-                      <Input v-model="searchData.prodtype" class="w180" clearable></Input>
+                      <Input v-model="searchData.prodtype" class="w180" placeholder="请输入产品型号" clearable></Input>
                     </FormItem>
                     <FormItem label="产品属性：" class="formitem_left">
                       <Select v-model="searchData.productType" class="w180" placeholder="请选择">
@@ -163,6 +163,7 @@ export default {
           }
         }
       ],
+      name: '',
       searchData: {
         page: 1,
         pageSize: 10,
@@ -247,7 +248,8 @@ export default {
     },
     // 搜索
     clearInput () {
-      if (this.searchData.name === '') {
+      if (this.name === '') {
+        this.searchData.name = this.name
         this.get()
       }
     },
@@ -255,7 +257,7 @@ export default {
       this.searchData = {
         page: 1,
         pageSize: this.searchData.pageSize,
-        name: this.searchData.name
+        name: this.name
       }
       this.get()
     },

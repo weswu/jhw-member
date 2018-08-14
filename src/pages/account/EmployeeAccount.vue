@@ -74,7 +74,9 @@ export default {
         { title: 'Email', key: 'email' },
         { title: '操作', className: 'j_table_operate', align: 'right', width: 202, render: this.renderOperate }
       ],
-      list: [],
+      list: [
+        {}
+      ],
       searchData: {
         page: 1,
         pageSize: 10

@@ -1,5 +1,6 @@
 <template>
   <Modal
+    class-name="j_userprivilege"
     v-model="modal"
     title="设置用户权限"
     okText="确定"
@@ -138,4 +139,7 @@ export default {
 </script>
 
 <style lang="css">
+.j_userprivilege{
+  z-index: 1001 !important
+}
 </style>

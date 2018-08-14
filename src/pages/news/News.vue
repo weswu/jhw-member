@@ -10,7 +10,7 @@
               <Button type="info" icon="plus" class="w130" @click="url('/news/add')">添加新闻</Button>
             </Col>
             <Col>
-              <Input v-model="searchData.title" clearable placeholder="请输入新闻标题" class="w180" @on-change="clearInput"></Input>
+              <Input v-model="title" class="w180" placeholder="请输入新闻标题" clearable @on-change="clearInput"></Input>
               <Button class="search" @click="search">搜索</Button>
               <Poptip placement="bottom-end" class="j_poptip_confirm_edit advancedSearch"
                 confirm
@@ -19,8 +19,8 @@
                 <Button class="grey w130">高级搜索</Button>
                 <div slot="title">
                   <Form :model="searchData" :label-width="85">
-                    <FormItem label="名称：" class="formitem_left">
-                      <Input v-model="searchData.title" class="w180" clearable></Input>
+                    <FormItem label="标题：" class="formitem_left">
+                      <Input v-model="searchData.title" class="w180" placeholder="请输入新闻标题" clearable></Input>
                     </FormItem>
                     <FormItem label="分类：" :label-width="62" class="formitem_left">
                       <div style="width:203px">
@@ -200,6 +200,7 @@ export default {
           }
         }
       ],
+      title: '',
       searchData: {
         page: 1,
         pageSize: 10,
@@ -253,7 +254,8 @@ export default {
     },
     // 搜索
     clearInput () {
-      if (this.searchData.title === '') {
+      if (this.title === '') {
+        this.searchData.title = this.title
         this.get()
       }
     },
@@ -261,7 +263,7 @@ export default {
       this.searchData = {
         page: 1,
         pageSize: this.searchData.pageSize,
-        title: this.searchData.title
+        title: this.title
       }
       this.get()
     },

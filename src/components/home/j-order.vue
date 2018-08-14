@@ -11,8 +11,13 @@
           <PurchasedItem :searchData="{ page: 1, pageSize: 3 }"/>
         </div>
       </TabPane>
-      <TabPane label="我的积分" name="3">
+      <TabPane label="待缴费" name="3">
         <div class="j_warpper" v-if="tab3">
+          <PaidItem :searchData="{ page: 1, pageSize: 3 }"/>
+        </div>
+      </TabPane>
+      <TabPane label="我的积分" name="4">
+        <div class="j_warpper" v-if="tab4">
           <PointTable :searchData="searchData"/>
         </div>
       </TabPane>
@@ -21,14 +26,16 @@
 </template>
 
 <script>
-import PointTable from '@/pages/point/PointTable'
 import OrderItem from '@/pages/cost/OrderItem'
 import PurchasedItem from '@/pages/cost/PurchasedItem'
+import PaidItem from '@/pages/cost/PaidItem'
+import PointTable from '@/pages/point/PointTable'
 export default {
   components: {
-    PointTable,
     OrderItem,
-    PurchasedItem
+    PurchasedItem,
+    PaidItem,
+    PointTable
   },
   data () {
     return {
@@ -38,7 +45,8 @@ export default {
         pageSize: 3
       },
       tab2: false,
-      tab3: false
+      tab3: false,
+      tab4: false
     }
   },
   mounted () {
@@ -54,6 +62,7 @@ export default {
     tabChange (name) {
       if (!this.tab2 && name === '2') this.tab2 = true
       if (!this.tab3 && name === '3') this.tab3 = true
+      if (!this.tab4 && name === '4') this.tab4 = true
     }
   }
 }

@@ -1,6 +1,6 @@
 <template>
-  <div class="j_amap">
-    <div id="container" class="mymap"></div>
+  <div class="j_map">
+    <div id="container" class="map"></div>
     <div id="myPageTop">
       <table>
           <tr>
@@ -134,11 +134,13 @@ export default {
   cursor: pointer;
 }
 /** 搜索 **/
-.j_amap{
+.j_map{
   position: relative;
-  .mymap {
-    width: 650px;
-    height: 450px;
+  width: 100%;
+  height: 100%;
+  .map {
+    width: 100%;
+    height: 100%;
   }
 }
 #myPageTop {

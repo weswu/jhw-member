@@ -10,7 +10,7 @@
               <Button type="info" icon="plus" class="w130" @click="url('/member/add')">添加会员</Button>
             </Col>
             <Col>
-              <Input v-model="searchData.name" class="w180" clearable placeholder="请输入用户名" @on-change="clearInput"></Input>
+              <Input v-model="name" class="w180" clearable placeholder="请输入用户名" @on-change="clearInput"></Input>
               <Button class="search" @click="search">搜索</Button>
               <Poptip placement="bottom-end" class="j_poptip_confirm_edit"
                 confirm
@@ -71,6 +71,7 @@ export default {
         { title: '操作', className: 'j_table_operate', width: 120, render: this.renderOperate }
       ],
       list: [],
+      name: '',
       searchData: {
         page: 1,
         pageSize: 10
@@ -100,7 +101,8 @@ export default {
     },
     // 功能
     clearInput () {
-      if (this.searchData.name === '') {
+      if (this.name === '') {
+        this.searchData.name = this.name
         this.get()
       }
     },
@@ -108,7 +110,7 @@ export default {
       this.searchData = {
         page: 1,
         pageSize: this.searchData.pageSize,
-        name: this.searchData.name
+        name: this.name
       }
       this.get()
     },

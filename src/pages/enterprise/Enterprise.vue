@@ -69,7 +69,7 @@
         <Button type="text" size="large" @click="cancel">取消</Button>
         <Button type="primary" size="large" @click="submitMap">保存</Button>
       </div>
-      <Map ref="map" v-if="isMap" @on-change="initUser"/>
+      <Map ref="map" v-if="isMap" @on-change="initUser" style="height:450px;"/>
     </Modal>
     <Cropimg ref="cropimg" @on-change="cropChange"/>
   </Layout>
