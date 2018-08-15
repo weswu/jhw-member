@@ -14,7 +14,6 @@
               <Input v-model="item.seoTitle2" placeholder="请输入网站名称"></Input>
             </div>
           </Poptip>
-
           <span>(网站编号：{{item.id}}&nbsp;&nbsp;/&nbsp;&nbsp;语言：<span v-if="item.language === '1'">中文</span><span v-if="item.language === '2'">英文</span>)</span>
           <!-- 状态 -->
           <span class="type" v-if="item.state === '0'">审核中</span>
@@ -24,13 +23,7 @@
         <p>
           <a :href="item.url | http" target="_blank" class="url">{{item.url}}</a>
           <span class="time" v-if="item.endTime">(到期时间：{{item.endTime | time}})</span>
-          <Poptip trigger="hover" placement="top" class="j_poptip_ul" v-if="!item.new">
-            <a href="javascript:;" class="buy">购买</a>
-            <ul slot="content">
-              <li><a :href="'http://buy.jihui88.com/#/?tab=tab1&layoutId=' + item.id" target="_blank">自选模板</a></li>
-              <li><a :href="'http://buy.jihui88.com/#/?tab=tab2&layoutId=' + item.id" target="_blank">定制设计</a></li>
-            </ul>
-          </Poptip>
+          <a href="javascript:;" class="buy" v-if="!item.new" @click="buy(item.id)">购买</a>
           <a href="javascript:;" class="buy" v-if="item.new" @click="again(item.id)">续费</a>
           <a :href="'http://buy.jihui88.com/#/?layoutId=' + item.id" class="buy" target="_blank" v-if="item.new">升级</a>
         </p>
@@ -83,6 +76,7 @@
       </div>
     </JDialog>
     <Again ref="again"/>
+    <Buy ref="buy"/>
     <Add ref="add" @on-change="get"/>
   </div>
 </template>
@@ -92,7 +86,8 @@ import qs from 'qs'
 import { mapState } from 'vuex'
 import JPagination from '@/components/group/j-pagination'
 import JDialog from '@/components/group/j-dialog'
-import Add from '@/components/static/add'
+import Add from '@/components/pc/add'
+import Buy from '@/components/pc/buy'
 import Again from '@/pages/cost/Again'
 export default {
   props: {
@@ -111,6 +106,7 @@ export default {
     JPagination,
     JDialog,
     Add,
+    Buy,
     Again
   },
   data () {
@@ -188,10 +184,35 @@ export default {
       })
     },
     add () {
-      this.$refs.add.open()
+      let data = {
+        model: JSON.stringify({
+          title: '我的网站',
+          seoTitle: '我的网站',
+          language: '1',
+          grade: 1,
+          name: '我的网站',
+          cellphone: '',
+          categoryId: '7',
+          entName: '',
+          areaPath: ''
+        })
+      }
+      this.$http.post('/rest/pc/api/baseLayout/detail', qs.stringify(data)).then((res) => {
+        if (res.success) {
+          this.$Message.success('创建成功')
+          this.staticList.splice(0, 0, res.attributes.data)
+          this.$store.commit('setStaticList', this.staticList)
+          this.get()
+        } else {
+          this.$Message.error(res.msg)
+        }
+      })
     },
     again (id) {
       this.$refs.again.open(id)
+    },
+    buy (id) {
+      this.$refs.buy.open('?ids=297e2669600191860160021b8fcc007f&layoutId=' + id)
     },
     // 网站上线
     bind (e) {

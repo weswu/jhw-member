@@ -396,7 +396,7 @@ const store = new Vuex.Store({
           let data = res.attributes.data
           if (data.content) {
             let content = JSON.parse(data.content)
-            if (!content.homeSort[0].type) {
+            if (!content.homeSort) {
               content.homeSort = [
                 { value: 'static', text: '我的网站', status: '01', type: '01' },
                 { value: 'link', text: '链接', status: '01', type: '00' },
@@ -404,9 +404,6 @@ const store = new Vuex.Store({
                 { value: 'message', text: '留言', status: '00', type: '01' },
                 { value: 'service', text: '服务', status: '00', type: '01' }
               ]
-            }
-            if (content.homeShow) {
-              delete content['homeShow']
             }
             this.commit('setCustomData', content)
           }

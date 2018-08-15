@@ -125,9 +125,7 @@ export default {
           }
         })
       } else {
-        this.model = {
-          memberId: 'cccc'
-        }
+        this.model = {}
       }
     },
     auth () {

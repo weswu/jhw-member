@@ -25,7 +25,7 @@
 </template>
 
 <script>
-import Website from '@/components/static/website'
+import Website from '@/components/pc/website'
 import Xiaochengxu from '@/components/static/xiaochengxu'
 export default {
   components: {

@@ -3,6 +3,7 @@
     <Table :columns="columns" :data="list"/>
     <JPagination :total="total" :searchData='searchData' @on-change="get"/>
     <Detail ref="detail"/>
+    <Buy ref="buy"/>
   </Content>
 </template>
 
@@ -10,6 +11,7 @@
 import qs from 'qs'
 import JPagination from '@/components/group/j-pagination'
 import Detail from '@/pages/cost/Detail'
+import Buy from '@/components/pc/buy'
 export default {
   props: {
     searchData: {
@@ -24,7 +26,8 @@ export default {
   },
   components: {
     JPagination,
-    Detail
+    Detail,
+    Buy
   },
   data () {
     return {
@@ -94,7 +97,7 @@ export default {
           },
           on: {
             click: () => {
-              window.open('http://buy.jihui88.com/#/alipay?title=支付&orderId=' + params.row.orderId, '_blank')
+              this.$refs.buy.open('?orderId=' + params.row.orderId)
             }
           }
         }, '支付')

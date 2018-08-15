@@ -13,7 +13,7 @@
 <script>
 import MenuBar from '@/components/common/menu_bar'
 import JHeader from '@/components/group/j-header'
-import Website from '@/components/static/website'
+import Website from '@/components/pc/website'
 export default {
   components: {
     MenuBar,
