@@ -33,29 +33,42 @@ export default {
       name: '',
       map: '',
       marker: '',
-      placeSearch: ''
+      placeSearch: '',
+      count: 0
     }
   },
   mounted () {
-    this.loadmap() // 加载地图和相关组件
+    this.get()
   },
   methods: {
     get () {
+      let vm = this
       this.user = JSON.parse(JSON.stringify(this.$store.state.user))
-      if (this.user.enterprise.mapaddress) {
+      if (!this.user.userId && this.count < 3) {
+        setTimeout(function () {
+          vm.get()
+          vm.count += 1
+        }, 500)
+      } else if (this.user.enterprise.mapaddress) {
         this.center.lng = parseFloat(this.user.enterprise.mapaddress.split(',')[0])
         this.center.lat = parseFloat(this.user.enterprise.mapaddress.split(',')[1])
+        this.loadmap() // 加载地图和相关组件
       }
     },
     open () {
       if (this.marker) {
-        this.get()
-        this.marker.setPosition([this.center.lng, this.center.lat])
-        this.map.setCenter([this.center.lng, this.center.lat])
+        this.user = JSON.parse(JSON.stringify(this.$store.state.user))
+        if (this.user.enterprise.mapaddress) {
+          this.center.lng = parseFloat(this.user.enterprise.mapaddress.split(',')[0])
+          this.center.lat = parseFloat(this.user.enterprise.mapaddress.split(',')[1])
+        }
+        let center = [this.center.lng, this.center.lat]
+        this.marker.setPosition(center)
+        this.map.setCenter(center)
       }
     },
     loadmap () {
-      this.get()
+      let vm = this
       let center = [this.center.lng, this.center.lat]
       this.map = new AMap.Map('container', {
         resizeEnable: true,
@@ -69,7 +82,6 @@ export default {
         draggable: true, // 是否可拖动
         content: '<div class="marker-route"></div>' // 自定义点标记覆盖物内容
       })
-      let vm = this
       // 移动标签
       this.marker.on('dragend', function (e) {
         vm.center = e.lnglat

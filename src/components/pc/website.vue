@@ -1,6 +1,9 @@
 <template>
   <div class="j_static_website">
-    <div class="j_tip" style="margin-top: 13px;">由于互联网信息管理法规，发布网站需要验证您的手机号信息。 <a href="#/account" class="a_underline">立即验证</a></div>
+    <div class="j_tip" style="margin-top: 13px;">由于互联网信息管理法规，发布网站需要验证您的手机号信息。
+      <a href="#/account" class="a_underline">立即验证</a>
+      <a href="https://v.qq.com/x/page/f0753d6r4fb.html" class="a_underline" target="_blank" style="margin-left:5px">视频教程</a>
+    </div>
     <Button icon="plus" class="orange" @click="add">创建新网站</Button> 您有{{onlineCount}}个网站上线了
     <ul class="static_info j_scroll">
       <li class="item" v-for="(item, index) in list" :key="item.id">
@@ -23,7 +26,15 @@
         <p>
           <a :href="item.url | http" target="_blank" class="url">{{item.url}}</a>
           <span class="time" v-if="item.endTime">(到期时间：{{item.endTime | time}})</span>
-          <a href="javascript:;" class="buy" v-if="!item.new" @click="buy(item.id)">购买</a>
+          <Poptip placement="top" class="j_poptip_ul" v-if="!item.new">
+            <a href="javascript:;" class="buy">购买</a>
+            <ul slot="content">
+              <li @click="buy(item.id)"> 购买站点 </li>
+              <a :href="'http://buy.jihui88.com/#/?layoutId=' + item.id" target="_blank"> <li> 购买套餐 </li> </a>
+              <a :href="'http://buy.jihui88.com/#/?tab=tab1&layoutId=' + item.id" target="_blank"> <li> 定制设计 </li> </a>
+            </ul>
+          </Poptip>
+
           <a href="javascript:;" class="buy" v-if="item.new" @click="again(item.id)">续费</a>
           <a :href="'http://buy.jihui88.com/#/?layoutId=' + item.id" class="buy" target="_blank" v-if="item.new">升级</a>
         </p>
@@ -76,7 +87,7 @@
       </div>
     </JDialog>
     <Again ref="again"/>
-    <Buy ref="buy"/>
+    <Buy ref="buy" @on-change="get"/>
     <Add ref="add" @on-change="get"/>
   </div>
 </template>
@@ -115,8 +126,9 @@ export default {
       listTest: [
         {
           id: '99',
-          new: true,
+          new: false,
           state: '3',
+          url: '',
           bind: {
             address: ''
           }
@@ -212,7 +224,7 @@ export default {
       this.$refs.again.open(id)
     },
     buy (id) {
-      this.$refs.buy.open('?ids=297e2669600191860160021b8fcc007f&layoutId=' + id)
+      this.$refs.buy.open(id)
     },
     // 网站上线
     bind (e) {

@@ -2,7 +2,7 @@
   <Layout class="ivu-layout-has-sider j_static_batch">
     <MenuBar :data="'menuStatic'" :active="'seo_batch'"/>
     <Layout class="j_layout_content">
-      <JHeader :title="'批量提交'" :type="true" :tip="'温馨提醒：向各大搜索引擎提交网址，可以加快网站被搜索引擎收录。 一个网站只需提交一次（首页），搜索引擎会自动收录网页。 不保证一定能收录您提交的网站。'"/>
+      <JHeader :title="'批量提交'" :type="true" :tip="tip"/>
       <Content>
         <div class="j_search" style="padding-bottom: 17px;">
           <Button class="grey" @click="active = item.value" v-for="(item, index) in btns" :key="index" :class="{primary: active === item.value}">{{item.text}}</Button>
@@ -32,6 +32,7 @@ export default {
   },
   data () {
     return {
+      tip: '温馨提醒：向各大搜索引擎提交网址，可以加快网站被搜索引擎收录。 一个网站只需提交一次（首页），搜索引擎会自动收录网页。 不保证一定能收录您提交的网站。<a href="https://v.qq.com/x/page/u0753ji3n5n.html" class="a_underline" target="_blank">批量提交视频教程</a>',
       btns: [
         { text: '百度', value: '0' },
         { text: '好搜', value: '1' },

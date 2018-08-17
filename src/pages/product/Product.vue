@@ -10,6 +10,7 @@
               <Button type="info" icon="plus" class="w130" @click="url('/product/add')">添加产品</Button>
             </Col>
             <Col>
+              <a href="https://v.qq.com/x/page/w0753bnm9kh.html" class="a_underline" target="_blank">产品视频教程</a>
               <span class="a_underline" @click="myShow">我的显示</span>
               <Input v-model="name" clearable placeholder="请输入产品名称" class="w180" @on-change="clearInput"></Input>
               <Button class="search" @click="search">搜索</Button>

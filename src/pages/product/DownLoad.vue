@@ -4,6 +4,9 @@
     <Layout class="j_layout_content">
       <Content>
         <JHeader :title="'下载'" :lan="true"/>
+        <div class="j_tip">
+          温馨提示：<a href="https://v.qq.com/x/page/w0753bnm9kh.html" class="a_underline" target="_blank">下载视频教程</a>
+        </div>
         <div class="j_search">
           <Button class="grey primary w130">产品表格下载</Button>
           <Button class="grey w130" @click="exportProductImg">产品相册下载</Button>

@@ -3,7 +3,7 @@
     <MenuBar :data="'menuStatic'" :active="'third_party_statistics'"/>
     <Layout class="j_layout_content">
       <JHeader :title="'第三方统计'"
-        :type="true" :tip="'温馨提醒：请选择好右边的网站编号再来设置下面的按钮。'"
+        :type="true" :tip="tip"
         :website="true" @on-layout="get"/>
       <Content>
         <Form :model="detail" :label-width="75">
@@ -41,6 +41,7 @@ export default {
   },
   data () {
     return {
+      tip: '温馨提醒：请选择好右边的网站编号再来设置下面的按钮。<a href="https://v.qq.com/x/page/j0753ycgfeh.html" class="a_underline" target="_blank">视频教程</a>',
       detail: {
         analysisHeadState: '00',
         analysisTailState: '00'

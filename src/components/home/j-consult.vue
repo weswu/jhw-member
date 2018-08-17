@@ -52,10 +52,11 @@ export default {
 
 <style lang="less">
 .j_consult{
+  overflow: hidden;
   .j_consult_btn{
     position: fixed;
     right: 0;
-    top: 50%;
+    bottom: 100px;
     width: 24px;
     height: 125px;
     background: #5bd1e7;
@@ -74,7 +75,7 @@ export default {
     transition: all .3s;
     position: fixed;
     right: 42px;
-    top: 50%;
+    bottom: 100px;
     z-index: 9;
     color: #707070;
     font-size: 14px;

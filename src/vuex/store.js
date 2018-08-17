@@ -405,6 +405,13 @@ const store = new Vuex.Store({
                 { value: 'service', text: '服务', status: '00', type: '01' }
               ]
             }
+            if (!content.linkList) {
+              content.linkList = [
+                { value: 'static', text: '站点数据管理', icon: 'icon-shuju' },
+                { value: 'member', text: '会员管理', icon: 'icon-Group' },
+                { value: 'product', text: '产品列表', icon: 'icon-liebiao1' }
+              ]
+            }
             this.commit('setCustomData', content)
           }
         }

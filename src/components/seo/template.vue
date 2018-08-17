@@ -23,7 +23,7 @@
         <Button class="info" size="small" @click="back">返回</Button>
       </FormItem>
       <div class="explain">
-        <span>视频教程: </span> <a href="https://v.qq.com/x/page/a0179l2o2l2.html" target="_blank" class="a_underline">SEO优化视频教程</a><br/>
+        <span>视频教程: </span> <a href="https://v.qq.com/x/page/u0753y5akkv.html" target="_blank" class="a_underline">SEO优化视频教程</a><br/>
         关键词中可用的变量有如下几个:<br/>
         栏目名称:{page},<br/>
         新闻标题:{news_title},<br/>

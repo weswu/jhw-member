@@ -6,6 +6,7 @@
       <Content>
         <div class="j_search">
           <Button class="grey" @click="active = item.value" v-for="(item, index) in btns" :key="index" :class="{primary: active === item.value}">{{item.text}}</Button>
+          <a href="https://v.qq.com/x/page/u0753y5akkv.html" class="a_underline" target="_blank">SEO管理视频教程</a>
         </div>
         <div class="warpper j_scroll">
           <SBase @on-change="headerChange" v-if="active === '0'"/>
