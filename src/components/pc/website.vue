@@ -26,14 +26,8 @@
         <p>
           <a :href="item.url | http" target="_blank" class="url">{{item.url}}</a>
           <span class="time" v-if="item.endTime">(到期时间：{{item.endTime | time}})</span>
-          <Poptip placement="top" class="j_poptip_ul" v-if="!item.new">
-            <a href="javascript:;" class="buy">购买</a>
-            <ul slot="content">
-              <li @click="buy(item.id)"> 购买站点 </li>
-              <a :href="'http://buy.jihui88.com/#/?layoutId=' + item.id" target="_blank"> <li> 购买套餐 </li> </a>
-              <a :href="'http://buy.jihui88.com/#/?tab=tab1&layoutId=' + item.id" target="_blank"> <li> 定制设计 </li> </a>
-            </ul>
-          </Poptip>
+
+          <a href="javascript:;" class="buy" @click="buy(item.id)" v-if="!item.new">购买</a>
 
           <a href="javascript:;" class="buy" v-if="item.new" @click="again(item.id)">续费</a>
           <a :href="'http://buy.jihui88.com/#/?layoutId=' + item.id" class="buy" target="_blank" v-if="item.new">升级</a>

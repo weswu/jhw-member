@@ -90,6 +90,7 @@ export default {
     open (id) {
       this.id = id
       this.modal = true
+      this.showQrCode = false
       this.src = 'http://buy.jihui88.com/#/qrcode?layoutId=' + this.id
     },
     priceChange (e) {

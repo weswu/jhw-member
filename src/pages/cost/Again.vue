@@ -13,6 +13,11 @@
           </Select>
         </FormItem>
       </Form>
+      <Modal
+        title="续费"
+        v-model="modal" width="800">
+          <iframe class="j_buy_iframe" :src="src" scrolling="no" style="height:420px"/>
+      </Modal>
     </div>
   </JDialog>
 </template>
@@ -26,6 +31,8 @@ export default {
   },
   data () {
     return {
+      modal: false,
+      src: '',
       detail: {
         year: '1'
       }
@@ -44,7 +51,8 @@ export default {
       var ctx = this
       this.$http.post('/rest/buy/api/order/renew', qs.stringify(this.detail)).then((res) => {
         if (res.code === 0) {
-          window.open('http://buy.jihui88.com/#/alipay?title=续费&orderId=' + res.data.orderId, '_blank')
+          this.modal = true
+          this.src = 'http://buy.jihui88.com/#/qrcode?orderId=' + res.data.orderId
         } else {
           if (res.msg === '订单不存在') {
             this.$Notice.info({

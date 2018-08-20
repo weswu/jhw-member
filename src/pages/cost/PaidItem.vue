@@ -3,6 +3,11 @@
     <Table :columns="columns" :data="list"/>
     <JPagination :total="total" :searchData='searchData' @on-change="get"/>
     <Detail ref="detail"/>
+    <Modal
+      title="支付"
+      v-model="modal" width="800">
+        <iframe class="j_buy_iframe" :src="src" scrolling="no" style="height:420px"/>
+    </Modal>
   </Content>
 </template>
 
@@ -28,6 +33,8 @@ export default {
   },
   data () {
     return {
+      modal: false,
+      src: '',
       columns: [
         { title: '产品名称', key: 'name', ellipsis: true, minWidth: 180 },
         { title: '应付金额', render: this.totalPriceFilter, width: 85 },
@@ -94,7 +101,8 @@ export default {
           },
           on: {
             click: () => {
-              window.open('http://buy.jihui88.com/#/alipay?title=支付&orderId=' + params.row.orderId, '_blank')
+              this.modal = true
+              this.src = 'http://buy.jihui88.com/#/qrcode?orderId=' + params.row.orderId
             }
           }
         }, '支付')
