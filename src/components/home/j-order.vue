@@ -1,19 +1,19 @@
 <template>
   <div class="j_panel">
     <Tabs :value="tabActive" @on-click="tabChange">
-      <TabPane label="消费记录" name="1">
+      <TabPane label="待缴费" name="1">
         <div class="j_warpper">
-          <OrderItem :searchData="{ page: 1, pageSize: 3 }"/>
+          <PaidItem :searchData="searchData"/>
         </div>
       </TabPane>
-      <TabPane label="已购产品" name="2">
+      <TabPane label="消费记录" name="2">
         <div class="j_warpper" v-if="tab2">
-          <PurchasedItem :searchData="{ page: 1, pageSize: 3 }"/>
+          <OrderItem :searchData="searchData"/>
         </div>
       </TabPane>
-      <TabPane label="待缴费" name="3">
+      <TabPane label="已购产品" name="3">
         <div class="j_warpper" v-if="tab3">
-          <PaidItem :searchData="{ page: 1, pageSize: 3 }"/>
+          <PurchasedItem :searchData="searchData"/>
         </div>
       </TabPane>
       <TabPane label="我的积分" name="4">

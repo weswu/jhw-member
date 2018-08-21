@@ -55,7 +55,7 @@ export default {
           text: '账号信息',
           children: [
             { name: 'account', icon: 'account-only', text: '账号管理' },
-            { name: 'cost_order', icon: 'price', text: '费用中心' },
+            { name: 'cost_paid', icon: 'price', text: '费用中心' },
             { name: 'point', icon: 'jifen', text: '积分管理' }
           ]
         },

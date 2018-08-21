@@ -50,7 +50,7 @@
           <Row>
             <Col span="8"><a href="#/account"><i class="iconfont icon-account-only"></i>账号信息</a></Col>
             <Col span="8"><a href="#/account"><i class="iconfont icon-anquan"></i>安全设置</a></Col>
-            <Col span="8"><a href="#/cost_order"><i class="iconfont icon-price"></i>费用中心</a></Col>
+            <Col span="8"><a href="#/cost_paid"><i class="iconfont icon-price"></i>费用中心</a></Col>
           </Row>
           <Row>
             <Col span="8"><a href="#/point_origin"><i class="iconfont icon-quanyi"></i>积分规则</a></Col>

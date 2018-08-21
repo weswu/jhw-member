@@ -1,7 +1,8 @@
 <template>
   <Modal class-name="j_buy_modal"
     title="企业建站选购"
-    v-model="modal" width="800">
+    v-model="modal" width="800"
+    @on-cancel="cancel">
       <div class="j_buy_iframe" v-if="showQrCode">
         <iframe :src="src" scrolling="no"/>
       </div>
@@ -80,7 +81,7 @@ export default {
           vm.$emit('on-change')
           vm.modal = false
         }
-        vm.showQrCode = false
+        vm.cancel()
       } else {
         data.msg && vm.$Message.error(data.msg)
       }
@@ -92,6 +93,13 @@ export default {
       this.modal = true
       this.showQrCode = false
       this.src = 'http://buy.jihui88.com/#/qrcode?layoutId=' + this.id
+    },
+    cancel () {
+      if (this.showQrCode) {
+        this.$root.$emit('eventBusName')
+      }
+      this.showQrCode = false
+      this.modal = false
     },
     priceChange (e) {
       let vm = this
@@ -140,11 +148,13 @@ export default {
         border-radius: 8px;
         width: 11px;
         height: 11px;
-        padding: 2px;
+        padding: 2px 0 0 2px;
+        transform: scale(0.75);
       }
     }
     .ivu-radio-checked .ivu-radio-inner{
       border-color: #34b34a;
+      background: #34b34a;
     }
     button{
       margin: 10px auto 0 auto;

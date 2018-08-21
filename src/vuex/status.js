@@ -98,9 +98,9 @@ const state = {
   menuCost: {
     title: '费用中心',
     menu: [
+      { text: '待缴费', value: 'cost_paid' },
       { text: '消费记录', value: 'cost_order' },
-      { text: '已购产品', value: 'cost_purchased' },
-      { text: '待缴费', value: 'cost_paid' }
+      { text: '已购产品', value: 'cost_purchased' }
     ]
   },
   menuPoint: {

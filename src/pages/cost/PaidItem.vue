@@ -4,6 +4,7 @@
     <JPagination :total="total" :searchData='searchData' @on-change="get"/>
     <Detail ref="detail"/>
     <Modal
+      class-name="buy-iframe"
       title="支付"
       v-model="modal" width="800">
         <iframe class="j_buy_iframe" :src="src" scrolling="no" style="height:420px"/>
@@ -48,10 +49,13 @@ export default {
     }
   },
   created () {
-    var ctx = this
+    var vm = this
     setTimeout(function () {
-      ctx.get()
+      vm.get()
     }, 500)
+    this.$root.$on('eventBusName', e => {
+      vm.get()
+    })
   },
   methods: {
     get () {
@@ -113,4 +117,7 @@ export default {
 </script>
 
 <style lang="css">
+.buy-iframe .ivu-modal-footer{
+  display: none
+}
 </style>
