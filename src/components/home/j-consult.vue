@@ -4,6 +4,7 @@
       <i class="iconfont icon-paimaizixun"></i>
       咨<br/>询<br/> <span>.</span><br/>建<br/>议
     </div>
+    <div class="shipin" @click="toggle2">视<br/>频</div>
     <Card class="j_consult_content" v-if="display">
       <i class="iconfont icon-x" @click="close"></i>
       <Row>
@@ -21,30 +22,57 @@
         </Col>
       </Row>
     </Card>
+    <Card class="j_consult_content j_consult_content2" v-if="display2">
+      <i class="iconfont icon-x" @click="close2"></i>
+      <div class="ivu-row">
+          <div class="item" @click="yindao">
+            新手提示<p>让您快速了解我们的后台</p>
+          </div>
+          <a href="http://v.qq.com/vplus/4aa13bffe0e2662991069f1800862a96/foldervideos/gr2002901enccnk" target="_blank" class="item">
+              视频<p>机汇网不是完美的，我们渴望您的建议</p>
+          </a>
+      </div>
+    </Card>
     <Feedback ref="feedback"/>
+    <YinDao ref="yindao"/>
   </div>
 </template>
 
 <script>
 import Feedback from '@/components/home/j-feedback'
+import YinDao from '@/components/home/j-yindao'
 export default {
   components: {
-    Feedback
+    Feedback,
+    YinDao
   },
   data () {
     return {
-      display: false
+      display: false,
+      display2: false
     }
   },
   methods: {
     toggle () {
       this.display = !this.display
+      this.display2 = false
+    },
+    toggle2 () {
+      this.display2 = !this.display2
+      this.display = false
     },
     close () {
       this.display = false
     },
+    close2 () {
+      this.display2 = false
+    },
     open () {
       this.$refs.feedback.open()
+    },
+    yindao () {
+      this.display2 = false
+      this.$refs.yindao.open()
     }
   }
 }
@@ -56,7 +84,7 @@ export default {
   .j_consult_btn{
     position: fixed;
     right: 0;
-    bottom: 100px;
+    bottom: 170px;
     width: 24px;
     height: 125px;
     background: #5bd1e7;
@@ -70,12 +98,23 @@ export default {
       font-size: 18px;
     }
   }
+  .shipin{
+    position: fixed;
+    right: 0;
+    bottom: 100px;
+    width: 24px;
+    background: #5bd1e7;
+    color: #fff;
+    text-align: center;
+    box-shadow: 0 1px 6px rgba(0, 0, 0, 0.2);
+    padding: 5px 0;cursor: pointer;
+  }
   .j_consult_content{
     width:280px;
-    transition: all .3s;
+    transition: none;
     position: fixed;
     right: 42px;
-    bottom: 100px;
+    bottom: 170px;
     z-index: 9;
     color: #707070;
     font-size: 14px;
@@ -98,6 +137,18 @@ export default {
       cursor: pointer;
       font-size: 12px;position: absolute;
       right: 16px;top: 15px;color: #d0d0d0;
+    }
+  }
+  .j_consult_content2{
+    width:255px;
+    bottom: 100px;
+    .ivu-card-body {
+      padding: 35px 15px 30px 25px;
+      .item{
+        color: #595959;
+        margin-bottom: 5px;
+        cursor: pointer;
+      }
     }
   }
 }

@@ -23,7 +23,6 @@
         </Col>
       </Row>
       <JConsult/>
-      <a href="http://v.qq.com/vplus/4aa13bffe0e2662991069f1800862a96/foldervideos/gr2002901enccnk" class="shipin" target="_blank" title="视频教程"><i class="iconfont icon-shipin"></i></a>
     </Content>
   </Layout>
 </template>
@@ -83,16 +82,6 @@ export default {
     padding-bottom: 25px;
     .j_warpper{
       padding: 0px 28px 28px;
-    }
-    .shipin{
-      position: fixed;
-      right: 0;
-      bottom: 52px;
-      width: 24px;
-      background: #5bd1e7;
-      color: #fff;
-      text-align: center;
-      box-shadow: 0 1px 6px rgba(0, 0, 0, 0.2);
     }
   }
 </style>

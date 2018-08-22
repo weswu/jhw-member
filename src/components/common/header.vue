@@ -11,7 +11,7 @@
       <a href="javascript:;" class="header_link" @click="openFeedback">服务反馈</a>
       <Dropdown placement="bottom" class="j_dropdown_message" @on-visible-change="messageChange">
         <a href="#/message" class="header_link">
-          <i class="iconfont icon-tixing2"><span class="badge">{{userInfo.noReaderMsg}}</span></i>
+          <i class="iconfont icon-tixing2" id="messageView"><span class="badge">{{userInfo.noReaderMsg}}</span></i>
         </a>
         <DropdownMenu slot="list">
           <div class="name">

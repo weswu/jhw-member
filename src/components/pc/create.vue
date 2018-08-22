@@ -83,7 +83,8 @@ export default {
         }
       }
       let data = {
-        model: JSON.stringify(obj)
+        model: JSON.stringify(obj),
+        country: 'cn'
       }
       this.$http.post('/rest/pc/api/baseLayout/detail', qs.stringify(data)).then((res) => {
         if (res.success) {

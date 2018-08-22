@@ -4,7 +4,7 @@
       <a href="#/account" class="a_underline">立即验证</a>
       <a href="https://v.qq.com/x/page/f0753d6r4fb.html" class="a_underline" target="_blank" style="margin-left:5px">视频教程</a>
     </div>
-    <Button icon="plus" class="orange" @click="add">创建新网站</Button> 您有{{onlineCount}}个网站上线了
+    <Button icon="plus" class="orange" @click="add" id="websiteCreate">创建新网站</Button> 您有{{onlineCount}}个网站上线了
     <ul class="static_info j_scroll">
       <li class="item" v-for="(item, index) in list" :key="item.id">
         <p>
@@ -17,11 +17,13 @@
               <Input v-model="item.seoTitle2" placeholder="请输入网站名称"></Input>
             </div>
           </Poptip>
-          <span>(网站编号：{{item.id}}&nbsp;&nbsp;/&nbsp;&nbsp;语言：<span v-if="item.language === '1'">中文</span><span v-if="item.language === '2'">英文</span>)</span>
+          <span>(网站编号：{{item.id}}&nbsp;&nbsp;/&nbsp;&nbsp;
+            语言：:<span v-if="item.language === '1'">中文</span><span v-if="item.language === '2'">英文</span>&nbsp;&nbsp;/&nbsp;&nbsp;
+            版本：{{item.siteVersion}}
+            )</span>
           <!-- 状态 -->
-          <span class="type" v-if="item.state === '0'">审核中</span>
-          <span class="type" v-else-if="item.state === '3'" style="background: #d0021b;">审核未通过</span>
-          <span class="type" v-else-if="!item.bind.address">未上线</span>
+          <span v-html="stateFilter(item.state)"></span>
+          <span class="country" v-html="countryFilter(item.bind.country)"></span>
         </p>
         <p>
           <a :href="item.url | http" target="_blank" class="url">{{item.url}}</a>
@@ -31,6 +33,10 @@
 
           <a href="javascript:;" class="buy" v-if="item.new" @click="again(item.id)">续费</a>
           <a :href="'http://buy.jihui88.com/#/?layoutId=' + item.id" class="buy" target="_blank" v-if="item.new">升级</a>
+        </p>
+        <p>
+          温馨提醒：您选择的"<span v-html="countryFilter(item.bind.country)"></span><span v-if="item.bind.country === 'en' || item.bind.country === 'hc'">"不需要备案，如果要上线网站，请联系我们：139-6793-8189，我们将帮您免费办理备案域名绑定。</span>
+          <span v-else>"需要备案（大概需要21个工作日的审核时间），请尽早联系我们：139-6793-8189，我们将帮您免费办理备案手续。</span>
         </p>
         <p class="more">
           <a :href="'http://pc.jihui88.com/pc/design.html?layoutId=' + item.id" target="_blank" class="a_underline">进入编辑</a>
@@ -46,6 +52,7 @@
                 <li> 删除网站 </li>
               </Poptip>
 
+              <li @click="countryChange(item)"> 变更机房 </li>
               <li @click="bind(item.id)"> 网站上线 </li>
               <li @click="lanSetting(item)"> 语言设置 </li>
               <li @click="data"> 同步数据 </li>
@@ -120,11 +127,14 @@ export default {
       listTest: [
         {
           id: '99',
+          seoTitle: '我的网站',
           new: false,
           state: '3',
           url: '',
+          language: '1',
           bind: {
-            address: ''
+            address: '',
+            country: 'cn'
           }
         }
       ],
@@ -141,7 +151,9 @@ export default {
   computed: {
     ...mapState({
       lanList: state => state.status.lanList,
-      staticList: state => state.staticList
+      staticList: state => state.staticList,
+      versionType: state => state.status.versionType,
+      countryType: state => state.status.countryType
     })
   },
   created () {
@@ -190,29 +202,7 @@ export default {
       })
     },
     add () {
-      let data = {
-        model: JSON.stringify({
-          title: '我的网站',
-          seoTitle: '我的网站',
-          language: '1',
-          grade: 1,
-          name: '我的网站',
-          cellphone: '',
-          categoryId: '7',
-          entName: '',
-          areaPath: ''
-        })
-      }
-      this.$http.post('/rest/pc/api/baseLayout/detail', qs.stringify(data)).then((res) => {
-        if (res.success) {
-          this.$Message.success('创建成功')
-          this.staticList.splice(0, 0, res.attributes.data)
-          this.$store.commit('setStaticList', this.staticList)
-          this.get()
-        } else {
-          this.$Message.error(res.msg)
-        }
-      })
+      this.$refs.add.open()
     },
     again (id) {
       this.$refs.again.open(id)
@@ -268,6 +258,9 @@ export default {
           this.$Message.error(res.msg)
         }
       })
+    },
+    countryChange (item) {
+      this.$refs.add.open({title: '变更机房', item: item})
     },
     del (id, index) {
       this.$http.delete('/rest/pc/api/baseLayout/detail/' + id).then((res) => {
@@ -330,6 +323,22 @@ export default {
           this.$Message.error(res.msg)
         }
       })
+    },
+    // 过滤
+    stateFilter (val) {
+      let text = '<span class="type">未上线</span>'
+      if (val === '0') text = '<span class="type">审核中</span>'
+      if (val === '3') text = '<span class="type" style="background: #d0021b;">审核未通过</span>'
+      return text
+    },
+    countryFilter (val) {
+      let text = '中国'
+      this.countryType.forEach(item => {
+        if (item.value === val) {
+          text = item.text
+        }
+      })
+      return text + '机房'
     }
   }
 }
@@ -389,6 +398,9 @@ export default {
       padding: 3px 5px;
       margin-left: 10px;
     }
+    .country{
+      float:right;
+    }
     .url {
       color: #b9b9b9;
     }
@@ -407,8 +419,8 @@ export default {
     }
     p{
       border-bottom: 1px solid #e9e9e9;
-      height: 60px;
-      line-height: 60px;
+      line-height: 30px;
+      padding: 15px 0;
       &:last-child{
         border-bottom: none;
       }

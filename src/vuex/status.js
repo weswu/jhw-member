@@ -5,6 +5,11 @@ const state = {
     { value: '1', text: '中文' },
     { value: '2', text: '英文' }
   ],
+  countryType: [
+    { text: '中国', value: 'cn' },
+    { text: '美国', value: 'en' },
+    { text: '香港', value: 'hc' }
+  ],
   // 会员属性
   memberAttrList: [
     { text: '文本', value: 'text' },
@@ -79,6 +84,14 @@ const state = {
     { text: '组织机构代码证', value: '08' },
     { text: '实地认证', value: '09' },
     { text: '其它证书', value: '05' }
+  ],
+  versionType: [
+    { text: '自选模板', value: '297e2669600191860160021b8fcc007f', price: 600 },
+    { text: '展示型网站', value: '2c9080ce60f7b2650160f7c2e3910025', price: 6800 },
+    { text: '外贸型网站', value: '2c9080ce60f7b2650160f7c40283002d', price: 12800 },
+    { text: '营销型网站', value: '2c9080ce60f7b2650160f7c3327f0028', price: 16800 },
+    { text: '电商型网站', value: '2c9080ce60f7b2650160f7c495fd0033', price: 16800 },
+    { text: '品牌型网站', value: '2c9080ce60f7b2650160f7c448650030', price: 25800 }
   ],
   // 三级导航
   menuAccount: {

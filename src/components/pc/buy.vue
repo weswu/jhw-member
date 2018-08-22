@@ -9,7 +9,7 @@
       <Form ref="modal" :model="detail" :label-width="110" v-if="!showQrCode">
         <FormItem label="建站版本：">
           <RadioGroup v-model="detail.version" @on-change="priceChange">
-            <Radio :label="item.value" v-for="item in versionList" :key="item.value">{{item.text}}</Radio>
+            <Radio :label="item.value" v-for="item in versionType" :key="item.value">{{item.text}}</Radio>
           </RadioGroup>
         </FormItem>
         <FormItem label="版本说明：">
@@ -49,6 +49,7 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
 export default {
   data () {
     return {
@@ -60,16 +61,13 @@ export default {
         version: '297e2669600191860160021b8fcc007f',
         versionPrice: '01',
         price: 600
-      },
-      versionList: [
-        { text: '自选模板', value: '297e2669600191860160021b8fcc007f', price: 600 },
-        { text: '展示型网站', value: '2c9080ce60f7b2650160f7c2e3910025', price: 6800 },
-        { text: '外贸型网站', value: '2c9080ce60f7b2650160f7c40283002d', price: 12800 },
-        { text: '营销型网站', value: '2c9080ce60f7b2650160f7c3327f0028', price: 16800 },
-        { text: '电商型网站', value: '2c9080ce60f7b2650160f7c495fd0033', price: 16800 },
-        { text: '品牌型网站', value: '2c9080ce60f7b2650160f7c448650030', price: 25800 }
-      ]
+      }
     }
+  },
+  computed: {
+    ...mapState({
+      versionType: state => state.status.versionType
+    })
   },
   mounted () {
     var vm = this
@@ -104,7 +102,7 @@ export default {
     priceChange (e) {
       let vm = this
       this.detail.version = e
-      this.versionList.forEach(item => {
+      this.versionType.forEach(item => {
         if (item.value === e) {
           vm.detail.price = item.price
         }

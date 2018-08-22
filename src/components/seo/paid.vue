@@ -64,7 +64,7 @@
       <div class="" style="color: #a7a7a7;margin-top: 25px;margin-bottom: 50px">
         温馨提醒：客户选择的关键词必须符合机汇网普及版服务包综合指数150以内，套餐有多种达标方案，只要满足其中任意一种达标方案即视为达标，客户享受机汇网提供的关键词达标365天的服务，域名，空间到期后客户自行交费，SEO未达标365天，机汇网继续提供服务。如果规定时间内未达标，客户也不愿意继续等待，客户可以申请退款，机汇网根据提供服务关键词的达标比例为客户退款。
       </div>
-      <div>
+      <div style="position: relative;">
         <div style="position: absolute;">如有意向联系我们：</div>
         <div style="padding-left: 115px;">电话：400-7111-011<br>俞小姐：136-2679-9628</div>
       </div>
@@ -91,7 +91,7 @@ export default {
         { text: '什么是付费SEO推广', value: '0' },
         { text: '付费SEO推广登录', value: '1' }
       ],
-      active: '1'
+      active: '0'
     }
   }
 }
