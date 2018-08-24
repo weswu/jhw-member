@@ -20,9 +20,9 @@
       </table>
     </div>
     <div class="button-group">
-      <Button type="primary" size="small" @click="lanChange('en')">显示英文</Button>
-      <Button type="primary" size="small" @click="lanChange('zh_en')">显示中英文</Button>
-      <Button type="primary" size="small" @click="lanChange('zh_cn')">显示中文</Button>
+      <Button type="primary" size="small" @click="lanChange('en')">查看英文</Button>
+      <Button type="primary" size="small" @click="lanChange('zh_en')">查看中英文</Button>
+      <Button type="primary" size="small" @click="lanChange('zh_cn')">查看中文</Button>
     </div>
   </div>
 </template>

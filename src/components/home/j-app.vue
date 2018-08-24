@@ -23,6 +23,7 @@ export default {
 <style lang="less">
 .j_app{
   padding: 28px 0 27px 27px;
+  margin-bottom: 20px;
   .ivu-poptip{
     float: left;
     width: 91px;

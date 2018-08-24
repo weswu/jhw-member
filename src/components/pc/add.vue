@@ -3,6 +3,9 @@
     v-model="modal"
     :title="title"
     @on-cancel="cancel">
+    <div class="bind_state" v-if="detail.state === '00'">
+      我们将在24小时（工作日）内完成审核。<span class="type">审核中</span>
+    </div>
     <RadioGroup v-model="detail.country" style="width:100%">
       <Row type="flex" justify="space-between">
           <Col span="8" v-for="item in countryType" :key="item.id">
@@ -62,7 +65,7 @@ export default {
     open (e) {
       if (e) {
         this.title = e.title
-        this.$http.get('/rest/pc/api/bind/detail/' + e.item.layoutId).then((res) => {
+        this.$http.get('/rest/pc/api/bind/detail/' + e.item.id).then((res) => {
           if (res.success) {
             this.detail = res.attributes.data
           }
@@ -79,7 +82,6 @@ export default {
     },
     cancel () {
       this.modal = false
-      this.show = false
     },
     submit (e) {
       let obj = {
@@ -126,7 +128,11 @@ export default {
       }
       this.$http.post('/rest/pc/api/bind/detail/' + this.detail.id, qs.stringify(data)).then((res) => {
         if (res.success) {
-          this.$Message.success('保存成功')
+          this.$Notice.success({
+            title: '提交完成',
+            desc: '我们将在工作日的24小时内审核完毕。'
+          })
+          this.modal = false
         } else {
           this.$Message.error(res.msg)
         }
@@ -217,6 +223,16 @@ export default {
           text-indent: 25px;
           line-height: 1.7;
         }
+      }
+    }
+    .bind_state{
+      float: right;margin-bottom: 20px;
+      span{
+        background: #ffa000;
+        color: #fff;
+        padding: 3px 5px;
+        margin-left: 10px;
+        margin-right: 10px;
       }
     }
   }

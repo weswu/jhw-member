@@ -1,6 +1,6 @@
 <template>
   <div class="j_yindao">
-    <div :class="'counter counter_' + item.index" v-if="counter !== -1" :style="{left: item.dom.left - 6 + 'px', top: item.dom.top - 7 + 'px'}">
+    <div class="counter" v-if="counter !== -1" :style="{left: item.dom.left - 6 + 'px', top: item.dom.top - 7 + 'px'}">
       <div class="box" :style="{width: item.dom.width + 12 + 'px', height: item.dom.height + 14 + 'px', display: item.dom.display || 'block'}"></div>
       <div :class="'y_panel ' + item.class">
         <div class="y_header">
@@ -9,11 +9,15 @@
         </div>
         <div class="y_content">
           <p v-html="item.text"></p>
+          <span class="count">{{counter + 1}} / {{list2.length}}</span>
           <span class="next" @click="next">{{counter === this.list.length - 1 ? '完成' : '继续'}}</span>
         </div>
       </div>
     </div>
-    <div class="j_yindao_mask" v-if="counter !== -1"></div>
+
+    <div class="j_yindao_mask" v-if="counter !== -1">
+      <div class="box" :style="{width: item.dom.width + 12 + 'px', height: item.dom.height + 14 + 'px', left: item.dom.left - 6 + 'px', top: item.dom.top - 7 + 'px'}"></div>
+    </div>
   </div>
 </template>
 
@@ -74,6 +78,7 @@ export default {
           index: 8
         }
       ],
+      list2: [],
       item: {
         text: '',
         dom: {}
@@ -88,80 +93,67 @@ export default {
       }
     }
     setTimeout(e => {
+      this.list[0].text = (this.$store.state.user.nickName || this.$store.state.user.username) + ',您好<br/>接下来有些小提示，帮助您更快的熟悉后台。'
       if (!vm.$store.state.customData.yindao) {
         vm.open()
         vm.$store.state.customData.yindao = true
         vm.$store.dispatch('SAVE_CUSTOM_DATA')
       }
-      this.list[0].text = (this.$store.state.user.nickName || this.$store.state.user.username) + ',您好<br/>接下来有些小提示，帮助您更快的熟悉后台。'
     }, 1000)
   },
   methods: {
-    open () {
-      this.next()
+    init () {
+      this.list2 = []
+      this.list.forEach(item => {
+        if (item.index > 0 && item.index < 8) {
+          let dom = window.document.getElementsByClassName(item.class)[0]
+          if (dom) {
+            item.dom = dom.getBoundingClientRect()
+            this.list2.push(item)
+          }
+        } else {
+          let left = window.innerWidth / 2 - 100
+          item.dom = {
+            left: left,
+            top: 250,
+            width: 0,
+            height: 0,
+            display: 'none'
+          }
+          this.list2.push(item)
+        }
+      })
     },
-    ok () {
+    open () {
+      this.init()
       this.next()
     },
     close () {
       this.counter = -1
-      this.item = this.list[0]
+      this.item = this.list2[0]
     },
     next () {
-      if (this.counter === this.list.length - 1) {
+      if (this.counter === this.list2.length - 1) {
         this.close()
       } else {
         this.counter += 1
-        this.init()
-      }
-    },
-    init () {
-      let item = this.list[this.counter]
-      this.item = item
-      if (item.index > 0 && item.index < 8) {
-        let dom = window.document.getElementsByClassName(item.class)[0]
-        if (item.class === 'yd_website') {
-          document.getElementsByClassName('j_home')[0].scrollTop = 305
-        }
-        if (item.class === 'yd_tool') {
-          document.getElementsByClassName('j_home')[0].scrollTop = 700
-        }
-        if (item.class === 'yd_subscribe') {
-          document.getElementsByClassName('j_home')[0].scrollTop = 400
-        }
-        if (item.class === 'j_home_static') {
-          if (dom) {
-            document.getElementsByClassName('j_home')[0].scrollTop = 177
-            let data = dom.getElementsByClassName('ivu-tabs-bar')[0].getBoundingClientRect()
-            this.item.dom = {
-              left: data.left,
-              top: data.top,
-              width: data.width,
-              height: data.height
-            }
-            return false
-          } else {
-            this.counter += 1
-            let item = this.list[this.counter]
-            this.item = item
+        let item = this.list2[this.counter]
+        // 高度
+        if (item.class === 'yd_website' || item.class === 'yd_tool' || item.class === 'yd_subscribe' || item.class === 'j_home_static') {
+          let dom = window.document.getElementsByClassName(item.class)[0]
+          let top = dom.getBoundingClientRect().top + document.getElementsByClassName('j_home')[0].scrollTop
+          let height = dom.getBoundingClientRect().height + 70
+          if (item.class === 'j_home_static') {
+            height = dom.getElementsByClassName('ivu-tabs-bar')[0].getBoundingClientRect().height + 70
           }
+          document.getElementsByClassName('j_home')[0].scrollTop = top - height
+          let data = dom.getBoundingClientRect()
+          if (item.class === 'j_home_static') {
+            data = dom.getElementsByClassName('ivu-tabs-bar')[0].getBoundingClientRect()
+          }
+          item.dom = data
         }
-        let data = dom.getBoundingClientRect()
-        this.item.dom = {
-          left: data.left,
-          top: data.top,
-          width: data.width,
-          height: data.height
-        }
-      } else {
-        let left = window.innerWidth / 2 - 100
-        this.item.dom = {
-          left: left,
-          top: 250,
-          width: 0,
-          height: 0,
-          display: 'none'
-        }
+        this.item = item
       }
     }
   }
@@ -215,7 +207,14 @@ export default {
   }
   .yd_subscribe{
     left: 0;
-    top: 129px;
+    top: 105px;
+    &::after{
+      height: 30px;
+      top: -30px;
+    }
+    &::before{
+      top: -40px;
+    }
   }
   .yd_zixun,.yd_jiaocheng{
     left: -385px;
@@ -243,9 +242,9 @@ export default {
     top: 0;
     z-index: 999;
     transition: all 0.2s ease-in-out;
-  }
-  .box{
-    border: 2.5px solid #feea3d;
+    .box{
+      border: 2.5px solid #feea3d;
+    }
   }
   .y_panel{
     width: 318px;
@@ -288,6 +287,10 @@ export default {
     padding: 20px 12px;
     line-height: 2;
   }
+  .count{
+    margin-left: 13px;
+    color: #b8a103;
+  }
   .next{
     cursor: pointer;
     float: right;
@@ -302,8 +305,23 @@ export default {
   bottom: 0;
   left: 0;
   right: 0;
-  background-color: rgba(255, 255, 255, 0.5);
   height: 100%;
   z-index: 998;
+  .box{
+    position: absolute;
+    width: 0;
+    height: 0;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    border: 0 solid #000;
+    opacity: .5;
+    filter: alpha(opacity=75);
+    z-index: 998;
+    -webkit-transition: all .25s;
+    box-shadow: 0 0 0 10000px #fff;
+    overflow: hidden;
+  }
 }
 </style>
