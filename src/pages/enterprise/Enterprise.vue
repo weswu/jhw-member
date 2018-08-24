@@ -62,7 +62,7 @@
     </Layout>
     <Modal class-name="j_map_modal"
       v-model="modal"
-      width="650"
+      width="700"
       title="地图定位"
       @on-cancel="cancel">
       <div slot="footer">

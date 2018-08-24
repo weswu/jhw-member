@@ -19,6 +19,11 @@
           </tr>
       </table>
     </div>
+    <div class="button-group">
+      <Button type="primary" size="small" @click="lanChange('en')">显示英文</Button>
+      <Button type="primary" size="small" @click="lanChange('zh_en')">显示中英文</Button>
+      <Button type="primary" size="small" @click="lanChange('zh_cn')">显示中文</Button>
+    </div>
   </div>
 </template>
 
@@ -53,18 +58,27 @@ export default {
         this.center.lng = parseFloat(this.user.enterprise.mapaddress.split(',')[0])
         this.center.lat = parseFloat(this.user.enterprise.mapaddress.split(',')[1])
         this.loadmap() // 加载地图和相关组件
+      } else {
+        this.loadmap()
       }
     },
     open () {
+      this.user = JSON.parse(JSON.stringify(this.$store.state.user))
       if (this.marker) {
-        this.user = JSON.parse(JSON.stringify(this.$store.state.user))
         if (this.user.enterprise.mapaddress) {
           this.center.lng = parseFloat(this.user.enterprise.mapaddress.split(',')[0])
           this.center.lat = parseFloat(this.user.enterprise.mapaddress.split(',')[1])
+        } else {
+          this.center = {lng: 120.229355, lat: 30.2145}
         }
         let center = [this.center.lng, this.center.lat]
         this.marker.setPosition(center)
         this.map.setCenter(center)
+        if (this.$store.state.lanId === '2') {
+          this.map.setLang('zh_en')
+        } else {
+          this.map.setLang('zh_cn')
+        }
       }
     },
     loadmap () {
@@ -75,6 +89,11 @@ export default {
         center: center, // 地图中心点
         zoom: 13 // 地图显示的缩放级别
       })
+      if (this.$store.state.lanId === '2') {
+        this.map.setLang('zh_en')
+      } else {
+        this.map.setLang('zh_cn')
+      }
       this.marker = new AMap.Marker({ // 添加自定义点标记
         map: this.map,
         position: center, // 基点位置
@@ -115,6 +134,9 @@ export default {
     search () {
       this.placeSearch.search(this.name)
     },
+    lanChange (e) {
+      this.map.setLang(e)
+    },
     submit () {
       this.user.enterprise.mapaddress = this.center.lng + ',' + this.center.lat
       this.user.enterprise.regTime = this.dateFormat(this.user.enterprise.regTime, 'yyyy-MM-dd')
@@ -154,6 +176,13 @@ export default {
     width: 100%;
     height: 100%;
   }
+}
+.button-group{
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  font-size: 12px;
+  padding: 10px;
 }
 #myPageTop {
   position: absolute;

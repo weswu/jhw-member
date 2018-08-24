@@ -1,5 +1,5 @@
 <template>
-  <div class="j_panel">
+  <div class="j_panel j_home_cost">
     <Tabs :value="tabActive" @on-click="tabChange">
       <TabPane label="待缴费" name="1">
         <div class="j_warpper">

@@ -1,39 +1,19 @@
 <template>
   <div class="j_yindao">
-    <div class="counter" v-if="counter === 1" :style="{left: yindao1.left - 6 + 'px', top: yindao1.top - 7 + 'px'}">
-      <div class="box" :style="{width: yindao1.width + 12 + 'px', height: yindao1.height + 14 + 'px'}"></div>
-      <div class="y_panel y_panel1">
+    <div :class="'counter counter_' + item.index" v-if="counter !== -1" :style="{left: item.dom.left - 6 + 'px', top: item.dom.top - 7 + 'px'}">
+      <div class="box" :style="{width: item.dom.width + 12 + 'px', height: item.dom.height + 14 + 'px', display: item.dom.display || 'block'}"></div>
+      <div :class="'y_panel ' + item.class">
         <div class="y_header">
           <span class="title">新手提示</span>
           <span class="close" @click="close">关闭</span>
         </div>
         <div class="y_content">
-          <p>
-            点击"创建新网站"，可以生成免费试用1个月的站点，您在这期间可以编辑成您想要的网站，内有很多免费的网站模板和版块。<br/>
-            当然也可以联系我们，为您量身定制设计。
-          </p>
-          <span class="next" @click="next">继续</span>
+          <p v-html="item.text"></p>
+          <span class="next" @click="next">{{counter === this.list.length - 1 ? '完成' : '继续'}}</span>
         </div>
       </div>
     </div>
-
-    <div class="counter" v-if="counter === 2" :style="{left: yindao2.left - 6 + 'px', top: yindao2.top - 7 + 'px'}">
-      <div class="box" :style="{width: yindao2.width + 12 + 'px', height: yindao2.height + 14 + 'px'}"></div>
-      <div class="y_panel y_panel2">
-        <div class="y_header">
-          <span class="title">新手提示</span>
-          <span class="close" @click="close">关闭</span>
-        </div>
-        <div class="y_content">
-          <p>
-            点击"消息图标"，<br/>
-            可以查看到站内消息通知（客户留言、产品消息、服务消息、活动消息等），您还可以设置"消息接收人"。
-          </p>
-          <span class="next" @click="next">继续</span>
-        </div>
-      </div>
-    </div>
-
+    <div class="j_yindao_mask" v-if="counter !== -1"></div>
   </div>
 </template>
 
@@ -41,104 +21,251 @@
 export default {
   data () {
     return {
-      counter: 0,
-      yindao1: {},
-      yindao2: {}
+      counter: -1,
+      list: [
+        {
+          text: '',
+          class: 'begin',
+          index: 0
+        },
+        {
+          text: '点击"创建新网站"，可以生成免费试用1个月的站点，您在这期间可以编辑成您想要的网站，内有很多免费的网站模板和版块。<br/>当然也可以联系我们，为您量身定制设计。',
+          class: 'yd_website',
+          index: 1
+        },
+        {
+          text: '点击"消息图标"，<br/>可以查看到站内消息通知（客户留言、产品消息、服务消息、活动消息等），您还可以设置"消息接收人',
+          class: 'yd_message',
+          index: 2
+        },
+        {
+          text: '点击"折叠图标"，<br/>可以折叠左侧菜单列表，系统会记录您的操作习惯，下次登录时会怎么显示上次最后的折叠状态。',
+          class: 'yd_collapsed',
+          index: 3
+        },
+        {
+          text: '上下拖动"标签页"，<br/>可以按您的浏览习惯来排序（我的网站标签页、我的工具、待缴费标签页）。',
+          class: 'j_home_static',
+          index: 4
+        },
+        {
+          text: '点击"加号图标"，<br/>可以自定义您需要功能导航（默认站点数据管理、会员管理、产品列表）。',
+          class: 'yd_tool',
+          index: 5
+        },
+        {
+          text: '点击"订阅"，<br/>可以设置可以个性化定制您的首页面板内容（我的网站、消费记录、已购产品、我的积分、客户消息、服务消息）。',
+          class: 'yd_subscribe',
+          index: 6
+        },
+        {
+          text: '点击"咨询与建议"，<br/>可以使用到qq咨询与反馈建议（智能顾问、聆听.建议反馈）。',
+          class: 'yd_zixun',
+          index: 6
+        },
+        {
+          text: '点击"教程"，<br/>可以查看到后台相关教程（新手提示、视频教程）。',
+          class: 'yd_jiaocheng',
+          index: 7
+        },
+        {
+          text: '关闭“新手提示”后，您可以在后台-首页-右下角的“教程”-“新手提示”中重新打开。',
+          class: 'end',
+          index: 8
+        }
+      ],
+      item: {
+        text: '',
+        dom: {}
+      }
     }
   },
   mounted () {
     let vm = this
-    window.document.getElementsByClassName('j_home')[0].onscroll = function () {
-      vm.init()
-    }
     window.onresize = () => {
-      vm.init()
-      vm.init2()
+      if (vm.$route.path === '/') {
+        // 没用
+      }
     }
-    this.init()
-    this.init2()
+    setTimeout(e => {
+      if (!vm.$store.state.customData.yindao) {
+        vm.open()
+        vm.$store.state.customData.yindao = true
+        vm.$store.dispatch('SAVE_CUSTOM_DATA')
+      }
+      this.list[0].text = (this.$store.state.user.nickName || this.$store.state.user.username) + ',您好<br/>接下来有些小提示，帮助您更快的熟悉后台。'
+    }, 1000)
   },
   methods: {
-    init () {
-      this.yindao1 = document.getElementById('websiteCreate').getBoundingClientRect()
-    },
-    init2 () {
-      this.yindao2 = document.getElementById('messageView').getBoundingClientRect()
-    },
     open () {
-      this.counter = 1
+      this.next()
+    },
+    ok () {
+      this.next()
     },
     close () {
-      this.counter = 0
+      this.counter = -1
+      this.item = this.list[0]
     },
     next () {
-      this.counter += 1
+      if (this.counter === this.list.length - 1) {
+        this.close()
+      } else {
+        this.counter += 1
+        this.init()
+      }
+    },
+    init () {
+      let item = this.list[this.counter]
+      this.item = item
+      if (item.index > 0 && item.index < 8) {
+        let dom = window.document.getElementsByClassName(item.class)[0]
+        if (item.class === 'yd_website') {
+          document.getElementsByClassName('j_home')[0].scrollTop = 305
+        }
+        if (item.class === 'yd_tool') {
+          document.getElementsByClassName('j_home')[0].scrollTop = 700
+        }
+        if (item.class === 'yd_subscribe') {
+          document.getElementsByClassName('j_home')[0].scrollTop = 400
+        }
+        if (item.class === 'j_home_static') {
+          if (dom) {
+            document.getElementsByClassName('j_home')[0].scrollTop = 177
+            let data = dom.getElementsByClassName('ivu-tabs-bar')[0].getBoundingClientRect()
+            this.item.dom = {
+              left: data.left,
+              top: data.top,
+              width: data.width,
+              height: data.height
+            }
+            return false
+          } else {
+            this.counter += 1
+            let item = this.list[this.counter]
+            this.item = item
+          }
+        }
+        let data = dom.getBoundingClientRect()
+        this.item.dom = {
+          left: data.left,
+          top: data.top,
+          width: data.width,
+          height: data.height
+        }
+      } else {
+        let left = window.innerWidth / 2 - 100
+        this.item.dom = {
+          left: left,
+          top: 250,
+          width: 0,
+          height: 0,
+          display: 'none'
+        }
+      }
     }
   }
 }
 </script>
 
 <style lang="less">
-.y_panel1{
-  left: 190px;
-  top: 12px;
-  &::after{
-    height: 2px;
-    width: 55px;
-    left: -55px;
-    top: 8px;
+.j_yindao {
+  // 个别css
+  .yd_website,.yd_collapsed,.yd_tool{
+    left: 190px;
+    top: 12px;
+    &::after{
+      height: 2px;
+      width: 55px;
+      left: -55px;
+      top: 8px;
+    }
+    &::before{
+      height: 10px;
+      width: 10px;
+      left: -65px;
+      top: 4px;
+    }
   }
-  &::before{
-    height: 10px;
-    width: 10px;
-    left: -65px;
-    top: 4px;
+  .yd_collapsed{
+    left: 92px;
   }
-}
-.y_panel2{
-  left: -125px;
-  top: 110px;
-  &::after{
-    height: 55px;
-    width: 2px;
-    left: 154px;
-    top: -55px;
+  .yd_tool{
+    left: 140px;
   }
-  &::before{
-    height: 10px;
-    width: 10px;
-    left: 150px;
-    top: -65px;
+  .yd_message,.j_home_static,.yd_subscribe{
+    left: -125px;
+    top: 110px;
+    &::after{
+      height: 55px;
+      width: 2px;
+      left: 154px;
+      top: -55px;
+    }
+    &::before{
+      height: 10px;
+      width: 10px;
+      left: 150px;
+      top: -65px;
+    }
   }
-}
-
-// 基本内容
-.j_yindao{
+  .j_home_static{
+    left: 120px;
+    top: 120px;
+  }
+  .yd_subscribe{
+    left: 0;
+    top: 129px;
+  }
+  .yd_zixun,.yd_jiaocheng{
+    left: -385px;
+    top: -42px;
+    &::after{
+      height: 2px;
+      width: 55px;
+      left: 317px;
+      top: 110px;
+    }
+    &::before{
+      height: 10px;
+      width: 10px;
+      left: 372px;
+      top: 106px;
+    }
+  }
+  .yd_jiaocheng{
+    top: -80px;
+  }
+  // 基本内容
   .counter{
     position: fixed;
     left: 0;
     top: 0;
     z-index: 999;
+    transition: all 0.2s ease-in-out;
   }
   .box{
     border: 2.5px solid #feea3d;
   }
-}
-.y_panel{
-  width: 318px;
-  height: 181px;
-  background: #fef49b;
-  position: absolute;
-  &::after{
-    content: '';
-    position:absolute;
-    background: #feea3d;
-  }
-  &::before{
-    content: '';
-    position:absolute;
-    border-radius: 10px;
-    background: #feea3d;
+  .y_panel{
+    width: 318px;
+    height: 181px;
+    background: #fef49b;
+    position: absolute;
+    transition: all 0.2s ease-in-out;
+    &::after{
+      content: '';
+      position:absolute;
+      background: #feea3d;
+      transition: all 0.2s ease-in-out;
+    }
+    &::before{
+      content: '';
+      position:absolute;
+      border-radius: 10px;
+      background: #feea3d;
+      transition: all 0.2s ease-in-out;
+    }
   }
   .y_header{
     height: 19px;
@@ -168,5 +295,15 @@ export default {
     color: #b8a103;
     margin-right: 15px;
   }
+}
+.j_yindao_mask{
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: rgba(255, 255, 255, 0.5);
+  height: 100%;
+  z-index: 998;
 }
 </style>

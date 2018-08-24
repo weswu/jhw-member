@@ -36,7 +36,7 @@
           <Form :label-width="110">
             <FormItem label="温馨提示：">
               <span class="content">
-                购买任一建站版本，都免费帮您的域名备案。
+                购买任一建站版本，我们都将协助您办理域名备案手续。
               </span>
               <span class="content_right">
                 <span>VIP</span>高端网站定制 <a :href="'http://buy.jihui88.com/#/?tab=tab1&layoutId=' + id" target="_blank" class="a_underline">详情></a>

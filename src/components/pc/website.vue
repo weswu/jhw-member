@@ -4,7 +4,7 @@
       <a href="#/account" class="a_underline">立即验证</a>
       <a href="https://v.qq.com/x/page/f0753d6r4fb.html" class="a_underline" target="_blank" style="margin-left:5px">视频教程</a>
     </div>
-    <Button icon="plus" class="orange" @click="add" id="websiteCreate">创建新网站</Button> 您有{{onlineCount}}个网站上线了
+    <Button icon="plus" class="orange yd_website" @click="add">创建新网站</Button> 您有{{onlineCount}}个网站上线了
     <ul class="static_info j_scroll">
       <li class="item" v-for="(item, index) in list" :key="item.id">
         <p>
@@ -35,8 +35,8 @@
           <a :href="'http://buy.jihui88.com/#/?layoutId=' + item.id" class="buy" target="_blank" v-if="item.new">升级</a>
         </p>
         <p>
-          温馨提醒：您选择的"<span v-html="countryFilter(item.bind.country)"></span><span v-if="item.bind.country === 'en' || item.bind.country === 'hc'">"不需要备案，如果要上线网站，请联系我们：139-6793-8189，我们将帮您免费办理备案域名绑定。</span>
-          <span v-else>"需要备案（大概需要21个工作日的审核时间），请尽早联系我们：139-6793-8189，我们将帮您免费办理备案手续。</span>
+          温馨提醒：您选择的“<span v-html="countryFilter(item.bind.country)"></span><span v-if="item.bind.country === 'en' || item.bind.country === 'hc'">“不需要备案，如果要上线网站，请联系我们：139-6793-8189，我们将帮您免费办理备案域名绑定。</span>
+          <span v-else>”需要备案（大概需要21个工作日的审核时间），请尽早联系我们：139-6793-8189，我们将协助您办理备案手续。</span>
         </p>
         <p class="more">
           <a :href="'http://pc.jihui88.com/pc/design.html?layoutId=' + item.id" target="_blank" class="a_underline">进入编辑</a>

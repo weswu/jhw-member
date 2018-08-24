@@ -99,6 +99,7 @@ export default {
     ...mapState(['customData']),
     rotateIcon () {
       return [
+        'yd_collapsed',
         'menu-icon',
         this.customData.isCollapsed ? 'rotate-icon' : ''
       ]

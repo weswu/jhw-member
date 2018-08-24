@@ -3,7 +3,7 @@
     <li v-for="item in customData.linkList" :key="item.value">
       <a href="javascript:;" @click="nav(item.value)"><i :class="'iconfont ' + item.icon"></i>{{item.text}}</a>
     </li>
-    <li class="add" @click="add"><i class="iconfont icon--jia"></i></li>
+    <li class="add" @click="add"><i class="iconfont icon--jia yd_tool"></i></li>
     <Tool ref="tool" :selected="customData.linkList"/>
     <JAlbum ref="album" v-if="isAlbum"/>
     <addAlbum ref="addAlbum"/>

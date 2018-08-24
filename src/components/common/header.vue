@@ -8,10 +8,10 @@
     </Col>
     <Col class="userInfo">
       <a href="#/" class="header_link">首页</a>
-      <a href="javascript:;" class="header_link" @click="openFeedback">服务反馈</a>
+      <a href="javascript:;" class="header_link" @click="openFeedback"><span id="YD_Feedback">服务反馈</span></a>
       <Dropdown placement="bottom" class="j_dropdown_message" @on-visible-change="messageChange">
         <a href="#/message" class="header_link">
-          <i class="iconfont icon-tixing2" id="messageView"><span class="badge">{{userInfo.noReaderMsg}}</span></i>
+          <i class="iconfont icon-tixing2 yd_message"><span class="badge">{{userInfo.noReaderMsg}}</span></i>
         </a>
         <DropdownMenu slot="list">
           <div class="name">
@@ -26,7 +26,7 @@
                 {{item.addTime | time('yyyy-MM-dd hh:mm')}}
               </p>
             </li>
-            <li v-if="messageList.length === 0">暂无数据</li>
+            <li v-if="messageList.length === 0">{{message ? '暂无数据' : '加载中'}}</li>
           </ul>
           <a href="#/message/00" class="more">查看更多</a>
         </DropdownMenu>
@@ -79,11 +79,12 @@ export default {
   data () {
     return {
       visible: false,
-      message: false
+      message: false,
+      messageList: []
     }
   },
   computed: {
-    ...mapState(['user', 'userInfo', 'messageList', 'status'])
+    ...mapState(['user', 'userInfo', 'status'])
   },
   created () {
     this.$store.commit('setLanId', window.localStorage.getItem('lanId') || '1')
@@ -99,7 +100,7 @@ export default {
     this.getCustomData()
   },
   methods: {
-    ...mapActions(['getUser', 'getUserInfo', 'getMessage', 'getCustomData', 'getEnterprise']),
+    ...mapActions(['getUser', 'getUserInfo', 'getCustomData', 'getEnterprise']),
     get () {
       this.getUser()
       this.getEnterprise()
@@ -139,9 +140,19 @@ export default {
       }
       if (this.userInfo.noReaderMsg > 4) this.getMessage()
     },
+    getMessage () {
+      this.$http.get('/rest/api/message/list?page=1&pageSize=5&recvState=00').then((res) => {
+        if (res.success) {
+          this.messageList = res.attributes.data
+          this.message = true
+        }
+      })
+    },
     messageChange () {
       if (this.messageList.length === 0 && !this.message) {
         this.getMessage()
+      }
+      if (this.messageList.length > 0) {
         this.message = true
       }
     },

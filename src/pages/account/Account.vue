@@ -50,6 +50,7 @@
               <Col span="14">
                 <span v-if="item.nickname && item.nickname !== '未绑定'">您已绑定了手机{{item.nickname}} [您的手机为安全手机，可以找回密码，但不能用于登录]</span>
                 <span v-else>您可以绑定手机, 可以找回密码，但不能用于登录</span>
+                <br>温馨提醒：绑定时请允许浏览器弹出绑定窗口
               </Col>
               <Col span="6" class="flex-right">
                 <span class="success" v-if="item.nickname && item.nickname !== '未绑定'"><i class="iconfont icon-dagou"></i>已设置</span>
@@ -73,6 +74,7 @@
               <Col span="14">
                 <span v-if="item.nickname && item.nickname !== '未绑定'">您已绑定了微信{{item.nickname}} [可用于扫码登录]</span>
                 <span v-else>您可以绑定微信, 可用于扫码登录</span>
+                <br>温馨提醒：绑定时请允许浏览器弹出绑定窗口
               </Col>
               <Col span="6" class="flex-right">
                 <span class="success" v-if="item.nickname && item.nickname !== '未绑定'"><i class="iconfont icon-dagou"></i>已设置</span>
@@ -85,6 +87,7 @@
               <Col span="14">
                 <span v-if="item.nickname && item.nickname !== '未绑定'">您已绑定了QQ{{item.nickname}} [可用于快捷登录]</span>
                 <span v-else>您可以绑定QQ, 可用于快捷登录</span>
+                <br>温馨提醒：绑定时请允许浏览器弹出绑定窗口
               </Col>
               <Col span="6" class="flex-right">
                 <span class="success" v-if="item.nickname && item.nickname !== '未绑定'"><i class="iconfont icon-dagou"></i>已设置</span>

@@ -1,6 +1,6 @@
 <template>
   <div class="j_subscribe">
-    <a href="javascript:;" class="subscribe" @click="modal = true">+订阅</a>
+    <a href="javascript:;" class="subscribe yd_subscribe" @click="modal = true">+订阅</a>
     <Modal
       class-name="j_subscribe_model"
       v-model="modal"
@@ -10,7 +10,7 @@
       cancelText="取消"
       @on-ok="ok"
       @on-cancel="cancel">
-      <CheckboxGroup v-model="mySelected" class="j_home">
+      <CheckboxGroup v-model="mySelected">
         <div class="j_subscribe_list" v-for="item in list" :key="item.value">
           <Checkbox :label="item.value">
             <span class="name">{{item.value}}</span>
@@ -50,18 +50,17 @@ export default {
           active: '0'
         },
         {
-          name0: '消费记录',
-          name1: '已购产品',
-          name2: '我的积分',
+          name0: '待缴费',
+          name1: '消费记录',
+          name2: '已购产品',
           value: 'order',
-          active: '1'
+          active: '0'
         },
         {
           name0: '公告',
           name1: '客户消息',
           value: 'message',
           active: '1'
-
         },
         {
           name0: '正在服务',

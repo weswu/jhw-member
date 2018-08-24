@@ -21,7 +21,6 @@ const state = {
   productCategory: [],
   newsCategory: [],
   albumCategory: [],
-  messageList: [],
   memberRankList: [],
   memberAttrList: [],
   tagList: [],
@@ -33,6 +32,7 @@ const state = {
   win: '', // 小于400的窗口
   // 记录操作习惯
   customData: {
+    yindao: false,
     isCollapsed: true,
     linkList: [
       { value: 'static', text: '站点数据管理', icon: 'icon-shuju' },
@@ -70,7 +70,6 @@ const getters = {
   newsCategory: state => state.newsCategory,
   albumCategory: state => state.albumCategory,
   // 列表
-  messageList: state => state.messageList,
   memberRankList: state => state.memberRankList,
   memberAttrList: state => state.memberAttrList,
   tagList: state => state.tagList,
@@ -101,9 +100,6 @@ const mutations = {
   },
   setAlbumCategory (state, albumCategory) {
     state.albumCategory = albumCategory
-  },
-  setMessageList (state, messageList) {
-    state.messageList = messageList
   },
   setMemberRankList (state, memberRankList) {
     state.memberRankList = memberRankList
@@ -207,13 +203,6 @@ const store = new Vuex.Store({
       this._vm.$http.get('/rest/api/user/accountInfo/' + id).then((res) => {
         if (res.success) {
           this.commit('setAccountInfo', res.attributes.data)
-        }
-      })
-    },
-    getMessage ({commit, state}) {
-      this._vm.$http.get('/rest/api/message/list?page=1&pageSize=5&recvState=00').then((res) => {
-        if (res.success) {
-          this.commit('setMessageList', res.attributes.data)
         }
       })
     },
