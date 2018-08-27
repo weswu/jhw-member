@@ -10,7 +10,7 @@
         <div class="y_content">
           <p v-html="item.text"></p>
           <span class="count">{{counter + 1}} / {{list2.length}}</span>
-          <span class="next" @click="next">{{counter === this.list.length - 1 ? '完成' : '继续'}}</span>
+          <span class="next" @click="next">{{counter === this.list.length - 1 ? '完成' : counter === 0 ? '开始' : '继续'}}</span>
         </div>
       </div>
     </div>
@@ -112,7 +112,7 @@ export default {
             this.list2.push(item)
           }
         } else {
-          let left = window.innerWidth / 2 - 100
+          let left = window.innerWidth / 2 - 159
           item.dom = {
             left: left,
             top: 250,
@@ -184,6 +184,13 @@ export default {
   }
   .yd_tool{
     left: 140px;
+    top: -35px;
+    &::after{
+      top: 54px;
+    }
+    &::before{
+      top: 50px;
+    }
   }
   .yd_message,.j_home_static,.yd_subscribe{
     left: -125px;

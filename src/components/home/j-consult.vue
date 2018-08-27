@@ -8,7 +8,7 @@
     <Card class="j_consult_content" v-if="display">
       <i class="iconfont icon-x" @click="close"></i>
       <Row>
-        <a href="http://wpa.qq.com/msgrd?v=3&uin=1220328180&site=qq&menu=yes" target="_blank" style="color: #595959">
+        <a href="http://wpa.qq.com/msgrd?v=3&uin=1550676880&site=qq&menu=yes" target="_blank" style="color: #595959">
           <Col span="4"> <i class="iconfont icon-shezhizaixianzixun"></i> </Col>
           <Col span="20"> <span>智能顾问</span> <p>智能诊断，秒级解答</p></Col>
         </a>
