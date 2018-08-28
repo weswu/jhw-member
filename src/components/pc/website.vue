@@ -6,7 +6,7 @@
     </div>
     <Button icon="plus" class="orange yd_website" @click="add">创建新网站</Button> 您有{{onlineCount}}个网站上线了
     <ul class="static_info j_scroll">
-      <li class="item" v-for="(item, index) in list" :key="item.id">
+      <li class="item" v-for="item in list" :key="item.id">
         <p>
           <span class="name">{{item.seoTitle}}</span>
           <Poptip placement="right" class="j_poptip_confirm_edit"
@@ -17,7 +17,11 @@
               <Input v-model="item.seoTitle2" placeholder="请输入网站名称"></Input>
             </div>
           </Poptip>
-          <span>(网站编号：{{item.id}}&nbsp;&nbsp;/&nbsp;&nbsp;
+          <span>(网站编号：
+            <Badge dot :count="item.count">
+              {{item.id}}
+            </Badge>
+            &nbsp;&nbsp;/&nbsp;&nbsp;
             语言：:<span v-if="item.language === '1'">中文</span><span v-if="item.language === '2'">英文</span>&nbsp;&nbsp;/&nbsp;&nbsp;
             版本：{{item.siteVersion}}
             )</span>
@@ -39,18 +43,18 @@
           <span v-else>”需要备案（大概需要21个工作日的审核时间），请尽早联系我们：139-6793-8189，我们将协助您办理备案手续。</span>
         </p>
         <p class="more">
-          <a :href="'http://pc.jihui88.com/pc/design.html?layoutId=' + item.id" target="_blank" class="a_underline">进入编辑</a>
+          <a :href="'http://pc.jihui88.com/pc/design.html?layoutId=' + item.id" target="_blank" class="a_underline" @click="goEdit(item)">进入编辑</a>
           <Poptip placement="top" class="j_poptip_ul">
             <span class="a_underline">更多选项</span>
             <ul slot="content">
-              <li @click="copy(item)"> 复制网站 </li>
-
               <Poptip placement="right" width="200"
                 confirm
-                title="是否删除?"
-                @on-ok="del(item.id, index)">
-                <li> 删除网站 </li>
+                title="是否复制？"
+                @on-ok="copy(item)">
+                <li> 复制网站 </li>
               </Poptip>
+
+              <li @click="del(item.id)"> 删除网站 </li>
 
               <li @click="countryChange(item)"> 变更机房 </li>
               <li @click="bind(item.id)"> 网站上线 </li>
@@ -61,6 +65,18 @@
         </p>
       </li>
     </ul>
+    <Modal v-model="modalDel" width="360" class-name="vertical-center-modal">
+      <p slot="header" style="color:#f60;text-align:center">
+        <Icon type="ios-information-circle"></Icon>
+        <span>请谨慎！</span>
+      </p>
+      <div style="text-align:left;text-indent: 25px;line-height: 1.7;">
+        <p>站点（网站编号：{{id}}）将会被彻底删除，站点（网站编号：{{id}}）下的网站页面内容、到期时间等将永久失效（注：公司信息、产品、相册及新闻将会保留）。不建议删除未到期的站点。如果您真的确定要删除站点，请点击【确认】。</p>
+      </div>
+      <div slot="footer">
+        <Button type="error" size="large" long :loading="modal_loading" @click="delItem">确认</Button>
+      </div>
+    </Modal>
     <JPagination :fixed="true" :total="total" :searchData='searchData' @on-change="get"></JPagination>
     <JDialog ref="lan" :title="'设置语言版本'" :tip="'温馨提醒：'" @on-ok="save" >
       <div slot="content">
@@ -89,7 +105,7 @@
     </JDialog>
     <Again ref="again"/>
     <Buy ref="buy" @on-change="get"/>
-    <Add ref="add" @on-change="get"/>
+    <Add ref="add" @on-change="addChange"/>
   </div>
 </template>
 
@@ -132,6 +148,7 @@ export default {
           state: '3',
           url: '',
           language: '1',
+          count: 1,
           bind: {
             address: '',
             country: 'cn'
@@ -145,7 +162,11 @@ export default {
         end: '2'
       },
       onlineCount: 0,
-      getCount: 0
+      getCount: 0,
+      id: '',
+      modalDel: false,
+      modal_loading: false,
+      ids: ''
     }
   },
   computed: {
@@ -183,6 +204,12 @@ export default {
               }
             }
             item.seoTitle2 = item.seoTitle
+            item.count = 0
+            this.ids && this.ids.split(',').forEach(id => {
+              if (item.id === id) {
+                item.count = 1
+              }
+            })
           })
           this.list = res.attributes.data
           this.total = res.attributes.count
@@ -209,6 +236,22 @@ export default {
     },
     buy (id) {
       this.$refs.buy.open(id)
+    },
+    addChange (e) {
+      this.ids = this.ids ? (this.ids + ',' + e.id) : e.id
+      this.get()
+    },
+    goEdit (item) {
+      item.count = 0
+      if (this.ids) {
+        let list = this.ids.split(',')
+        list.forEach((id, index) => {
+          if (item.id === id) {
+            list.splice(index)
+          }
+        })
+        this.ids = list.join()
+      }
     },
     // 网站上线
     bind (e) {
@@ -250,10 +293,13 @@ export default {
       }
       this.$http.post('/rest/pc/api/baseLayout/detail', qs.stringify(data)).then((res) => {
         if (res.success) {
-          this.$Message.success('复制成功')
+          this.$Message.success({
+            content: '复制成功，生成网站编号：<span style="color:#d0021b">' + res.attributes.data.id + '</span>',
+            duration: 3
+          })
           this.staticList.splice(0, 0, res.attributes.data)
           this.$store.commit('setStaticList', this.staticList)
-          this.get()
+          this.addChange(res.attributes.data)
         } else {
           this.$Message.error(res.msg)
         }
@@ -262,22 +308,29 @@ export default {
     countryChange (item) {
       this.$refs.add.open({title: '变更机房', item: item})
     },
-    del (id, index) {
-      this.$http.delete('/rest/pc/api/baseLayout/detail/' + id).then((res) => {
+    delItem () {
+      this.modal_loading = true
+      this.$http.delete('/rest/pc/api/baseLayout/detail/' + this.id).then((res) => {
         if (res.success) {
           this.$Message.success('删除成功')
-          this.list.splice(index, 1)
           for (let i = 0; i < this.staticList.length; i++) {
-            if (this.staticList[i].id === id) {
+            if (this.staticList[i].id === this.id) {
               this.staticList.splice(i, 1)
             }
           }
           this.$store.commit('setStaticList', this.staticList)
-          this.total -= 1
+          this.modal_loading = false
+          this.modalDel = false
+          this.get()
         } else {
+          this.modal_loading = false
           this.$Message.success(res.msg)
         }
       })
+    },
+    del (id) {
+      this.id = id
+      this.modalDel = true
     },
     lanSetting (item) {
       this.lan = item.language
@@ -345,7 +398,18 @@ export default {
 </script>
 
 <style lang="less">
+.vertical-center-modal{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  .ivu-modal{
+    top: 0;
+  }
+}
 .j_static_website .j_poptip_ul{
+  .ivu-poptip-popper{
+    z-index: 999;
+  }
   height: 16px;
   line-height: 16px;
   .ivu-poptip-body {
@@ -374,6 +438,10 @@ export default {
   border-right: 1px solid #e9e9e9;
   border-top: 1px solid #e9e9e9;
   color: #b9b9b9;
+  .ivu-badge{
+    color: #777;
+    padding-right: 5px;
+  }
   .item{
     border-top: 1px solid #e9e9e9;
     padding: 0 18px;

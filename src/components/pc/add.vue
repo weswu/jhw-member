@@ -45,6 +45,7 @@
 
 <script>
 import qs from 'qs'
+import { mapState } from 'vuex'
 export default {
   data () {
     return {
@@ -60,6 +61,11 @@ export default {
         { text: '中国大陆', value: 'cn', content: '阿里云主机，需备案' }
       ]
     }
+  },
+  computed: {
+    ...mapState({
+      staticList: state => state.staticList
+    })
   },
   methods: {
     open (e) {
@@ -84,37 +90,39 @@ export default {
       this.modal = false
     },
     submit (e) {
-      let obj = {
-        title: '我的网站',
-        seoTitle: '我的网站',
-        language: '1',
-        grade: 1,
-        name: '我的网站',
-        cellphone: '',
-        categoryId: '7',
-        entName: '',
-        areaPath: ''
-      }
       let data = {
-        model: JSON.stringify(obj),
+        model: JSON.stringify({
+          title: '我的网站',
+          seoTitle: '我的网站',
+          language: '1',
+          grade: 1,
+          name: '我的网站',
+          cellphone: '',
+          categoryId: '7',
+          entName: '',
+          areaPath: ''
+        }),
         country: this.detail.country
       }
       this.$http.post('/rest/pc/api/baseLayout/detail', qs.stringify(data)).then((res) => {
         if (res.success) {
-          if (this.detail.country === 'cn') {
-            this.$Notice.success({
-              title: '创建网站成功',
-              desc: '请尽早联系我们：13967938189，我们将协助您尽早办理备案手续。'
-            })
-          } else {
-            this.$Notice.success({
-              title: '创建网站成功',
-              desc: '请联系我们：139-6793-8189，我们将帮您免费办理备案域名绑定。'
-            })
-          }
+          this.$Message.success({
+            render: h => {
+              return h('p', {
+                style: {
+                  textAlign: 'left'
+                },
+                domProps: {
+                  innerHTML: '网站创建成功（网站编号：<span style="color:#d0021b">' + res.attributes.data.id + '</span>）！<br/>您可以免费试用1个月，您在这期间可以编辑成您想要的网站，内有很多免费的网站模板和版块。<br/>当然也可以联系我们，为您量身定制设计。'
+                }
+              })
+            },
+            duration: 15,
+            closable: true
+          })
           this.staticList.splice(0, 0, res.attributes.data)
           this.$store.commit('setStaticList', this.staticList)
-          this.$emit('on-change')
+          this.$emit('on-change', res.attributes.data)
           this.modal = false
         } else {
           this.$Message.error(res.msg)
@@ -128,10 +136,11 @@ export default {
       }
       this.$http.post('/rest/pc/api/bind/detail/' + this.detail.id, qs.stringify(data)).then((res) => {
         if (res.success) {
-          this.$Notice.success({
-            title: '提交完成',
-            desc: '我们将在工作日的24小时内审核完毕。'
+          this.$Message.success({
+            content: '提交完成,我们将在工作日的24小时内审核完毕。',
+            duration: 5
           })
+          this.$emit('on-change')
           this.modal = false
         } else {
           this.$Message.error(res.msg)
@@ -143,97 +152,101 @@ export default {
 </script>
 
 <style lang="less">
-  .j_static_add{
-    z-index: 1061 !important;
-    .ivu-modal{
-      top: 250px
+.ivu-message-notice-closable .ivu-message-notice-content-text {
+    vertical-align: top;
+    padding-right: 10px !important;
+}
+.j_static_add{
+  z-index: 1061 !important;
+  .ivu-modal{
+    top: 250px
+  }
+  .ivu-modal-body{
+    padding: 29px 31px;
+  }
+  .ivu-modal-footer{
+    padding: 0;
+    .footer{
+      padding: 12px 18px 12px 18px;
+      overflow: hidden;
     }
-    .ivu-modal-body{
-      padding: 29px 31px;
-    }
-    .ivu-modal-footer{
-      padding: 0;
-      .footer{
-        padding: 12px 18px 12px 18px;
-        overflow: hidden;
+  }
+  .ivu-col{
+    width: 178px;
+    height: 175px;
+    box-shadow: 0 1px 6px rgba(0,0,0,.2);
+    position: relative;
+    .ivu-radio-wrapper{
+      width: 100%;
+      height: 100%;text-align: center;
+      .ivu-radio{
+        display: none;
       }
-    }
-    .ivu-col{
-      width: 178px;
-      height: 175px;
-      box-shadow: 0 1px 6px rgba(0,0,0,.2);
-      position: relative;
-      .ivu-radio-wrapper{
-        width: 100%;
-        height: 100%;text-align: center;
-        .ivu-radio{
-          display: none;
+      .ivu-checkbox {
+        display: block;text-align: left;
+        margin: 14px 0 9px 12px;
+        .ivu-checkbox-inner{
+          border: 1px solid #12bedb;
+          border-radius: 0;
+          width: 23px;
+          height: 23px;
         }
-        .ivu-checkbox {
-          display: block;text-align: left;
-          margin: 14px 0 9px 12px;
-          .ivu-checkbox-inner{
-            border: 1px solid #12bedb;
-            border-radius: 0;
-            width: 23px;
-            height: 23px;
+        .ivu-checkbox-inner:after{
+          width: 8px;
+          height: 16px;
+          left: 7px;
+        }
+        &.ivu-checkbox-checked .ivu-checkbox-inner{
+          background: #fff;
+          &:after{
+            border: 2px solid #12bedb;
+            border-top: 0;
+            border-left: 0;
           }
-          .ivu-checkbox-inner:after{
-            width: 8px;
-            height: 16px;
-            left: 7px;
-          }
-          &.ivu-checkbox-checked .ivu-checkbox-inner{
-            background: #fff;
-            &:after{
-              border: 2px solid #12bedb;
-              border-top: 0;
-              border-left: 0;
-            }
-          }
-        }
-        img{
-          width: 125px;
-        }
-        p{
-          color: #9b9b9b;
-          font-size: 14px;
-          padding-top: 5px;
         }
       }
-    }
-    .submitBtn{
-      text-align: center;
-      button.orange{
-        width: 335px;
-        height: 45px;
-        display: block;
-        margin: 30px auto 15px auto;
+      img{
+        width: 125px;
       }
-      a{
-        color: #707070;
-        text-decoration: underline;
-        padding-bottom: 20px;
-        display: block;
-      }
-      .a_content{
-        white-space: normal;text-align: left;padding: 10px 5px;
-        p{
-          padding: 5px 0;
-          text-indent: 25px;
-          line-height: 1.7;
-        }
-      }
-    }
-    .bind_state{
-      float: right;margin-bottom: 20px;
-      span{
-        background: #ffa000;
-        color: #fff;
-        padding: 3px 5px;
-        margin-left: 10px;
-        margin-right: 10px;
+      p{
+        color: #9b9b9b;
+        font-size: 14px;
+        padding-top: 5px;
       }
     }
   }
+  .submitBtn{
+    text-align: center;
+    button.orange{
+      width: 335px;
+      height: 45px;
+      display: block;
+      margin: 30px auto 15px auto;
+    }
+    a{
+      color: #707070;
+      text-decoration: underline;
+      padding-bottom: 20px;
+      display: block;
+    }
+    .a_content{
+      white-space: normal;text-align: left;padding: 10px 5px;
+      p{
+        padding: 5px 0;
+        text-indent: 25px;
+        line-height: 1.7;
+      }
+    }
+  }
+  .bind_state{
+    float: right;margin-bottom: 20px;
+    span{
+      background: #ffa000;
+      color: #fff;
+      padding: 3px 5px;
+      margin-left: 10px;
+      margin-right: 10px;
+    }
+  }
+}
 </style>

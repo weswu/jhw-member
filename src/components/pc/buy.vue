@@ -29,6 +29,12 @@
             </Radio>
           </RadioGroup>
         </FormItem>
+        <FormItem label="使用年限：">
+          <InputNumber v-model="detail.year" :min="1" placeholder="请输入使用年限" style="width: 80px"></InputNumber><span class="j_unit">年</span>
+        </FormItem>
+        <FormItem label="总金额：">
+          <span class="totalPrice"><span>￥</span>{{totalPrice}}</span>
+        </FormItem>
         <Button class="orange" size="large" @click="submit">立即购买</Button>
       </Form>
       <div slot="footer">
@@ -51,6 +57,9 @@
 <script>
 import { mapState } from 'vuex'
 export default {
+  props: {
+    verName: {}
+  },
   data () {
     return {
       modal: false,
@@ -60,14 +69,33 @@ export default {
       detail: {
         version: '297e2669600191860160021b8fcc007f',
         versionPrice: '01',
-        price: 600
+        price: 600,
+        year: 1
       }
     }
   },
   computed: {
     ...mapState({
       versionType: state => state.status.versionType
-    })
+    }),
+    totalPrice () {
+      let price = 0
+      let vm = this
+      if (this.detail.version === '297e2669600191860160021b8fcc007f') {
+        price = this.detail.price * this.detail.year
+      } else {
+        this.versionType.forEach(item => {
+          if (vm.detail.version === item.value) {
+            if (item.text === vm.verName) {
+              price = 2580 * vm.detail.year
+            } else {
+              price = item.price + 2580 * (vm.detail.year - 1)
+            }
+          }
+        })
+      }
+      return price
+    }
   },
   mounted () {
     var vm = this
@@ -110,7 +138,7 @@ export default {
     },
     submit () {
       this.showQrCode = true
-      this.src = 'http://buy.jihui88.com/#/qrcode?back=1&ids=' + this.detail.version + '&layoutId=' + this.id
+      this.src = 'http://buy.jihui88.com/#/qrcode?back=1&ids=' + this.detail.version + '&layoutId=' + this.id + '&year=' + this.detail.year
     }
   }
 }
@@ -155,9 +183,17 @@ export default {
       background: #34b34a;
     }
     button{
-      margin: 10px auto 0 auto;
+      margin: 15px auto 0 auto;
       display: block;
       width: 205px;
+    }
+    .totalPrice{
+      font-size: 16px;
+      color: #ff6700;
+      font-weight: bold;
+      span{
+        font-size: 12px
+      }
     }
   }
   .content{

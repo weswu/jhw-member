@@ -13,7 +13,8 @@
 程程
 QQ：1550676880
 手机: 13967938189
-
+http://wpa.qq.com/msgrd?v=3&uin=1550676880&site=qq&menu=yes
+http://wpa.qq.com/msgrd?v=3&uin=&site=qq&menu=yes
 
 ## 安装教程
 ```
