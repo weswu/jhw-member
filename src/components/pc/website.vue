@@ -294,7 +294,7 @@ export default {
       this.$http.post('/rest/pc/api/baseLayout/detail', qs.stringify(data)).then((res) => {
         if (res.success) {
           this.$Message.success({
-            content: '复制成功，生成网站编号：<span style="color:#d0021b">' + res.attributes.data.id + '</span>',
+            content: '复制成功，生成网站编号：<span style="color:#ff6700">' + res.attributes.data.id + '</span>',
             duration: 3
           })
           this.staticList.splice(0, 0, res.attributes.data)
@@ -441,6 +441,9 @@ export default {
   .ivu-badge{
     color: #777;
     padding-right: 5px;
+    .ivu-badge-dot{
+      background: #ff6700;
+    }
   }
   .item{
     border-top: 1px solid #e9e9e9;

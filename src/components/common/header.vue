@@ -7,6 +7,19 @@
       <Badge count="体验版 v4" class="badge-primary"></Badge>
     </Col>
     <Col class="userInfo">
+      <Dropdown placement="bottom" class="j_dropdown_browser">
+        <a class="header_link">
+          建议用：360/谷歌浏览器
+        </a>
+        <DropdownMenu slot="list">
+          <ul class="browser-dropdown">
+            <li><a href="https://browser.360.cn/ee/" target="_blank">下载360极速浏览器</a></li>
+            <li><a href="https://www.google.cn/chrome/" target="_blank">下载谷歌浏览器</a></li>
+            <li><a href="https://ie.sogou.com/" target="_blank">下载搜狗高速浏览器</a></li>
+            <li><a href="https://browser.qq.com/" target="_blank">下载QQ浏览器</a></li>
+          </ul>
+        </DropdownMenu>
+      </Dropdown>
       <a href="#/" class="header_link">首页</a>
       <a href="javascript:;" class="header_link" @click="openFeedback"><span id="YD_Feedback">服务反馈</span></a>
       <Dropdown placement="bottom" class="j_dropdown_message" @on-visible-change="messageChange">
@@ -354,6 +367,39 @@ export default {
     display: inline-block;
     width: 1px;
     padding: 0 !important;
+  }
+  .j_dropdown_browser{
+    &:hover{
+      a{
+        color: #fff
+      }
+    }
+    .header_link{
+      color: #999;
+    }
+    .ivu-dropdown-menu{
+      width: 150px;
+    }
+    .browser-dropdown{
+      background-color: #fff;
+      padding: 10px 15px;
+      text-align: left;
+      li{
+        height: 30px;
+        line-height: 30px;
+        border-bottom: 1px solid #eaeaea;
+        padding: 0 5px;
+        &:last-child{
+          border-bottom: none;
+        }
+        a{
+          color: #333;
+          &:hover{
+            color: #333
+          }
+        }
+      }
+    }
   }
 }
 </style>

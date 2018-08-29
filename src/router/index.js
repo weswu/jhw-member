@@ -28,6 +28,7 @@ export default new Router({
     { path: '/seo', component: require('@/pages/static/Seo').default, meta: { open: '2', parent: 'static' } },
     { path: '/beian', component: require('@/pages/static/Beian').default, meta: { open: '2', parent: 'static' } },
     { path: '/bind', component: require('@/pages/static/Bind').default, meta: { open: '2', parent: 'static' } },
+    { path: '/bind/:id', component: require('@/pages/static/BindDetail').default, meta: { open: '2', parent: 'static' } },
     { path: '/sitemap', component: require('@/pages/static/Sitemap').default, meta: { open: '2', parent: 'static' } },
     { path: '/seo_batch', component: require('@/pages/static/SeoBatch').default, meta: { open: '2', parent: 'static' } },
     { path: '/third_party_statistics', component: require('@/pages/static/ThirdPartyStatistics').default, meta: { open: '2', parent: 'static' } },

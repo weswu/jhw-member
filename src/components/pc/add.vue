@@ -113,7 +113,7 @@ export default {
                   textAlign: 'left'
                 },
                 domProps: {
-                  innerHTML: '网站创建成功（网站编号：<span style="color:#d0021b">' + res.attributes.data.id + '</span>）！<br/>您可以免费试用1个月，您在这期间可以编辑成您想要的网站，内有很多免费的网站模板和版块。<br/>当然也可以联系我们，为您量身定制设计。'
+                  innerHTML: '网站创建成功（网站编号：<span style="color:#ff6700">' + res.attributes.data.id + '</span>）！<br/>您可以免费试用1个月，您在这期间可以编辑成您想要的网站，内有很多免费的网站模板和版块。<br/>当然也可以联系我们，为您量身定制设计。'
                 }
               })
             },
