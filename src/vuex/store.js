@@ -370,13 +370,18 @@ const store = new Vuex.Store({
         if (res.success) {
           this.commit('setStaticList', res.attributes.data)
           if (res.attributes.data.length > 0) {
-            let layoutId = window.localStorage.getItem('layoutId')
-            if (!layoutId) {
-              layoutId = res.attributes.data[0].layoutId
-            }
-            this.commit('setLayoutId', parseInt(layoutId))
+            let layoutId = res.attributes.data[0].id
+            res.attributes.data.forEach(item => {
+              if (item.id === window.localStorage.getItem('layoutId')) {
+                layoutId = window.localStorage.getItem('layoutId')
+              }
+            })
+            this.commit('setLayoutId', layoutId)
           }
         }
+      }).catch(e => {
+        // 异常情况
+        this.dispatch('getStaticList')
       })
     },
     getCustomData ({commit, state}) {

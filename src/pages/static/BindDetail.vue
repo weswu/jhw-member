@@ -2,11 +2,8 @@
   <Layout class="ivu-layout-has-sider j_bind">
     <MenuBar :data="'menuStatic'" :active="'bind'"/>
     <Layout class="j_layout_content">
-      <JHeader :title="'域名绑定'"/>
+      <JHeader :title="'域名详情'"/>
       <Content>
-        <div class="j_search">
-          <Button class="grey" @click="active = item.value" v-for="(item, index) in btns" :key="index" :class="{primary: active === item.value}">{{item.text}}</Button>
-        </div>
         <div v-if="active === '0'" style="padding-bottom: 20px;">
           <div class="j_tip" style="margin-top: 9px;">
             温馨提醒：还没有域名? <a :href="'http://buy.jihui88.com/#/?tab=tab1&layoutId='+$store.state.layoutId" target="_blank" class="a_underline" style="padding: 0 5px;">点击前往购买</a>
@@ -26,7 +23,7 @@
             </FormItem>
             <div v-if="detail.country === 'cn'">
               <FormItem>
-                <Input v-model="detail.icp" placeholder="填写ICP备案号"></Input><Button class="submit" @click="saveIcp">提交</Button>
+                <Input v-model="detail.icp" placeholder="填写ICP备案号"></Input><Button class="submit" @click="submit">提交</Button>
               </FormItem>
               <a class="a_underline" target="_blank" href="https://help.aliyun.com/knowledge_detail/36922.html?spm=a2c4g.11186623.6.545.txarXU">查看阿里云备案教程</a>
               <a class="a_underline" target="_blank" href="https://beian.aliyun.com/?spm=5176.8006371.388261.5.5d907e630O5Nkf">视频教程</a>
@@ -38,7 +35,7 @@
               <span class="grey">请在此输入您已经拥有的自定义域名。审核(或清除)周期大概2个工作日。</span>
             </div>
             <FormItem>
-              <Input v-model="detail.address" placeholder="填写主域名"></Input> <Button class="submit" @click="submit">提交</Button><Button class="submit" @click="clear1">解绑</Button>
+              <Input v-model="detail.address" placeholder="填写主域名"></Input> <Button class="submit" @click="submit">提交</Button>
             </FormItem>
             <div class="j_tip">
               <span class="red">第<span class="count">3</span>步：</span>
@@ -72,10 +69,10 @@
                 <span class="grey">网安备案配置</span>
               </div>
               <FormItem>
-                <Input v-model="detail.psr" placeholder="填写网安备案号"></Input> <Button class="submit" @click="savePsr">提交</Button>
+                <Input v-model="detail.psr" placeholder="填写网安备案号"></Input> <Button class="submit" @click="submit">提交</Button>
               </FormItem>
               <FormItem>
-                <Input v-model="detail.seccurityLink" placeholder="填写网安备案链接地址"></Input> <Button class="submit" @click="saveSeccurityLink">提交</Button>
+                <Input v-model="detail.seccurityLink" placeholder="填写网安备案链接地址"></Input> <Button class="submit" @click="submit">提交</Button>
               </FormItem>
               <a class="a_underline" target="_blank" href="https://docs.qq.com/doc/B7xfV62RQmDe1mclWr0lzVOU0CnQYE2DAa9O3">查看网安备案教程</a>
               <a class="a_underline" target="_blank" :href="'http://buy.jihui88.com/#/?tab=tab1&layoutId='+$store.state.layoutId">前往购买 "代理备案"</a>
@@ -85,7 +82,7 @@
         <div v-if="active === '1'" style="padding-bottom: 20px;">
           <div style="margin-top: 9px;">
             &nbsp;&nbsp;&nbsp;&nbsp;http://&nbsp;&nbsp;<Input v-model="detail.userSecondDomain" style="width: 140px"></Input>
-            <Button class="submit" @click="submit">提交</Button><Button class="submit" @click="clear3">解绑</Button>
+            <Button class="submit" @click="submit">提交</Button>
           </div>
         </div>
         <div v-if="active === '2'" style="padding-bottom: 20px;">
@@ -93,7 +90,7 @@
             二级域名(长度最小为6，最长为20的小写英文字母或数字组合)。&nbsp;(请求帮助QQ：260404208)
           </div>
           &nbsp;&nbsp;&nbsp;&nbsp;http://&nbsp;&nbsp;<Input v-model="detail.secondDomain" style="width: 140px"></Input>
-          &nbsp;.pc.jihui88.com<Button class="submit" @click="submit">提交</Button><Button class="submit" @click="clear2">解绑</Button>
+          &nbsp;.pc.jihui88.com<Button class="submit" @click="submit">提交</Button>
         </div>
       </Content>
     </Layout>
@@ -124,86 +121,20 @@ export default {
     }
   },
   created (e) {
-    this.layoutId = this.$route.query.layoutId
     this.get()
   },
   methods: {
     get () {
-      // this.$route.params.id
-      this.$http.get('/rest/pc/api/bind/detail/' + this.$route.params.id).then((res) => {
+      this.$http.get('/rest/pc/api/bind/bindDetail?bindId=' + this.$route.params.id).then((res) => {
         if (res.success) {
           this.detail = res.attributes.data
         }
       })
     },
-    saveIcp () {
-      this.$http.post('/rest/pc/api/bind/saveIcp', qs.stringify({icp: this.detail.icp, layoutId: this.layoutId})).then((res) => {
-        if (res.success) {
-          this.$Message.success('保存成功')
-        } else {
-          this.$Message.error(res.msg)
-        }
-      })
-    },
-    savePsr () {
-      this.$http.post('/rest/pc/api/bind/savePsr', qs.stringify({psr: this.detail.psr, layoutId: this.layoutId})).then((res) => {
-        if (res.success) {
-          this.$Message.success('保存成功')
-        } else {
-          this.$Message.error(res.msg)
-        }
-      })
-    },
-    saveSeccurityLink () {
-      this.$http.post('/rest/pc/api/bind/saveSeccurityLink', qs.stringify({seccurityLink: this.detail.seccurityLink, layoutId: this.layoutId})).then((res) => {
-        if (res.success) {
-          this.$Message.success('保存成功')
-        } else {
-          this.$Message.error(res.msg)
-        }
-      })
-    },
     submit () {
-      let data = {
-        model: JSON.stringify(this.detail),
-        _method: 'put'
-      }
-      this.$http.post('/rest/pc/api/bind/detail/' + this.detail.id, qs.stringify(data)).then((res) => {
+      this.$http.post('/rest/pc/api/bind/bindEdit', qs.stringify(this.detail)).then((res) => {
         if (res.success) {
           this.$Message.success('保存成功')
-        } else {
-          this.$Message.error(res.msg)
-        }
-      })
-    },
-    clear1 () {
-      this.$http.get('/rest/pc/api/bind/clearAddress').then((res) => {
-        if (res.success) {
-          this.detail.address = ''
-          this.detail.state = '03'
-          this.$Message.success('解绑成功')
-        } else {
-          this.$Message.error(res.msg)
-        }
-      })
-    },
-    clear2 () {
-      this.$http.get('/rest/pc/api/bind/clearSecondDomain').then((res) => {
-        if (res.success) {
-          this.detail.secondDomain = ''
-          this.detail.state = '03'
-          this.$Message.success('解绑成功')
-        } else {
-          this.$Message.error(res.msg)
-        }
-      })
-    },
-    clear3 () {
-      this.$http.get('/rest/pc/api/bind/clearUserSecondDomain').then((res) => {
-        if (res.success) {
-          this.detail.userSecondDomain = ''
-          this.detail.state = '03'
-          this.$Message.success('解绑成功')
         } else {
           this.$Message.error(res.msg)
         }
