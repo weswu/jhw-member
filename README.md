@@ -2,7 +2,7 @@
 > [机汇网后台管理](http://www.jihui88.com/member_new/index.html#/)（v4.0）
 
 ## 平面
-<image src="https://pro.modao.cc/uploads3/images/1966/19661206/artboard_1527473050.png"/>
+![图片](https://pro.modao.cc/uploads3/images/1966/19661206/artboard_1527473050.png)
 
 ## 软件架构
 - VUE2全家桶(vue vue-router vuex)
