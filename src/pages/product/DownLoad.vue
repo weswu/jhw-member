@@ -5,7 +5,7 @@
       <Content>
         <JHeader :title="'下载'" :lan="true"/>
         <div class="j_tip">
-          温馨提示：<a href="https://v.qq.com/x/page/w0753bnm9kh.html" class="a_underline" target="_blank">下载视频教程</a>
+          温馨提示：<a href="https://v.qq.com/x/page/n0753o7p54m.html" class="a_underline" target="_blank">下载视频教程</a>
         </div>
         <div class="j_search">
           <Button class="grey primary w130">产品表格下载</Button>

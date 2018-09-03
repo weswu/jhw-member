@@ -390,6 +390,20 @@ const store = new Vuex.Store({
           let data = res.attributes.data
           if (data.content) {
             let content = JSON.parse(data.content)
+            // 处理默认数据
+            if (!content.linkList) {
+              content.linkList = [
+                { value: 'static', text: '站点数据管理', icon: 'icon-shuju' },
+                { value: 'member', text: '会员管理', icon: 'icon-Group' },
+                { value: 'product', text: '产品列表', icon: 'icon-liebiao1' }
+              ]
+            }
+            if (!content.productShow) {
+              content.productShow = ['序号', '产品图片', '产品名称', '产品型号', '产品分类', '添加时间', '显示／隐藏', '排序', '二维码']
+            }
+            if (!content.shopShow) {
+              content.shopShow = ['序号', '订单编号', '用户名', '订单总额', '订单状态', '付款状态', '配送状态', '支付方式', '配送方式', '下单时间']
+            }
             if (!content.homeSort) {
               content.homeSort = [
                 { value: 'static', text: '我的网站', status: '01', type: '01' },
@@ -397,13 +411,6 @@ const store = new Vuex.Store({
                 { value: 'order', text: '订单', status: '01', type: '01' },
                 { value: 'message', text: '留言', status: '00', type: '01' },
                 { value: 'service', text: '服务', status: '00', type: '01' }
-              ]
-            }
-            if (!content.linkList) {
-              content.linkList = [
-                { value: 'static', text: '站点数据管理', icon: 'icon-shuju' },
-                { value: 'member', text: '会员管理', icon: 'icon-Group' },
-                { value: 'product', text: '产品列表', icon: 'icon-liebiao1' }
               ]
             }
             this.commit('setCustomData', content)
