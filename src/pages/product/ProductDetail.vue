@@ -153,9 +153,9 @@
           </FormItem>
         </Form>
       </Content>
-      <Footer v-if="this.$route.params.id !== 'add'">
+      <Footer>
         <Button type="primary" size="small" @click="submit">保存</Button>
-        <Poptip placement="bottom" class="j_poptip_ul">
+        <Poptip placement="bottom" class="j_poptip_ul" v-if="this.$route.params.id !== 'add'">
           <Button type="ghost" size="small">预览</Button>
           <ul slot="content" style="max-height: 250px;">
             <li v-for="(item, index) in staticList" :key="index">
@@ -163,9 +163,6 @@
             </li>
           </ul>
         </Poptip>
-      </Footer>
-      <Footer v-if="this.$route.params.id === 'add'">
-        <Button type="primary" size="small" @click="submit">保存</Button>
       </Footer>
     </Layout>
     <AttrAdd ref="attrAdd" :categoryId="detail.category" @on-change="attrChange"/>
@@ -481,6 +478,7 @@ export default {
       }
       this.$http.post('/rest/api/product/detail' + url, qs.stringify(data)).then((res) => {
         if (res.success) {
+          this.detail = res.attributes.data
           this.$Message.success('保存成功')
         } else {
           this.$Message.error(res.msg)

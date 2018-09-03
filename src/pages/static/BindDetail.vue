@@ -1,6 +1,6 @@
 <template>
   <Layout class="ivu-layout-has-sider j_bind">
-    <MenuBar :data="'menuStatic'" :active="'bind'"/>
+    <MenuBar :data="'menu_bind_detail'" :active="'0'" :detail="true"/>
     <Layout class="j_layout_content">
       <JHeader :title="'域名详情'"/>
       <Content>
@@ -16,9 +16,9 @@
           <Form :model="detail" :label-width="0" style="padding-bottom: 10px;">
             <FormItem>
               <Select v-model="detail.country" class="w144">
-                <Option value="cn">国内</Option>
-                <Option value="en">美国</Option>
-                <Option value="hc">香港</Option>
+                <Option value="cn">国内机房</Option>
+                <Option value="en">美国机房</Option>
+                <Option value="hc">香港机房</Option>
               </Select>
             </FormItem>
             <div v-if="detail.country === 'cn'">

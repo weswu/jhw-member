@@ -53,11 +53,10 @@ Vue.filter('time', function (date, format) {
 Vue.filter('limitString', function (input, begin, end) {
   return input.substring(begin, input.length - end)
 })
-
 /*
  * @author: wes
  * @date: 2017-8-3
- * @desc: 邮箱
+ * @desc: 邮箱中间过滤
 */
 Vue.filter('limitEmail', function (str) {
   var reg = /(.{1}).+(.{0}@.+)/g
@@ -89,7 +88,7 @@ Vue.filter('postfix', function (src) {
 /*
  * @author: wes
  * @date: 2018-6-12
- * @desc: 图片名字
+ * @desc: 站点地址过滤
 */
 Vue.filter('http', function (src) {
   return src.indexOf('http') > -1 ? src : ('http://' + src)

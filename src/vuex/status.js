@@ -148,6 +148,12 @@ const state = {
       { text: '附件存储服务', value: 'storage_service' }
     ]
   },
+  menu_bind_detail: {
+    title: '绑定详情',
+    menu: [
+      { text: '基本信息', value: '0' }
+    ]
+  },
   menuEnter: {
     title: '公司信息',
     menu: [

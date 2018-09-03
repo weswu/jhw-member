@@ -5,7 +5,7 @@ Vue.use(Router)
 export default new Router({
   routes: [
     { path: '/', components: require('@/pages/Home') },
-    // 账号管理
+    // 账号管理  meta用于刷新页面定位左侧菜单
     { path: '/account', components: require('@/pages/account/Account'), meta: { open: '1', parent: 'account' } },
     { path: '/employee_account', components: require('@/pages/account/EmployeeAccount'), meta: { open: '1', parent: 'account' } },
     { path: '/employee_account_analysis', component: require('@/pages/account/Analysis').default, meta: { open: '1', parent: 'account' } },

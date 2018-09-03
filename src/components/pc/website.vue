@@ -256,7 +256,7 @@ export default {
     // 网站上线
     bind (e) {
       this.$store.commit('setLayoutId', parseInt(e))
-      this.$router.push({path: '/bind'})
+      this.$router.push({path: '/bind', query: {layoutId: e}})
     },
     // 更多
     edit (item) {

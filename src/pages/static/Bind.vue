@@ -41,7 +41,11 @@ export default {
   },
   methods: {
     get () {
-      this.$http.get('/rest/pc/api/bind/bindList?pageSize=100').then(res => {
+      let url = ''
+      if (this.$route.query.layoutId) {
+        url = '&layoutId=' + this.$route.query.layoutId
+      }
+      this.$http.get('/rest/pc/api/bind/bindList?pageSize=100' + url).then(res => {
         if (res.success) {
           this.list = res.attributes.data
         }
@@ -49,8 +53,12 @@ export default {
     },
     add () {
       let layoutId = this.$store.state.layoutId
+      let staticList = this.$store.state.staticList
+      if (staticList.length === 0) {
+        return this.$Message.warning('请先<a href="#/static">购买站点</a>才能实现域名的自动绑定')
+      }
       if (!layoutId) {
-        return this.$Message.warning('请选择站点')
+        return this.$Message.warning('请选择右上角站点')
       }
       let data = {
         layoutId: layoutId,
@@ -75,7 +83,8 @@ export default {
       return h('span', text)
     },
     stateFilter (h, params) {
-      let text = '<span style="color:#f5a623">审核中</span>'
+      let text = '免费用户'
+      if (params.row.state === '00') text = '<span style="color:#f5a623">审核中</span>'
       if (params.row.state === '01') text = '<span style="color:#417505">是</span>'
       if (params.row.state === '02') text = '<span style="color:#d0021b">否</span>'
       return h('span', {

@@ -10,7 +10,7 @@
         <div class="y_content">
           <p v-html="item.text"></p>
           <span class="count">{{counter + 1}} / {{list2.length}}</span>
-          <span class="next" @click="next">{{counter === this.list.length - 1 ? '完成' : counter === 0 ? '开始' : '继续'}}</span>
+          <span class="next" @click="next">{{counter === this.list2.length - 1 ? '完成' : counter === 0 ? '开始' : '继续'}}</span>
         </div>
       </div>
     </div>
