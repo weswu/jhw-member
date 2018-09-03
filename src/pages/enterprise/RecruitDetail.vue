@@ -53,12 +53,14 @@ export default {
         this.$http.get('/rest/api/job/detail/' + id).then((res) => {
           if (res.success) {
             this.detail = res.attributes.data
+            this.$refs.ue.setUEContent(this.detail.content)
           } else {
             this.$Message.error(res.msg)
           }
         })
       } else {
         this.detail = {}
+        this.$refs.ue.setUEContent('<p><br/></p>')
       }
     },
     cancel () {
@@ -82,6 +84,7 @@ export default {
           this.$http.post('/rest/api/job/detail' + url, qs.stringify(data)).then((res) => {
             if (res.success) {
               this.$Message.success('保存成功')
+              this.$emit('on-change')
               this.modal = false
             } else {
               this.$Message.error(res.msg)

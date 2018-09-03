@@ -10,13 +10,13 @@
     </div>
     <Form ref="modal" :model="model" :rules="rules" :label-width="110" class="j_password">
       <FormItem label="旧密码" prop="oldpassword">
-        <Input v-model="model.oldpassword" placeholder="请输入旧密码"></Input>
+        <Input v-model="model.oldpassword" type="password" placeholder="请输入旧密码"></Input>
       </FormItem>
       <FormItem label="新密码" prop="newpassword">
-        <Input v-model="model.newpassword" placeholder="请输入新密码"></Input>
+        <Input v-model="model.newpassword" type="password" placeholder="请输入新密码"></Input>
       </FormItem>
       <FormItem label="再次输入新密码" prop="newpassword2">
-        <Input v-model="model.newpassword2" placeholder="请再次输入新密码"></Input>
+        <Input v-model="model.newpassword2" type="password" placeholder="请再次输入新密码"></Input>
       </FormItem>
     </Form>
   </Modal>

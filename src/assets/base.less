@@ -1,6 +1,5 @@
 @import '~iview/src/styles/index.less';
 @import './variables.less';
-@import './common.less';
 
 
 li{
@@ -17,15 +16,21 @@ hr{
   border: none;
   margin: 20px 0 23px 0;
 }
+.icon {
+  width: 1em; height: 1em;
+  vertical-align: -0.15em;
+  fill: currentColor;
+  overflow: hidden;
+}
 a.primary{
   color: @primary-color;
 }
 .a_underline{
-  color: #0366ce;
+  color: @link-color;
   cursor: pointer;
   text-decoration: underline;
   &:hover{
-    color: #0366ce;
+    color: @link-color;
     text-decoration: underline;
   }
 }
@@ -36,6 +41,20 @@ a.primary{
 .clear{
   clear: both
 }
+.ellipsis{
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+.price{
+  color: @price-color;
+}
+.red{
+  color: @error-color;
+}
+.green{
+  color: @success-color;
+}
 .pl5{
   padding-left: 5px;
 }
@@ -44,6 +63,110 @@ a.primary{
 }
 .w144{
   width: 144px
+}
+.w180{
+  width: 180px
+}
+.w244{
+  width: 244px
+}
+.j_empty{
+  color: #9b9b9b;
+  padding: 10px 0;
+  text-align: center;
+}
+.text-color{
+  color: @text-color
+}
+.tr{
+  text-align: right;
+}
+.j_unit{
+  padding-left: 10px
+}
+.j_form_title{
+  font-size: 14px;
+  padding: 25px 0 15px 0;
+  span{
+    font-size: 12px;
+    margin: 0 10px 0 12px;
+  }
+  .grey{
+    color: #bababa;
+  }
+  .a_underline{
+    color: #f5a623;
+    margin: 0 10px 0 12px;
+    font-size: 12px;
+  }
+}
+// 面包屑导航
+.picture_panel{
+  border: 1px solid #e9e9e9;
+  border-bottom: none;
+  .picture_header{
+    background: #f5f6fa;
+    height: 36px;
+    line-height: 36px;
+    border-bottom: 1px solid #e9e9e9;
+    .ivu-breadcrumb{
+      padding-left: 21px;
+      font-size: 12px;
+      .icon-tupian1{
+        padding-right: 3px;
+        font-size: 14px;
+      }
+      span{
+        font-weight: normal;
+        color: #bfbfc0;
+        margin: 0 3px;
+        cursor: pointer;
+      }
+      a{
+        font-size: 12px;
+        color: #a8a8a8;
+        font-weight: normal;
+      }
+    }
+  }
+}
+// 通用
+.j_product_import_download{
+  .ivu-checkbox-group-item{
+    float: left;
+    width: 14.285%;
+    color: #656565;
+    margin-right: 0;
+    padding: 15px 10px;
+    border-right: 1px solid #e9e9e9;
+    border-bottom: 1px solid #e9e9e9;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    .ivu-checkbox{
+      padding-right: 7%
+    }
+  }
+}
+
+.whether{
+  &.iconfont{
+    width: 16px;
+    height: 16px;
+    line-height: 16px;
+    background: #eee;
+    color: #fff !important;
+    padding: 0px !important;
+    font-size: 12px !important;
+    text-align: center;
+    border-radius: 3px;
+  }
+  &.icon-x{
+    background: @error-color ;
+  }
+  &.icon-gou{
+    background: @success-color;
+  }
 }
 // 头像昵称
 .badge-normal{
@@ -55,25 +178,28 @@ a.primary{
 .badge-gray .ivu-badge-count{
   background: #ccc
 }
+.badge-primary {
+  left: 136px;
+  position: absolute;
+  margin-top: 14px;
+  .ivu-badge-count{
+    background: @primary-color !important;
+  }
+}
 
 .j_panel{
   background: #fff;box-shadow: 0 1px 6px rgba(0, 0, 0, 0.2);
 }
 
 // 高度
-.ivu-layout::-webkit-scrollbar-track{background-color: transparent;}
-.ivu-layout::-webkit-scrollbar{width: 6px;height: 6px;}
-.ivu-layout::-webkit-scrollbar-thumb{background-color: #dedee4;}
-.ivu-layout::-webkit-scrollbar-corner {background-color: transparent;}
-.ivu-layout-content::-webkit-scrollbar-track{background-color: transparent;}
-.ivu-layout-content::-webkit-scrollbar{width: 6px;height: 6px;}
-.ivu-layout-content::-webkit-scrollbar-thumb{background-color: #dedee4;}
-.ivu-layout-content::-webkit-scrollbar-corner {background-color: transparent;}
-.j_scroll{ overflow-y: scroll;}
-.j_scroll::-webkit-scrollbar-track{background-color: transparent;}
-.j_scroll::-webkit-scrollbar{width: 6px;height: 6px;}
-.j_scroll::-webkit-scrollbar-thumb{background-color: #dedee4;}
-.j_scroll::-webkit-scrollbar-corner {background-color: transparent;}
+.ivu-layout,.picture_warpper,.ivu-layout-content,.j_scroll{
+  &::-webkit-scrollbar-track{background-color: transparent;}
+  &::-webkit-scrollbar{width: 6px;height: 6px;}
+  &::-webkit-scrollbar-thumb{background-color: #dedee4;}
+  &::-webkit-scrollbar-corner {background-color: transparent;}
+}
+
+.j_scroll{ overflow-y: auto;}
 .j_layout{
   height: calc(100vh - 50px);
   background: @background-color-base
@@ -83,7 +209,7 @@ a.primary{
   .ivu-layout-content{
     height: calc(100vh - 95px);
     &.scroll {
-      overflow-y: scroll;
+      overflow-y: auto;
     }
     .ivu-table-body{
       max-height: calc(100vh - 213px);
@@ -93,7 +219,7 @@ a.primary{
 .j_form_detail{
   .ivu-layout-content{
     height: calc(100vh - 116px);
-    overflow-y: scroll;
+    overflow-y: auto;
   }
   .ivu-layout-footer{
     background: @background-gray-color;
@@ -101,10 +227,9 @@ a.primary{
     border-bottom: none;
     padding: 16px 50px;
   }
-}
-// 表格调试
-.j_news .ivu-table-body,.j_product .ivu-table-body{
-  height: calc(100vh - 297px);
+  .formitem_left{
+    display: inline-block;
+  }
 }
 
 // 其它高度
@@ -121,7 +246,7 @@ a.primary{
     height: calc(100vh - 145px);
     .ivu-layout-content{
       .picture_warpper{
-        height: calc(100vh - 300px);
+        height: calc(100vh - 301px);
       }
     }
   }
@@ -140,6 +265,7 @@ a.primary{
   width: 100%;
   line-height: 45px;
   height: 45px;
+  cursor: pointer;
 }
 .j_more:hover{
   color: #fff;
@@ -152,9 +278,16 @@ a.primary{
   margin: 20px 0;
   background: #f9f9f9;
   line-height: 1.7;
+  position: relative;
   .red{
     color: #ff0800;
     padding-right: 3px;
+  }
+  .grey{
+    color: #646464;
+  }
+  .count{
+    padding: 0 3px;
   }
 }
 .head_portrait{
@@ -177,6 +310,8 @@ a.primary{
   border-spacing: 0;
   empty-cells: show;
   border: 1px solid #e9e9e9;
+  border-bottom: none;
+  border-right: none;
   width: 100%;
   margin-bottom: 15px;
   td,th {
@@ -190,9 +325,33 @@ a.primary{
     color: #a0a0a0;
     font-weight: normal;
   }
+  &.j_table_li td{
+    padding: 0;
+    border-bottom: none;
+    border-right: none;
+  }
 }
 .j_table_checkbox .ivu-table-cell{
   padding: 0 11px;
+}
+.j_table_img{
+  .product-img{
+    width: 68px;
+    height: 68px;
+    line-height: 66px;
+    text-align: center;
+    background: #f5f6fa;
+    border: 1px solid #d5d5d5;
+    overflow: hidden;
+    margin: 5px 0;
+    img{
+      margin: 0px auto;
+      display: inline-block;
+      vertical-align: middle;
+      max-height: 68px;
+      max-width: 68px;
+    }
+  }
 }
 .j_table_title .ivu-table-cell .title{
   display: flex;
@@ -210,15 +369,27 @@ a.primary{
     margin-left: 5px;
   }
 }
-.j_table_operate{
-  a{
-    color: #0366ce
+.j_table_category .ivu-table-cell{
+  overflow: visible;
+  .ivu-input{
+     border:none;
+     box-shadow: none;
   }
-  .delimiter{
-    padding: 0 10px;
-    color: #aaa
+  .ivu-input-icon{
+    color: #a0a0a0;
+    font-size: 12px;
+  }
+  .ivu-select-dropdown,.ivu-select-dropdown-list{
+    width: 250px;
   }
 }
+.delimiter{
+  padding: 0 10px;
+  color: #aaa
+}
+.j_sort .ivu-table td{
+   height: 64px
+ }
 .ivu-table-wrapper{
   .ivu-table {
     color: #a0a0a0;
@@ -244,6 +415,14 @@ a.primary{
           .icon-bianji2{
             font-size: 12px;
           }
+          .ivu-row-flex{
+            span{
+              color: @text-color;
+            }
+            .ivu-input{
+              padding: 0 5px;
+            }
+          }
         }
         &.ivu-table-row-hover{
           .ivu-table-cell{
@@ -261,6 +440,7 @@ a.primary{
       font-weight: normal;
       height: 28px;
       background: @background-gray-color;
+      color: #a0a0a0;
     }
   }
 }
@@ -335,13 +515,9 @@ a.primary{
   border-top: none;
   color: #a0a0a0;
   font-size: 12px;
-  &.border{
-    border-bottom: none;
-  }
   &.fixed{
-    border-top: 1px solid #e9e9e9;
-    .page{
-      padding-left: 6px;
+    .ivu-page{
+      padding-right: 6px;
     }
   }
   &.border_top{
@@ -373,33 +549,28 @@ a.primary{
   }
   .ivu-page{
     padding-left: 18px;
+    padding-right: 20px;
   }
   .page{
     display:inline-block;
     padding-right: 15px;
-    padding-left: 20px;
     .ivu-input-wrapper{
       width: 35px;
       float: left;
       padding-top: 7px;
     }
   }
-  .go{
+  .ivu-btn-small.go{
     background: #f4f3f5;
-    color: #a0a0a0;
-    &:hover{
-      color: #a0a0a0;
-    }
+    margin-left: 8px;
+  }
+  .icon-shuaxin{
+    padding-right: 5px;
   }
 }
 
 
 // 弹出框表单
-.ivu-modal{
-  .ivu-input-wrapper{
-    width: 250px;
-  }
-}
 .ivu-poptip-inner{
   border-radius: 0px;
 }
@@ -408,16 +579,12 @@ a.primary{
   border-radius: 5px;
   font-size: 10px;
   height: 19px;
+  box-shadow: none;
 }
 //卡片
 .ivu-card{
   border-radius: 0px;
 }
-
-.ivu-cascader-arrow,.ivu-select-arrow{
-  color: #000;
-}
-
 // 弹出框ul
 .j_poptip_ul{
   .ivu-poptip-popper{
@@ -438,22 +605,27 @@ a.primary{
 
 .j_poptip_confirm_edit{
   .ivu-poptip-popper{
-
+    max-width: max-content;
   }
-  .ivu-icon{
-    display: none
+  .ivu-poptip-body {
+    .ivu-icon-help-circled{
+      display: none
+    }
+    .ivu-icon{
+      color: @subsidiary-color
+    }
+    .ivu-input-wrapper .ivu-icon{
+      line-height: 32px;
+    }
+    .ivu-poptip-body-message{
+      padding-left: 0;
+    }
   }
-  .ivu-poptip-body-message{
-    padding-left: 0;
+  .ivu-form input{
+    margin-bottom: 0;
   }
 }
 
-// Input
-.ivu-input{
-  border: 1px solid #c9c9c9;
-  border-radius: 0px;
-  box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
-}
 //Select
 .ivu-select{
   .ivu-select-dropdown{
@@ -462,6 +634,7 @@ a.primary{
     border-radius: 0;
     box-shadow: none;
     border: 1px solid @border-color-split;
+    z-index: 1002; // 高于自定义弹出框
   }
   &.border{
     .ivu-select-selection{
@@ -515,28 +688,8 @@ a.primary{
     }
   }
 }
-// 表单
-.ivu-form{
-  .ivu-form-item{
-    margin-bottom: 7px;
-  }
-  .ivu-form-item-error{
-    margin-bottom: 24px;
-  }
-  .ivu-input-wrapper{
-    max-width: 450px;
-  }
-  .ivu-select{
-    max-width: 450px;
-  }
-  .ivu-cascader{
-    max-width: 450px
-  }
-  .ivu-select{
-    .ivu-select-selection{
-      border: 1px solid #c9c9c9;
-    }
-  }
+.ivu-message{
+  top: 40% !important;
 }
 // 标签切换
 .ivu-tabs{
@@ -591,37 +744,29 @@ a.primary{
 }
 
 //对敌框
-.ivu-modal-mask{
-  background: none;
+.j_dialog{
+  z-index: 1001; // 高于默认弹出框
+  .ivu-modal {
+    top: 186px;
+  }
+  .ivu-modal-body{
+    padding: 22px 54px 45px 54px;
+  }
+  .ivu-modal-close{
+    right: 25px;
+    top: 25px;
+  }
+  .icon-x{
+    color: #c7c7c7
+  }
+  .ivu-modal-footer{
+    display: none
+  }
 }
 .ivu-modal{
-  top: 186px;
-  .ivu-modal-content{
-    border-radius: 0px;
-    border: 1px solid #e1e6eb;
-    .ivu-modal-header{
-      background: @background-gray-color;
-      border-bottom: none;
-      .ivu-modal-header-inner{
-        color: @title-color;
-      }
-    }
-    .ivu-modal-footer{
-      background: @background-gray-color;
-      border-top: none;
-      overflow: hidden;
-      button{
-        float: right;
-      }
-      .ivu-btn-primary{
-        border: 1px solid @info-color;
-        background: @info-color;
-      }
-      .ivu-btn-text{
-        border: 1px solid @info-color;
-        color: @info-color;
-        margin-left: 10px;
-      }
+  form{
+    .ivu-input-wrapper,.ivu-select{
+      width: 250px;
     }
   }
 }
@@ -632,7 +777,12 @@ a.primary{
     margin-bottom: 9px;
   }
   .j_tip{
-    margin-top: 2px;
+    margin-top: 9px;
+  }
+  .ivu-btn{
+    &:last-child{
+      margin-right: 0;
+    }
   }
 }
 //按钮
@@ -641,8 +791,9 @@ a.primary{
   &:focus{
     box-shadow: none;
   }
-  i{
+  .iconfont{
     font-size: 12px;
+    padding-right: 5px;
   }
   &.grey{
     background: #d9dee4;
@@ -678,6 +829,7 @@ a.primary{
   // 搜索按钮
   &.search{
     background: #f7f7f7;
+    margin-left: 5px;
     &:hover{
       background: #f7f7f7;
       border-color: #dddddd;
@@ -697,7 +849,7 @@ a.primary{
     border-radius: 4px;
     box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
     margin-left: 7px;
-    padding: 6px 25px;
+    padding: 6px 10px;
   }
   &.orange{
     background-color: #ff6700;
@@ -718,6 +870,234 @@ a.primary{
     &:hover{
       border-color: @btn-default-border;
       color: @text-color;
+    }
+  }
+}
+
+// 相册弹出
+.modal-upload-list{
+  height: 420px;
+  .modal-upload-item {
+    display: inline-block;
+    width: 90px;
+    height: 90px;
+    line-height: 90px;
+    text-align: center;
+    border: 1px solid transparent;
+    overflow: hidden;
+    background: #fff;
+    position: relative;
+    border: 1px solid #eee;
+    margin: 5px 6px;
+    cursor: pointer;
+    padding: 1px;
+    &.file {
+      border: 1px solid transparent;
+      .icon-weibiaoti5{
+        color: #79d3fb;
+        font-size: 50px;
+        margin: 0 auto;
+      }
+    }
+    &.active {
+      border: 2px solid #12bedb;
+      padding: 0;
+      .modal-upload-item-cover {
+        background: rgba(0, 0, 0, 0.5);
+        left: -1px;
+        bottom: -1px;
+      }
+    }
+    img {
+       max-width: 100%;
+       vertical-align: middle;
+    }
+    .modal-upload-item-cover {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      background: rgba(0, 0, 0, 0.3);
+      color: #fff;
+      height: 30px;
+      line-height: 30px;
+      text-align: left;
+      width: 90px;
+      padding: 0 6px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      cursor: text;
+    }
+  }
+}
+// 小程序-存储附件
+.j_panel_box{
+  padding: 22px 22px 25px 22px;border: 1px solid #ddd;
+  Button{
+    margin: 10px 0 20px 0
+  }
+}
+// 相册分类
+
+.j_album_category{
+  width: 227px;
+  flex: 0 0 227px;
+  background: #ebedf1;
+  padding: 10px;
+  .title{
+    color:#737373;padding: 10px 0;font-size:14px;
+  }
+  .ivu-tree-arrow{
+    position: relative;
+    z-index: 11;
+    vertical-align: sub;
+  }
+  .ivu-icon-arrow-right-b{
+    font-family: "iconfont" !important;
+    color: #6f6f6f;
+    transform: none;
+    background: #ebedf1;
+    &:before{
+      content: "\e60c";
+    }
+  }
+  .ivu-tree-arrow-open{
+    .ivu-icon-arrow-right-b{
+      &:before{
+        content: "\e61a";
+      }
+    }
+  }
+  .ivu-tree{
+    height: calc(100vh - 266px);
+    margin-bottom: 10px;
+    overflow: auto;
+    overflow-x: hidden;
+  }
+  .ivu-tree ul {
+    line-height: 1.3;
+    .ivu-input{
+      padding: 0px 10px;
+      height: 26px;
+    }
+    .item{
+      position: relative;
+      padding: 2px 0;
+      &::after{
+        content: '';
+        position: absolute;
+        background: url(http://www.jihui88.com/manage_v4/platform/img/dashed2.png);
+        background-repeat: repeat-x;
+        background-size: 3px;
+        top: 43%;
+        left: -10px;
+        width: 10px;
+        height: 1px;
+        z-index: 10;
+      }
+      .ivu-tree-title{
+        border-radius: 0px;
+        color: #595959;
+        border: 1px solid #ebedf1;
+      }
+      .ivu-tree-title-selected, .ivu-tree-title-selected:hover,.ivu-tree-title:hover {
+        background-color: #ffecc0;
+        border: 1px solid #ffce83;
+        box-sizing: border-box;
+      }
+    }
+    li ul {
+      &:last-child{
+        li{
+          &::before{
+            height: 13px;
+          }
+        }
+      }
+      li{
+        position: relative;
+        margin: 0;
+        padding-left: 5px;
+        &::before{
+          content: '';
+          position: absolute;
+          left: 10px;
+          height: 100%;
+          width: 1px;
+          z-index: 9;
+          background: url(http://www.jihui88.com/manage_v4/platform/img/dashed.png);
+          background-repeat: repeat-y;
+          background-size: 1px;
+        }
+        .ivu-tree-title span{
+          display: inline-block;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+          width: 129px;
+          vertical-align: text-bottom;
+        }
+        .ivu-input{
+          width: 164px;
+        }
+        ul li{
+          .ivu-tree-title span{
+            width: 106px;
+          }
+          .ivu-input{
+            width: 141px;
+          }
+          ul li{
+            .ivu-tree-title span{
+              width: 83px;
+            }
+            .ivu-input{
+              width: 118px;
+            }
+          }
+        }
+      }
+    }
+  }
+  .a_normal{
+    margin-left: 10px;
+  }
+}
+// 右菜单
+.menu{
+  display: none;
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: 99;
+  width: 159px;
+  border: 1px solid #e0e0e0;
+  background: #f0f0f0;
+  border-radius: 5px;
+  li{
+    border-bottom: 1px solid #dfdfdf;
+    color: #4c4a46;padding: 4px 0 4px 15px;
+    cursor: pointer;
+    width: 157px;
+  }
+  .ivu-poptip,.ivu-poptip-rel{
+    width: 100%
+  }
+}
+// 小窗口
+#JHW{
+  &.small{
+    .j_layout{
+      padding-top: 20px;
+      height: 100vh;
+      &.detail{
+        padding-top: 0;
+        .j_form_detail{
+          padding-top: 20px;
+        }
+      }
+      .j_map .map{
+        height: calc(100vh - 40px);
+      }
     }
   }
 }

@@ -1,12 +1,12 @@
 <template>
-  <Sider id="J_Menu_Bar" ref="side1" hide-trigger collapsible :collapsed-width="0" v-model="isCollapsed" width="180">
+  <Sider id="J_Menu_Bar" ref="side1" hide-trigger collapsible :collapsed-width="0" v-model="isCollapsed" width="180" v-if="win !== 'small' || detail">
     <div class="title">
-      <span v-if="!detail">{{status[data].title || 'Basic Table'}}</span>
+      <span v-if="win === 'small' || !detail">{{status[data].title || 'Basic Table'}}</span>
       <span v-else @click="back" class="back"><i class="iconfont icon-fanhui"></i>返回</span>
     </div>
     <div @click="collapsedSider" :class="rotateIcon">
       <div class="navbar-collapse-bg"></div>
-      <img src="static/img/toggle.png" alt="">
+      <img src="platform/img/toggle.png" alt="">
     </div>
     <Menu width="auto" :class="menuitemClasses" :active-name="active" @on-select="mrouter">
       <MenuItem :name="item.value" v-for="(item, index) in status[data].menu" :key="index">
@@ -39,9 +39,7 @@ export default {
     }
   },
   computed: {
-    ...mapState({
-      'status': state => state.status
-    }),
+    ...mapState(['status', 'win', 'userInfo']),
     rotateIcon () {
       return [
         'rotate',
@@ -57,7 +55,7 @@ export default {
   },
   created () {
     if (this.data === 'menuMessage') {
-      this.status[this.data].menu[1].count = this.$store.state.userInfo.noReaderMsg
+      this.status[this.data].menu[1].count = this.userInfo.noReaderMsg
     }
   },
   methods: {

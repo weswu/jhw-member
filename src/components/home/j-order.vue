@@ -1,35 +1,52 @@
 <template>
-  <div class="j_panel">
-    <Tabs :value="tabActive">
-        <TabPane label="消费记录" name="1">
-          <div class="j_warpper">
-            <iframe src="http://buy.jihui88.com/#/member/order?size=5" class="j_buy_iframe"/>
-          </div>
-        </TabPane>
-        <TabPane label="已购产品" name="2">
-          <div style="padding: 0 28px;">
-            已购产品
-          </div>
-        </TabPane>
-        <TabPane label="我的积分" name="3">
-          <div style="padding: 0 28px;">
-            我的积分和权益
-          </div>
-        </TabPane>
+  <div class="j_panel j_home_cost">
+    <Tabs :value="tabActive" @on-click="tabChange">
+      <TabPane label="待缴费" name="1">
+        <div class="j_warpper">
+          <PaidItem :searchData="searchData"/>
+        </div>
+      </TabPane>
+      <TabPane label="消费记录" name="2">
+        <div class="j_warpper" v-if="tab2">
+          <OrderItem :searchData="searchData"/>
+        </div>
+      </TabPane>
+      <TabPane label="已购产品" name="3">
+        <div class="j_warpper" v-if="tab3">
+          <PurchasedItem :searchData="searchData"/>
+        </div>
+      </TabPane>
+      <TabPane label="我的积分" name="4">
+        <div class="j_warpper" v-if="tab4">
+          <PointTable :searchData="searchData"/>
+        </div>
+      </TabPane>
     </Tabs>
-    <JCostOrderDetail ref="order"/>
   </div>
 </template>
 
 <script>
-import JCostOrderDetail from '@/components/group/j-cost-order-detail'
+import OrderItem from '@/pages/cost/OrderItem'
+import PurchasedItem from '@/pages/cost/PurchasedItem'
+import PaidItem from '@/pages/cost/PaidItem'
+import PointTable from '@/pages/point/PointTable'
 export default {
   components: {
-    JCostOrderDetail
+    OrderItem,
+    PurchasedItem,
+    PaidItem,
+    PointTable
   },
   data () {
     return {
-      tabActive: '1'
+      tabActive: '1',
+      searchData: {
+        page: 1,
+        pageSize: 3
+      },
+      tab2: false,
+      tab3: false,
+      tab4: false
     }
   },
   mounted () {
@@ -42,16 +59,14 @@ export default {
     }, false)
   },
   methods: {
-    handleTabRemove (name) {
-      this['tabActive'] = name
+    tabChange (name) {
+      if (!this.tab2 && name === '2') this.tab2 = true
+      if (!this.tab3 && name === '3') this.tab3 = true
+      if (!this.tab4 && name === '4') this.tab4 = true
     }
   }
 }
 </script>
 
 <style lang="less">
-.j_warpper{
-  padding: 5px 28px 0 28px;
-  height: 376px;
-}
 </style>

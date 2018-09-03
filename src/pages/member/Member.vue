@@ -1,23 +1,41 @@
 <template>
-  <Layout class="j_layout ivu-layout-has-sider">
+  <Layout class="ivu-layout-has-sider">
     <MenuBar :data="'menuMember'" :active="'member'"/>
     <Layout class="j_layout_content">
       <Content>
         <JHeader :title="'会员管理'"/>
         <div class="j_search">
-          <Row :gutter="24">
-            <Col span="13">
-              <Button type="info" icon="plus" class="w130" @click="add">添加会员</Button>
+          <Row type="flex" justify="space-between">
+            <Col>
+              <Button type="info" icon="plus" class="w130" @click="url('/member/add')">添加会员</Button>
             </Col>
-            <Col span="11" style="text-align:right">
-              <Input v-model="searchData.name" style="width:140px;padding-right:5px;" placeholder="请输入用户名"></Input>
+            <Col>
+              <Input v-model="name" class="w180" clearable placeholder="请输入用户名" @on-change="clearInput"></Input>
               <Button class="search" @click="search">搜索</Button>
-              <Button class="grey w130" @click="update($Message)" style="margin-right: 0;">高级搜索</Button>
+              <Poptip placement="bottom-end" class="j_poptip_confirm_edit"
+                confirm
+                width="370"
+                @on-ok="advancedSearch">
+                <Button class="grey w130">高级搜索</Button>
+                <div slot="title">
+                  <Form :model="searchData" :label-width="85">
+                    <FormItem label="会员用户名：">
+                      <Input v-model="searchData.name" class="w244" clearable></Input>
+                    </FormItem>
+                    <FormItem label="会员等级：">
+                      <Select v-model="searchData.memberRankId" class="w244">
+                        <Option value="">请选择</Option>
+                        <Option :value="item.rankId" v-for="item in $store.state.memberRankList" :key="item.rankId">{{item.name}}</Option>
+                      </Select>
+                    </FormItem>
+                  </Form>
+                </div>
+              </Poptip>
             </Col>
           </Row>
         </div>
         <Table ref="selection" :columns="columns" :data="list" @on-selection-change="handleSelectChange"/>
-        <JPagination :checkbox="true" :total="total" :searchData='searchData' @on-change="pageChange">
+        <JPagination :checkbox="true" :total="total" :searchData='searchData' @on-change="get">
           <span slot="btn">
             <Checkbox v-model="toggle" @on-change="handleSelectAll(toggle)"/>
             <Button type="ghost" size="small"  @click="delAll">删除</Button>
@@ -44,19 +62,19 @@ export default {
       columns: [
         { type: 'selection', className: 'j_table_checkbox', width: 44 },
         { type: 'index2', title: '序号', align: 'center', width: 60, render: this.indexFilter },
-        { title: '用户名', key: 'name', render: this.nameFilter },
+        { title: '用户名', key: 'name', className: 'text-color', ellipsis: true, render: this.nameFilter },
         { title: '会员等级', key: 'memberRank', render: this.rankFilter },
         { title: '邮箱', key: 'email' },
-        { title: '注册时间', key: 'addTime' },
-        { title: '状态', key: 'isAccountEnabled', render: this.typeFilter },
-        { title: '来源（网站编号）', key: '' },
+        { title: '注册时间', width: 148, key: 'addTime' },
+        { title: '状态', key: 'isAccountEnabled', width: 70, render: this.typeFilter },
+        { title: '来源：网站编号', key: 'layoutId' },
         { title: '操作', className: 'j_table_operate', width: 120, render: this.renderOperate }
       ],
       list: [],
+      name: '',
       searchData: {
         page: 1,
-        pageSize: 10,
-        name: ''
+        pageSize: 10
       },
       total: 0,
       toggle: false,
@@ -65,9 +83,11 @@ export default {
   },
   created () {
     this.get()
+    this.$store.dispatch('getMemberRank')
   },
   methods: {
     get () {
+      this.ids = ''
       this.$http.get('/rest/api/member/list?' + qs.stringify(this.searchData)).then(res => {
         if (res.success) {
           this.total = res.attributes.count
@@ -79,16 +99,23 @@ export default {
         }
       })
     },
-    // 上
-    add () {
-      this.$Message.success('更新中...')
+    // 功能
+    clearInput () {
+      if (this.name === '') {
+        this.searchData.name = this.name
+        this.get()
+      }
     },
     search () {
-      this.searchData.page = 1
+      this.searchData = {
+        page: 1,
+        pageSize: this.searchData.pageSize,
+        name: this.name
+      }
       this.get()
     },
-    pageChange (page) {
-      this.searchData.page = page
+    advancedSearch () {
+      this.searchData.page = 1
       this.get()
     },
     // 批量操作
@@ -143,7 +170,7 @@ export default {
         h('a', {
           on: {
             click: () => {
-              this.$Message.success('更新中..')
+              this.$router.push({path: '/member/' + params.row.memberId})
             }
           }
         }, '修改'),
@@ -163,11 +190,7 @@ export default {
                 this.$http.delete('/rest/api/member/detail/' + params.row.memberId).then((res) => {
                   if (res.success) {
                     ctx.$Message.success('删除成功')
-                    for (let i = 0; i < ctx.list.length; i++) {
-                      if (ctx.list[i].memberId === params.row.memberId) {
-                        ctx.list.splice(i, 1)
-                      }
-                    }
+                    ctx.list.splice(params.index, 1)
                     ctx.total -= 1
                   } else {
                     ctx.$Message.success(res.msg)

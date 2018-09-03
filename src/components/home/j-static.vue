@@ -16,7 +16,7 @@
 </template>
 
 <script>
-import Website from '@/components/static/website'
+import Website from '@/components/pc/website'
 import Xiaochengxu from '@/components/static/xiaochengxu'
 export default {
   components: {
@@ -28,7 +28,8 @@ export default {
       tabActive: '0',
       searchData: {
         page: 1,
-        pageSize: 2
+        pageSize: 2,
+        sortType: 'desc'
       }
     }
   },
@@ -41,5 +42,9 @@ export default {
 </script>
 
 <style lang="less">
-
+.j_home_static{
+  .static_info {
+    overflow: hidden;
+  }
+}
 </style>

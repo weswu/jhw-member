@@ -1,18 +1,24 @@
 <template>
-  <Layout class="j_home">
+  <Layout class="j_home" style="background: #e7eaef">
     <Content :style="{padding: '32px 32px 0 30px'}">
       <Row :gutter="24">
         <Col :lg="16" :md="16" class="j_col">
           <JWebsite style="margin-bottom: 25px;"/>
-          <div id="HomeSortable">
-            <JStatic style="margin-bottom: 25px;"/>
-            <JLink style="margin-bottom: 25px;"/>
-            <JOrder style="margin-bottom: 25px;"/>
+          <div ref="HomeSortable">
+            <div v-for="item in $store.state.customData.homeSort" :key="item.value" v-if="item.status === '01'">
+              <JStatic style="margin-bottom: 25px;" v-if="item.value === 'static'"/>
+              <JLink style="margin-bottom: 25px;" v-if="item.value === 'link'"/>
+              <JOrder style="margin-bottom: 25px;" v-if="item.value === 'order'"/>
+            </div>
           </div>
         </Col>
         <Col :lg="8" :md="8" class="j_col" style="padding-left:17px;">
           <JBanner/>
           <JSubscribe/>
+          <div v-for="item in $store.state.customData.homeSort" :key="item.value" v-if="item.status === '01'">
+            <JMessage style="margin-bottom: 25px;" v-if="item.value === 'message'"/>
+            <JService style="margin-bottom: 25px;" v-if="item.value === 'service'"/>
+          </div>
           <JApp/>
         </Col>
       </Row>
@@ -22,10 +28,13 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
 import JWebsite from '@/components/home/j-website'
 import JStatic from '@/components/home/j-static'
 import JLink from '@/components/home/j-link'
 import JOrder from '@/components/home/j-order'
+import JMessage from '@/components/home/j-message'
+import JService from '@/components/home/j-service'
 import JBanner from '@/components/home/j-banner'
 import JSubscribe from '@/components/home/j-subscribe'
 import JApp from '@/components/home/j-app'
@@ -37,33 +46,42 @@ export default {
     JStatic,
     JLink,
     JOrder,
+    JMessage,
+    JService,
     JBanner,
     JSubscribe,
     JApp,
     JConsult
   },
+  computed: {
+    ...mapState(['customData'])
+  },
   mounted () {
-    setTimeout(function () {
-      let el = document.getElementById('HomeSortable')
-      Sortable.create(el, {
-        group: {
-          name: 'list',
-          pull: true
-        },
-        animation: 120,
-        onUpdate (e) {
-          console.log('aa')
-        }
-      })
-    }, 2000)
+    var ctx = this
+    let el = this.$refs.HomeSortable
+    Sortable.create(el, {
+      group: {
+        name: 'list',
+        pull: true
+      },
+      animation: 120,
+      handle: '.ivu-tabs-bar',
+      onUpdate (e) {
+        let newIndex = ctx.customData.homeSort[e.newIndex]
+        let oldIndex = ctx.customData.homeSort[e.oldIndex]
+        ctx.customData.homeSort.splice(e.newIndex, 1, oldIndex)
+        ctx.customData.homeSort.splice(e.oldIndex, 1, newIndex)
+        ctx.$store.dispatch('SAVE_CUSTOM_DATA')
+      }
+    })
   }
 }
 </script>
-<style lang="less" scoped>
+<style lang="less">
   .j_home{
     padding-bottom: 25px;
-  }
-  .ivu-layout {
-    background: #e7eaef
+    .j_warpper{
+      padding: 0px 28px 28px;
+    }
   }
 </style>

@@ -7,26 +7,26 @@
     </div>
     <div class="j_pagination fixed" v-if="fixed" style="text-align:right" :class="{border_top: borderTop}">
       {{searchData.page}}/{{ Math.ceil(total/searchData.pageSize)}}页，共有{{total}}{{unit}}，每页显示：
-      <input v-model="searchData.pageSize" type="number" class="number"/>{{unit}}
-      <Page :total="total" @on-change="pageChange"></Page>
+      <input v-model="searchData.pageSize" type="number" class="number" @change="refresh"/>{{unit}}
+      <Page :total="total" :current="searchData.page" :page-size="searchData.pageSize" @on-change="pageChange"></Page>
       <div class="page">
         <Input size="small" v-model="page"></Input>
         <Button type="primary" size="small" @click="pageChange(page)">GO</Button>
         <Button type="primary" size="small" @click="refresh" class="refresh"><i class="iconfont icon-shuaxin"></i><span>刷新</span></Button>
       </div>
     </div>
+    <!-- 分页样式(简单) -->
     <div class="j_pagination" v-if="!fixed">
-      <!-- 分页2样式 -->
-      <Row :gutter="24">
-        <Col :span="left" v-if="checkbox" class="btn">
+      <Row type="flex" justify="space-between">
+        <Col class="btn">
           <slot name="btn"></slot>
         </Col>
-        <Col :span="right" style="text-align:right;">
+        <Col>
           共有{{total}}条，每页显示：{{searchData.pageSize}}条
-          <Page :total="total" @on-change="pageChange"></Page>
+          <Page :total="total" :current="searchData.page" :page-size="searchData.pageSize" @on-change="pageChange"></Page>
           <div class="page">
             <Input size="small" v-model="page"></Input>
-            <Button size="small" @click="pageChange(page)" class="go" style="margin-left: 8px;">GO</Button>
+            <Button type="ghost" size="small" @click="pageChange(page)" class="go">GO</Button>
           </div>
         </Col>
       </Row>
@@ -41,10 +41,7 @@ export default {
       type: Boolean,
       default: false
     },
-    total: {
-      type: Number,
-      default: 0
-    },
+    total: Number,
     searchData: {},
     checkbox: {
       type: Boolean,
@@ -53,14 +50,6 @@ export default {
     unit: {
       type: String,
       default: '条'
-    },
-    left: {
-      type: String,
-      default: '6'
-    },
-    right: {
-      type: String,
-      default: '18'
     },
     borderTop: {
       type: Boolean,
@@ -74,11 +63,12 @@ export default {
   },
   methods: {
     pageChange (page) {
-      this.$emit('on-change', page || 1)
+      this.searchData.page = parseInt(page) || 1
       this.page = ''
+      this.$emit('on-change')
     },
     refresh () {
-      this.$emit('get')
+      this.$emit('on-change')
     }
   }
 }

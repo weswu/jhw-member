@@ -2,8 +2,9 @@
   <div class="j_seo_template">
     <div class="j_search">
       <Button class="mormal" @click="activeChange(item.value)" v-for="(item, index) in btns" :key="index" :class="{active: active === item.value}">{{item.text}}</Button>
-      <div class="j_tip">
-        温馨提醒：此项设置包括（首页、产品展示页、新闻展示页、自定义页等导航页面的设置），“基本栏目模板配置”一旦保存，会覆盖所有的页面，请慎用。
+      <div class="j_tip" style="margin-top: 2px;">
+        温馨提醒：此项设置包括（
+        <span v-if="active === '0'">首页、产品展示页、新闻展示页、自定义页等导航页面</span><span v-if="active === '1'">新闻分类页</span><span v-if="active === '2'">产品分类页</span><span v-if="active === '3'">新闻详细页</span><span v-if="active === '4'">产品详细页</span>的设置），“{{btns[active].text}}”一旦保存，会覆盖所有的页面，请慎用。
       </div>
     </div>
     <Form :model="detail" :label-width="105" ref="model">
@@ -22,7 +23,7 @@
         <Button class="info" size="small" @click="back">返回</Button>
       </FormItem>
       <div class="explain">
-        <span>视频教程: </span> <a href="https://v.qq.com/x/page/a0179l2o2l2.html" target="_blank" class="a_underline">SEO优化视频教程</a><br/>
+        <span>视频教程: </span> <a href="https://v.qq.com/x/page/u0753y5akkv.html" target="_blank" class="a_underline">SEO优化视频教程</a><br/>
         关键词中可用的变量有如下几个:<br/>
         栏目名称:{page},<br/>
         新闻标题:{news_title},<br/>
@@ -41,6 +42,7 @@
 
 <script>
 import qs from 'qs'
+import { mapState } from 'vuex'
 export default {
   data () {
     return {
@@ -56,6 +58,14 @@ export default {
       data: []
     }
   },
+  computed: {
+    ...mapState(['lanId'])
+  },
+  watch: {
+    lanId () {
+      this.get()
+    }
+  },
   created () {
     this.get()
   },
@@ -63,11 +73,17 @@ export default {
     get () {
       this.$http.get('/rest/api/seoTemplate/list').then((res) => {
         if (res.success) {
-          this.data.push(res.attributes.commonList)
-          this.data.push(res.attributes.news_categoryList)
-          this.data.push(res.attributes.product_categoryList)
-          this.data.push(res.attributes.news_detailList)
-          this.data.push(res.attributes.product_detailList)
+          let data = res.attributes
+          if (!data.commonList.page) data.commonList.page = 'common'
+          if (!data.news_categoryList.page) data.news_categoryList.page = 'news_category'
+          if (!data.product_categoryList.page) data.product_categoryList.page = 'product_category'
+          if (!data.news_detailList.page) data.news_detailList.page = 'news_detail'
+          if (!data.product_detailList.page) data.product_detailList.page = 'product_detail'
+          this.data.push(data.commonList)
+          this.data.push(data.news_categoryList)
+          this.data.push(data.product_categoryList)
+          this.data.push(data.news_detailList)
+          this.data.push(data.product_detailList)
           this.detail = this.data[0]
         } else {
           this.$Message.error(res.msg)
@@ -76,7 +92,11 @@ export default {
     },
     activeChange (e) {
       this.active = e
-      this.detail = this.data[e]
+      this.detail = this.data[e] || {
+        seoTitle: '',
+        seoKey: '',
+        seoDescription: ''
+      }
     },
     importSeo (e) {
       let data = {

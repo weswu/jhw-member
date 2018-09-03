@@ -8,7 +8,7 @@ module.exports = {
   dev: {
 
     // Paths
-    assetsSubDirectory: 'static',
+    assetsSubDirectory: 'platform',
     assetsPublicPath: '/',
     proxyTable: {
       '/rest': {
@@ -23,6 +23,13 @@ module.exports = {
         changeOrigin: true, // 如果接口跨域，需要进行这个参数配置
         pathRewrite: {
           '^/user': '/user'
+        }
+      },
+      '/commonutil': {
+        target: 'http://www.jihui88.com', // 接口的域名
+        changeOrigin: true, // 如果接口跨域，需要进行这个参数配置
+        pathRewrite: {
+          '^/commonutil': '/commonutil'
         }
       }
     },
@@ -60,11 +67,11 @@ module.exports = {
 
   build: {
     // Template for index.html
-    index: path.resolve(__dirname, '../dist_member/index.html'),
+    index: path.resolve(__dirname, '../manage_v4/index.html'),
 
     // Paths
-    assetsRoot: path.resolve(__dirname, '../dist_member'),
-    assetsSubDirectory: 'static',
+    assetsRoot: path.resolve(__dirname, '../manage_v4'),
+    assetsSubDirectory: 'platform',
     assetsPublicPath: './',
 
     /**

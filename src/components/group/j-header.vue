@@ -1,16 +1,19 @@
 <template>
-  <div :class="{j_head: tip}">
+  <div :class="{j_head: tip, j_head2: type}" v-if="$store.state.win !== 'small'">
     <div class="j_header">
-      <Row :gutter="24">
-        <Col :span="left">
+      <Row type="flex" justify="space-between">
+        <Col>
           <span class="title">{{title}}<span v-if="count">拥有积分：{{count}}分</span></span>
         </Col>
-        <Col :span="right" style="text-align:right">
-          <Select v-model="lanId" class="primary" @on-change="change" style="width:106px" v-if="lan">
+        <Col>
+          <Select v-model="$store.state.lanId" class="primary" @on-change="lanChange" style="width:106px" v-show="lan" v-if="lanHidden">
             <Option v-for="item in lanList" :value="item.value" :key="item.value">{{ item.text }}</Option>
           </Select>
-          <Select v-model="staticId" class="primary" @on-change="staticChange" style="width:167px" v-if="website">
-            <Option v-for="item in staticList" :value="item.value" :key="item.value">{{ item.text }}</Option>
+          <Select v-model="$store.state.lanId" class="primary" @on-change="lanChange" style="width:106px" v-if="!lanHidden && lan">
+            <Option v-for="item in lanList" :value="item.value" :key="item.value">{{ item.text }}</Option>
+          </Select>
+          <Select v-model="$store.state.layoutId" class="primary" @on-change="layoutChange" style="width:167px" v-if="website">
+            <Option v-for="item in staticList" :value="item.layoutId" :key="item.layoutId">网站编号：{{ item.layoutId }}</Option>
           </Select>
           <slot name="btn"></slot>
         </Col>
@@ -32,41 +35,41 @@ export default {
       type: Boolean,
       default: false
     },
+    lanHidden: {
+      type: Boolean,
+      default: false
+    },
     website: {
       type: Boolean,
       default: false
     },
     count: {},
     tip: {},
-    left: {
-      type: String,
-      default: '10'
-    },
-    right: {
-      type: String,
-      default: '14'
-    }
+    type: {}
   },
   computed: {
     ...mapState({
-      lanId: state => state.lanId,
-      staticId: state => state.staticId,
       lanList: state => state.status.lanList,
-      staticList: state => state.staticList
+      staticList: state => state.staticList,
+      user: state => state.user
     })
   },
   methods: {
-    change (e) {
+    lanChange (e) {
       var ctx = this
       this.$store.dispatch('lanIdChange', e).then((res) => {
-        ctx.$emit('on-change')
+        ctx.$emit('on-change', e)
+        ctx.$store.dispatch('getUser').then((res) => {
+          ctx.$emit('on-user', e)
+        })
+        ctx.$store.dispatch('getEnterprise').then((res) => {
+          ctx.$emit('on-enterprise', e)
+        })
       })
     },
-    staticChange (e) {
-      var ctx = this
-      this.$store.dispatch('staticIdChange', e).then((res) => {
-        ctx.$emit('on-static')
-      })
+    layoutChange (e) {
+      window.localStorage.setItem('layoutId', e)
+      this.$emit('on-layout', e)
     }
   }
 }
@@ -81,6 +84,12 @@ export default {
   }
   .j_tip{
     margin: 0 0 20px 0;
+  }
+  &.j_head2{
+    .j_header{
+      border-bottom: 1px solid #c9c9c9;
+      margin-bottom: 21px;
+    }
   }
 }
 .j_header{

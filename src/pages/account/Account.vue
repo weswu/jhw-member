@@ -1,14 +1,17 @@
 <template>
-  <Layout class="j_layout ivu-layout-has-sider j_account">
+  <Layout class="ivu-layout-has-sider j_account">
       <MenuBar :data="'menuAccount'" :active="'account'"/>
       <Layout class="j_layout_content">
         <JHeader :title="'安全设置'"/>
         <Content class="scroll">
+          <div class="j_tip" style="margin-top:0">
+            温馨提示：<a href="https://v.qq.com/x/page/c0753vzonsm.html" class="a_underline" target="_blank">安全设置视频教程</a>
+          </div>
           <Row :gutter="24" class="account_user">
             <Col span="6" style="width:130px">
               <div @click="avatar">
-                <Avatar shape="square" :src="'http://img.jihui88.com/'+user.enterprise.logo" size="large" v-if="user.enterprise.logo" class="head_portrait"/>
-                <i class="iconfont icon-huiyuan" v-if="!user.enterprise.logo"></i>
+                <Avatar shape="square" :src="$store.state.status.IMG_HOST+user.headimg" size="large" v-if="user.headimg" class="head_portrait"/>
+                <i class="iconfont icon-huiyuan" v-if="!user.headimg"></i>
               </div>
               <a href="javascript:;" @click="avatar">修改头像</a>
             </Col>
@@ -30,7 +33,7 @@
               <span v-if="percent === 60" style="color:#e7ae5f">中</span>
               <span v-if="percent > 60" style="color:#e7ae5f">高</span>
             </span>
-            <span v-if="percent < 100" style="padding-left: 40px">断续努力</span>
+            <span v-if="percent < 100" style="padding-left: 40px">继续努力</span>
             <span v-if="percent === 100" style="padding-left: 40px">继续保持</span>
           </div>
           <div class="account_bind_edit">
@@ -47,6 +50,7 @@
               <Col span="14">
                 <span v-if="item.nickname && item.nickname !== '未绑定'">您已绑定了手机{{item.nickname}} [您的手机为安全手机，可以找回密码，但不能用于登录]</span>
                 <span v-else>您可以绑定手机, 可以找回密码，但不能用于登录</span>
+                <br>温馨提醒：绑定时请允许浏览器弹出绑定窗口
               </Col>
               <Col span="6" class="flex-right">
                 <span class="success" v-if="item.nickname && item.nickname !== '未绑定'"><i class="iconfont icon-dagou"></i>已设置</span>
@@ -56,8 +60,8 @@
             <Row type="flex">
               <Col span="4" class="flex-left">备用邮箱</Col>
               <Col span="14">
-                <span v-if="user.email">您已绑定了邮箱{{user.email | limitEmail}} [机汇网发送的各类系统、营销、服务通知将发送到您的备用邮箱。]</span>
-                <span v-else>您可以绑定邮箱, 机汇网发送的各类系统、营销、服务通知将发送到您的备用邮箱。</span>
+                <span v-if="user.email">您已绑定了邮箱{{user.email | limitEmail}} [可用于找回您的密码。]</span>
+                <span v-else>您可以绑定邮箱, 可用于找回您的密码</span>
               </Col>
               <Col span="6" class="flex-right">
                 <span class="success" v-if="user.email"><i class="iconfont icon-dagou"></i>已设置</span>
@@ -70,6 +74,7 @@
               <Col span="14">
                 <span v-if="item.nickname && item.nickname !== '未绑定'">您已绑定了微信{{item.nickname}} [可用于扫码登录]</span>
                 <span v-else>您可以绑定微信, 可用于扫码登录</span>
+                <br>温馨提醒：绑定时请允许浏览器弹出绑定窗口
               </Col>
               <Col span="6" class="flex-right">
                 <span class="success" v-if="item.nickname && item.nickname !== '未绑定'"><i class="iconfont icon-dagou"></i>已设置</span>
@@ -82,6 +87,7 @@
               <Col span="14">
                 <span v-if="item.nickname && item.nickname !== '未绑定'">您已绑定了QQ{{item.nickname}} [可用于快捷登录]</span>
                 <span v-else>您可以绑定QQ, 可用于快捷登录</span>
+                <br>温馨提醒：绑定时请允许浏览器弹出绑定窗口
               </Col>
               <Col span="6" class="flex-right">
                 <span class="success" v-if="item.nickname && item.nickname !== '未绑定'"><i class="iconfont icon-dagou"></i>已设置</span>
@@ -100,7 +106,8 @@
         </div>
       </div>
       <Password ref="password"/>
-      <JAblum :title="'替换头像'" ref="ablum"/>
+      <JAlbum :title="'修改头像'" ref="ablum" @on-change="picChange" v-if="ablumToggle"/>
+      <Cropimg ref="cropimg" @on-change="cropChange"/>
   </Layout>
 </template>
 
@@ -109,23 +116,19 @@ import qs from 'qs'
 import { mapState } from 'vuex'
 import MenuBar from '@/components/common/menu_bar'
 import JHeader from '@/components/group/j-header'
-import JAblum from '@/components/group/j-ablum'
+import JAlbum from '@/components/group/j-album'
 import Password from '@/pages/account/Password'
+import Cropimg from '@/components/common/cropimg'
 export default {
   components: {
     MenuBar,
     JHeader,
-    JAblum,
-    Password
-  },
-  computed: {
-    ...mapState({
-      'user': state => state.user
-    })
+    JAlbum,
+    Password,
+    Cropimg
   },
   data () {
     return {
-      percent: 20,
       list: [
         {
           language: null,
@@ -183,15 +186,28 @@ export default {
         }
       ],
       width: '348',
-      src: 'http://www.jihui88.com/member/login.html?backURL=http://www.jihui88.com/member/qqRedirect.html&scope=snsapi_login_quick',
+      src: 'http://www.jihui88.com/manage_v4/login.html?backURL=http://www.jihui88.com/member/qqRedirect.html&scope=snsapi_login_quick',
       open: false,
-      email: ''
+      email: '',
+      ablumToggle: false
+    }
+  },
+  computed: {
+    ...mapState(['user']),
+    percent () {
+      let percent = 20
+      if (this.user.email) {
+        percent += 20
+      }
+      this.list.forEach(item => {
+        if (item.nickname && item.nickname !== '未绑定' && item.type !== 'user') {
+          percent += 20
+        }
+      })
+      return percent
     }
   },
   created () {
-    if (this.user.email) {
-      this.percent += 20
-    }
     this.get()
   },
   mounted () {
@@ -200,49 +216,57 @@ export default {
       var data = e.data || {}
       if (data.type === 1) {
         // 处理iframe  src地址和隐藏弹出框
-        ctx.src = 'http://www.jihui88.com/member/login.html?backURL=http://' + location.host + '/redirect&scope=snsapi_login_quick'
+        ctx.src = 'http://www.jihui88.com/manage_v4/login.html?backURL=http://' + location.host + '/redirect&scope=snsapi_login_quick'
         ctx.close()
-        if (ctx.user.email) {
-          ctx.percent = 40
-        } else {
-          ctx.percent = 20
-        }
         ctx.get()
       }
     }, false)
   },
   methods: {
     get () {
-      var ctx = this
       this.$http.get('/rest/api/oauth/list').then((res) => {
         if (res.success) {
           this.list = res.attributes.data
-          this.list.forEach(item => {
-            if (item.nickname && item.nickname !== '未绑定') {
-              ctx.percent += 20
-            }
-          })
         } else {
           this.$Message.error(res.msg)
         }
       })
     },
     avatar () {
-      this.$refs.ablum.open()
+      this.ablumToggle = true
+      var ctx = this
+      setTimeout(function () {
+        ctx.$refs.ablum.open()
+      }, 100)
     },
     password () {
       this.$refs.password.open()
     },
+    // 修改user
+    picChange (e) {
+      this.$refs.cropimg.open(e.src)
+    },
+    cropChange (src) {
+      let user = JSON.parse(JSON.stringify(this.user))
+      user.headimg = src
+      this.$store.commit('setUser', user)
+      this.changeUser({
+        headimg: src
+      }, 'tip')
+    },
     input (e) {
+      this.changeUser({
+        nickName: this.user.nickName
+      })
+    },
+    changeUser (info, tip) {
       let data = {
-        model: JSON.stringify({
-          nickName: this.user.nickName
-        }),
+        model: JSON.stringify(info),
         _method: 'put'
       }
       this.$http.post('/rest/api/user/accountInfo/' + this.user.userId, qs.stringify(data)).then((res) => {
         if (res.success) {
-          this.$Message.success('修改成功')
+          if (tip !== 'tip') this.$Message.success('修改成功')
         } else {
           this.$Message.error(res.msg)
         }
@@ -254,7 +278,7 @@ export default {
         // 解绑
         this.$Modal.confirm({
           title: '重新绑定',
-          content: '你确定要解绑并重新绑定吗?',
+          content: '您确定要解绑并重新绑定吗?',
           onOk: () => {
             ctx.$http.post('/rest/api/user/oauthUnBind', qs.stringify({
               model: JSON.stringify({
@@ -287,7 +311,7 @@ export default {
       if (bindType !== 'weixin') {
         this.open = true
       }
-      this.src = 'http://www.jihui88.com/member/login.html?addBind=1&bindType=' + bindType + '&page=bind&isAccount=1&scope=snsapi_login_quick&backURL=http://www.jihui88.com/member/qqRedirect.html'
+      this.src = 'http://www.jihui88.com/manage_v4/login.html?addBind=1&bindType=' + bindType + '&page=bind&isAccount=1&scope=snsapi_login_quick&backURL=http://www.jihui88.com/member/qqRedirect.html'
     },
     close () {
       this.open = false
@@ -313,6 +337,7 @@ export default {
           })
         },
         onOk: () => {
+          if (!this.email) return this.$Message.info('邮箱不能为空')
           let user = this.user
           user.email = this.email
           let data = {
@@ -354,7 +379,7 @@ export default {
   }
   .account_user{
     width:660px;
-    padding: 0 0 20px 0;
+    padding: 2px 0 20px 0;
     .ivu-avatar-large{
       width: 110px;
       height: 110px;

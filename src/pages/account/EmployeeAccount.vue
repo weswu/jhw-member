@@ -9,8 +9,8 @@
           </div>
         </JHeader>
         <Content>
-          <Table highlight-row :columns="columns" :data="list" @on-selection-change="handleSelectChange"></Table>
-          <JPagination :checkbox="true" :total="total" :searchData='searchData' @on-change="pageChange">
+          <Table ref="selection" :columns="columns" :data="list" @on-selection-change="handleSelectChange"></Table>
+          <JPagination :checkbox="true" :total="total" :searchData='searchData' @on-change="get">
             <span slot="btn">
               <Checkbox v-model="toggle" @on-change="handleSelectAll(toggle)"/>
               <Button type="ghost" size="small" @click="delAll">删除</Button>
@@ -20,32 +20,39 @@
       </Layout>
       <Modal
         v-model="modal1"
-        title="推广"
+        title="员工推广"
+        width="500"
         cancelText="取消">
-        <p style="padding-bottom:10px;">注：绑定域名后可用<a href="/bind" class="viewBind">(查看绑定)</a></p>
-        <Tabs>
+        <div class="j_tip" style="margin: 0 0 10px 0;">
+          注：请选择站点后再推广二维码
+          <Select v-model="$store.state.layoutId" class="small" @on-change="layoutChange" style="float: right;width: 130px;">
+            <Option v-for="item in staticList" :value="item.layoutId" :key="item.layoutId">网站编号：{{ item.layoutId }}</Option>
+          </Select>
+        </div>
+        <Tabs style="clear:both">
           <TabPane label="手机网站推广">
-            <img :src="'http://wcd.jihui88.com/rest/comm/qrbar/create?w=130&text='+src"><br/>
+            <img :src="'http://wcd.jihui88.com/rest/comm/qrbar/create?w=130&text='+posterUrl"><br/>
             <a href="javascritp:;" class="downloadQr" target="_blank" @click="downloadQr" style="padding-left:31px;">下载二维码</a>
           </TabPane>
           <TabPane label="PC网站推广">
-            <Input v-model="url" style="width:250px"></Input>
-            <Button v-clipboard:copy="url" v-clipboard:success="copy" style="margin-left:10px;">复制</Button>
+            <Input v-model="posterUrl" style="width:250px"></Input>
+            <Button v-clipboard:copy="posterUrl" v-clipboard:success="copy" style="margin-left:10px;">复制</Button>
           </TabPane>
         </Tabs>
       </Modal>
       <Authority ref="auth"/>
-      <Detail ref="detail"/>
+      <Detail ref="detail" @on-change="get"/>
     </Tabs>
   </Layout>
 </template>
 
 <script>
 import qs from 'qs'
+import { mapState } from 'vuex'
 import MenuBar from '@/components/common/menu_bar'
 import JHeader from '@/components/group/j-header'
 import JPagination from '@/components/group/j-pagination'
-import Detail from '@/pages/account/Detail'
+import Detail from '@/pages/account/EmployeeDetail'
 import Authority from '@/pages/account/Authority'
 export default {
   components: {
@@ -73,19 +80,23 @@ export default {
         pageSize: 10
       },
       total: 0,
-      modal1: false,
-      src: 'http://m.baidu.com?memberId=1163',
-      url: 'http://53happy.com?memberId=1163',
-      memberId: '',
       ids: '',
-      toggle: false
+      toggle: false,
+      // 推广
+      modal1: false,
+      posterUrl: '',
+      posterId: ''
     }
+  },
+  computed: {
+    ...mapState(['staticList'])
   },
   created () {
     this.get()
   },
   methods: {
     get () {
+      this.ids = ''
       this.$http.get('/rest/api/submember/list?' + qs.stringify(this.searchData)).then((res) => {
         if (res.success) {
           this.list = res.attributes.data
@@ -102,10 +113,16 @@ export default {
     analysis () {
       this.$router.push({path: 'employee_account_analysis'})
     },
-    // 搜索
-    pageChange (page) {
-      this.searchData.page = page
-      this.get()
+    layoutChange () {
+      var vm = this
+      let layoutId = this.$store.state.layoutId
+      this.posterUrl = 'http://pc.jihui88.com/rest/site/' + layoutId + '/index?posterId=' + this.posterId
+      if (this.staticList.length === 0) return this.$Message.info('未生成站点或者刷新页面')
+      this.staticList.forEach(item => {
+        if (layoutId === item.id && item.bind.address) {
+          vm.posterUrl = item.bind.address + '?posterId=' + this.posterId
+        }
+      })
     },
     // 批量操作
     handleSelectChange (status) {
@@ -124,17 +141,10 @@ export default {
       if (!this.ids) {
         return this.$Message.error('未选择')
       }
-      var ctx = this
       this.$http.post('/rest/api/submember/delete?ids=' + this.ids).then((res) => {
         if (res.success) {
           this.$Message.success('删除成功')
-          this.ids.split(',').forEach(id => {
-            ctx.list.forEach((item, index) => {
-              if (id === item.memberId) {
-                ctx.list.splice(index, 1)
-              }
-            })
-          })
+          this.get()
         } else {
           this.$Message.error(res.msg)
         }
@@ -145,7 +155,7 @@ export default {
       this.$Message.success('复制成功')
     },
     downloadQr () {
-      window.open('http://wcd.jihui88.com/rest/comm/qrbar/createAndDownload?w=300&text=' + this.src)
+      window.open('http://wcd.jihui88.com/rest/comm/qrbar/createAndDownload?w=300&text=' + this.posterUrl)
     },
     encodeId (target) {
       return target == null ? '' : target.replace(/^[^1-9]+/, '')
@@ -187,11 +197,7 @@ export default {
                 this.$http.delete('/rest/api/submember/detail/' + params.row.memberId).then((res) => {
                   if (res.success) {
                     ctx.$Message.success('删除成功')
-                    for (let i = 0; i < ctx.list.length; i++) {
-                      if (ctx.list[i].memberId === params.row.memberId) {
-                        ctx.list.splice(i, 1)
-                      }
-                    }
+                    ctx.list.splice(params.index, 1)
                   } else {
                     ctx.$Message.success(res.msg)
                   }
@@ -206,8 +212,8 @@ export default {
         h('a', {
           on: {
             click: () => {
-              this.src = encodeURIComponent(params.row.mobileBindUrl + '?memberId=' + ctx.encodeId(params.row.memberId))
-              this.url = params.row.pcBindUrl + '?memberId=' + ctx.encodeId(params.row.memberId)
+              this.posterId = ctx.encodeId(params.row.memberId)
+              this.layoutChange()
               this.modal1 = true
             }
           }

@@ -1,103 +1,140 @@
 <template>
   <Row id="J_Header" type="flex" justify="space-between">
-    <div class="logo">
-      <a href="http://www.jihui88.com"><img src="http://img.jihui88.com/upload/w/w5/www2/picture/2017/07/05/54b68a5c-fdd2-4842-9e1e-b88d1c403f28.png" height="30" alt=""></a>
-    </div>
-    <Col span="18" class="userInfo">
+    <Col>
+      <div class="logo">
+        <a href="http://www.jihui88.com"><img src="http://img.jihui88.com/upload/w/w5/www2/picture/2017/07/05/54b68a5c-fdd2-4842-9e1e-b88d1c403f28.png" height="30" alt=""></a>
+      </div>
+      <Badge count="体验版 v4" class="badge-primary"></Badge>
+    </Col>
+    <Col class="userInfo">
+      <Dropdown placement="bottom" class="j_dropdown_browser">
+        <a class="header_link">
+          建议用：360/谷歌浏览器
+        </a>
+        <DropdownMenu slot="list">
+          <ul class="browser-dropdown">
+            <li><a href="https://browser.360.cn/ee/" target="_blank">下载360极速浏览器</a></li>
+            <li><a href="https://www.google.cn/chrome/" target="_blank">下载谷歌浏览器</a></li>
+            <li><a href="https://ie.sogou.com/" target="_blank">下载搜狗高速浏览器</a></li>
+            <li><a href="https://browser.qq.com/" target="_blank">下载QQ浏览器</a></li>
+          </ul>
+        </DropdownMenu>
+      </Dropdown>
       <a href="#/" class="header_link">首页</a>
-      <a href="#/" class="header_link">服务反馈</a>
-      <Dropdown placement="bottom" class="j_dropdown_message">
-          <a href="#/message" class="header_link">
-              <i class="iconfont icon-tixing2"><span class="badge">{{userInfo.noReaderMsg}}</span></i>
-          </a>
-          <DropdownMenu slot="list">
-            <div class="name">
-              站内消息通知
-            </div>
-            <ul>
-              <li v-for="(item, index) in messageList" :key="index" v-if="index<5">
-                <div class="title" @click="detail(item.messageId)">
-                  {{item.title}}
-                </div>
-                <p>
-                  {{item.addTime | time('yyyy-MM-dd hh:mm')}}
-                </p>
-              </li>
-              <li v-if="messageList.length === 0">暂无数据</li>
-            </ul>
-            <a href="#/message/00" class="more">查看更多</a>
-          </DropdownMenu>
+      <a href="javascript:;" class="header_link" @click="openFeedback"><span id="YD_Feedback">服务反馈</span></a>
+      <Dropdown placement="bottom" class="j_dropdown_message" @on-visible-change="messageChange">
+        <a href="#/message" class="header_link">
+          <i class="iconfont icon-tixing2 yd_message"><span class="badge">{{userInfo.noReaderMsg}}</span></i>
+        </a>
+        <DropdownMenu slot="list">
+          <div class="name">
+            站内消息通知
+          </div>
+          <ul>
+            <li v-for="(item, index) in messageList" :key="index" v-if="index<5">
+              <div class="title" @click="detail(item, index)">
+                {{item.title}}
+              </div>
+              <p>
+                {{item.addTime | time('yyyy-MM-dd hh:mm')}}
+              </p>
+            </li>
+            <li v-if="messageList.length === 0">{{message ? '暂无数据' : '加载中'}}</li>
+          </ul>
+          <a href="#/message/00" class="more">查看更多</a>
+        </DropdownMenu>
       </Dropdown>
       <span class="border" style="background:#383d41"></span>
       <Dropdown placement="bottom-end" class="j_dropdown_username">
-          <a href="javascript:void(0)" style="color: #999" class="header_link">
-              {{user.username}}
-              <Icon type="arrow-down-b"></Icon>
-          </a>
-          <a href="javascript:void(0)" class="avatar header_link">
-            <i class="iconfont icon-huiyuan"></i>
-          </a>
-          <DropdownMenu slot="list">
-            <div class="info">
-              <i class="iconfont icon-huiyuan"></i>
-              <p>账号：{{user.username}}</p>
-            </div>
-            <Row>
-              <Col span="8"><a href="#/account"><i class="iconfont icon-account-only"></i>账号信息</a></Col>
-              <Col span="8"><a href="#/account"><i class="iconfont icon-anquan"></i>安全设置</a></Col>
-              <Col span="8"><a href="#/cost_order"><i class="iconfont icon-price"></i>费用中心</a></Col>
-            </Row>
-            <Row>
-              <Col span="8"><a href="#/point_origin"><i class="iconfont icon-quanyi"></i>积分规则</a></Col>
-              <Col span="8"><a href="#/point"><i class="iconfont icon-jifen"></i>账号积分</a></Col>
-              <Col span="8"><a href="#/enterprise"><i class="iconfont icon-gongsi"></i>公司信息</a></Col>
-            </Row>
-            <a href="javascript:;" @click="signout" class="signout">退出</a>
-          </DropdownMenu>
+        <a href="javascript:void(0)" style="color: #999" class="header_link">
+            {{user.username}}
+            <Icon type="arrow-down-b"></Icon>
+        </a>
+        <a href="javascript:void(0)" class="avatar header_link">
+          <i class="iconfont icon-huiyuan" v-if="!$store.state.user.headimg"></i>
+          <img :src="$store.state.status.IMG_HOST+$store.state.user.headimg" v-if="$store.state.user.headimg">
+        </a>
+        <DropdownMenu slot="list">
+          <div class="info">
+            <i class="iconfont icon-huiyuan" v-if="!$store.state.user.headimg"></i>
+            <img :src="$store.state.status.IMG_HOST+$store.state.user.headimg" v-if="$store.state.user.headimg">
+            <p>账号：{{user.username}}</p>
+          </div>
+          <Row>
+            <Col span="8"><a href="#/account"><i class="iconfont icon-account-only"></i>账号信息</a></Col>
+            <Col span="8"><a href="#/account"><i class="iconfont icon-anquan"></i>安全设置</a></Col>
+            <Col span="8"><a href="#/cost_paid"><i class="iconfont icon-price"></i>费用中心</a></Col>
+          </Row>
+          <Row>
+            <Col span="8"><a href="#/point_origin"><i class="iconfont icon-quanyi"></i>积分规则</a></Col>
+            <Col span="8"><a href="#/point"><i class="iconfont icon-jifen"></i>账号积分</a></Col>
+            <Col span="8"><a href="#/enterprise"><i class="iconfont icon-gongsi"></i>公司信息</a></Col>
+          </Row>
+          <a href="javascript:;" @click="signout" class="signout"> <span v-if="user.username !== '未登录'">退出</span><span v-else>登录</span> </a>
+        </DropdownMenu>
       </Dropdown>
       <span class="border"></span>
     </Col>
     <Detail ref="detail"/>
+    <Feedback ref="feedback"/>
   </Row>
 </template>
 
 <script>
 import { mapState, mapActions } from 'vuex'
+import Feedback from '@/components/home/j-feedback'
 import Detail from '@/pages/message/Detail'
 export default {
   components: {
+    Feedback,
     Detail
   },
   data () {
     return {
-      visible: false
+      visible: false,
+      message: false,
+      messageList: []
     }
   },
   computed: {
-    ...mapState(['user', 'userInfo', 'messageList'])
+    ...mapState(['user', 'userInfo', 'status'])
   },
   created () {
     this.$store.commit('setLanId', window.localStorage.getItem('lanId') || '1')
-    this.getUser()
+    if (window.location.search.substr(1).indexOf('&lanId=') > -1) {
+      var vm = this
+      this.$store.dispatch('lanIdChange', window.localStorage.getItem('lanId')).then((res) => {
+        vm.get()
+      })
+    } else {
+      this.get()
+    }
     this.getUserInfo()
-    this.getMessage()
+    this.getCustomData()
   },
   methods: {
-    ...mapActions(['getUser', 'getUserInfo', 'getMessage']),
+    ...mapActions(['getUser', 'getUserInfo', 'getCustomData', 'getEnterprise']),
+    get () {
+      this.getUser()
+      this.getEnterprise()
+    },
     signout () {
-      let ctx = this
       // 新版PC注销操作
       this.ilogout('iframepclogout', 'http://pc.jihui88.com/rest/api/user/logout')
       // 订购系统注销操作
       this.ilogout('iframeorderlogout', 'http://buy.jihui88.com/api/user/logout')
-      this.$http.get('/rest/api/user/logout').then((res) => {
-        if (res.success) {
-          ctx.$store.commit('setUser', {})
-          window.location.href = 'http://www.jihui88.com/member/login.html?backURL=' + decodeURIComponent(window.location.href)
-        } else {
-          ctx.$Message.success(res.msg)
-        }
-      })
+      this.ilogout('iframebuylogout', 'http://www.jihui88.com/rest/buy/api/user/logout')
+      if (this.user.username === '未登录') {
+        window.location.href = 'http://www.jihui88.com/manage_v4/login.html?backURL=' + decodeURIComponent(window.location.origin + window.location.pathname)
+      } else {
+        this.$http.get('/rest/api/user/logout').then((res) => {
+          if (res.success) {
+            window.location.href = 'http://www.jihui88.com/manage_v4/login.html?backURL=' + window.location.origin + window.location.pathname
+          } else {
+            this.$Message.success(res.msg)
+          }
+        })
+      }
       window.localStorage.setItem('lanId', '1')
     },
     ilogout (id, url) {
@@ -107,8 +144,33 @@ export default {
       ifr.style.display = 'none'
       document.getElementById('JHW').appendChild(ifr)
     },
-    detail (id) {
-      this.$refs.detail.open(id)
+    detail (item, index) {
+      this.$refs.detail.open(item.messageId)
+      if (this.userInfo.noReaderMsg > 0) {
+        this.userInfo.noReaderMsg -= 1
+        this.status['menuMessage'].menu[1].count = this.userInfo.noReaderMsg
+        this.messageList.splice(index, 1)
+      }
+      if (this.userInfo.noReaderMsg > 4) this.getMessage()
+    },
+    getMessage () {
+      this.$http.get('/rest/api/message/list?page=1&pageSize=5&recvState=00').then((res) => {
+        if (res.success) {
+          this.messageList = res.attributes.data
+          this.message = true
+        }
+      })
+    },
+    messageChange () {
+      if (this.messageList.length === 0 && !this.message) {
+        this.getMessage()
+      }
+      if (this.messageList.length > 0) {
+        this.message = true
+      }
+    },
+    openFeedback () {
+      this.$refs.feedback.open()
     }
   }
 }
@@ -123,7 +185,7 @@ export default {
   background: #383d41;
   .logo{
     float:left;
-    width: 120px;
+    width: 120px;    height: 50px;
     border-right: 1px solid #000;
     img{
       height: 36px;
@@ -178,6 +240,12 @@ export default {
           margin-bottom: 10px;
           padding: 30px 0 20px 0;
           line-height: 2.5;
+          img{
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            vertical-align: middle;
+          }
           p{
             font-size: 14px;
             font-weight: bold;
@@ -214,6 +282,12 @@ export default {
         background: #000;
         padding: 0 7px 0 8px;
         text-align: center;
+        img{
+          width: 32px;
+          height: 32px;
+          border-radius: 50%;
+          vertical-align: middle;
+        }
       }
       .icon-huiyuan{
         width: 32px;
@@ -293,6 +367,39 @@ export default {
     display: inline-block;
     width: 1px;
     padding: 0 !important;
+  }
+  .j_dropdown_browser{
+    &:hover{
+      a{
+        color: #fff
+      }
+    }
+    .header_link{
+      color: #999;
+    }
+    .ivu-dropdown-menu{
+      width: 150px;
+    }
+    .browser-dropdown{
+      background-color: #fff;
+      padding: 10px 15px;
+      text-align: left;
+      li{
+        height: 30px;
+        line-height: 30px;
+        border-bottom: 1px solid #eaeaea;
+        padding: 0 5px;
+        &:last-child{
+          border-bottom: none;
+        }
+        a{
+          color: #333;
+          &:hover{
+            color: #333
+          }
+        }
+      }
+    }
   }
 }
 </style>

@@ -5,12 +5,12 @@
       <Content>
         <JHeader :title="'导入'" :lan="true"/>
         <div class="import_title">
-          Excle表格批量上传
+          Excle表格批量上传<a href="https://v.qq.com/x/page/j0753rag7kr.html" class="a_underline" target="_blank" style="font-size: 12px;padding-left: 20px;">导入视频教程</a>
         </div>
         <div class="j_tip">
           <span class="red">步骤一：</span>“打勾”生成产品表格模板
         </div>
-        <table class="j_table">
+        <table class="j_table j_table_li">
           <thead>
             <tr>
               <th>表格模板内容：</th>
@@ -20,18 +20,22 @@
             <tr>
               <td>
                 <CheckboxGroup v-model="col">
-                  <Checkbox :label="item.value" v-for="item in list" :key="item.value">{{item.text}}</Checkbox>
+                  <Checkbox :label="item.text === '-' ? item.value : item.text" v-for="item in list" :key="item.value">{{item.text}}</Checkbox>
                 </CheckboxGroup>
               </td>
             </tr>
           </tbody>
         </table>
-        <a href="http://www.jihui88.com/sample/productMulti.xls"><Button type="primary" style="margin-bottom:22px;">生成产品表格模板</Button></a>
-
+        <Button type="primary" style="margin-bottom:22px;" @click="generate">生成产品表格模板</Button>
         <div class="j_tip">
           <span class="red">步骤二：</span>进行批量上传产品表格前，请先把产品图片上传好
         </div>
-        <Button type="primary" @click="update($Message)" style="margin-bottom:16px;">上传产品图片</Button>
+        <Button type="primary" @click="uploadPic" style="margin-bottom:16px;">上传产品图片</Button>
+        <JUpload :id="albumId" @on-success="handleSuccess" style="height: 0px;">
+          <span slot="content">
+            <div id="productUpload" style="display:none">上传</div>
+          </span>
+        </JUpload>
         <div class="j_tip">
           <span class="red">步骤三：</span>提交填写好的产品表格
         </div>
@@ -40,9 +44,13 @@
             <span class="star">*</span>上传表格:
           </Col>
           <Col span="21">
-            <input id="fileUpload" type="file" style="width:440px;float:left" class="ivu-input"></input>
-            <span class="select" @click="select">选择文件</span>
-            <Button type="primary" @click="submit()" class="submit">提交</Button>
+            <Upload ref="upload2" action="/rest/api/product/uploadProductsByExcel"
+              formenctype="multipart/form-data"
+              :on-success="handleSuccess2">
+              <div id="fileUpload" >
+                <span class="select">选择文件</span>{{name}}
+              </div>
+            </Upload>
           </Col>
         </Row>
       </Content>
@@ -51,13 +59,16 @@
 </template>
 
 <script>
-import lrz from 'lrz'
+import qs from 'qs'
+import { mapState } from 'vuex'
 import MenuBar from '@/components/common/menu_bar'
 import JHeader from '@/components/group/j-header'
+import JUpload from '@/components/group/j-upload'
 export default {
   components: {
     MenuBar,
-    JHeader
+    JHeader,
+    JUpload
   },
   data () {
     return {
@@ -66,7 +77,7 @@ export default {
         { value: 'name', text: '产品名称' },
         { value: 'prodtype', text: '产品型号' },
         { value: 'category', text: '产品分类' },
-        { value: 'picName', text: '图片名称' },
+        { value: 'picName', text: '产品图片' },
         { value: 'proddesc', text: '产品内容' },
         { value: 'detail1', text: '产品描述' },
         { value: 'detail2', text: '产品卖点' },
@@ -78,68 +89,91 @@ export default {
         { value: 'isNew', text: '新品' },
         { value: 'isBest', text: '精品' },
         { value: 'isHot', text: '热销' },
-        { value: 'picPath', text: '产品主图缩略图' },
-        { value: 'productImageListStore', text: '多方位图缩略图' },
         { value: 'tag', text: '产品标签' },
         { value: 'a', text: '-' },
         { value: 'b', text: '-' },
-        { value: 'c', text: '-' }
-      ]
+        { value: 'c', text: '-' },
+        { value: 'd', text: '-' },
+        { value: 'e', text: '-' }
+      ],
+      modal: false,
+      albumId: 'all',
+      name: '未选择任何文件'
+    }
+  },
+  computed: {
+    ...mapState({
+      categoryList: state => state.albumCategory
+    })
+  },
+  watch: {
+    categoryList: {
+      handler () {
+        this.init()
+      }
+    }
+  },
+  created () {
+    if (this.categoryList.length === 0) {
+      this.$store.dispatch('getAlbumCategory').then(res => {
+        this.init()
+      })
+    } else {
+      this.init()
     }
   },
   methods: {
+    init () {
+      this.categoryList.forEach(item => {
+        if (item.name === '产品批量上传') {
+          this.albumId = item.albumId
+        }
+      })
+    },
+    uploadPic () {
+      var btn = document.getElementById('productUpload')
+      if (this.albumId !== 'all') {
+        btn.click()
+      } else {
+        let data = {
+          model: JSON.stringify({blongType: 'AP', state: '01', name: '产品批量上传'})
+        }
+        this.$http.post('/rest/api/album/detail', qs.stringify(data)).then((res) => {
+          if (res.success) {
+            this.albumId = res.attributes.data.albumId
+            btn.click()
+          }
+        })
+      }
+    },
+    handleSuccess (res, file) {
+      var ctx = this
+      this.$Message.info('上传成功')
+      setTimeout(function () {
+        ctx.$refs.upload.clearFiles()
+      }, 1000)
+    },
+    handleSuccess2 (res, file) {
+      var ctx = this
+      this.name = file.name
+      this.$Message.info('上传成功')
+      setTimeout(function () {
+        ctx.$refs.upload2.clearFiles()
+      }, 1000)
+    },
     select () {
       var btn = document.getElementById('fileUpload')
       btn.click()
     },
-    submit () {
-      this.$Message.info('更新中')
-      let _this = this
-      var e = document.getElementById('fileUpload')
-      lrz(e.files[0], {fieldName: 'Filedata'})
-        .then(function (rst) {
-          // 这里该上传给后端啦
-          /* ==================================================== */
-          // 原生ajax上传代码，所以看起来特别多 ╮(╯_╰)╭，但绝对能用
-          // 其他框架，例如jQuery处理formData略有不同，请自行google，baidu。
-          let xhr = new XMLHttpRequest()
-          xhr.open('POST', '/user_v2/product/uploadProducts')
-          xhr.onload = function () {
-            _this.isloading = false
-            if (xhr.status === 200) {
-              // 上传成功
-              let result = JSON.parse(xhr.response).attributes
-              console.log(result)
-              _this.result = result
-              _this.$emit('result', result)
-            } else {
-              // 处理其他情况
-              console.log(xhr.statusText)
-            }
-          }
-          xhr.onerror = function () {
-            // 处理错误
-          }
-          xhr.upload.onprogress = function (e) {
-            // 上传进度
-            _this.isloading = true
-            // var percentComplete = ((e.loaded / e.total) || 0) * 100
-          }
-          // 添加参数
-          rst.formData.append('fileLen', rst.fileLen)
-          // 触发上传
-          xhr.send(rst.formData)
-          /* ==================================================== */
-          return rst
-        })
-        .catch(function (err) {
-          console.log(err)
-          // 处理失败会执行
-        })
-        .always(function () {
-          _this.isloading = false
-          // 不管是成功失败，都会执行
-        })
+    generate () {
+      let data = {
+        fields: this.col.join()
+      }
+      this.$http.post('/rest/api/product/downloadProductExcel?' + qs.stringify(data)).then(res => {
+        if (res.success) {
+          window.open(res.attributes.data)
+        }
+      })
     }
   }
 }
@@ -192,15 +226,15 @@ export default {
     #fileUpload{
       color: #aaa;
       cursor: pointer;
+      border: 1px solid #c9c9c9;
+      box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+      max-width: 440px;
     }
     .select{
-      position: absolute;
-      left: 22px;
-      top: 5px;
       background: #fff;
       color: #aaa;
       text-decoration: underline;
-      padding: 0 9px;
+      padding: 0 9px 0 20px;
       line-height: 26px;
       cursor: pointer;
     }

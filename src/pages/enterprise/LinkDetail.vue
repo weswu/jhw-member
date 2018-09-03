@@ -31,7 +31,9 @@ export default {
   data () {
     return {
       modal: false,
-      detail: {},
+      detail: {
+        image: ''
+      },
       rules: {
         name: [
           { required: true, message: '链接名称不能为空', trigger: 'blur' }
@@ -50,19 +52,22 @@ export default {
         this.$http.get('/rest/api/link/detail/' + id).then((res) => {
           if (res.success) {
             this.detail = res.attributes.data
+            if (!this.detail.image) this.detail.image = ''
           } else {
             this.$Message.error(res.msg)
           }
         })
       } else {
-        this.detail = {}
+        this.detail = {
+          image: ''
+        }
       }
     },
     cancel () {
       this.modal = false
     },
     change (e) {
-      console.log('image update')
+      this.detail.image = e.src
     },
     submit (name) {
       this.$refs[name].validate((valid) => {
@@ -75,11 +80,10 @@ export default {
             url = '/' + this.detail.linkId
             data._method = 'put'
           }
-          var ctx = this
           this.$http.post('/rest/api/link/detail' + url, qs.stringify(data)).then((res) => {
             if (res.success) {
               this.$Message.success('保存成功')
-              this.$emit('on-change', res.attributes.data, ctx.detail.linkId ? '' : 'add')
+              this.$emit('on-change')
               this.modal = false
             } else {
               this.$Message.error(res.msg)

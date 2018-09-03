@@ -1,9 +1,9 @@
 <template>
   <div class="j_app j_panel">
     <Poptip trigger="hover" placement="right" width="228">
-      <img src="static/img/app.png" alt="">
+      <img src="platform/img/app.png" alt="">
       <div slot="content">
-        <img src="static/img/app.png" alt="" style="width:182px;height:182px;">
+        <img src="platform/img/app.png" alt="" style="width:182px;height:182px;">
       </div>
     </Poptip>
     <p>
@@ -23,6 +23,7 @@ export default {
 <style lang="less">
 .j_app{
   padding: 28px 0 27px 27px;
+  margin-bottom: 20px;
   .ivu-poptip{
     float: left;
     width: 91px;

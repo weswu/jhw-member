@@ -1,60 +1,65 @@
 <template>
-  <Sider id="J_Sider" ref="side1" hide-trigger collapsible :collapsed-width="50" v-model="isCollapsed" width="180">
+  <Sider id="J_Sider" ref="side1" hide-trigger collapsible :collapsed-width="50" v-model="customData.isCollapsed" width="180">
     <Header :style="{padding: 0}" class="layout-header-bar" @click.native="collapsedSider">
       <Icon :class="rotateIcon" :style="{margin: '10px 10px 0'}" type="navicon" size="20"></Icon>
     </Header>
-    <Menu theme="dark" width="auto" :class="menuitemClasses" :active-name="activeName" @on-select="mrouter" accordion>
-        <Tooltip content="首页" placement="right" :transfer="transfer" :disabled="disabled">
-            <MenuItem name="index">
-                  <i class="iconfont icon-ai-home"></i>
-                  <span>首页</span>
-            </MenuItem>
+    <Menu ref="menu" theme="dark" width="auto" :class="menuitemClasses" :active-name="activeName" :open-names="open" @on-select="mrouter" accordion>
+      <Tooltip content="首页" placement="right" :transfer="transfer" :disabled="disabled">
+        <MenuItem name="index">
+          <i class="iconfont icon-ai-home"></i>
+          <span>首页</span>
+        </MenuItem>
+      </Tooltip>
+      <Submenu :name="item.name" v-for="(item, index) in navList" :key="index">
+        <template slot="title">
+          <Tooltip :content="item.text" placement="right" :transfer="transfer" :disabled="disabled">
+            <i :class="'iconfont icon-' + item.icon"></i>
+            <span>{{item.text}}</span>
+          </Tooltip>
+        </template>
+        <Tooltip v-for="(row, i) in item.children" :key="i" :content="row.text" placement="right" :transfer="transfer" :disabled="disabled">
+          <MenuItem :name="row.name">
+            <i :class="'iconfont icon-' + row.icon"></i>
+            <span>{{row.text}}</span>
+          </MenuItem>
         </Tooltip>
-        <Submenu :name="item.name" v-for="(item, index) in navList" :key="index">
-            <template slot="title">
-              <Tooltip :content="item.text" placement="right" :transfer="transfer" :disabled="disabled">
-                <i :class="'iconfont icon-' + item.icon"></i>
-                <span>{{item.text}}</span>
-              </Tooltip>
-            </template>
-            <Tooltip v-for="(row, i) in item.children" :key="i" :content="row.text" placement="right" :transfer="transfer" :disabled="disabled">
-                <MenuItem :name="row.name">
-                      <i :class="'iconfont icon-' + row.icon"></i>
-                      <span>{{row.text}}</span>
-                </MenuItem>
-            </Tooltip>
-        </Submenu>
-        <Tooltip :content="item.text" placement="right" v-for="item in navList2" :key="item.name" :transfer="transfer" :disabled="disabled">
-            <a :href="item.url" target="_blank">
-              <MenuItem :name="item.name">
-                  <i :class="'iconfont icon-' + item.icon"></i>
-                  <span>{{item.text}}</span>
-              </MenuItem>
-            </a>
-        </Tooltip>
+      </Submenu>
+      <Tooltip :content="item.text" placement="right" v-for="item in navList2" :key="item.name" :transfer="transfer" :disabled="disabled">
+        <MenuItem :name="item.name" v-if="!item.url">
+          <i :class="'iconfont icon-' + item.icon"></i>
+          <span>{{item.text}}</span>
+        </MenuItem>
+        <a :href="item.url" target="_blank" v-if="item.url">
+          <MenuItem :name="item.name">
+            <i :class="'iconfont icon-' + item.icon"></i>
+            <span>{{item.text}}</span>
+          </MenuItem>
+        </a>
+      </Tooltip>
     </Menu>
   </Sider>
 </template>
 
 <script>
+import { mapState } from 'vuex'
 export default {
   data () {
     return {
-      isCollapsed: true,
-      transfer: true,
-      disabled: false,
+      transfer: true, // 是否将弹层放置于 body 内，它将不受父级样式影响
+      disabled: false, // 是否禁用提示框
       activeName: 'index',
+      open: [],
       navList: [
-        { name: 'renyuan',
+        { name: '1',
           icon: 'fl-renyuan',
           text: '账号信息',
           children: [
             { name: 'account', icon: 'account-only', text: '账号管理' },
-            { name: 'cost_order', icon: 'price', text: '费用中心' },
+            { name: 'cost_paid', icon: 'price', text: '费用中心' },
             { name: 'point', icon: 'jifen', text: '积分管理' }
           ]
         },
-        { name: 'shuju',
+        { name: '2',
           icon: 'fl-shuju',
           text: '数据管理中心',
           children: [
@@ -69,15 +74,13 @@ export default {
         }
       ],
       navList2: [
-        { name: 'tianchong',
+        { name: 'pc',
           icon: 'diannao-tianchong',
-          text: '网站界面管理',
-          url: 'http://pc.jihui88.com/pc/index.html'
+          text: '网站界面管理'
         },
-        { name: 'xiaochengxu',
+        { name: 'basis',
           icon: 'xiaochengxu',
-          text: '小程序界面管理',
-          url: 'http://pc.jihui88.com/rest/site/299/applets'
+          text: '小程序界面管理'
         },
         { name: 'fenxiao',
           icon: 'fenxiao',
@@ -93,23 +96,54 @@ export default {
     }
   },
   computed: {
+    ...mapState(['customData']),
     rotateIcon () {
       return [
+        'yd_collapsed',
         'menu-icon',
-        this.isCollapsed ? 'rotate-icon' : ''
+        this.customData.isCollapsed ? 'rotate-icon' : ''
       ]
     },
     menuitemClasses () {
       return [
         'menu-item',
-        this.isCollapsed ? 'collapsed-menu' : ''
+        this.customData.isCollapsed ? 'collapsed-menu' : ''
       ]
     }
   },
+  watch: {
+    $route (to, from) {
+      this.initRoute(to)
+    }
+  },
+  created () {
+    this.initRoute(this.$route)
+  },
+  mounted () {
+    var vm = this
+    setTimeout(function () {
+      vm.disabled = !vm.customData.isCollapsed
+    }, 1000)
+  },
   methods: {
+    initRoute (to) {
+      if (to.meta.parent) {
+        if (to.path === '/category/news') {
+          this.activeName = 'news'
+        } else {
+          this.activeName = to.meta.parent
+        }
+      }
+      this.open = to.meta.open ? to.meta.open.split('') : []
+      this.$nextTick(() => {
+        this.$refs.menu.updateOpened()
+      })
+    },
     collapsedSider () {
       this.$refs.side1.toggleCollapse()
-      this.disabled = !this.isCollapsed
+      this.disabled = !this.customData.isCollapsed
+      this.customData.isCollapsed = this.customData.isCollapsed
+      this.$store.dispatch('SAVE_CUSTOM_DATA')
     },
     mrouter (name) {
       this.$router.push({path: '/' + name})
@@ -130,9 +164,10 @@ export default {
   background: #2d303c;
   height: 100%;
   transition: none;
-  overflow-y: scroll;
+  overflow-y: auto;
   overflow-x: hidden;
   &::-webkit-scrollbar{width: 0;}
+  .ivu-tooltip,.ivu-tooltip-rel{width: 100%}
   .layout-header-bar{
     background: #414659;
     height: 40px;
@@ -181,7 +216,6 @@ export default {
        margin-right: 0;
        display: inline-block;
        overflow: hidden;
-       width: 130px;
        text-overflow: ellipsis;
        white-space: nowrap;
        vertical-align: middle;
@@ -209,9 +243,6 @@ export default {
       .ivu-menu-item {
         padding-left: 10px !important;
         transition: none;
-        span{
-          width: 120px;
-        }
       }
     }
     // 二级菜单打开
@@ -226,6 +257,9 @@ export default {
   .collapsed-menu {
     span{
       width: 0;
+    }
+    .iconfont {
+      width: 100%;
     }
     .ivu-icon{
       display: none

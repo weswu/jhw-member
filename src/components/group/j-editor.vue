@@ -1,25 +1,22 @@
 <template>
   <div>
     <script :id='id' type='text/plain'></script>
-    <Modal
-        v-model="picModel"
-        title="选择图片"
-        width="800"
-        ok-text="确定"
-        @on-ok='insertImg'
-        cancel-text="取消">
-    </Modal>
+    <JAlbum ref="ablum" :type="imgType" @on-change="insertImg"/>
+    <Attachment ref="attachment" @on-change="insertFile"/>
   </div>
 </template>
 <script>
+import JAlbum from '@/components/group/j-album'
+import Attachment from '@/components/attachment/at-file'
 export default {
   props: {
-    content: {
-      type: String,
-      default: ''
-    },
+    content: {},
     eWidth: {},
     eHeight: {}
+  },
+  components: {
+    JAlbum,
+    Attachment
   },
   data () {
     return {
@@ -28,26 +25,31 @@ export default {
       imageEdit: false,
       width: '131px',
       imgWidth: '115px',
-      imgUpdate: '',
-      picModel: false,
-      imgModel: false, // 点击后为true 只初始化一次
+      imgType: 'many',
       config: {
         toolbars: [
           ['fullscreen', 'source', '|', 'undo', 'redo', '|', 'fontsize', '|', 'blockquote', 'horizontal', '|', 'removeformat', 'formatmatch', 'link', 'unlink'],
           ['bold', 'italic', 'underline', 'forecolor', 'backcolor', '|', 'indent', '|', 'justifyleft', 'justifycenter', 'justifyright', 'justifyjustify', '|', 'rowspacingtop', 'rowspacingbottom', 'lineheight', '|', 'insertorderedlist', 'insertunorderedlist', '|', 'imagenone', 'imageleft', 'imageright', 'imagecenter'],
-          ['fontfamily', 'letterspacing', '|', 'fontborder', 'strikethrough', 'superscript', 'subscript', 'autotypeset', 'pasteplain', '|', 'insertimage', 'emotion', 'map', '|', 'inserttable', 'searchreplace']
+          ['fontfamily', 'letterspacing', '|', 'fontborder', 'strikethrough', 'superscript', 'subscript', 'autotypeset', 'pasteplain', '|', 'insertimage', 'emotion', 'map', 'insertvideo', '|', 'inserttable', 'searchreplace', 'attachment']
         ],
-        elementPathEnabled: false,
-        wordCount: false,
+        // 宽高
         initialFrameWidth: 770,
         initialFrameHeight: 600,
+        // 是否自动长高
         autoHeightEnabled: false,
+        // 是否启用元素路径
+        elementPathEnabled: false,
+        // 是否开启字数统计
+        wordCount: false,
+        // 自动保存间隔时间，单位ms
         saveInterval: 500,
+        // 阻止Div转换成P标签
         allowDivTransToP: false,
-        catchRemoteImageEnable: false, // 防止远程抓取图片
-        enterTag: 'br', // 去掉自动添加的p和br标签
-        UEDITOR_HOME_URL: './static/ueditor1_4_3/',
-        serverUrl: './static/ueditor1_4_3/'
+        // 防止远程抓取图片
+        catchRemoteImageEnable: false,
+        UEDITOR_HOME_URL: 'http://www.jihui88.com/manage_v4/platform/ueditor1_4_3/',
+        serverUrl: 'http://www.jihui88.com/manage_v4/platform/ueditor1_4_3/',
+        themePath: 'http://www.jihui88.com/manage_v4/platform/ueditor1_4_3/themes/'
       }
     }
   },
@@ -65,12 +67,15 @@ export default {
     }
     this.editor = window.UE.getEditor(this.id, this.config) // 初始化UE
     this.editor.addListener('ready', function () {
-      ctx.editor.setContent(ctx.content || '') // 确保UE加载完成后，放入内容。
+      ctx.editor.setContent(ctx.content || '<p><br/></p>') // 确保UE加载完成后，放入内容。
       window.UE.dom.domUtils.on(document.getElementsByClassName('edui-for-insertimage')[0], 'click', function (e) {
         // e为事件对象，this为被点击元素对戏那个
-        ctx.imgUpdate = ''
-        ctx.picModel = true
-        ctx.imgModel = true
+        ctx.imgType = 'many'
+        ctx.$refs.ablum.open()
+      })
+      // 附件点击
+      window.UE.dom.domUtils.on(document.getElementsByClassName('edui-for-attachment')[0], 'click', function (e) {
+        ctx.$refs.attachment.open()
       })
     })
     // 图片替换
@@ -83,12 +88,13 @@ export default {
           ctx.img.className.indexOf('edui-faked-music') === -1 && ctx.img.src.indexOf('http://maps.google.com/maps/api/staticmap') === -1 &&
           !ctx.img.getAttribute('anchorname') && !ctx.img.getAttribute('word_img')) {
           setTimeout(function () {
-            window.$('.edui-default .edui-clickable1').click(function () {
-              ctx.imgUpdate = 'update'
-              ctx.$refs.imgRef.initList()
-              ctx.picModel = true
-              ctx.imgModel = true
-            })
+            let array = window.document.getElementsByClassName('edui-clickable1')
+            for (var i = 0; i < array.length; i++) {
+              array[i].addEventListener('click', function (e) {
+                ctx.imgType = 'single'
+                ctx.$refs.ablum.open()
+              })
+            }
           }, 500)
         }
       }
@@ -99,21 +105,72 @@ export default {
       return this.editor.getContent().replace(/\uD83C[\uDF00-\uDFFF]|\uD83D[\uDC00-\uDE4F]/g, '')
     },
     setUEContent (data) { // 设置内容方法
-      this.editor.setContent(data)
+      this.editor.setContent(data || '<p><br/></p>')
     },
-    selectImg (data) {
-      this.imgList = data
-    },
-    insertImg () {
-      var ctx = this
-      if (this.imgUpdate === 'update') {
-        this.img.src = 'http://dfwjjingtai.b0.upaiyun.com/' + this.imgList.serverPath
+    insertImg (e) {
+      let vm = this
+      if (this.imgType === 'single') {
+        this.img.src = 'http://img.jihui88.com/' + e.src
       } else {
-        for (var i = 0; i < this.imgList.length; i++) {
-          var pic = 'http://dfwjjingtai.b0.upaiyun.com/' + this.imgList[i]['serverPath']
-          ctx.editor.execCommand('inserthtml', '<img src="' + pic + '" alt="' + this.imgList[i].filename + '">', true)
-        }
+        e.forEach(item => {
+          var pic = 'http://img.jihui88.com/' + item.src
+          vm.editor.execCommand('inserthtml', '<img src="' + pic + '" alt="' + item.name + '">', true)
+        })
       }
+    },
+    getFileIcon (url) {
+      var ext = url.substr(url.lastIndexOf('.') + 1).toLowerCase()
+      let maps = {
+        'rar': 'icon_rar.gif',
+        'zip': 'icon_rar.gif',
+        'tar': 'icon_rar.gif',
+        'gz': 'icon_rar.gif',
+        'bz2': 'icon_rar.gif',
+        'doc': 'icon_doc.gif',
+        'docx': 'icon_docx.gif',
+        'pdf': 'icon_pdf.gif',
+        'mp3': 'icon_mp3.gif',
+        'xls': 'icon_xls.gif',
+        'xlsx': 'icon_xlsx.gif',
+        'chm': 'icon_chm.gif',
+        'ppt': 'icon_ppt.gif',
+        'pptx': 'icon_pptx.gif',
+        'avi': 'icon_mv.gif',
+        'rmvb': 'icon_mv.gif',
+        'wmv': 'icon_mv.gif',
+        'flv': 'icon_mv.gif',
+        'swf': 'icon_mv.gif',
+        'rm': 'icon_mv.gif',
+        'exe': 'icon_exe.gif',
+        'psd': 'icon_psd.gif',
+        'txt': 'icon_txt.gif',
+        'jpg': 'icon_jpg.gif',
+        'png': 'icon_jpg.gif',
+        'jpeg': 'icon_jpg.gif',
+        'gif': 'icon_jpg.gif',
+        'ico': 'icon_jpg.gif',
+        'bmp': 'icon_jpg.gif',
+        'rtf': 'icon_rtf.gif',
+        'wps': 'icon_wps.gif',
+        'et': 'icon_et.gif',
+        'dps': 'icon_dps.gif'
+      }
+      return maps[ext] ? maps[ext] : maps['txt']
+    },
+    insertFile (data) {
+      let vm = this
+      let html = ''
+      let icon = ''
+      let URL = vm.editor.getOpt('UEDITOR_HOME_URL')
+      let iconDir = URL + (URL.substr(URL.length - 1) === '/' ? '' : '/') + 'dialogs/attachment/fileTypeImages/'
+      data.forEach(item => {
+        icon = 'http://www.jihui88.com/manage_v4/' + iconDir + vm.getFileIcon(item.serverPath)
+        html += '<p style="line-height: 16px;">' +
+          '<img style="vertical-align: middle; margin-right: 2px;" src="' + icon + '"/>' +
+          '<a style="font-size:12px; color:#0066cc;" href="' + item.serverPath + '" target="_blank" title="' + item.filename + '">' + item.filename + '</a>' +
+          '</p>'
+      })
+      vm.editor.execCommand('inserthtml', html)
     }
   },
   destroyed () {

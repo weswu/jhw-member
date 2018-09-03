@@ -1,5 +1,5 @@
 <template>
-  <Layout class="j_layout ivu-layout-has-sider">
+  <Layout class="ivu-layout-has-sider">
     <MenuBar :data="'menuAnalysis'" :active="active" :detail="true" @on-change="activeChange"/>
     <Layout class="j_layout_content">
       <JHeader :title="'员工推广分析'"/>

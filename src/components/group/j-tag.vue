@@ -1,16 +1,31 @@
 <template>
-  <div class="">
-    <Select v-model="taglist" multiple style="width:350px" @on-change="change">
-      <Option v-for="item in tagList" :value="item.name" :key="item.tagId" v-if="item.type === type">{{ item.name }}</Option>
-    </Select>
-    <Poptip placement="bottom" width="235">
-      <span class="a_underline pl5">新增标签</span>
-      <div slot="content">
-        <Input v-model="tag" placeholder="请输入标签名称" style="width:200px;margin-bottom:10px;"></Input><br/>
-        <Button type="primary" size="small" @click="addTag">添加</Button>
-      </div>
-    </Poptip>
-  </div>
+  <FormItem label="标签：">
+    <p style="padding:0 0 10px 0">
+      <span v-for="(item, index) in list" :key="index" v-if="item.type === type">
+        <Tag v-if="item._checked" type="border" closable @on-close="delTag(item)">{{item.name}}</Tag>
+      </span>
+    </p>
+    <Dropdown>
+      <Input v-model="name" class="w244" placeholder="请输入标签名称"></Input>
+      <DropdownMenu slot="list">
+        <p style="width:244px;padding: 0 5px">
+          <span v-for="(item, index) in list" :key="index" v-if="item.type === type">
+            <Tag v-if="!item._checked">
+              <span @click="addTag(item)">{{item.name}}</span>
+            </Tag>
+          </span>
+        </p>
+      </DropdownMenu>
+    </Dropdown>
+    <Button icon="ios-plus-empty" type="dashed" @click="addTag" style="margin-left:5px;">添加标签</Button><br/>
+    您可能感兴趣的标签：
+    <span class="a_normal" @click="add('最新')">最新</span>
+    <span class="a_normal" @click="add('热卖')" style="margin-left:5px;">热卖</span>
+    <span class="a_normal" @click="add('推荐')" style="margin-left:5px;">推荐</span>
+    <span class="a_normal" @click="add('置顶')" style="margin-left:5px;">置顶</span>
+    <span class="a_normal" @click="add('促销')" style="margin-left:5px;">促销</span>
+    <span class="a_normal" @click="add('打折')" style="margin-left:5px;">打折</span>
+  </FormItem>
 </template>
 
 <script>
@@ -24,9 +39,8 @@ export default {
   },
   data () {
     return {
-      tag: '',
-      taglist: [],
-      oldVal: []
+      name: '',
+      list: []
     }
   },
   computed: {
@@ -34,65 +48,68 @@ export default {
       tagList: state => state.tagList
     })
   },
+  watch: {
+    tagList () {
+      this.tagActive()
+    }
+  },
   created () {
-    this.tagList.length === 0 && this.$store.dispatch('getTagList')
-    if (this.tagMapStore) {
-      this.tagMapStore.forEach(item => {
-        this.taglist.push(item.name)
-        this.oldVal.push(item.name)
-      })
+    if (this.tagList.length === 0) {
+      this.$store.dispatch('getTagList')
+    } else {
+      this.tagActive()
     }
   },
   methods: {
-    change (val) {
-      if (val.length > this.oldVal.length) {
-        let arr = this.unique(this.oldVal, val).join()
-        this.tagList.forEach(item => {
-          if (item.type === this.type && item.name === arr) {
-            this.addTag(item)
-          }
-        })
-      }
-      if (val.length < this.oldVal.length) {
-        let arr = this.unique(val, this.oldVal).join()
-        this.tagList.forEach(item => {
-          if (item.type === this.type && item.name === arr) {
-            this.delTag(item)
-          }
-        })
-      }
-      this.oldVal = JSON.parse(JSON.stringify(this.taglist))
-    },
-    unique (arr, arr1) {
-      arr1.forEach((item, index) => {
-        arr.forEach(row => {
-          if (item === row) {
-            arr1.splice(index, 1)
-          }
-        })
+    // 初始化标签
+    tagActive () {
+      var ctx = this
+      let list = JSON.parse(JSON.stringify(this.tagList))
+      list.forEach(item => {
+        if (item.type === ctx.type) {
+          item._checked = false
+          ctx.tagMapStore && this.tagMapStore.forEach(item2 => {
+            if (item.tagId === item2.tagId) {
+              item._checked = true
+            }
+          })
+          ctx.list.push(item)
+        }
       })
-      return arr1
+    },
+    // 添加
+    add (name) {
+      this.name = name
+      this.addTag(name)
     },
     addTag (item) {
-      if (this.id) {
-        let data = {
-          model: JSON.stringify({
-            name: this.tag
-          })
-        }
-        if (item) {
-          data.model = JSON.stringify(item)
-        }
-        this.$http.post('/rest/api/tag/detail/' + this.id, qs.stringify(data)).then((res) => {
-          if (res.success) {
-            this.$Message.success('保存成功')
-          } else {
-            this.$Message.error(res.msg)
-          }
-        })
-      } else {
-        this.$Message.error('请先保存再来添加标签')
+      if (item.tagId) {
+        this.name = item.name
+        item._checked = true
       }
+      let data = {
+        model: JSON.stringify({
+          tagId: item.tagId,
+          name: this.name,
+          type: this.type
+        })
+      }
+      this.name = ''
+      let url = this.id ? '/' + this.id : ''
+      this.$http.post('/rest/api/tag/detail' + url, qs.stringify(data)).then((res) => {
+        if (res.success) {
+          this.$Message.success('添加成功')
+          if (!item.tagId) {
+            let data = res.attributes.data
+            data._checked = true
+            this.list.push(data)
+            this.tagList.push(data)
+            this.$store.commit('setTagList', this.tagList)
+          }
+        } else {
+          this.$Message.error(res.msg)
+        }
+      })
     },
     delTag (item) {
       let data = {
@@ -101,6 +118,7 @@ export default {
       this.$http.post('/rest/api/tag/detail/' + this.id + '/' + item.tagId, qs.stringify(data)).then((res) => {
         if (res.success) {
           this.$Message.success('删除成功')
+          item._checked = false
         } else {
           this.$Message.error(res.msg)
         }
@@ -109,7 +127,3 @@ export default {
   }
 }
 </script>
-
-<style lang="less">
-
-</style>

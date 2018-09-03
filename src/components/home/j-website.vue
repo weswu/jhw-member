@@ -1,14 +1,14 @@
 <template>
   <div class="j_home_website j_panel">
     <div class="img" @click="href">
-      <Avatar shape="square" :src="'http://img.jihui88.com/'+user.enterprise.logo" size="large" v-if="user.enterprise.logo" class="head_portrait"/>
-      <i class="iconfont icon-huiyuan" v-if="!user.enterprise.logo"></i>
+      <Avatar shape="square" :src="$store.state.status.IMG_HOST+user.headimg" size="large" v-if="user.headimg" class="head_portrait"/>
+      <i class="iconfont icon-huiyuan" v-if="!user.headimg"></i>
     </div>
     <div class="name">
       <span>
         账号昵称：
         <span class="nickName" @click="href">{{user.nickName || user.username}}</span>
-        <div class="j_tip">温馨提醒：为了你账号的安全，请及时 <span class="a_underline" @click="href">设置你的邮箱及密码</span></div>
+        <div class="j_tip">温馨提醒：为了您账号的安全，请及时 <span class="a_underline" @click="href">设置您的邮箱及密码</span></div>
       </span>
       <p>
         <span>注册时间：{{user.addTime | time}}</span>
@@ -19,8 +19,8 @@
     <div class="buy">
       <Select class="primary" placeholder="升级购买" @on-change="change" style="width:123px">
         <Option class="head" value="0" label="升级购买"> 网站 </Option>
-        <Option v-for="item in staticList" :value="item.value" :key="item.value" label="升级购买">
-          {{ item.text }}
+        <Option v-for="item in staticList" :value="item.layoutId" :key="item.layoutId" label="升级购买">
+          网站编号：{{ item.layoutId }}
         </Option>
         <Option class="head" v-for="item in list" :value="item.value" :key="item.value" label="升级购买">
           {{ item.text }}
@@ -56,12 +56,18 @@ export default {
     change (e) {
       if (e === '0') {
         console.log('0')
+      } else if (e === '1') {
+        window.location.href = 'http://buy.jihui88.com/#/?ids=297e2669613f7026016140f7276b0017'
+      } else if (e === '2') {
+        window.location.href = 'http://buy.jihui88.com/#/?ids=297e2669613f7026016140f98df40026'
+      } else if (e === '3') {
+        window.location.href = 'http://buy.jihui88.com/#/?ids=297e2669613f7026016140f8ed260020'
       } else if (e === '4') {
         window.location.href = 'http://buy.jihui88.com/#/?tab=tab1'
       } else if (e === '5') {
         window.location.href = 'http://buy.jihui88.com/#/'
       } else {
-        this.$Message.info('更新中...' + e)
+        window.location.href = 'http://buy.jihui88.com/#/?layoutId=' + e
       }
     }
   }

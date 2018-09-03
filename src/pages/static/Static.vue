@@ -1,5 +1,5 @@
 <template>
-  <Layout class="j_layout ivu-layout-has-sider j_static">
+  <Layout class="ivu-layout-has-sider j_static">
     <MenuBar :data="'menuStatic'" :active="'static'"/>
     <Layout class="j_layout_content">
       <JHeader :title="'站点数据管理'"/>
@@ -17,7 +17,7 @@
 <script>
 import MenuBar from '@/components/common/menu_bar'
 import JHeader from '@/components/group/j-header'
-import Website from '@/components/static/website'
+import Website from '@/components/pc/website'
 import Xiaochengxu from '@/components/static/xiaochengxu'
 export default {
   components: {
@@ -41,6 +41,6 @@ export default {
 <style lang="less">
 .j_static .static_info{
   height: calc(100vh - 347px);
-  overflow-y: scroll;
+  overflow-y: auto;
 }
 </style>

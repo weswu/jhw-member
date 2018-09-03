@@ -5,7 +5,7 @@
       <JHeader :title="'积分兑换'" :count="count"/>
       <Content>
         <Table :columns="columns" :data="list"></Table>
-        <JPagination :total="total" :searchData='searchData' @on-change="pageChange" :right="'24'"/>
+        <JPagination :total="total" :searchData='searchData' @on-change="get"/>
       </Content>
     </Layout>
   </Layout>
@@ -55,10 +55,6 @@ export default {
         }
       })
     },
-    pageChange (page) {
-      this.searchData.page = page
-      this.get()
-    },
     indexFilter (h, params) {
       return h('span', params.index + (this.searchData.page - 1) * this.searchData.pageSize + 1)
     },
@@ -68,7 +64,7 @@ export default {
           height: '50px'
         },
         attrs: {
-          src: 'http://img.jihui88.com/' + params.row.pic
+          src: this.$store.state.status.IMG_HOST + params.row.pic
         }
       })
     },

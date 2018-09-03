@@ -1,4 +1,5 @@
 import Vue from 'vue'
+import qs from 'qs'
 // 全局方法
 
 /*
@@ -6,7 +7,8 @@ import Vue from 'vue'
  * @date: 2018-5-8
  * @desc: 时间选择
 */
-Vue.prototype.dataFormat = function (date, format) {
+Vue.prototype.dateFormat = function (date, format) {
+  if (!date) return ''
   date = new Date(date)
   format = format || 'yyyy-MM-dd hh:mm'
   var o = {
@@ -28,6 +30,7 @@ Vue.prototype.dataFormat = function (date, format) {
   }
   return format
 }
+
 /**
  * 还原ID
  * @method [字符串] - decodeId ( 还原ID )
@@ -51,7 +54,7 @@ Vue.prototype.decodeId = function (id, prefix, length) {
  * @desc: 图片缩略图
 */
 Vue.prototype.picUrl = function (src, number) {
-  if (src === null || src.length === 0) return 'http://img.jihui88.com/upload/j/j2/jihui88/picture/2015/04/01/72041ac7-51fa-4163-906d-8b576955d29e.jpg'
+  if (!src || src.length === 0) return 'upload/j/j2/jihui88/picture/2015/04/01/72041ac7-51fa-4163-906d-8b576955d29e.jpg'
   if (number > 10) {
     src = src + '!' + number
   } else {
@@ -66,17 +69,10 @@ Vue.prototype.picUrl = function (src, number) {
  * @date: 2018-5-5
  * @desc: 时间选择
 */
-Vue.prototype.index2 = function (index, obj) {
-  return index + (obj.page - 1) * obj.pageSize + 1
+Vue.prototype.index2 = function (vm, h, params) {
+  return h('span', params.index + (parseInt(vm.searchData.page) - 1) * parseInt(vm.searchData.pageSize) + 1)
 }
-/*
- * @author: wes
- * @date: 2018-5-18
- * @desc: 路由
-*/
-Vue.prototype.url = function (e) {
-  this.$router.push({ path: e })
-}
+
 /*
  * @author: wes
  * @date: 2018-5-18
@@ -86,6 +82,263 @@ Vue.prototype.url = function (e) {
   this.$router.push({ path: e })
 }
 
+/*
+ * @author: wes
+ * @date: 2018-5-18
+ * @desc: 排序
+*/
+Vue.prototype.sortable = function (a, b, url) {
+  let objA = this.list[a]
+  let objB = this.list[b]
+  let sortA = this.list[a].sort
+  let sortB = this.list[b].sort
+  if (url === 'link') {
+    sortA = this.list[a].lorder
+    sortB = this.list[b].lorder
+  }
+  this.sortPost(this.list[a].edittingCell.id, sortB, url)
+  this.sortPost(this.list[b].edittingCell.id, sortA, url)
+  if (url === 'link') {
+    objA.lorder = sortB
+    objB.lorder = sortA
+  } else {
+    objA.sort = sortB
+    objB.sort = sortA
+  }
+  this.list[a] = objB
+  this.list[b] = objA
+}
+Vue.prototype.sortPost = function (id, sort, url) {
+  let model = {
+    sort: sort,
+    editField: true
+  }
+  if (url === 'link') {
+    model = {
+      lorder: sort,
+      editField: true
+    }
+  }
+  let data = {
+    model: JSON.stringify(model),
+    _method: 'put'
+  }
+  this.$http.post('/rest/api/' + url + '/detail/' + id, qs.stringify(data)).then((res) => {
+    if (res.success) {
+      console.log(sort)
+    } else {
+      this.$Message.error(res.msg)
+    }
+  })
+}
+
 Vue.prototype.update = function (e) {
   e.info('更新中...')
+}
+
+Vue.prototype.cellSort = (vm, h, params) => {
+  return h('div', [
+    h('i', {
+      class: {
+        'none': true,
+        'iconfont': true,
+        'icon-bianji2': true
+      },
+      on: {
+        click: () => {
+          params.row.edittingCell[params.column.key] = true
+        }
+      }
+    }),
+    h('span', {
+      class: {
+        'j_sort': true
+      }
+    }, [
+      h('i', {
+        class: {
+          'none': true,
+          'iconfont': true,
+          'icon-icon--': true
+        },
+        on: {
+          click: () => {
+            if (params.index > 0) {
+              vm.sortable(params.index, params.index - 1, params.row.edittingCell.api)
+            }
+          }
+        }
+      }),
+      h('i', {
+        class: {
+          'none': true,
+          'iconfont': true,
+          'icon-tuozhuai': true
+        }
+      }),
+      h('i', {
+        class: {
+          'none': true,
+          'iconfont': true,
+          'icon-icon--1': true
+        },
+        on: {
+          click: () => {
+            if (params.index < vm.list.length - 1) {
+              vm.sortable(params.index, params.index + 1, params.row.edittingCell.api)
+            }
+          }
+        }
+      })
+    ])
+  ])
+}
+Vue.prototype.cellInput = (vm, h, params) => {
+  return h('Input', {
+    props: {
+      type: 'text',
+      value: params.row[params.column.key]
+    },
+    on: {
+      input: (val) => {
+        params.row[params.column.key] = val
+      }
+    }
+  })
+}
+Vue.prototype.incellEditBtn = (vm, h, params) => {
+  if (params.column.key === 'sort' || params.column.key === 'lorder') {
+    return vm.cellSort(vm, h, params)
+  } else {
+    return h('i', {
+      class: {
+        'none': true,
+        'iconfont': true,
+        'icon-bianji2': true
+      },
+      on: {
+        click: (event) => {
+          params.row.edittingCell[params.column.key] = true
+        }
+      }
+    })
+  }
+}
+Vue.prototype.saveIncellEditBtn = (vm, h, params) => {
+  return h('Button', {
+    props: {
+      type: 'text',
+      icon: 'checkmark'
+    },
+    on: {
+      click: (event) => {
+        params.row.edittingCell[params.column.key] = false
+        vm.list[params.index] = params.row
+        let model = {
+          id: params.row.edittingCell.id,
+          editField: true
+        }
+        model[params.column.key] = params.row[params.column.key]
+        let data = {
+          model: JSON.stringify(model),
+          _method: 'put'
+        }
+        vm.$http.post('/rest/api/' + params.row.edittingCell.api + '/detail/' + params.row.edittingCell.id, qs.stringify(data)).then((res) => {
+          if (res.success) {
+            if (params.column.key === 'sort' || params.column.key === 'lorder') {
+              vm.get()
+            }
+            vm.$Message.success('修改成功')
+          } else {
+            vm.$Message.error(res.msg)
+          }
+        })
+      }
+    }
+  })
+}
+Vue.prototype.cellEdit = (vm, h, params) => {
+  return h('Row', {
+    props: {
+      type: 'flex',
+      align: 'middle',
+      justify: 'center'
+    }
+  }, [
+    h('Col', {
+      props: {
+        span: (params.column.key === 'sort' || params.column.key === 'lorder') ? '14' : '22'
+      }
+    }, [
+      !params.row.edittingCell[params.column.key] ? h('span', params.row[params.column.key]) : vm.cellInput(vm, h, params)
+    ]),
+    h('Col', {
+      props: {
+        span: (params.column.key === 'sort' || params.column.key === 'lorder') ? '10' : '2'
+      }
+    }, [
+      params.row.edittingCell[params.column.key] ? vm.saveIncellEditBtn(vm, h, params) : vm.incellEditBtn(vm, h, params)
+    ])
+  ])
+}
+
+Vue.prototype.cellRadio = (vm, h, params, option) => {
+  return h('div', [
+    h('span', params.row[params.column.key] === option[0] ? option[2] || '是' : option[3] || '否'),
+    h('i', {
+      class: {
+        'none': true,
+        'iconfont': true,
+        'icon-bianji2': true
+      },
+      on: {
+        click: () => {
+          params.row[params.column.key] = params.row[params.column.key] === option[0] ? option[1] : option[0]
+          let model = {
+            id: params.row.edittingCell.id,
+            editField: true
+          }
+          model[params.column.key] = params.row[params.column.key]
+          let data = {
+            model: JSON.stringify(model),
+            _method: 'put'
+          }
+          vm.$http.post('/rest/api/' + params.row.edittingCell.api + '/detail/' + params.row.edittingCell.id, qs.stringify(data)).then((res) => {
+            if (res.success) {
+            } else {
+              vm.$Message.error(res.msg)
+            }
+          })
+        }
+      }
+    })
+  ])
+}
+
+Vue.prototype.cellImg = (vm, h, params) => {
+  return h('div', {
+    class: {
+      'product-img': true
+    }
+  }, [
+    h('i', {
+      class: {
+        'iconfont': true,
+        'icon-tupian': true
+      },
+      style: {
+        fontSize: '24px',
+        padding: '0',
+        display: !params.row[params.column.key] ? 'block' : 'none'
+      }
+    }),
+    h('img', {
+      style: {
+        display: params.row[params.column.key] ? 'inline-block' : 'none'
+      },
+      attrs: {
+        src: vm.$store.state.status.IMG_HOST + vm.picUrl(params.row[params.column.key], 4)
+      }
+    })
+  ])
 }

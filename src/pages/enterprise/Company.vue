@@ -2,7 +2,7 @@
   <Layout class="ivu-layout-has-sider j_company">
     <MenuBar :data="'menuEnter'" :active="'company'"/>
     <Layout class="j_layout_content j_form_detail">
-      <JHeader :title="'公司简介'" :lan="true"/>
+      <JHeader :title="'公司简介'" :lan="true" @on-enterprise="change"/>
       <Content>
         <UE :content='user.enterprise.edesc' ref='ue'></UE>
       </Content>
@@ -12,8 +12,8 @@
     </Layout>
   </Layout>
 </template>
-
 <script>
+// import Iconfont from 'http://at.alicdn.com/t/font_594793_25yayd6j51n.js'
 import qs from 'qs'
 import { mapState } from 'vuex'
 import MenuBar from '@/components/common/menu_bar'
@@ -26,21 +26,19 @@ export default {
     UE
   },
   computed: {
-    ...mapState({
-      'user': state => state.user
-    })
-  },
-  data () {
-    return {}
+    ...mapState(['user'])
   },
   methods: {
+    change () {
+      this.$refs.ue.setUEContent(this.user.enterprise.edesc)
+    },
     submit () {
       this.user.enterprise.edesc = this.$refs.ue.getUEContent()
       let data = {
         model: JSON.stringify(this.user.enterprise),
         _method: 'put'
       }
-      this.$http.post('/rest/api/enterprise/detail', qs.stringify(data)).then((res) => {
+      this.$http.post('/rest/api/enterprise/detail/' + this.user.enterprise.enterpriseId, qs.stringify(data)).then((res) => {
         if (res.success) {
           this.$Message.success('保存成功')
           this.$store.commit('serUser', this.user)

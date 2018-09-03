@@ -1,8 +1,7 @@
 .DS_Store
 node_modules/
-/dist/
-/dist_member
-dist_member.zip
+/manage_v4
+manage_v4.zip
 package-lock.json
 npm-debug.log*
 yarn-debug.log*

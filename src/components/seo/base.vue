@@ -1,16 +1,17 @@
 <template>
   <div class="j_seo_base">
     <div class="j_search">
-      <Button class="mormal" @click="search(item.value)" v-for="(item, index) in btns" :key="index" :class="{active: active === item.value}">{{item.text}}</Button>
+      <Button class="mormal" @click="change(item.value)" v-for="(item, index) in btns" :key="index" :class="{active: active === item.value}">{{item.text}}</Button>
     </div>
     <Table :columns="columns" :data="list"/>
-    <JPagination :fixed="true" :borderTop="true" :total="total" :searchData='searchData' @on-change="pageChange"/>
+    <JPagination :fixed="true" :borderTop="true" :total="total" :searchData='searchData' @on-change="get"/>
     <Detail ref="detail"/>
   </div>
 </template>
 
 <script>
 import qs from 'qs'
+import { mapState } from 'vuex'
 import JPagination from '@/components/group/j-pagination'
 import Detail from '@/pages/static/SeoDetail'
 export default {
@@ -21,20 +22,22 @@ export default {
   data () {
     return {
       btns: [
-        { text: '导航', value: 'navigator/list' },
+        { text: '导航', value: 'pc' },
         { text: '产品分类', value: 'category/product' },
         { text: '产品', value: 'product/list' },
         { text: '新闻分类', value: 'category/news' },
         { text: '新闻', value: 'news/list' }
       ],
-      active: 'navigator/list',
+      active: 'pc',
       columns: [
         { type: 'index2', title: '序号', align: 'center', width: 60, render: this.indexFilter },
         { title: '导航名称', key: 'name', render: this.nameFilter },
         { title: '页面地址', key: 'page', render: this.pageFilter },
-        { title: '操作', className: 'j_table_operate', align: 'center', width: 100, render: this.renderOperate }
+        { title: '操作', className: 'j_table_operate', width: 100, render: this.renderOperate }
       ],
-      list: [],
+      list: [
+        {}
+      ],
       total: 0,
       searchData: {
         page: 1,
@@ -42,33 +45,67 @@ export default {
       }
     }
   },
+  computed: {
+    ...mapState(['layoutId', 'lanId', 'staticList'])
+  },
+  watch: {
+    layoutId () {
+      if (this.active === 'pc') {
+        this.getPcNav()
+      }
+    },
+    lanId () {
+      this.get()
+    }
+  },
   created () {
     this.get()
   },
   methods: {
     get () {
-      this.$http.get('/rest/api/' + this.active + '?' + qs.stringify(this.searchData)).then((res) => {
-        if (res.success) {
-          this.list = res.attributes.data
-          this.total = res.attributes.count
-        } else {
-          this.$Message.error(res.msg)
-        }
-      })
+      if (this.active !== 'pc') {
+        this.$http.get('/rest/api/' + this.active + '?' + qs.stringify(this.searchData)).then((res) => {
+          if (res.success) {
+            this.list = res.attributes.data
+            this.total = res.attributes.count
+          } else {
+            this.$Message.error(res.msg)
+          }
+        })
+      } else {
+        this.getPcNav()
+      }
+    },
+    getPcNav () {
+      if (this.layoutId) {
+        this.searchData.layoutId = this.layoutId
+        this.staticList.forEach(item => {
+          if (item.layoutId === this.layoutId) {
+            this.searchData.lanId = item.language
+          }
+        })
+        this.$http.get('/rest/pc/api/navigator/list?' + qs.stringify(this.searchData)).then((res) => {
+          if (res.success) {
+            this.list = res.attributes.data
+            this.total = res.attributes.count
+          }
+        })
+      }
     },
     // 功能
-    search (e) {
+    change (e) {
       this.active = e
       this.searchData.page = 1
       this.get()
-    },
-    pageChange (e) {
-      this.searchData.page = e
-      this.get()
+      if (e === 'pc') {
+        this.$emit('on-change', false)
+      } else {
+        this.$emit('on-change', true)
+      }
     },
     // 过滤
     indexFilter (h, params) {
-      return h('span', this.index2(params.index, this.searchData))
+      return this.index2(this, h, params)
     },
     nameFilter (h, params) {
       return h('span', this.active === 'news/list' ? params.row.title : params.row.name)
@@ -92,9 +129,13 @@ export default {
         href = 'news-detail-' + params.row.newsId2 + '.html'
         page = 'news-detail-' + params.row.newsId2
       }
+      let src = 'http://' + this.$store.state.user.username + '.jihui88.com/' + href
+      if (this.active === 'pc') {
+        src = 'http://pc.jihui88.com/rest/site/' + this.layoutId + '/' + page
+      }
       return h('a', {
         attrs: {
-          href: 'http://' + this.$store.state.user.username + '.jihui88.com/' + href,
+          href: src,
           target: '_blank'
         },
         style: {
@@ -115,7 +156,7 @@ export default {
             } else if (this.active === 'news/list') {
               this.$refs.detail.open(params.row.newsId, 'news')
             } else {
-              this.$refs.detail.open(params.row.page, 'page')
+              this.$refs.detail.open(params.row.id, 'page')
             }
           }
         }
