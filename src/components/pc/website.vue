@@ -27,6 +27,7 @@
             )</span>
           <!-- 状态 -->
           <span v-html="stateFilter(item.state)"></span>
+          <span v-html="onlineFilter(item.bind.online)"></span>
           <span class="country" v-html="countryFilter(item.bind.country)"></span>
         </p>
         <p>
@@ -145,13 +146,14 @@ export default {
           id: '99',
           seoTitle: '我的网站',
           new: false,
-          state: '3',
+          state: '0',
           url: '',
           language: '1',
           count: 1,
           bind: {
             address: '',
-            country: 'cn'
+            country: 'cn',
+            online: '01'
           }
         }
       ],
@@ -379,9 +381,15 @@ export default {
     },
     // 过滤
     stateFilter (val) {
-      let text = '<span class="type">未上线</span>'
-      if (val === '0') text = '<span class="type">审核中</span>'
-      if (val === '3') text = '<span class="type" style="background: #d0021b;">审核未通过</span>'
+      let text = ''
+      if (val === '0') text = '<span class="type">未开通</span>'
+      if (val === '1') text = '<span class="type green">已开通</span>'
+      return text
+    },
+    onlineFilter (val) {
+      let text = ''
+      if (val === '01') text = '<span class="type green">已上线</span>'
+      if (val === '00') text = '<span class="type red">未上线</span>'
       return text
     },
     countryFilter (val) {
@@ -468,6 +476,12 @@ export default {
       color: #fff;
       padding: 3px 5px;
       margin-left: 10px;
+      &.red{
+        background: #d0021b
+      }
+      &.green {
+        background: #417505
+      }
     }
     .country{
       float:right;

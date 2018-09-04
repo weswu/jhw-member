@@ -30,6 +30,7 @@ export default {
         { title: '所属网站编号', key: 'layoutId' },
         { title: '网站服务器地点', render: this.countryFilter },
         { title: '是否绑定', render: this.stateFilter },
+        { title: '是否上线', render: this.onlineFilter },
         { title: '操作', className: 'j_table_operate', width: 115, render: this.renderOperate }
       ],
       list: [],
@@ -87,6 +88,16 @@ export default {
       if (params.row.state === '00') text = '<span style="color:#f5a623">审核中</span>'
       if (params.row.state === '01') text = '<span style="color:#417505">是</span>'
       if (params.row.state === '02') text = '<span style="color:#d0021b">否</span>'
+      return h('span', {
+        domProps: {
+          innerHTML: text
+        }
+      })
+    },
+    onlineFilter (h, params) {
+      let text = '<span style="color:#d0021b">否</span>'
+      if (params.row.online === '01') text = '<span style="color:#417505">是</span>'
+      if (params.row.online === '00') text = '<span style="color:#d0021b">否</span>'
       return h('span', {
         domProps: {
           innerHTML: text

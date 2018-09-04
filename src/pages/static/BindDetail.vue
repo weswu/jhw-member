@@ -2,7 +2,7 @@
   <Layout class="ivu-layout-has-sider j_bind">
     <MenuBar :data="'menu_bind_detail'" :active="'0'" :detail="true"/>
     <Layout class="j_layout_content">
-      <JHeader :title="'域名详情'"/>
+      <JHeader :title="'域名绑定详情'"/>
       <Content>
         <div v-if="active === '0'" style="padding-bottom: 20px;">
           <div class="j_tip" style="margin-top: 9px;">
