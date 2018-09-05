@@ -370,13 +370,13 @@ const store = new Vuex.Store({
         if (res.success) {
           this.commit('setStaticList', res.attributes.data)
           if (res.attributes.data.length > 0) {
-            let layoutId = res.attributes.data[0].id
+            let id = res.attributes.data[0].id
             res.attributes.data.forEach(item => {
               if (item.id === window.localStorage.getItem('layoutId')) {
-                layoutId = window.localStorage.getItem('layoutId')
+                id = window.localStorage.getItem('layoutId')
               }
             })
-            this.commit('setLayoutId', layoutId)
+            this.commit('setLayoutId', id)
           }
         }
       }).catch(e => {

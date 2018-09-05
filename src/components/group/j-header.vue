@@ -13,7 +13,7 @@
             <Option v-for="item in lanList" :value="item.value" :key="item.value">{{ item.text }}</Option>
           </Select>
           <Select v-model="$store.state.layoutId" class="primary" @on-change="layoutChange" style="width:167px" v-if="website">
-            <Option v-for="item in staticList" :value="item.layoutId" :key="item.layoutId">网站编号：{{ item.layoutId }}</Option>
+            <Option v-for="item in staticList" :value="item.id" :key="item.id">网站编号：{{ item.id }}</Option>
           </Select>
           <slot name="btn"></slot>
         </Col>

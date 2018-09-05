@@ -146,7 +146,7 @@ export default {
           id: '99',
           seoTitle: '我的网站',
           new: false,
-          state: '0',
+          state: '',
           url: '',
           language: '1',
           count: 1,
@@ -383,13 +383,13 @@ export default {
     stateFilter (val) {
       let text = ''
       if (val === '0') text = '<span class="type">未开通</span>'
-      if (val === '1') text = '<span class="type green">已开通</span>'
+      if (val === '1') text = '<span class="type">已开通</span>'
       return text
     },
     onlineFilter (val) {
       let text = ''
-      if (val === '01') text = '<span class="type green">已上线</span>'
-      if (val === '00') text = '<span class="type red">未上线</span>'
+      if (val === '00') text = '<span class="type">未上线</span>'
+      if (val === '01') text = '<span class="type">已上线</span>'
       return text
     },
     countryFilter (val) {

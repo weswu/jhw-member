@@ -29,8 +29,9 @@ export default {
         { title: '绑定域名', key: 'address' },
         { title: '所属网站编号', key: 'layoutId' },
         { title: '网站服务器地点', render: this.countryFilter },
-        { title: '是否绑定', render: this.stateFilter },
-        { title: '是否上线', render: this.onlineFilter },
+        { title: '添加时间', width: 132, render: this.dataFilter },
+        { title: '是否绑定', width: 85, render: this.stateFilter },
+        { title: '是否上线', width: 85, render: this.onlineFilter },
         { title: '操作', className: 'j_table_operate', width: 115, render: this.renderOperate }
       ],
       list: [],
@@ -83,9 +84,38 @@ export default {
       if (params.row.country === 'hc') text = '香港机房'
       return h('span', text)
     },
+    // 时间格式化
+    dataFilter (h, params) {
+      return h('div', this.dateFormat(params.row.addTime))
+    },
     stateFilter (h, params) {
       let text = '免费用户'
-      if (params.row.state === '00') text = '<span style="color:#f5a623">审核中</span>'
+      if (params.row.state === '00') {
+        return h('span', [
+          h('span', {
+            style: {
+              color: '#f5a623'
+            }
+          }, '审核中'),
+          h('Poptip', {
+            class: {
+              state_tip: true
+            },
+            props: {
+              placement: 'right',
+              trigger: 'hover',
+              width: 310
+            }
+          }, [
+            h('div', {
+              slot: 'content',
+              style: {
+                'white-space': 'normal'
+              }
+            }, '温馨提示：自动绑定只针对购买过站点的客户，请先购买站点，如有问题，请咨询：13967938189')
+          ])
+        ])
+      }
       if (params.row.state === '01') text = '<span style="color:#417505">是</span>'
       if (params.row.state === '02') text = '<span style="color:#d0021b">否</span>'
       return h('span', {
@@ -146,5 +176,23 @@ export default {
 </script>
 
 <style lang="less">
-
+.state_tip{
+  width: 14px;
+  height: 14px;
+  position: absolute;
+  margin-left: 5px;
+  &:after{
+    content: '?';
+    background: #d3d3d3;
+    color: #fff;
+    width: 14px;
+    height: 14px;
+    border-radius: 7px;
+    text-align: center;
+    line-height: 14px;
+    cursor: pointer;
+    position: absolute;
+    font-size: 12px;
+  }
+}
 </style>
