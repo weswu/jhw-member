@@ -574,16 +574,24 @@ export default {
       })
     },
     handleSuccess (res, file) {
-      this.$Message.success('替换成功')
-      this.item.serverPath = this.item.serverPath + '?0'
+      this.$Message.success({
+        content: '替换成功,图片5分钟左右生效。',
+        duration: 3
+      })
+      this.refurbish('tip')
     },
-    refurbish () {
+    refurbish (e) {
       let data = {
         serverPath: this.item.serverPath
       }
       this.$http.post('/rest/api/album/single/refurbish', qs.stringify(data)).then((res) => {
         if (res.success) {
-          this.$Message.success('刷新成功')
+          if (e !== 'tip') {
+            this.$Message.success({
+              content: '刷新成功',
+              duration: 3
+            })
+          }
           this.item.serverPath = this.item.serverPath + '?0'
         } else {
           this.$Message.error(res.msg)

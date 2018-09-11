@@ -29,7 +29,7 @@ export default {
         { title: '绑定域名', key: 'address' },
         { title: '所属网站编号', key: 'layoutId' },
         { title: '网站服务器地点', render: this.countryFilter },
-        { title: '添加时间', width: 132, render: this.dataFilter },
+        { title: '添加时间', width: 135, render: this.dataFilter },
         { title: '是否绑定', width: 85, render: this.stateFilter },
         { title: '是否上线', width: 85, render: this.onlineFilter },
         { title: '操作', className: 'j_table_operate', width: 115, render: this.renderOperate }

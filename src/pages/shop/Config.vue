@@ -20,7 +20,7 @@
             </RadioGroup>
           </FormItem>
           <!-- 2 -->
-          <div class="j_form_title">产品价格登隐藏：</div>
+          <div class="j_form_title">产品价格隐藏：</div>
           <FormItem label="PC网站：">
             <RadioGroup v-model="detail.priceDisplayPc">
               <Radio label="01">显示</Radio>
@@ -34,7 +34,7 @@
             </RadioGroup>
           </FormItem>
           <!-- 3 -->
-          <div class="j_form_title">市场价格登隐藏：</div>
+          <div class="j_form_title">市场价格隐藏：</div>
           <FormItem label="PC网站：">
             <RadioGroup v-model="detail.marketPriceDisplayPc">
               <Radio label="01">显示</Radio>

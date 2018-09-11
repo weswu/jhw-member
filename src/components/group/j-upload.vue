@@ -43,6 +43,9 @@ export default {
           name: res.split(',')[2]
         })
       }
+      if (this.replace === '01') {
+        this.$emit('on-success')
+      }
       var ctx = this
       if (this) {
         setTimeout(function () {
