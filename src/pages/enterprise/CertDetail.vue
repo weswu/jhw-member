@@ -74,7 +74,7 @@ export default {
         this.$http.get('/rest/api/cert/detail/' + id).then((res) => {
           if (res.success) {
             this.detail = res.attributes.data
-            if (!this.detail.att) this.detail.att = {}
+            if (!this.detail.att) this.detail.att = {serverPath: ''}
           } else {
             this.$Message.error(res.msg)
           }

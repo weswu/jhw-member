@@ -69,12 +69,9 @@ export default {
       columns: [
         { type: 'index', title: '序号', align: 'center', width: 60 },
         { title: '证书图片', className: 'j_table_img', key: 'serverPath', width: 90, render: this.imgFilter },
-        { title: '证书名称', key: 'name', minWidth: 100, render: this.editFilter },
-        { title: '证书分类', key: 'type', minWidth: 90, render: this.typeFilter },
-        { title: '发证机构', key: 'organize', minWidth: 100, render: this.editFilter },
-        { title: '审核状态', key: 'state', width: 90, render: this.stateFilter },
-        { title: '排序', className: 'j_table_sort', key: 'sort', width: 125, render: this.editFilter },
-        { title: '操作', className: 'j_table_operate', width: 120, render: this.renderOperate }
+        { title: '证书名称', key: 'name', width: 180, render: this.editFilter },
+        { title: '排序', className: 'j_table_sort', key: 'sort', width: 130, render: this.editFilter },
+        { title: '操作', className: 'j_table_operate', minWidth: 120, render: this.renderOperate }
       ],
       list: [],
       listTest: [

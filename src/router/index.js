@@ -40,6 +40,7 @@ export default new Router({
     { path: '/recruit', components: require('@/pages/enterprise/Recruit'), meta: { open: '2', parent: 'enterprise' } },
     { path: '/link', components: require('@/pages/enterprise/Link'), meta: { open: '2', parent: 'enterprise' } },
     { path: '/cert', components: require('@/pages/enterprise/Cert'), meta: { open: '2', parent: 'enterprise' } },
+    { path: '/partner', components: require('@/pages/enterprise/Partner'), meta: { open: '2', parent: 'enterprise' } },
     // 分类
     { path: '/category/:id', components: require('@/pages/category/Category'), meta: { open: '2', parent: 'product' } },
     // 产品

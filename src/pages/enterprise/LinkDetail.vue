@@ -1,20 +1,20 @@
 <template>
   <Modal
     v-model="modal"
-    title="友情链接"
+    :title="title"
     @on-cancel="cancel">
     <div slot="footer">
       <Button type="text" size="large" @click="cancel">取消</Button>
       <Button type="primary" size="large" @click="submit('modalForm')">保存</Button>
     </div>
     <Form ref="modalForm" :model="detail" :rules="rules" :label-width="110">
-      <FormItem label="链接名称：" prop="name">
-        <Input v-model="detail.name" placeholder="请输入链接名称"></Input>
+      <FormItem label="名称：" prop="name">
+        <Input v-model="detail.name" placeholder="请输入名称"></Input>
       </FormItem>
-      <FormItem label="链接地址：" prop="url">
-        <Input v-model="detail.url" placeholder="请输入链接地址"></Input>
+      <FormItem label="地址：" prop="url">
+        <Input v-model="detail.url" placeholder="请输入地址"></Input>
       </FormItem>
-      <FormItem label="链接图片：">
+      <FormItem label="图片：">
         <JPictrue :src="detail.image" @on-change="change"/>
       </FormItem>
     </Form>
@@ -30,22 +30,21 @@ export default {
   },
   data () {
     return {
+      title: '',
       modal: false,
-      detail: {
-        image: ''
-      },
+      detail: {},
       rules: {
         name: [
-          { required: true, message: '链接名称不能为空', trigger: 'blur' }
+          { required: true, message: '名称不能为空', trigger: 'blur' }
         ],
         url: [
-          { required: true, message: '链接地址不能为空', trigger: 'blur' }
+          { required: true, message: '地址不能为空', trigger: 'blur' }
         ]
       }
     }
   },
   methods: {
-    open (id) {
+    open (id, type) {
       this.modal = true
       if (id) {
         this.$refs['modalForm'].resetFields()
@@ -59,9 +58,12 @@ export default {
         })
       } else {
         this.detail = {
-          image: ''
+          image: '',
+          type: type
         }
       }
+      if (type === '01') this.title = '友情链接'
+      if (type === '02') this.title = '合作伙伴'
     },
     cancel () {
       this.modal = false

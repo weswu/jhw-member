@@ -1,11 +1,11 @@
 <template>
   <Layout class="ivu-layout-has-sider j_link">
-    <MenuBar :data="'menuEnter'" :active="'link'"/>
+    <MenuBar :data="'menuEnter'" :active="'partner'"/>
     <Layout class="j_layout_content">
-      <JHeader :title="'友情链接'" :lan="true" @on-change="get"/>
+      <JHeader :title="'合作伙伴'" :lan="true" @on-change="get"/>
       <Content>
         <div class="j_search">
-          <Button type="info" icon="plus" class="w130" @click="add">添加友情链接</Button>
+          <Button type="info" icon="plus" class="w130" @click="add">添加合作伙伴</Button>
         </div>
         <DragableTable
           :list="list"
@@ -33,47 +33,13 @@ export default {
     return {
       columns: [
         { type: 'index', title: '序号', align: 'center', width: 60 },
-        { title: '链接名称', key: 'name', minWidth: 90, render: this.editFilter },
-        { title: '链接地址', key: 'url', minWidth: 90, render: this.editFilter },
-        { title: '链接图片', className: 'j_table_img', minWidth: 90, render: this.imgFilter },
+        { title: '合作伙伴名称', key: 'name', minWidth: 90, render: this.editFilter },
+        { title: '合作伙伴地址', key: 'url', minWidth: 90, render: this.editFilter },
+        { title: '合作伙伴图片', className: 'j_table_img', minWidth: 90, render: this.imgFilter },
         { title: '排序', className: 'j_table_sort', key: 'lorder', width: 125, render: this.editFilter },
         { title: '操作', className: 'j_table_operate', width: 120, render: this.renderOperate }
       ],
-      list: [],
-      listTest: [
-        {
-          name: '李五2',
-          state: null,
-          url: 'g.cn',
-          userId: 'User_000000000000000000000000082',
-          linkId: 'Link_000000000000000000000000102',
-          lorder: 2,
-          lanId: 1,
-          image: null,
-          edittingCell: {
-            name: false,
-            url: false,
-            api: 'link',
-            id: 'Link_000000000000000000000000102'
-          }
-        },
-        {
-          name: '李五2',
-          state: null,
-          url: 'g.cn',
-          userId: 'User_000000000000000000000000082',
-          linkId: 'Link_000000000000000000000000102',
-          lorder: 2,
-          lanId: 1,
-          image: null,
-          edittingCell: {
-            name: false,
-            url: false,
-            api: 'link',
-            id: 'Link_000000000000000000000000102'
-          }
-        }
-      ]
+      list: []
     }
   },
   created () {
@@ -81,7 +47,7 @@ export default {
   },
   methods: {
     get () {
-      this.$http.get('/rest/api/link/list?page=1&pageSize=200&type=01').then(res => {
+      this.$http.get('/rest/api/link/list?page=1&pageSize=200&type=02').then(res => {
         if (res.success) {
           let data = res.attributes.data
           data.forEach(item => {
@@ -98,7 +64,7 @@ export default {
       })
     },
     add () {
-      this.$refs.detail.open('', '01')
+      this.$refs.detail.open('', '02')
     },
     tableUpdate (a, b) {
       this.sortable(a, b, 'link')
@@ -140,7 +106,7 @@ export default {
         h('a', {
           on: {
             click: () => {
-              this.$refs.detail.open(params.row.linkId, '01')
+              this.$refs.detail.open(params.row.linkId, '02')
             }
           }
         }, '修改'),
