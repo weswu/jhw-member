@@ -269,6 +269,9 @@ const store = new Vuex.Store({
           if (list.length > 0) {
             if (list[0].type === '10') this.commit('setProductCategory', list)
             if (list[0].type === '11') this.commit('setNewsCategory', list)
+          } else {
+            this.commit('setProductCategory', [])
+            this.commit('setNewsCategory', [])
           }
         }
       })
@@ -412,6 +415,29 @@ const store = new Vuex.Store({
                 { value: 'message', text: '留言', status: '00', type: '01' },
                 { value: 'service', text: '服务', status: '00', type: '01' }
               ]
+            }
+            // 语言设置
+            if (content.lanList) {
+              let lans = content.lanList.split(',')
+              let lanLst = [
+                { value: '1', text: '中文', type: 'cn' },
+                { value: '2', text: '英文', type: 'en' },
+                { value: '3', text: '日语', type: 'ja' },
+                { value: '4', text: '韩语', type: 'ko' },
+                { value: '5', text: '德语', type: 'de' },
+                { value: '6', text: '法语', type: 'fr' },
+                { value: '7', text: '西班牙语', type: 'es' },
+                { value: '8', text: '俄语', type: 'ru' },
+                { value: '9', text: '阿拉伯语', type: 'ar' }
+              ]
+              let list = []
+              lans.forEach(item => {
+                list.push(lanLst[item - 1])
+              })
+              this.commit('status/setLanList', list)
+              if (content.lanList.indexOf(state.lanId) === -1) {
+                this.commit('setLanId', lans[0])
+              }
             }
             this.commit('setCustomData', content)
           }

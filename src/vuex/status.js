@@ -2,8 +2,8 @@
 const state = {
   IMG_HOST: 'http://img.jihui88.com/',
   lanList: [
-    { value: '1', text: '中文' },
-    { value: '2', text: '英文' }
+    { value: '1', text: '中文', type: 'cn' },
+    { value: '2', text: '英文', type: 'en' }
   ],
   countryType: [
     { text: '中国', value: 'cn' },
@@ -481,7 +481,11 @@ const state = {
 
 const getters = {}
 
-const mutations = {}
+const mutations = {
+  setLanList (state, data) {
+    state.lanList = data
+  }
+}
 
 const actions = {}
 

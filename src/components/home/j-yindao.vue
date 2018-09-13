@@ -95,7 +95,7 @@ export default {
     setTimeout(e => {
       this.list[0].text = (this.$store.state.user.nickName || this.$store.state.user.username) + ',您好<br/>接下来有些小提示，帮助您更快的熟悉后台。'
       if (!vm.$store.state.customData.yindao) {
-        vm.open()
+        if (location.port !== '8080') vm.open()
         vm.$store.state.customData.yindao = true
         vm.$store.dispatch('SAVE_CUSTOM_DATA')
       }

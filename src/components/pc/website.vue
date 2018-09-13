@@ -22,7 +22,8 @@
               {{item.id}}
             </Badge>
             &nbsp;&nbsp;/&nbsp;&nbsp;
-            语言：:<span v-if="item.language === '1'">中文</span><span v-if="item.language === '2'">英文</span>&nbsp;&nbsp;/&nbsp;&nbsp;
+            语言：<span v-html="lanFilter(item.language)"></span>
+            &nbsp;&nbsp;/&nbsp;&nbsp;
             版本：{{item.siteVersion}}
             )</span>
           <!-- 状态 -->
@@ -79,7 +80,7 @@
       </div>
     </Modal>
     <JPagination :fixed="true" :total="total" :searchData='searchData' @on-change="get"></JPagination>
-    <JDialog ref="lan" :title="'设置语言版本'" :tip="'温馨提醒：'" @on-ok="save" >
+    <JDialog ref="lan" :title="'设置语言版本'" :tip="'温馨提醒：语言切换仅限中英文。如需其他语言，请联系我们139-6793-8189。'" @on-ok="save" >
       <div slot="content">
         <Select v-model="lan" style="width:144px">
           <Option v-for="item in lanList" :value="item.value" :key="item.value">{{ item.text }}</Option>
@@ -91,14 +92,12 @@
         <Form :model="detail" :label-width="120">
           <FormItem label="来源语言版本：">
             <Select v-model="detail.begin" class="border w144">
-              <Option value="1">中文版</Option>
-              <Option value="2">英文版</Option>
+              <Option v-for="item in lanList" :value="item.value" :key="item.value">{{ item.text }}</Option>
             </Select>
           </FormItem>
           <FormItem label="目标语言版本：">
             <Select v-model="detail.end" class="border w144">
-              <Option value="1">中文版</Option>
-              <Option value="2">英文版</Option>
+              <Option v-for="item in lanList" :value="item.value" :key="item.value">{{ item.text }}</Option>
             </Select>
           </FormItem>
         </Form>
@@ -366,10 +365,8 @@ export default {
     },
     saveData () {
       let data = {
-        model: JSON.stringify({
-          originLanId: this.detail.begin,
-          targetLanId: this.detail.end
-        })
+        originLanId: this.detail.begin,
+        targetLanId: this.detail.end
       }
       this.$http.post('/rest/api/import/synchronousData', qs.stringify(data)).then((res) => {
         if (res.success) {
@@ -380,6 +377,17 @@ export default {
       })
     },
     // 过滤
+    lanFilter (val) {
+      let text = ''
+      if (val === '0') text = '<span class="type">未开通</span>'
+      if (val === '1') text = '<span class="type">已开通</span>'
+      this.lanList.forEach(item => {
+        if (item.value === val) {
+          text = item.text
+        }
+      })
+      return text
+    },
     stateFilter (val) {
       let text = ''
       if (val === '0') text = '<span class="type">未开通</span>'

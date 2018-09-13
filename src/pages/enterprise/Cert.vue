@@ -12,28 +12,6 @@
             <Col>
               <Input v-model="searchData.name" class="w180" clearable placeholder="请输入证书名称" @on-change="clearInput"></Input>
               <Button class="search" @click="search">搜索</Button>
-              <Poptip placement="bottom-end" class="j_poptip_confirm_edit"
-                confirm
-                width="370"
-                @on-ok="advancedSearch">
-                <Button class="grey w130">高级搜索</Button>
-                <div slot="title">
-                  <Form :model="searchData" :label-width="85">
-                    <FormItem label="名称：">
-                      <Input v-model="searchData.name" class="w244" clearable></Input>
-                    </FormItem>
-                    <FormItem label="发证机构：">
-                      <Input v-model="searchData.organize" class="w244" clearable></Input>
-                    </FormItem>
-                    <FormItem label="分类：">
-                      <Select v-model="searchData.type" class="w244">
-                        <Option value="">请选择</Option>
-                        <Option :value="item.value" v-for="item in certType" :key="item.value">{{item.text}}</Option>
-                      </Select>
-                    </FormItem>
-                  </Form>
-                </div>
-              </Poptip>
             </Col>
           </Row>
         </div>
@@ -50,7 +28,6 @@
 
 <script>
 import qs from 'qs'
-import { mapState } from 'vuex'
 import MenuBar from '@/components/common/menu_bar'
 import JHeader from '@/components/group/j-header'
 import DragableTable from '@/components/group/j-dragable-table'
@@ -69,9 +46,9 @@ export default {
       columns: [
         { type: 'index', title: '序号', align: 'center', width: 60 },
         { title: '证书图片', className: 'j_table_img', key: 'serverPath', width: 90, render: this.imgFilter },
-        { title: '证书名称', key: 'name', width: 180, render: this.editFilter },
-        { title: '排序', className: 'j_table_sort', key: 'sort', width: 130, render: this.editFilter },
-        { title: '操作', className: 'j_table_operate', minWidth: 120, render: this.renderOperate }
+        { title: '证书名称', key: 'name', minWidth: 180, render: this.editFilter },
+        { title: '排序', className: 'j_table_sort', key: 'sort', minWidth: 130, render: this.editFilter },
+        { title: '操作', className: 'j_table_operate', width: 120, render: this.renderOperate }
       ],
       list: [],
       listTest: [
@@ -105,11 +82,6 @@ export default {
       },
       total: 0
     }
-  },
-  computed: {
-    ...mapState({
-      certType: state => state.status.certType
-    })
   },
   created () {
     this.get()
@@ -147,14 +119,6 @@ export default {
       }
     },
     search () {
-      this.searchData = {
-        page: 1,
-        pageSize: this.searchData.pageSize,
-        name: this.searchData.name
-      }
-      this.get()
-    },
-    advancedSearch () {
       this.searchData.page = 1
       this.get()
     },
@@ -167,18 +131,6 @@ export default {
     },
     imgFilter (h, params) {
       return this.cellImg(this, h, params)
-    },
-    typeFilter (h, params) {
-      let text = ''
-      this.certType.forEach(item => {
-        if (item.value === params.row.type) {
-          text = item.text
-        }
-      })
-      return h('span', text)
-    },
-    stateFilter (h, params) {
-      return h('span', params.row.state === '01' ? '通过审核' : '未审核')
     },
     renderOperate (h, params) {
       var ctx = this
