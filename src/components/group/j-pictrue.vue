@@ -70,6 +70,7 @@ export default {
 
 <style lang="less">
 .j_picture{
+  position: relative;
   .j_picture_item{
     width: 104px;
     height: 104px;

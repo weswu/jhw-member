@@ -247,9 +247,6 @@ export default {
       this.$store.dispatch('getCategory', 'news')
       this.get()
     },
-    add () {
-      this.$router.push({ path: '/news/add' })
-    },
     tableUpdate (a, b) {
       this.sortable(a, b, 'news')
     },

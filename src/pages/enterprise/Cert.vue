@@ -32,7 +32,7 @@ import MenuBar from '@/components/common/menu_bar'
 import JHeader from '@/components/group/j-header'
 import DragableTable from '@/components/group/j-dragable-table'
 import JPagination from '@/components/group/j-pagination'
-import Detail from '@/pages/enterprise/CertDetail'
+import Detail from '@/pages/enterprise/CertDetail2'
 export default {
   components: {
     MenuBar,

@@ -39,8 +39,11 @@ export default new Router({
     { path: '/company', components: require('@/pages/enterprise/Company'), meta: { open: '2', parent: 'enterprise' } },
     { path: '/recruit', components: require('@/pages/enterprise/Recruit'), meta: { open: '2', parent: 'enterprise' } },
     { path: '/link', components: require('@/pages/enterprise/Link'), meta: { open: '2', parent: 'enterprise' } },
+    { path: '/link/:id', components: require('@/pages/enterprise/LinkDetail'), meta: { open: '2', parent: 'enterprise' } },
     { path: '/cert', components: require('@/pages/enterprise/Cert'), meta: { open: '2', parent: 'enterprise' } },
+    { path: '/cert/:id', components: require('@/pages/enterprise/CertDetail'), meta: { open: '2', parent: 'enterprise' } },
     { path: '/partner', components: require('@/pages/enterprise/Partner'), meta: { open: '2', parent: 'enterprise' } },
+    { path: '/partner/:id', components: require('@/pages/enterprise/LinkDetail'), meta: { open: '2', parent: 'enterprise' } },
     // 分类
     { path: '/category/:id', components: require('@/pages/category/Category'), meta: { open: '2', parent: 'product' } },
     // 产品

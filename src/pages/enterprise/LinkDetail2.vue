@@ -1,37 +1,37 @@
 <template>
-  <Layout class="ivu-layout-has-sider j_cert_detail">
-    <Layout class="j_layout_content j_form_detail">
-      <JHeader :title="title"/>
-      <Content>
-        <Form ref="modalForm" :model="detail" :rules="rules" :label-width="110">
-          <FormItem label="名称：" prop="name">
-            <Input v-model="detail.name" placeholder="请输入名称"></Input>
-          </FormItem>
-          <FormItem label="地址：" prop="url">
-            <Input v-model="detail.url" placeholder="请输入地址"></Input>
-          </FormItem>
-          <FormItem label="图片：">
-            <JPictrue :src="detail.image" @on-change="change"/>
-          </FormItem>
-        </Form>
-        <Button type="primary" size="small" @click="submit('modalForm')" style="margin-left:110px;margin-top:20px;">保存</Button>
-      </Content>
-    </Layout>
-  </Layout>
+  <Modal
+    v-model="modal"
+    :title="title"
+    @on-cancel="cancel">
+    <div slot="footer">
+      <Button type="text" size="large" @click="cancel">取消</Button>
+      <Button type="primary" size="large" @click="submit('modalForm')">保存</Button>
+    </div>
+    <Form ref="modalForm" :model="detail" :rules="rules" :label-width="110">
+      <FormItem label="名称：" prop="name">
+        <Input v-model="detail.name" placeholder="请输入名称"></Input>
+      </FormItem>
+      <FormItem label="地址：" prop="url">
+        <Input v-model="detail.url" placeholder="请输入地址"></Input>
+      </FormItem>
+      <FormItem label="图片：">
+        <JPictrue :src="detail.image" @on-change="change"/>
+      </FormItem>
+    </Form>
+  </Modal>
 </template>
 
 <script>
 import qs from 'qs'
-import JHeader from '@/components/group/j-header'
 import JPictrue from '@/components/group/j-pictrue'
 export default {
   components: {
-    JHeader,
     JPictrue
   },
   data () {
     return {
       title: '',
+      modal: false,
       detail: {},
       rules: {
         name: [
@@ -43,26 +43,12 @@ export default {
       }
     }
   },
-  created () {
-    this.get()
-  },
   methods: {
-    get () {
-      let type = ''
-      if (this.$route.path.split('/')[1] === 'link') {
-        this.title = '友情链接'
-        type = '01'
-      } else {
-        this.title = '合作伙伴'
-        type = '02'
-      }
-      if (this.$route.params.id === 'add') {
-        this.detail = {
-          image: '',
-          type: type
-        }
-      } else {
-        this.$http.get('/rest/api/link/detail/' + this.$route.params.id).then((res) => {
+    open (id, type) {
+      this.modal = true
+      if (id) {
+        this.$refs['modalForm'].resetFields()
+        this.$http.get('/rest/api/link/detail/' + id).then((res) => {
           if (res.success) {
             this.detail = res.attributes.data
             if (!this.detail.image) this.detail.image = ''
@@ -70,13 +56,21 @@ export default {
             this.$Message.error(res.msg)
           }
         })
+      } else {
+        this.detail = {
+          image: '',
+          type: type
+        }
       }
+      if (type === '01') this.title = '友情链接'
+      if (type === '02') this.title = '合作伙伴'
     },
-    // 功能
+    cancel () {
+      this.modal = false
+    },
     change (e) {
       this.detail.image = e.src
     },
-    // 提交
     submit (name) {
       this.$refs[name].validate((valid) => {
         if (valid) {

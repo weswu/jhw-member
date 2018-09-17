@@ -21,7 +21,7 @@
 import MenuBar from '@/components/common/menu_bar'
 import JHeader from '@/components/group/j-header'
 import DragableTable from '@/components/group/j-dragable-table'
-import Detail from '@/pages/enterprise/LinkDetail'
+import Detail from '@/pages/enterprise/LinkDetail2'
 export default {
   components: {
     MenuBar,
