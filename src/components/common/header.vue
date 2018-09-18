@@ -21,7 +21,18 @@
         </DropdownMenu>
       </Dropdown>
       <a href="#/" class="header_link">首页</a>
-      <a href="javascript:;" class="header_link" @click="openFeedback"><span id="YD_Feedback">服务反馈</span></a>
+      <Dropdown placement="bottom" class="j_dropdown_browser j_dropdown_word">
+        <a class="header_link">
+          文档
+        </a>
+        <DropdownMenu slot="list">
+          <ul class="browser-dropdown">
+            <li><a href="http://v.qq.com/vplus/4aa13bffe0e2662991069f1800862a96/foldervideos/gr2002901enccnk" target="_blank">教程中心</a></li>
+            <li><a href="http://xueyuan.jihui88.com/news.html" target="_blank">建站资讯</a></li>
+            <li><a href="#/update">更新日志</a></li>
+          </ul>
+        </DropdownMenu>
+      </Dropdown>
       <Dropdown placement="bottom" class="j_dropdown_message" @on-visible-change="messageChange">
         <a href="#/message" class="header_link">
           <i class="iconfont icon-tixing2 yd_message"><span class="badge">{{userInfo.noReaderMsg}}</span></i>
@@ -168,9 +179,6 @@ export default {
       if (this.messageList.length > 0) {
         this.message = true
       }
-    },
-    openFeedback () {
-      this.$refs.feedback.open()
     }
   }
 }
@@ -399,6 +407,14 @@ export default {
           }
         }
       }
+    }
+  }
+  .j_dropdown_word{
+    .header_link{
+      color: #fff;
+    }
+    .ivu-dropdown-menu{
+      width: 100px;
     }
   }
 }

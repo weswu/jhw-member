@@ -277,6 +277,12 @@ const state = {
       { text: '高级版', value: 'senior' }
     ]
   },
+  menuWord: {
+    title: '文档管理',
+    menu: [
+      { text: '更新日志', value: 'update' }
+    ]
+  },
   test_album: [
     {
       state: '01',

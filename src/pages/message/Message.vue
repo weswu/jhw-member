@@ -227,9 +227,9 @@ export default {
             'state-unread': true
           },
           style: {
-            color: params.row.recvState === '00' ? '#418bca' : ''
+            background: params.row.recvState === '00' ? '#418bca' : ''
           }
-        }, '●'),
+        }, ''),
         h('a', {
           style: {
             color: params.row.recvState === '00' ? '#5b5b5b' : '#a0a0a0'
@@ -355,8 +355,10 @@ export default {
   .state-unread{
     margin-right: 10px;
     display: inline-block;
-    font-size: 14px;
-    color: #a0a0a0;
+    width: 6px;
+    height: 6px;
+    background: #a0a0a0;
+    border-radius: 50%;
   }
   .ivu-table-row td:nth-child(2) .ivu-table-cell{
     padding-left: 0;

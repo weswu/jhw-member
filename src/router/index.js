@@ -86,6 +86,7 @@ export default new Router({
     // 其它项目用
     { path: '/map', components: require('@/pages/enterprise/Amap') },
     { path: '/pic', components: require('@/pages/album//Pic') },
+    { path: '/update', components: require('@/components/word/update') },
     // default
     { path: '*', redirect: '/' }
   ]
