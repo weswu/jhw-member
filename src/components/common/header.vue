@@ -87,17 +87,14 @@
       <span class="border"></span>
     </Col>
     <Detail ref="detail"/>
-    <Feedback ref="feedback"/>
   </Row>
 </template>
 
 <script>
 import { mapState, mapActions } from 'vuex'
-import Feedback from '@/components/home/j-feedback'
 import Detail from '@/pages/message/Detail'
 export default {
   components: {
-    Feedback,
     Detail
   },
   data () {

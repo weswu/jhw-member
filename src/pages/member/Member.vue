@@ -136,7 +136,7 @@ export default {
         return this.$Message.error('未选择')
       }
       var ctx = this
-      this.$http.post('/rest/api/member/delete?ids=' + this.ids).then((res) => {
+      this.$http.post('/rest/api/member/butchDel?memberIds=' + this.ids).then((res) => {
         if (res.success) {
           this.$Message.success('删除成功')
           this.ids.split(',').forEach(id => {
