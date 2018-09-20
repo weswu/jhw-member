@@ -1,46 +1,26 @@
 <template>
-  <Layout class="ivu-layout-has-sider j_cert_detail">
+  <Layout class="ivu-layout-has-sider">
     <Layout class="j_layout_content j_form_detail">
       <JHeader :title="title"/>
       <Content>
-        <Form ref="modalForm" :model="detail" :rules="rules" :label-width="110">
-          <FormItem label="名称：" prop="name">
-            <Input v-model="detail.name" placeholder="请输入名称"></Input>
-          </FormItem>
-          <FormItem label="地址：" prop="url">
-            <Input v-model="detail.url" placeholder="请输入地址"></Input>
-          </FormItem>
-          <FormItem label="图片：">
-            <JPictrue :src="detail.image" @on-change="change"/>
-          </FormItem>
-        </Form>
-        <Button type="primary" size="small" @click="submit('modalForm')" style="margin-left:110px;margin-top:20px;">保存</Button>
+        <ItemDetail :type="type"/>
       </Content>
     </Layout>
   </Layout>
 </template>
 
 <script>
-import qs from 'qs'
 import JHeader from '@/components/group/j-header'
-import JPictrue from '@/components/group/j-pictrue'
+import ItemDetail from '@/pages/enterprise/ItemDetail'
 export default {
+  props: ['title'],
   components: {
     JHeader,
-    JPictrue
+    ItemDetail
   },
   data () {
     return {
-      title: '',
-      detail: {},
-      rules: {
-        name: [
-          { required: true, message: '名称不能为空', trigger: 'blur' }
-        ],
-        url: [
-          { required: true, message: '地址不能为空', trigger: 'blur' }
-        ]
-      }
+      type: ''
     }
   },
   created () {
@@ -48,57 +28,17 @@ export default {
   },
   methods: {
     get () {
-      let type = ''
-      if (this.$route.path.split('/')[1] === 'link') {
+      let route = this.$route.path.split('/')[1]
+      if (route === 'link') {
         this.title = '友情链接'
-        type = '01'
-      } else {
+        this.type = '01'
+      } else if (route === 'partner') {
         this.title = '合作伙伴'
-        type = '02'
+        this.type = '02'
+      } else if (route === 'team_intro') {
+        this.title = '团队介绍'
+        this.type = '03'
       }
-      if (this.$route.params.id === 'add') {
-        this.detail = {
-          image: '',
-          type: type
-        }
-      } else {
-        this.$http.get('/rest/api/link/detail/' + this.$route.params.id).then((res) => {
-          if (res.success) {
-            this.detail = res.attributes.data
-            if (!this.detail.image) this.detail.image = ''
-          } else {
-            this.$Message.error(res.msg)
-          }
-        })
-      }
-    },
-    // 功能
-    change (e) {
-      this.detail.image = e.src
-    },
-    // 提交
-    submit (name) {
-      this.$refs[name].validate((valid) => {
-        if (valid) {
-          let data = {
-            model: JSON.stringify(this.detail)
-          }
-          let url = ''
-          if (this.detail.linkId) {
-            url = '/' + this.detail.linkId
-            data._method = 'put'
-          }
-          this.$http.post('/rest/api/link/detail' + url, qs.stringify(data)).then((res) => {
-            if (res.success) {
-              this.$Message.success('保存成功')
-              this.$emit('on-change')
-              this.modal = false
-            } else {
-              this.$Message.error(res.msg)
-            }
-          })
-        }
-      })
     }
   }
 }

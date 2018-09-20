@@ -1,5 +1,5 @@
 <template>
-  <Item :title="'友情链接'" :active="'link'" :type="'01'"/>
+  <Item :title="'团队介绍'" :active="'team_intro'" :type="'03'"/>
 </template>
 
 <script>

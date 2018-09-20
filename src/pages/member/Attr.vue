@@ -66,7 +66,10 @@ export default {
     }
   },
   computed: {
-    ...mapState(['memberAttrList'])
+    ...mapState({
+      selectlist: state => state.status.memberAttrList,
+      memberAttrList: state => state.memberAttrList
+    })
   },
   created () {
     this.get()
@@ -88,7 +91,7 @@ export default {
     },
     typeFilter (h, params) {
       let text = '文本'
-      this.memberAttrList.forEach(item => {
+      this.selectlist.forEach(item => {
         if (item.value === params.row.attributeType) {
           text = item.text
         }

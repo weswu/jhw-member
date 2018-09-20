@@ -162,7 +162,8 @@ const state = {
       { text: '招聘管理', value: 'recruit' },
       { text: '友情链接', value: 'link' },
       { text: '荣誉证书', value: 'cert' },
-      { text: '合作伙伴', value: 'partner' }
+      { text: '合作伙伴', value: 'partner' },
+      { text: '团队介绍', value: 'team_intro' }
     ]
   },
   menu_product: {
