@@ -1,19 +1,22 @@
 <template>
   <Layout class="ivu-layout-has-sider">
-    <MenuBar :data="'menuAnalysis'" :active="active" :detail="true" @on-change="activeChange"/>
+    <MenuBar :data="'menuAccount'" :active="'employee_account_analysis'"/>
     <Layout class="j_layout_content">
       <JHeader :title="'员工推广分析'"/>
       <Content>
-        <div id="employee_account_analysis" style="width:100%;"></div>
+        <div class="j_search">
+          <DatePicker type="daterange" split-panels placeholder="选择搜索时间段" @on-change="search" style="width: 200px"></DatePicker>
+        </div>
+        <Table :columns="columns" :data="list"></Table>
       </Content>
     </Layout>
   </Layout>
 </template>
 
 <script>
+import qs from 'qs'
 import MenuBar from '@/components/common/menu_bar'
 import JHeader from '@/components/group/j-header'
-import echarts from 'echarts'
 export default {
   components: {
     MenuBar,
@@ -21,10 +24,21 @@ export default {
   },
   data () {
     return {
-      active: 'pc',
-      categories: [],
-      data: [],
-      height: 0
+      columns: [
+        { type: 'index', title: '序号', align: 'center', width: 60 },
+        { title: '分站编号', minWidth: 85, key: 'layoutId' },
+        { title: '运营人员', minWidth: 85, key: 'name' },
+        { title: '新增浏量', minWidth: 85, key: 'viewCount' },
+        { title: '新增询盘', minWidth: 85, key: 'messageCount' },
+        { title: '新增成交', minWidth: 85, key: 'orderCount' },
+        { title: '新增注册', minWidth: 85, key: 'registerCount' },
+        { title: '转发量', minWidth: 85, key: 'shareCount' }
+      ],
+      list: [],
+      searchData: {
+        startDate: '',
+        endDate: ''
+      }
     }
   },
   created () {
@@ -32,67 +46,16 @@ export default {
   },
   methods: {
     get () {
-      this.$http.get('/rest/api/submember/list_s?type=' + this.active).then(res => {
+      this.$http.get('/rest/api/submember/statistical?' + qs.stringify(this.searchData)).then(res => {
         if (res.success) {
-          this.categories = res.attributes.categories
-          this.data = res.attributes.data
-          this.height = this.categories.length * 40
-          this.init()
+          this.list = res.attributes.data
         }
       })
     },
-    activeChange (e) {
-      this.active = e
+    search (e) {
+      this.searchData.startDate = e[0]
+      this.searchData.endDate = e[1]
       this.get()
-    },
-    init () {
-      let analysis = document.getElementById('employee_account_analysis')
-      // 设置容器高宽
-      analysis.style.height = this.height + 'px'
-      let myChart = echarts.init(analysis)
-      let data = []
-      for (var i = 0; i < this.categories.length; i++) {
-        data.push({value: this.data[i], name: this.categories[i], itemStyle: {normal: {color: '#2d8cf0'}}})
-      }
-      const option = {
-        tooltip: {
-          trigger: 'axis',
-          axisPointer: {
-            type: 'shadow'
-          }
-        },
-        grid: {
-          top: 0,
-          left: '2%',
-          right: '4%',
-          bottom: '3%',
-          containLabel: true
-        },
-        xAxis: {
-          type: 'value',
-          boundaryGap: [0, 0.01]
-        },
-        yAxis: {
-          type: 'category',
-          data: this.categories,
-          nameTextStyle: {
-            color: '#c3c3c3'
-          }
-        },
-        series: [
-          {
-            name: '推广量',
-            type: 'bar',
-            data: data
-          }
-        ]
-      }
-      myChart.setOption(option)
-      myChart.resize()
-      // 自适应高度和宽度
-      window.onresize = function () {
-        myChart.resize()
-      }
     }
   }
 }

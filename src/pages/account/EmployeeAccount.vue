@@ -1,48 +1,46 @@
 <template>
   <Layout class="ivu-layout-has-sider j_employee_account">
-      <MenuBar :data="'menuAccount'" :active="'employee_account'"/>
-      <Layout class="j_layout_content">
-        <JHeader :title="'员工账号管理'">
-          <div slot="btn">
-            <Button type="primary" @click="add">新增员工</Button>
-            <Button type="primary" @click="analysis">员工推广分析</Button>
-          </div>
-        </JHeader>
-        <Content>
-          <Table ref="selection" :columns="columns" :data="list" @on-selection-change="handleSelectChange"></Table>
-          <JPagination :checkbox="true" :total="total" :searchData='searchData' @on-change="get">
-            <span slot="btn">
-              <Checkbox v-model="toggle" @on-change="handleSelectAll(toggle)"/>
-              <Button type="ghost" size="small" @click="delAll">删除</Button>
-            </span>
-          </JPagination>
-        </Content>
-      </Layout>
-      <Modal
-        v-model="modal1"
-        title="员工推广"
-        width="500"
-        cancelText="取消">
-        <div class="j_tip" style="margin: 0 0 10px 0;">
-          注：请选择站点后再推广二维码
-          <Select v-model="$store.state.layoutId" class="small" @on-change="layoutChange" style="float: right;width: 130px;">
-            <Option v-for="item in staticList" :value="item.layoutId" :key="item.layoutId">网站编号：{{ item.layoutId }}</Option>
-          </Select>
+    <MenuBar :data="'menuAccount'" :active="'employee_account'"/>
+    <Layout class="j_layout_content">
+      <JHeader :title="'员工账号管理'">
+        <div slot="btn">
+          <Button type="primary" @click="add">新增员工</Button>
         </div>
-        <Tabs style="clear:both">
-          <TabPane label="手机网站推广">
-            <img :src="'http://wcd.jihui88.com/rest/comm/qrbar/create?w=130&text='+posterUrl"><br/>
-            <a href="javascritp:;" class="downloadQr" target="_blank" @click="downloadQr" style="padding-left:31px;">下载二维码</a>
-          </TabPane>
-          <TabPane label="PC网站推广">
-            <Input v-model="posterUrl" style="width:250px"></Input>
-            <Button v-clipboard:copy="posterUrl" v-clipboard:success="copy" style="margin-left:10px;">复制</Button>
-          </TabPane>
-        </Tabs>
-      </Modal>
-      <Authority ref="auth"/>
-      <Detail ref="detail" @on-change="get"/>
-    </Tabs>
+      </JHeader>
+      <Content>
+        <Table ref="selection" :columns="columns" :data="list" @on-selection-change="handleSelectChange"></Table>
+        <JPagination :checkbox="true" :total="total" :searchData='searchData' @on-change="get">
+          <span slot="btn">
+            <Checkbox v-model="toggle" @on-change="handleSelectAll(toggle)"/>
+            <Button type="ghost" size="small" @click="delAll">删除</Button>
+          </span>
+        </JPagination>
+      </Content>
+    </Layout>
+    <Modal
+      v-model="modal1"
+      title="员工推广"
+      width="500"
+      cancelText="取消">
+      <div class="j_tip" style="margin: 0 0 10px 0;">
+        注：请选择站点后再推广二维码
+        <Select v-model="$store.state.layoutId" class="small" @on-change="layoutChange" style="float: right;width: 130px;">
+          <Option v-for="item in staticList" :value="item.layoutId" :key="item.layoutId">网站编号：{{ item.layoutId }}</Option>
+        </Select>
+      </div>
+      <Tabs style="clear:both">
+        <TabPane label="手机网站推广">
+          <img :src="'http://wcd.jihui88.com/rest/comm/qrbar/create?w=130&text='+posterUrl"><br/>
+          <a href="javascritp:;" class="downloadQr" target="_blank" @click="downloadQr" style="padding-left:31px;">下载二维码</a>
+        </TabPane>
+        <TabPane label="PC网站推广">
+          <Input v-model="posterUrl" style="width:250px"></Input>
+          <Button v-clipboard:copy="posterUrl" v-clipboard:success="copy" style="margin-left:10px;">复制</Button>
+        </TabPane>
+      </Tabs>
+    </Modal>
+    <Authority ref="auth"/>
+    <Detail ref="detail" @on-change="get"/>
   </Layout>
 </template>
 
@@ -67,12 +65,13 @@ export default {
       columns: [
         { type: 'selection', className: 'j_table_checkbox', width: 44 },
         { type: 'index', title: '序号', align: 'center', width: 60 },
-        { title: '账号', key: 'username' },
-        { title: '姓名', key: 'name' },
-        { title: '职位', key: 'position' },
-        { title: '手机号码', key: 'mobile' },
-        { title: 'Email', key: 'email' },
-        { title: '操作', className: 'j_table_operate', align: 'right', width: 202, render: this.renderOperate }
+        { title: '账号', minWidth: 80, key: 'username' },
+        { title: '姓名', minWidth: 80, key: 'name' },
+        { title: '职位', minWidth: 80, key: 'position' },
+        { title: '站点', width: 160, key: 'layoutId', render: this.staticFilter },
+        { title: '手机号码', minWidth: 85, key: 'mobile' },
+        { title: 'Email', minWidth: 100, key: 'email' },
+        { title: '操作', className: 'j_table_operate', align: 'right', width: 250, render: this.renderOperate }
       ],
       list: [],
       searchData: {
@@ -109,9 +108,6 @@ export default {
     // 功能
     add () {
       this.$refs.detail.open('新增员工')
-    },
-    analysis () {
-      this.$router.push({path: 'employee_account_analysis'})
     },
     layoutChange () {
       var vm = this
@@ -161,9 +157,63 @@ export default {
       return target == null ? '' : target.replace(/^[^1-9]+/, '')
     },
     // 过滤
+    staticFilter (h, params) {
+      if (params.row.layoutId !== null) {
+        let option = []
+        this.staticList.forEach(item => {
+          option.push(h('Option', {
+            props: {
+              value: item.id
+            },
+            on: {
+              click: () => {
+                this.$refs.detail.open('修改员工', params.row.memberId)
+              }
+            }
+          }, '网站编号：' + item.id))
+        })
+        return h('Select', {
+          props: {
+            value: params.row.layoutId
+          },
+          on: {
+            'on-change': (val) => {
+              params.row.layoutId = val
+              let data = {
+                memberId: params.row.memberId,
+                layoutId: val
+              }
+              this.$http.post('/rest/api/submember/changeLayoutId', qs.stringify(data)).then((res) => {
+                if (res.success) {
+                  this.$Message.success('修改成功')
+                }
+              })
+            }
+          }
+        }, option)
+      } else {
+        return h('span', {
+          on: {
+            click: () => {
+              params.row.layoutId = ''
+            }
+          }
+        }, '选择推广站点')
+      }
+    },
     renderOperate (h, params) {
       var ctx = this
       return h('div', [
+        h('a', {
+          on: {
+            click: () => {
+              this.$router.push({path: '/message', query: {posterId: this.encodeId(params.row.memberId)}})
+            }
+          }
+        }, '留言'),
+        h('span', {
+          class: { delimiter: true }
+        }, '|'),
         h('a', {
           on: {
             click: () => {

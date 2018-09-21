@@ -98,14 +98,8 @@ const state = {
     title: '账号管理',
     menu: [
       { text: '安全设置', value: 'account' },
-      { text: '员工账号管理', value: 'employee_account' }
-    ]
-  },
-  menuAnalysis: {
-    title: '员工推广分析',
-    menu: [
-      { text: 'PC端', value: 'pc' },
-      { text: '手机端', value: 'mobile' }
+      { text: '员工账号管理', value: 'employee_account' },
+      { text: '员工推广分析', value: 'employee_account_analysis' }
     ]
   },
   menuCost: {

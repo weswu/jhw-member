@@ -79,7 +79,8 @@ export default {
         page: 1,
         pageSize: 10,
         recvState: '',
-        type: ''
+        type: '',
+        posterId: ''
       },
       total: 0,
       pageName: '',
@@ -107,6 +108,7 @@ export default {
     this.searchData.recvState = this.pageName || ''
     this.searchData.page = 1
     this.searchData.type = this.$route.query.type || ''
+    this.searchData.posterId = this.$route.query.posterId || ''
     this.get()
     this.changeTableColumns()
   },
