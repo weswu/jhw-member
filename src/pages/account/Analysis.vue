@@ -5,7 +5,7 @@
       <JHeader :title="'员工推广分析'"/>
       <Content>
         <div class="j_search">
-          <DatePicker type="daterange" split-panels placeholder="选择搜索时间段" @on-change="search" style="width: 200px"></DatePicker>
+          <DatePicker type="daterange" :options="options" split-panels placeholder="选择搜索时间段" @on-change="search" style="width: 200px"></DatePicker>
         </div>
         <Table :columns="columns" :data="list"></Table>
       </Content>
@@ -38,6 +38,37 @@ export default {
       searchData: {
         startDate: '',
         endDate: ''
+      },
+      options: {
+        shortcuts: [
+          {
+            text: '7天',
+            value () {
+              const end = new Date()
+              const start = new Date()
+              start.setTime(start.getTime() - 3600 * 1000 * 24 * 7)
+              return [start, end]
+            }
+          },
+          {
+            text: '15天',
+            value () {
+              const end = new Date()
+              const start = new Date()
+              start.setTime(start.getTime() - 3600 * 1000 * 24 * 15)
+              return [start, end]
+            }
+          },
+          {
+            text: '30天',
+            value () {
+              const end = new Date()
+              const start = new Date()
+              start.setTime(start.getTime() - 3600 * 1000 * 24 * 30)
+              return [start, end]
+            }
+          }
+        ]
       }
     }
   },

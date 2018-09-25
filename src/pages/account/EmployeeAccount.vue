@@ -159,16 +159,17 @@ export default {
     // 过滤
     staticFilter (h, params) {
       if (params.row.layoutId !== null) {
-        let option = []
+        let option = [
+          h('Option', {
+            props: {
+              value: null
+            }
+          }, '请选择')
+        ]
         this.staticList.forEach(item => {
           option.push(h('Option', {
             props: {
               value: item.id
-            },
-            on: {
-              click: () => {
-                this.$refs.detail.open('修改员工', params.row.memberId)
-              }
             }
           }, '网站编号：' + item.id))
         })

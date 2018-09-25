@@ -1,14 +1,17 @@
 <template>
-  <Modal class-name="j_static_add" width="735"
+  <Modal class-name="j_static_add" width="660"
     v-model="modal"
     :title="title"
     @on-cancel="cancel">
+    <div class="j_tip" v-if="show" style="margin-top: 0;">
+      温馨提醒：一个站点下只支持一个机房。如果您变更机房，之前绑定的域名会被清除，请慎重选择。
+    </div>
     <div class="bind_state" v-if="detail.state === '00'">
       我们将在24小时（工作日）内完成审核。<span class="type">审核中</span>
     </div>
     <RadioGroup v-model="detail.country" style="width:100%">
       <Row type="flex" justify="space-between">
-          <Col span="8" v-for="item in countryType" :key="item.id">
+          <Col span="12" v-for="item in countryType" :key="item.id">
             <Radio :label="item.value">
                 <div :class="{'ivu-checkbox': true, 'ivu-checkbox-checked': item.value === detail.country}">
                   <span class="ivu-checkbox-inner"></span>
@@ -56,10 +59,10 @@ export default {
         country: 'cn'
       },
       countryType: [
-        { text: '香港', value: 'hc', content: '免备案' },
         { text: '美国', value: 'en', content: '免备案' },
         { text: '中国大陆', value: 'cn', content: '阿里云主机，需备案' }
-      ]
+      ],
+      isOk: false
     }
   },
   computed: {
@@ -130,6 +133,19 @@ export default {
       })
     },
     ok () {
+      if (this.detail.address && !this.isOk) {
+        return this.$Modal.confirm({
+          content: '温馨提醒：之前有绑定过域名的，请前往重新“域名绑定”',
+          okText: '前往',
+          onOk: () => {
+            this.$store.commit('setLayoutId', parseInt(this.detail.layoutId))
+            this.$router.push({path: '/bind', query: {layoutId: this.detail.layoutId}})
+          },
+          onCancel: () => {
+            this.isOk = true
+          }
+        })
+      }
       let data = {
         model: JSON.stringify(this.detail),
         _method: 'put'
@@ -157,7 +173,6 @@ export default {
     padding-right: 10px !important;
 }
 .j_static_add{
-  z-index: 1061 !important;
   .ivu-modal{
     top: 250px
   }
@@ -172,7 +187,7 @@ export default {
     }
   }
   .ivu-col{
-    width: 178px;
+    width: 280px;
     height: 175px;
     box-shadow: 0 1px 6px rgba(0,0,0,.2);
     position: relative;

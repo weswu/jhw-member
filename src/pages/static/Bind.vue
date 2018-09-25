@@ -2,7 +2,7 @@
   <Layout class="j_layout ivu-layout-has-sider j_bind">
     <MenuBar :data="'menuStatic'" :active="'bind'"/>
     <Layout class="j_layout_content">
-      <JHeader :title="'域名绑定'" :website="true"/>
+      <JHeader :title="'域名绑定'" :website="true" :type="true" :tip="'温馨提醒：一个站点下只支持一个机房。如果您变更机房，之前绑定的域名会被清除，请慎重选择。'"/>
       <div class="j_search">
         <Input v-model="address" class="w180" placeholder="输入新域名" clearable></Input>
         <Button class="submit" @click="add" style="padding:6px 20px">提交</Button>

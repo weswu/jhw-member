@@ -145,7 +145,7 @@ export default {
           id: '99',
           seoTitle: '我的网站',
           new: false,
-          state: '',
+          state: '00',
           url: '',
           language: '1',
           count: 1,

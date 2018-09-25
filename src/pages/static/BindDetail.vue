@@ -20,10 +20,11 @@
                 <Option value="en">美国机房</Option>
                 <Option value="hc">香港机房</Option>
               </Select>
+              <Button class="submit" @click="submit" v-if="detail.country !== 'cn'">提交</Button>
             </FormItem>
             <div v-if="detail.country === 'cn'">
               <FormItem>
-                <Input v-model="detail.icp" placeholder="填写ICP备案号"></Input><Button class="submit" @click="submit">提交</Button>
+                <Input v-model="detail.icp" placeholder="填写ICP备案号"></Input> <Button class="submit" @click="submit">提交</Button>
               </FormItem>
               <a class="a_underline" target="_blank" href="https://help.aliyun.com/knowledge_detail/36922.html?spm=a2c4g.11186623.6.545.txarXU">查看阿里云备案教程</a>
               <a class="a_underline" target="_blank" href="https://beian.aliyun.com/?spm=5176.8006371.388261.5.5d907e630O5Nkf">视频教程</a>

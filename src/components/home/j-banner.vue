@@ -1,15 +1,9 @@
 <template>
   <div class="j_carousel j_panel">
-    <Carousel v-model="value1" :height="223" :radius-dot="radiusDot" :dots="dots" loop>
-        <CarouselItem>
-            <div class="demo-carousel">广告位</div>
-        </CarouselItem>
-        <CarouselItem>
-            <div class="demo-carousel">广告位</div>
-        </CarouselItem>
-        <CarouselItem>
-            <div class="demo-carousel">广告位</div>
-        </CarouselItem>
+    <Carousel v-model="value1" :height="auto" :radius-dot="radiusDot" :dots="dots" loop>
+      <CarouselItem>
+        <a href="http://xueyuan.jihui88.com/news-detail-201950.html" target="_blank"><img :src="'platform/img/banner1.jpg'"/></a>
+      </CarouselItem>
     </Carousel>
   </div>
 
@@ -36,6 +30,10 @@ export default {
     text-align: center;
     height: 223px;
     line-height: 223px;
+  }
+  img{
+    width: 100%;
+    height: 100%;
   }
   .ivu-carousel-dots li button.radius{
     width: 11px;height: 11px;
