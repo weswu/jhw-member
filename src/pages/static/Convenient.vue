@@ -34,7 +34,7 @@
           </FormItem>
           <br/>
           <FormItem label="QQ登录：">
-            使用条件：1.需绑定过域名<a href="#/bind">[点击查看]</a> 。2.需在微信开放平台申请一个登录应用<a href="https://connect.qq.com/manage.html" target="_blank">[前往申请]</a>
+            使用条件：1.需绑定过域名<a href="#/bind">[点击查看]</a> 。2.需在QQ开放平台申请一个登录应用<a href="https://connect.qq.com/manage.html" target="_blank">[前往申请]</a>
           </FormItem>
           <FormItem label="是否开启：">
             <RadioGroup v-model="detail.oauthQqState">

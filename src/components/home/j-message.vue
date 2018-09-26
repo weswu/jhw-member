@@ -1,36 +1,39 @@
 <template>
   <div class="j_home_message j_panel">
     <Tabs :value="tabActive">
-        <TabPane label="公告" name="0">
-          <div class="j_warpper">
-            <div class="j_null">暂无公告</div>
-          </div>
-        </TabPane>
-        <TabPane label="客户消息" name="1">
-          <ul>
-            <li v-for="(item, index) in list" :key="index">
-              <div class="title">
-                {{item.title}}
-              </div>
-              <p>
-                {{item.addTime | time('yyyy-MM-dd hh:mm')}}
-              </p>
-            </li>
-          </ul>
-          <div class="j_null j_warpper" v-if="list.length===0">暂无数据</div>
-          <a href="#/message?type=03" class="j_more">查看更多</a>
-        </TabPane>
+      <TabPane label="公告" name="0">
+        <div class="j_warpper">
+          <div class="j_null">暂无公告</div>
+        </div>
+      </TabPane>
+      <TabPane label="客户消息" name="1">
+        <ul>
+          <li v-for="(item, index) in list" :key="index">
+            <div class="title" @click="detail(item, index)">
+              {{item.title}}
+            </div>
+            <p>
+              {{item.addTime | time('yyyy-MM-dd hh:mm')}}
+            </p>
+          </li>
+        </ul>
+        <div class="j_null j_warpper" v-if="list.length===0">暂无数据</div>
+        <a href="#/message?type=03" class="j_more">查看更多</a>
+      </TabPane>
     </Tabs>
+    <Detail ref="detail"/>
   </div>
 </template>
 
 <script>
 import Website from '@/components/pc/website'
 import Xiaochengxu from '@/components/static/xiaochengxu'
+import Detail from '@/pages/message/Detail'
 export default {
   components: {
     Website,
-    Xiaochengxu
+    Xiaochengxu,
+    Detail
   },
   data () {
     return {
@@ -48,6 +51,9 @@ export default {
           this.list = res.attributes.data
         }
       })
+    },
+    detail (item, index) {
+      this.$refs.detail.open(item.messageId)
     }
   }
 }

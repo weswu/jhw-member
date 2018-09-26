@@ -25,6 +25,9 @@ export default {
 @import '../../assets/variables.less';
 .j_carousel{
   padding: 25px;
+  .ivu-carousel-track,.ivu-carousel-item{
+    width: 100% !important;
+  }
   .demo-carousel{
     background: @background-gray-color;
     text-align: center;

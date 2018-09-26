@@ -15,12 +15,11 @@
           </div>
           <Form :model="detail" :label-width="0" style="padding-bottom: 10px;">
             <FormItem>
-              <Select v-model="detail.country" class="w144">
+              <Select v-model="detail.country" disabled class="w144">
                 <Option value="cn">国内机房</Option>
                 <Option value="en">美国机房</Option>
                 <Option value="hc">香港机房</Option>
               </Select>
-              <Button class="submit" @click="submit" v-if="detail.country !== 'cn'">提交</Button>
             </FormItem>
             <div v-if="detail.country === 'cn'">
               <FormItem>
@@ -52,14 +51,12 @@
                 <tr>
                   <td>www.</td>
                   <td>CNAME</td>
-                  <td>gn<span v-if="detail.country === 'hc'">2</span>
-                  <span v-else>1</span>.dns.jihui88.com</td>
+                  <td>g<span v-if="detail.country === 'cn'">n</span><span v-if="detail.country !== 'cn'">w</span>1.dns.jihui88.com</td>
                 </tr>
                 <tr>
                   <td></td>
                   <td>CNAME</td>
-                  <td>gn<span v-if="detail.country === 'hc'">2</span>
-                  <span v-else>1</span>.dns.jihui88.com</td>
+                  <td>g<span v-if="detail.country === 'cn'">n</span><span v-if="detail.country !== 'cn'">w</span>1.dns.jihui88.com</td>
                 </tr>
               </tbody>
             </table>

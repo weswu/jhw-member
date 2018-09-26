@@ -6,9 +6,6 @@
     <div class="j_tip" v-if="show" style="margin-top: 0;">
       温馨提醒：一个站点下只支持一个机房。如果您变更机房，之前绑定的域名会被清除，请慎重选择。
     </div>
-    <div class="bind_state" v-if="detail.state === '00'">
-      我们将在24小时（工作日）内完成审核。<span class="type">审核中</span>
-    </div>
     <RadioGroup v-model="detail.country" style="width:100%">
       <Row type="flex" justify="space-between">
           <Col span="12" v-for="item in countryType" :key="item.id">
@@ -61,8 +58,7 @@ export default {
       countryType: [
         { text: '美国', value: 'en', content: '免备案' },
         { text: '中国大陆', value: 'cn', content: '阿里云主机，需备案' }
-      ],
-      isOk: false
+      ]
     }
   },
   computed: {
@@ -74,11 +70,7 @@ export default {
     open (e) {
       if (e) {
         this.title = e.title
-        this.$http.get('/rest/pc/api/bind/detail/' + e.item.id).then((res) => {
-          if (res.success) {
-            this.detail = res.attributes.data
-          }
-        })
+        this.detail = JSON.parse(JSON.stringify(e.item))
         this.show = true
       } else {
         this.title = '选择网站服务器地点'
@@ -133,31 +125,26 @@ export default {
       })
     },
     ok () {
-      if (this.detail.address && !this.isOk) {
-        return this.$Modal.confirm({
-          content: '温馨提醒：之前有绑定过域名的，请前往重新“域名绑定”',
-          okText: '前往',
-          onOk: () => {
-            this.$store.commit('setLayoutId', parseInt(this.detail.layoutId))
-            this.$router.push({path: '/bind', query: {layoutId: this.detail.layoutId}})
-          },
-          onCancel: () => {
-            this.isOk = true
-          }
-        })
-      }
       let data = {
-        model: JSON.stringify(this.detail),
+        model: JSON.stringify({
+          id: this.detail.id,
+          country: this.detail.country
+        }),
         _method: 'put'
       }
-      this.$http.post('/rest/pc/api/bind/detail/' + this.detail.id, qs.stringify(data)).then((res) => {
+      this.$http.post('/rest/pc/api/baseLayout/detail/' + this.detail.id, qs.stringify(data)).then((res) => {
         if (res.success) {
-          this.$Message.success({
-            content: '提交完成,我们将在工作日的24小时内审核完毕。',
-            duration: 5
-          })
+          this.$Message.success('更改完成')
           this.$emit('on-change')
           this.modal = false
+          this.$Modal.confirm({
+            content: '温馨提醒：如果之前有绑定过域名的，请前往重新“域名绑定”',
+            okText: '前往',
+            onOk: () => {
+              this.$store.commit('setLayoutId', parseInt(this.detail.layoutId))
+              this.$router.push({path: '/bind', query: {layoutId: this.detail.layoutId}})
+            }
+          })
         } else {
           this.$Message.error(res.msg)
         }

@@ -29,7 +29,7 @@
           <!-- 状态 -->
           <span v-html="stateFilter(item.state)"></span>
           <span v-html="onlineFilter(item.bind.online)"></span>
-          <span class="country" v-html="countryFilter(item.bind.country)"></span>
+          <span class="country" v-html="countryFilter(item.country)"></span>
         </p>
         <p>
           <a :href="item.url | http" target="_blank" class="url">{{item.url}}</a>
@@ -40,8 +40,8 @@
           <a href="javascript:;" class="buy" v-if="item.new" @click="again(item.id)">续费</a>
           <a :href="'http://buy.jihui88.com/#/?layoutId=' + item.id" class="buy" target="_blank" v-if="item.new">升级</a>
         </p>
-        <p>
-          温馨提醒：您选择的“<span v-html="countryFilter(item.bind.country)"></span><span v-if="item.bind.country === 'en' || item.bind.country === 'hc'">“不需要备案，如果要上线网站，请联系我们：139-6793-8189，我们将帮您免费办理备案域名绑定。</span>
+        <p v-if="item.country">
+          温馨提醒：您选择的“<span v-html="countryFilter(item.country)"></span><span v-if="item.country === 'en' || item.country === 'hc'">“不需要备案，如果要上线网站，请联系我们：139-6793-8189，我们将帮您免费办理备案域名绑定。</span>
           <span v-else>”需要备案（大概需要21个工作日的审核时间），请尽早联系我们：139-6793-8189，我们将协助您办理备案手续。</span>
         </p>
         <p class="more">
@@ -151,7 +151,7 @@ export default {
           count: 1,
           bind: {
             address: '',
-            country: 'cn',
+            country: '',
             online: '01'
           }
         }
@@ -239,7 +239,7 @@ export default {
       this.$refs.buy.open(id)
     },
     addChange (e) {
-      this.ids = this.ids ? (this.ids + ',' + e.id) : e.id
+      if (e) this.ids = this.ids ? (this.ids + ',' + e.id) : e.id
       this.get()
     },
     goEdit (item) {
@@ -401,13 +401,13 @@ export default {
       return text
     },
     countryFilter (val) {
-      let text = '中国'
+      let text = ''
       this.countryType.forEach(item => {
         if (item.value === val) {
-          text = item.text
+          text = item.text + '机房'
         }
       })
-      return text + '机房'
+      return text
     }
   }
 }
