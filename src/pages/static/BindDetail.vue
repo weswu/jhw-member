@@ -132,7 +132,7 @@ export default {
     submit () {
       this.$http.post('/rest/pc/api/bind/bindEdit', qs.stringify(this.detail)).then((res) => {
         if (res.success) {
-          this.$Message.success('保存成功')
+          this.$Message.success('保存成功,生效时间10分钟')
         } else {
           this.$Message.error(res.msg)
         }

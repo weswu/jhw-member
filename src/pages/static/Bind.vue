@@ -69,7 +69,7 @@ export default {
       }
       this.$http.post('/rest/pc/api/bind/bindAdd', qs.stringify(data)).then((res) => {
         if (res.success) {
-          this.$Message.success('添加成功')
+          this.$Message.success('添加成功,生效时间10分钟')
           this.get()
         } else {
           this.$Message.error(res.msg)
