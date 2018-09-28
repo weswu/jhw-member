@@ -19,7 +19,7 @@
               <div class="time">
                 {{item.time}}
               </div>
-              {{item.desc}}
+              <span v-html="item.desc"></span>
             </div>
           </li>
         </ul>
@@ -49,7 +49,7 @@ export default {
           pic: 'platform/img/doc/003.png',
           title: '系统升级日志: V4.0.4',
           time: '2018-09-12',
-          desc: '新增合作伙伴功能'
+          desc: '1.新增合作伙伴功能<br/>2.新增团队介绍功能'
         },
         {
           pic: 'platform/img/doc/004.png',

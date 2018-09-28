@@ -15,18 +15,18 @@
         </div>
 
         <div v-if="active === '0'">
-          <Form :model="bindDetail" :label-width="150" ref="model">
-            <FormItem label="ICP备案号：">
+          <Form :model="bindDetail" :label-width="200" ref="model">
+            <FormItem label="ICP备案号（公信备案）：">
               <Input v-model="bindDetail.icp" placeholder="填写ICP备案号" style="width:250px;"></Input>
             </FormItem>
-            <FormItem label="网安备案号：">
+            <FormItem label="网安备案号（公安备案）：">
               <Input v-model="bindDetail.psr" placeholder="填写网安备案号" style="width:250px;"></Input>
             </FormItem>
-            <FormItem label="网安备案链接地址：">
+            <FormItem label="网安备案链接地址（公安备案）：">
               <Input v-model="bindDetail.seccurityLink" placeholder="填写网安备案链接地址" style="width:250px;"></Input>
             </FormItem>
           </Form>
-          <Button type="primary" size="small" @click="submitBind" style="margin-top:20px;">提交</Button>
+          <Button type="primary" size="small" @click="submitBind" style="margin-top:20px;margin-left:7px;">提交</Button>
         </div>
 
         <a href="https://beian.aliyun.com/?utm_content=se_1351982" target="_blank"><Button type="info" class="w130" v-if="active === '1'">查看教程</Button></a>
@@ -313,6 +313,8 @@ export default {
           if (res.success) {
             this.bindAddressChange = false
             if (tip !== 'tip') this.$Message.success('保存成功')
+          } else {
+            this.$Message.error(res.msg)
           }
         })
       } else {

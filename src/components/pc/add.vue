@@ -4,7 +4,7 @@
     :title="title"
     @on-cancel="cancel">
     <div class="j_tip" v-if="show" style="margin-top: 0;">
-      温馨提醒：一个站点下只支持一个机房。如果您变更机房，之前绑定的域名会被清除，请慎重选择。
+      温馨提醒：一个网站编号只支持一个机房。如果您变更机房，之前绑定的域名会被清除，请慎重选择。
     </div>
     <RadioGroup v-model="detail.country" style="width:100%">
       <Row type="flex" justify="space-between">

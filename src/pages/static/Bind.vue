@@ -2,7 +2,7 @@
   <Layout class="j_layout ivu-layout-has-sider j_bind">
     <MenuBar :data="'menuStatic'" :active="'bind'"/>
     <Layout class="j_layout_content">
-      <JHeader :title="'域名绑定'" :website="true" :type="true" :tip="'温馨提醒：一个站点下只支持一个机房。如果您变更机房，之前绑定的域名会被清除，请慎重选择。'"/>
+      <JHeader :title="'域名绑定'" :website="true" :type="true" :tip="tip"/>
       <div class="j_search">
         <Input v-model="address" class="w180" placeholder="输入新域名" clearable></Input>
         <Button class="submit" @click="add" style="padding:6px 20px">提交</Button>
@@ -25,6 +25,7 @@ export default {
   },
   data () {
     return {
+      tip: '温馨提醒：<br/>1、一个网站编号只支持一个机房。如果您变更机房，之前绑定的域名会被清除，请慎重选择。<br/>2、为了搜索引擎能搜索到您的网站，网站上线之前的以下步骤要做好：<br/>（1）、<a href="#/seo">SEO优化设置</a>（网站标题、关键词、描述）要先布局好。<br/>3、网站上线之后，还要做好以下步骤：<br/>（1）、<a href="#/sitemap">Sitemap生成</a>；<br/>（2）、<a href="#/seo_batch">批量提交</a>；<br/>（3）、<a href="#/third_party_statistics">第三方统计</a>。',
       columns: [
         { title: '绑定域名', key: 'address' },
         { title: '所属网站编号', key: 'layoutId' },
