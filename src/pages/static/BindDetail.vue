@@ -49,11 +49,11 @@
                   <td>记录值</td>
                 </tr>
                 <tr>
-                  <td>www.</td>
+                  <td>{{detail.address}}</td>
                   <td>CNAME</td>
                   <td>g<span v-if="detail.country === 'cn'">n</span><span v-if="detail.country !== 'cn'">w</span>1.dns.jihui88.com</td>
                 </tr>
-                <tr>
+                <tr v-if="!isTwoDomain">
                   <td></td>
                   <td>CNAME</td>
                   <td>g<span v-if="detail.country === 'cn'">n</span><span v-if="detail.country !== 'cn'">w</span>1.dns.jihui88.com</td>
@@ -115,7 +115,8 @@ export default {
       detail: {
         country: 'cn'
       },
-      layoutId: ''
+      layoutId: '',
+      isTwoDomain: false
     }
   },
   created (e) {
@@ -126,13 +127,22 @@ export default {
       this.$http.get('/rest/pc/api/bind/bindDetail?bindId=' + this.$route.params.id).then((res) => {
         if (res.success) {
           this.detail = res.attributes.data
+          this.isDonain()
         }
       })
+    },
+    isDonain () {
+      if (this.detail.address.split('.').length > 3) {
+        this.isTwoDomain = true
+      } else {
+        this.isTwoDomain = false
+      }
     },
     submit () {
       this.$http.post('/rest/pc/api/bind/bindEdit', qs.stringify(this.detail)).then((res) => {
         if (res.success) {
           this.$Message.success('保存成功,生效时间10分钟')
+          this.isDonain()
         } else {
           this.$Message.error(res.msg)
         }

@@ -26,6 +26,9 @@
             <Input v-model="user.address" placeholder="请输入详细地址"></Input>
             <Button @click="map" class="submit">地图定位</Button>
           </FormItem>
+          <FormItem label="邮编：">
+            <Input v-model="user.zipcode" placeholder="请输入邮编"></Input>
+          </FormItem>
           <FormItem label="联系电话：">
             <Input v-model="user.phone" placeholder="请输入联系电话"></Input>
           </FormItem>

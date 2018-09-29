@@ -362,7 +362,7 @@ const store = new Vuex.Store({
       })
     },
     getUserprivilege ({commit, state}) {
-      return this._vm.$http.get('/rest/api/userprivilege/list').then(res => {
+      return this._vm.$http.get('/rest/api/userprivilege/list?version=v4').then(res => {
         if (res.success) {
           this.commit('setUserprivilege', res.attributes.data)
         }
