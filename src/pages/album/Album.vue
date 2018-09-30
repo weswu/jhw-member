@@ -16,7 +16,7 @@
           <li v-clipboard:copy="item.url2" v-clipboard:success="copy">复制图片的代码</li>
           <li v-clipboard:copy="item.url3" v-clipboard:success="copy" style="border:none;">复制链接的代码</li>
         </ul>
-        <Cateogy ref="category" @on-change="changeCategory" @on-file="changeFile" @on-del="fileChange"/>
+        <Cateogy ref="category" @on-change="changeCategory" @on-file="changeFile" @on-breadList="changeBreadList" @on-del="fileChange"/>
         <Layout class="j_album_container">
           <div class="j_search">
             <Row type="flex" justify="space-between">
@@ -190,7 +190,7 @@ export default {
       toggle: false,
       ids: '',
       fileids: '',
-      attId: 'all',
+      attId: 'all', // albumId
       fileList: [],
       belongModel: false,
       belongId: '',
@@ -199,6 +199,14 @@ export default {
     }
   },
   created () {
+    // 用于小窗口
+    let params = window.location.search.substr(1).split('&')
+    params.forEach(item => {
+      let arr = item.split('=')
+      if (arr[0] === 'albumId') {
+        this.attId = arr[1]
+      }
+    })
     this.get()
   },
   mounted () {
@@ -353,6 +361,9 @@ export default {
     },
     changeFile (data) {
       this.fileList = data.children
+    },
+    changeBreadList (data) {
+      this.breadList = data
     },
     breadClick (item, index) {
       var ctx = this

@@ -3,39 +3,38 @@
     <Header :style="{padding: 0}" class="layout-header-bar" @click.native="collapsedSider">
       <Icon :class="rotateIcon" :style="{margin: '10px 10px 0'}" type="navicon" size="20"></Icon>
     </Header>
-    <Menu ref="menu" theme="dark" width="auto" :class="menuitemClasses" :active-name="activeName" :open-names="open" @on-select="mrouter" accordion>
-      <Tooltip content="首页" placement="right" :transfer="transfer" :disabled="disabled">
-        <MenuItem name="index">
-          <i class="iconfont icon-ai-home"></i>
-          <span>首页</span>
-        </MenuItem>
-      </Tooltip>
-      <Submenu :name="item.name" v-for="(item, index) in navList" :key="index">
-        <template slot="title">
-          <Tooltip :content="item.text" placement="right" :transfer="transfer" :disabled="disabled">
+    <Menu ref="menu" theme="dark" width="auto" :class="menuitemClasses" :active-name="activeName" :open-names="open" @on-select="mrouter" accordion v-if="list.length > 0">
+      <div v-for="item in list" :key="item.name">
+        <Tooltip :content="item.text" placement="right" :transfer="transfer" :disabled="disabled" v-if="!item.children && !item.hidden">
+          <MenuItem :name="item.name" v-if="!item.url">
             <i :class="'iconfont icon-' + item.icon"></i>
             <span>{{item.text}}</span>
-          </Tooltip>
-        </template>
-        <Tooltip v-for="(row, i) in item.children" :key="i" :content="row.text" placement="right" :transfer="transfer" :disabled="disabled">
-          <MenuItem :name="row.name">
-            <i :class="'iconfont icon-' + row.icon"></i>
-            <span>{{row.text}}</span>
           </MenuItem>
+
+          <a :href="item.url" target="_blank" v-if="item.url">
+            <MenuItem :name="item.name">
+              <i :class="'iconfont icon-' + item.icon"></i>
+              <span>{{item.text}}</span>
+            </MenuItem>
+          </a>
         </Tooltip>
-      </Submenu>
-      <Tooltip :content="item.text" placement="right" v-for="item in navList2" :key="item.name" :transfer="transfer" :disabled="disabled">
-        <MenuItem :name="item.name" v-if="!item.url">
-          <i :class="'iconfont icon-' + item.icon"></i>
-          <span>{{item.text}}</span>
-        </MenuItem>
-        <a :href="item.url" target="_blank" v-if="item.url">
-          <MenuItem :name="item.name">
-            <i :class="'iconfont icon-' + item.icon"></i>
-            <span>{{item.text}}</span>
-          </MenuItem>
-        </a>
-      </Tooltip>
+
+        <Submenu :name="item.name" v-if="item.children && item.children.length > 0 && !item.hidden">
+          <template slot="title">
+            <Tooltip :content="item.text" placement="right" :transfer="transfer" :disabled="disabled">
+              <i :class="'iconfont icon-' + item.icon"></i>
+              <span>{{item.text}}</span>
+            </Tooltip>
+          </template>
+          <Tooltip v-for="(row, i) in item.children" :key="i" :content="row.text" placement="right" :transfer="transfer" :disabled="disabled" v-if=" !item.hidden">
+            <MenuItem :name="row.name">
+              <i :class="'iconfont icon-' + row.icon"></i>
+              <span>{{row.text}}</span>
+            </MenuItem>
+          </Tooltip>
+        </Submenu>
+      </div>
+
     </Menu>
   </Sider>
 </template>
@@ -49,7 +48,12 @@ export default {
       disabled: false, // 是否禁用提示框
       activeName: 'index',
       open: [],
-      navList: [
+      list: [],
+      list2: [
+        { name: 'index',
+          icon: 'ai-home',
+          text: '首页'
+        },
         { name: '1',
           icon: 'fl-renyuan',
           text: '账号信息',
@@ -71,9 +75,7 @@ export default {
             { name: 'member', icon: 'huiyuan', text: '客户管理' },
             { name: 'shop', icon: 'jiankangshangcheng', text: '商城管理' }
           ]
-        }
-      ],
-      navList2: [
+        },
         { name: 'pc',
           icon: 'diannao-tianchong',
           text: '网站界面管理'
@@ -96,7 +98,7 @@ export default {
     }
   },
   computed: {
-    ...mapState(['customData']),
+    ...mapState(['customData', 'userInfo']),
     rotateIcon () {
       return [
         'yd_collapsed',
@@ -114,9 +116,15 @@ export default {
   watch: {
     $route (to, from) {
       this.initRoute(to)
+    },
+    userInfo: {
+      handler () {
+        this.intiPri()
+      }
     }
   },
   created () {
+    // 初始化选中样式
     this.initRoute(this.$route)
   },
   mounted () {
@@ -126,6 +134,33 @@ export default {
     }, 1000)
   },
   methods: {
+    intiPri () {
+      let pris = this.userInfo.privilege
+      if (pris) {
+        let pri = pris.split(',')
+        let list = []
+        this.list2.forEach(item => {
+          item.hidden = true
+          pri.forEach(row => {
+            if (row === item.name) {
+              item.hidden = false
+            }
+          })
+          item.children && item.children.forEach(item2 => {
+            item2.hidden = true
+            pri.forEach(row => {
+              if (row === item2.name) {
+                item2.hidden = false
+              }
+            })
+          })
+          list.push(item)
+        })
+        this.list = list
+      } else {
+        this.list = this.list2
+      }
+    },
     initRoute (to) {
       if (to.meta.parent) {
         if (to.path === '/category/news') {

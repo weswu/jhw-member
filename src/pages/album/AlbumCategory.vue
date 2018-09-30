@@ -194,11 +194,31 @@ export default {
           })
         })
       })
+      // 用于小窗口显示目录
+      let breadList = [
+        { value: 'all', text: '全部图片' }
+      ]
+      let albumId = 'all'
+      let params = window.location.search.substr(1).split('&')
+      params.forEach(item => {
+        let arr = item.split('=')
+        if (arr[0] === 'albumId') {
+          albumId = arr[1]
+        }
+      })
       this.data[0].children.forEach(item1 => {
         item1.attCount = (item1.attCount || 0) + item1.children.length
         if (item1.id === ctx.copyId) {
           item1.expand = true
           ctx.$emit('on-file', item1)
+        }
+        // 小窗口
+        if (item1.id === albumId) {
+          breadList[1] = {
+            value: item1.id,
+            text: item1.title
+          }
+          this.$emit('on-breadList', breadList)
         }
         item1.children.forEach(item2 => {
           item2.attCount = (item2.attCount || 0) + item2.children.length
@@ -207,8 +227,24 @@ export default {
             item2.expand = true
             ctx.$emit('on-file', item2)
           }
+          // 小窗口
+          if (item2.id === albumId) {
+            breadList[2] = {
+              value: item2.id,
+              text: item2.title
+            }
+            this.$emit('on-breadList', breadList)
+          }
           item2.children.forEach(item3 => {
             item3.attCount = (item3.attCount || 0) + item3.children.length
+            // 小窗口
+            if (item3.id === albumId) {
+              breadList[3] = {
+                value: item3.id,
+                text: item3.title
+              }
+              this.$emit('on-breadList', breadList)
+            }
           })
         })
       })
