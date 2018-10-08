@@ -58,6 +58,22 @@ export default {
       this.status[this.data].menu[1].count = this.userInfo.noReaderMsg
     }
   },
+  mounted () {
+    let pris = this.userInfo.privilege || 'product,product,category/product'
+    if (pris) {
+      let pri = pris.split(',')
+      let list = []
+      this.status[this.data].menu.forEach(item => {
+        pri.forEach(row => {
+          if (row === item.value) {
+            list.push(item)
+          }
+        })
+      })
+      // this.status[this.data].menu = list
+    }
+    // 三级导航权限
+  },
   methods: {
     collapsedSider () {
       this.$refs.side1.toggleCollapse()

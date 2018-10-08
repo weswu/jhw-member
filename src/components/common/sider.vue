@@ -126,6 +126,7 @@ export default {
   created () {
     // 初始化选中样式
     this.initRoute(this.$route)
+    this.intiPri()
   },
   mounted () {
     var vm = this
@@ -134,8 +135,9 @@ export default {
     }, 1000)
   },
   methods: {
+    // 一级二级导航权限
     intiPri () {
-      let pris = this.userInfo.privilege
+      let pris = this.userInfo.privilege || 'product,product,category/product,product_import,product_download,2,shop,shop,shop_config,shop_pay,shop_delivery,shop_bill,shop_refund,coupon,member,member,member_rank,member_attr,member_register,album,news,news,category/news,enterprise,enterprise,company,recruit,link,cert,partner,team_intro,'
       if (pris) {
         let pri = pris.split(',')
         let list = []
