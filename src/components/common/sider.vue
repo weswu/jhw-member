@@ -137,7 +137,7 @@ export default {
   methods: {
     // 一级二级导航权限
     intiPri () {
-      let pris = this.userInfo.privilege || 'product,product,category/product,product_import,product_download,2,shop,shop,shop_config,shop_pay,shop_delivery,shop_bill,shop_refund,coupon,member,member,member_rank,member_attr,member_register,album,news,news,category/news,enterprise,enterprise,company,recruit,link,cert,partner,team_intro,'
+      let pris = this.userInfo.privilege
       if (pris) {
         let pri = pris.split(',')
         let list = []
@@ -151,7 +151,7 @@ export default {
           item.children && item.children.forEach(item2 => {
             item2.hidden = true
             pri.forEach(row => {
-              if (row === item2.name) {
+              if (row === item2.name + 'Man') {
                 item2.hidden = false
               }
             })

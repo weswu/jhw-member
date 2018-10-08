@@ -59,7 +59,8 @@ export default {
     }
   },
   mounted () {
-    let pris = this.userInfo.privilege || 'product,product,category/product'
+    // 三级导航权限
+    let pris = this.userInfo.privilege
     if (pris) {
       let pri = pris.split(',')
       let list = []
@@ -70,9 +71,8 @@ export default {
           }
         })
       })
-      // this.status[this.data].menu = list
+      this.status[this.data].menu = list
     }
-    // 三级导航权限
   },
   methods: {
     collapsedSider () {

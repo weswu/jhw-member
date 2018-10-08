@@ -39,6 +39,7 @@ export default {
         { title: '移序', className: 'j_table_sort', key: 'sort', minWidth: 125, render: this.editFilter },
         { title: '操作', className: 'j_table_operate', width: 120, render: this.renderOperate }
       ],
+      list: [],
       listTest: [
         {
           attributeType: 'checkbox',
@@ -87,6 +88,7 @@ export default {
     },
     // 过滤
     editFilter (h, params) {
+      this.list = this.memberAttrList
       return this.cellEdit(this, h, params)
     },
     typeFilter (h, params) {
@@ -144,7 +146,7 @@ export default {
                 this.$http.post('/rest/api/member/attr/detail/' + params.row.attId, qs.stringify({_method: 'DELETE'})).then((res) => {
                   if (res.success) {
                     ctx.$Message.success('删除成功')
-                    ctx.list.splice(params.index, 1)
+                    ctx.memberAttrList.splice(params.index, 1)
                   } else {
                     ctx.$Message.success(res.msg)
                   }
