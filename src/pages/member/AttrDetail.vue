@@ -1,4 +1,4 @@
-<template>
+  <template>
   <Modal
     v-model="modal"
     title="会员属性"
@@ -25,14 +25,14 @@
         :rules="{required: true, message: '选项不能为空', trigger: 'blur'}">
         <Row>
           <Col span="18">
-            <Input type="text" v-model="item.value"></Input>
+            <Input type="text" v-model="item.value" :disabled="detail.attId"></Input>
           </Col>
-          <Col span="4" offset="1">
+          <Col span="4" offset="1" v-if="!detail.attId">
             <Button type="ghost" @click="handleRemove(index)">删除</Button>
           </Col>
         </Row>
       </FormItem>
-      <FormItem v-if="detail.attributeType === 'select' || detail.attributeType === 'checkbox'">
+      <FormItem v-if="(detail.attributeType === 'select' || detail.attributeType === 'checkbox') && !detail.attId">
         <Button class="w144" type="dashed" long @click="handleAdd('')" icon="plus-round">添加</Button>
       </FormItem>
       <FormItem label="是否必填：">
@@ -74,19 +74,26 @@ export default {
   methods: {
     open (id) {
       this.modal = true
-      var ctx = this
       if (id) {
         this.$refs['modalForm'].resetFields()
         this.$http.get('/rest/api/member/attr/detail/' + id).then((res) => {
           if (res.success) {
             let data = res.attributes.data
-            this.detail = data
+            data.items = [
+              { value: '' }
+            ]
             if (data.attributeType === 'select' || data.attributeType === 'checkbox') {
-              this.detail.items = []
-              data.attributeOptionList.forEach(item => {
-                ctx.handleAdd(item)
-              })
+              if (data.attributeOptionList) {
+                let items = []
+                data.attributeOptionList.forEach(item => {
+                  items.push({
+                    value: item
+                  })
+                })
+                data.items = items
+              }
             }
+            this.detail = data
           } else {
             this.$Message.error(res.msg)
           }
@@ -98,8 +105,7 @@ export default {
           isEnabled: '00',
           items: [
             {
-              value: '',
-              index: 1
+              value: ''
             }
           ]
         }
@@ -125,7 +131,7 @@ export default {
             this.detail.items.forEach(item => {
               store.push(item.value)
             })
-            this.detail.attributeOptionStore = JSON.stringify(store)
+            this.detail.attributeOptionList = store
           }
           let data = {
             model: JSON.stringify(this.detail)

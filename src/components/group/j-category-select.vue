@@ -121,7 +121,11 @@ export default {
           item.hidden = !data.expand
           ctx.data.forEach(row => {
             if (row.belongId === item.categoryId) {
-              row.hidden = !data.expand
+              if (!data.expand) {
+                row.hidden = true
+              } else {
+                row.hidden = !item.expand
+              }
             }
           })
         }

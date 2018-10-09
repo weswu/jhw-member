@@ -4,7 +4,7 @@
     <Layout class="j_layout_content">
       <JHeader :title="'域名绑定详情'"/>
       <Content>
-        <div v-if="active === '0'" style="padding-bottom: 20px;">
+        <div style="padding-bottom: 20px;">
           <div class="j_tip" style="margin-top: 9px;">
             温馨提醒：还没有域名? <a :href="'http://buy.jihui88.com/#/?tab=tab1&layoutId='+$store.state.layoutId" target="_blank" class="a_underline" style="padding: 0 5px;">点击前往购买</a>
             进入页面后点击基础类里的申请域名。
@@ -54,7 +54,7 @@
                   <td>g<span v-if="detail.country === 'cn'">n</span><span v-if="detail.country !== 'cn'">w</span>1.dns.jihui88.com</td>
                 </tr>
                 <tr v-if="!isTwoDomain">
-                  <td></td>
+                  <td>{{address}}</td>
                   <td>CNAME</td>
                   <td>g<span v-if="detail.country === 'cn'">n</span><span v-if="detail.country !== 'cn'">w</span>1.dns.jihui88.com</td>
                 </tr>
@@ -77,19 +77,6 @@
             </div>
           </Form>
         </div>
-        <div v-if="active === '1'" style="padding-bottom: 20px;">
-          <div style="margin-top: 9px;">
-            &nbsp;&nbsp;&nbsp;&nbsp;http://&nbsp;&nbsp;<Input v-model="detail.userSecondDomain" style="width: 140px"></Input>
-            <Button class="submit" @click="submit">提交</Button>
-          </div>
-        </div>
-        <div v-if="active === '2'" style="padding-bottom: 20px;">
-          <div class="j_tip" style="margin-top: 9px;">
-            二级域名(长度最小为6，最长为20的小写英文字母或数字组合)。&nbsp;(请求帮助QQ：260404208)
-          </div>
-          &nbsp;&nbsp;&nbsp;&nbsp;http://&nbsp;&nbsp;<Input v-model="detail.secondDomain" style="width: 140px"></Input>
-          &nbsp;.pc.jihui88.com<Button class="submit" @click="submit">提交</Button>
-        </div>
       </Content>
     </Layout>
   </Layout>
@@ -111,12 +98,17 @@ export default {
         { text: '客户二级域名绑定', value: '1' },
         { text: '机汇网二级域名绑定', value: '2' }
       ],
-      active: '0',
       detail: {
         country: 'cn'
       },
+      address: '',
       layoutId: '',
       isTwoDomain: false
+    }
+  },
+  watch: {
+    'detail.address' () {
+      this.isDonain()
     }
   },
   created (e) {
@@ -132,7 +124,12 @@ export default {
       })
     },
     isDonain () {
-      if (this.detail.address.split('.').length > 3) {
+      let obj = this.detail.address.split('.')
+      this.address = ''
+      if (obj.length === 2) {
+        this.address = 'www.' + this.detail.address
+        this.isTwoDomain = false
+      } else if (obj.length > 2) {
         this.isTwoDomain = true
       } else {
         this.isTwoDomain = false
