@@ -26,7 +26,7 @@
               <span>{{item.text}}</span>
             </Tooltip>
           </template>
-          <Tooltip v-for="(row, i) in item.children" :key="i" :content="row.text" placement="right" :transfer="transfer" :disabled="disabled" v-if=" !item.hidden">
+          <Tooltip v-for="(row, i) in item.children" :key="i" :content="row.text" placement="right" :transfer="transfer" :disabled="disabled" v-if="!row.hidden">
             <MenuItem :name="row.name">
               <i :class="'iconfont icon-' + row.icon"></i>
               <span>{{row.text}}</span>

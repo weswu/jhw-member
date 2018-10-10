@@ -17,6 +17,7 @@ const state = {
   },
   lanId: '1',
   uid: ['0', '0', '0'],
+  loading: false,
   // 列表数据
   productCategory: [],
   newsCategory: [],
@@ -65,6 +66,7 @@ const getters = {
   user: state => state.user,
   userInfo: state => state.userInfo,
   lanId: state => state.lanId,
+  loading: state => state.loading,
   // 分类
   productCategory: state => state.productCategory,
   newsCategory: state => state.newsCategory,
@@ -88,6 +90,9 @@ const mutations = {
   },
   setUserInfo (state, userInfo) {
     state.userInfo = userInfo
+  },
+  setLoading (state, loading) {
+    state.loading = loading
   },
   setAccountInfo (state, data) {
     state.user.headimg = data.headimg
@@ -459,7 +464,7 @@ const store = new Vuex.Store({
         if (res.success) {
           console.log('自定义数据保存成功')
         } else {
-          this._vm.$Message.success(res.msg)
+          console.log(res.msg)
         }
       })
     }

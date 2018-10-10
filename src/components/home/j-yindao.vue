@@ -94,8 +94,8 @@ export default {
     }
     setTimeout(e => {
       this.list[0].text = (this.$store.state.user.nickName || this.$store.state.user.username) + ',您好<br/>接下来有些小提示，帮助您更快的熟悉后台。'
-      if (!vm.$store.state.customData.yindao && !vm.$store.state.userInfo.privilege) { // 未引导和子员工
-        if (location.port !== '8080') vm.open()
+      if (!vm.$store.state.customData.yindao) { // 未引导和子员工
+        if (location.port !== '8080' && !vm.$store.state.userInfo.privilege) vm.open()
         vm.$store.state.customData.yindao = true
         vm.$store.dispatch('SAVE_CUSTOM_DATA')
       }

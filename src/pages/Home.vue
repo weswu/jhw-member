@@ -4,7 +4,7 @@
       <Row :gutter="24">
         <Col :lg="16" :md="16" class="j_col">
           <JWebsite style="margin-bottom: 25px;"/>
-          <div ref="HomeSortable">
+          <div ref="HomeSortable" v-if="!isSubEmp">
             <div v-for="item in $store.state.customData.homeSort" :key="item.value" v-if="item.status === '01'">
               <JStatic style="margin-bottom: 25px;" v-if="item.value === 'static'"/>
               <JLink style="margin-bottom: 25px;" v-if="item.value === 'link'"/>
@@ -14,7 +14,7 @@
         </Col>
         <Col :lg="8" :md="8" class="j_col" style="padding-left:17px;">
           <JBanner/>
-          <JSubscribe/>
+          <JSubscribe v-if="!isSubEmp"/>
           <div v-for="item in $store.state.customData.homeSort" :key="item.value" v-if="item.status === '01'">
             <JMessage style="margin-bottom: 25px;" v-if="item.value === 'message'"/>
             <JService style="margin-bottom: 25px;" v-if="item.value === 'service'"/>
@@ -53,8 +53,13 @@ export default {
     JApp,
     JConsult
   },
+  data () {
+    return {
+      isSubEmp: false
+    }
+  },
   computed: {
-    ...mapState(['customData'])
+    ...mapState(['customData', 'userInfo'])
   },
   mounted () {
     var ctx = this
@@ -74,6 +79,14 @@ export default {
         ctx.$store.dispatch('SAVE_CUSTOM_DATA')
       }
     })
+  },
+  watch: {
+    userInfo: {
+      handler () {
+        let pris = this.userInfo.privilege
+        if (pris) this.isSubEmp = true
+      }
+    }
   }
 }
 </script>

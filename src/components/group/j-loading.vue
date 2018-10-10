@@ -7,30 +7,7 @@
     </div>
   </Spin>
 </template>
-
-<script>
-import JAlbum from '@/components/group/j-album'
-export default {
-  components: {
-    JAlbum
-  },
-  data () {
-    return {
-      isNull: false
-    }
-  },
-  methods: {
-    open () {
-      this.$refs.ablum.open()
-    },
-    setErrorImg (e) {
-      this.isNull = true
-      e.target.src = 'http://img.jihui88.com/upload/j/j2/jihui88/picture/2015/04/01/72041ac7-51fa-4163-906d-8b576955d29e.jpg'
-    }
-  }
-}
-</script>
-<style>
+<style media="screen">
 .w-loading .loader{
   width: 50px;
   height: 50px;

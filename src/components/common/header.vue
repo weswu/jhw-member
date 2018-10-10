@@ -87,15 +87,19 @@
       <span class="border"></span>
     </Col>
     <Detail ref="detail"/>
+    <!-- 加载中..."  -->
+    <JLoading></JLoading>
   </Row>
 </template>
 
 <script>
 import { mapState, mapActions } from 'vuex'
 import Detail from '@/pages/message/Detail'
+import JLoading from '@/components/group/j-loading'
 export default {
   components: {
-    Detail
+    Detail,
+    JLoading
   },
   data () {
     return {

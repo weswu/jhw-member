@@ -4,6 +4,7 @@
     :show-upload-list="show"
     name="Filedata"
     :max-size="2048"
+    :on-progress="beginUpload"
     :on-success="handleSuccess"
     :on-exceeded-size="handleMaxSize">
     <slot name="content"></slot>
@@ -35,7 +36,11 @@ export default {
     }
   },
   methods: {
+    beginUpload () {
+      this.$store.commit('setLoading', true)
+    },
     handleSuccess (res, file) {
+      this.$store.commit('setLoading', false)
       if (res !== null) {
         this.$emit('on-success', {
           id: res.split(',')[1],
@@ -54,6 +59,7 @@ export default {
       }
     },
     handleMaxSize (file) {
+      this.$store.commit('setLoading', false)
       this.$Notice.warning({
         title: '超过文件大小限制',
         desc: '文件  ' + file.name + ' 太大，不能超过2M。'
