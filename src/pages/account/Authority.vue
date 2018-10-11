@@ -25,14 +25,46 @@ export default {
     ...mapState(['userprivilege'])
   },
   methods: {
-    get () {
+    open (id) {
+      this.data = []
+      this.modal = true
+      this.memberId = id
       if (this.userprivilege.length === 0) {
         this.$store.dispatch('getUserprivilege').then(e => {
           this.init()
+          this.get()
         })
       } else {
         this.init()
+        this.get()
       }
+    },
+    get () {
+      var ctx = this
+      this.$http.get('/rest/api/userpriv/detail/' + this.memberId).then((res) => {
+        if (res.success) {
+          let data = res.attributes.data
+          data && data.forEach(item => {
+            ctx.data.forEach(item1 => {
+              if (item.userprivilegeId === item1.id) {
+                item1.checked = true
+              }
+              item1.children && item1.children.forEach(item2 => {
+                if (item.userprivilegeId === item2.id) {
+                  item2.checked = true
+                }
+                item2.children && item2.children.forEach(item3 => {
+                  if (item.userprivilegeId === item3.id) {
+                    item3.checked = true
+                  }
+                })
+              })
+            })
+          })
+        } else {
+          ctx.$Message.success(res.msg)
+        }
+      })
     },
     init () {
       var vm = this
@@ -72,37 +104,6 @@ export default {
             }
           })
         })
-      })
-    },
-    open (id) {
-      var ctx = this
-      this.data = []
-      this.get()
-      this.modal = true
-      this.memberId = id
-      this.$http.get('/rest/api/userpriv/detail/' + id).then((res) => {
-        if (res.success) {
-          let data = res.attributes.data
-          data && data.forEach(item => {
-            ctx.data.forEach(item1 => {
-              if (item.userprivilegeId === item1.id) {
-                item1.checked = true
-              }
-              item1.children && item1.children.forEach(item2 => {
-                if (item.userprivilegeId === item2.id) {
-                  item2.checked = true
-                }
-                item2.children && item2.children.forEach(item3 => {
-                  if (item.userprivilegeId === item3.id) {
-                    item3.checked = true
-                  }
-                })
-              })
-            })
-          })
-        } else {
-          ctx.$Message.success(res.msg)
-        }
       })
     },
     ok () {

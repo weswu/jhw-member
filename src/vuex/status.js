@@ -215,8 +215,7 @@ const state = {
   },
   menu_member_detail: {
     menu: [
-      { text: '会员基本信息', value: '0' },
-      { text: '会员属性', value: '1' }
+      { text: '会员基本信息', value: '0' }
     ]
   },
   menuShop: {

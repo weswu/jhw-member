@@ -66,9 +66,6 @@ export default {
     cancel () {
       this.modal = false
     },
-    change (e) {
-
-    },
     submit (name) {
       this.$refs[name].validate((valid) => {
         if (valid) {

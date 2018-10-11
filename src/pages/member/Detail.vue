@@ -1,70 +1,69 @@
 <template>
   <Layout class="ivu-layout-has-sider j_member_detail">
-    <MenuBar :data="'menu_member_detail'" :active="active" :detail="true" @on-change="activeChange"/>
+    <MenuBar :data="'menu_member_detail'" :active="active" :detail="true"/>
     <Layout class="j_layout_content j_form_detail">
       <JHeader :title="menuBarList.menu[active].text"/>
       <Content>
         <Form :model="detail" :label-width="130" :rules="rules" ref="modalForm">
-          <div class="" :hidden="active !== '0'">
-            <FormItem label="账号：" prop="username">
-              <Input v-model="detail.username" placeholder="请输入账号" :disabled="this.$route.params.id !== 'add'"></Input>
-            </FormItem>
-            <FormItem label="昵称：" prop="name">
-              <Input v-model="detail.name" placeholder="请输入昵称"></Input>
-            </FormItem>
-            <FormItem label="密码：" prop="password">
-              <Input v-model="detail.password" type="password" placeholder="请输入密码"></Input>
-            </FormItem>
-            <FormItem label="确认密码：" prop="rePassword">
-              <Input v-model="detail.rePassword" type="password" placeholder="请再次输入密码"></Input>
-            </FormItem>
-            <FormItem label="E-mail：">
-              <Input v-model="detail.email" type="email" placeholder="请输入E-mail"></Input>
-            </FormItem>
-            <FormItem label="积分:">
-              <InputNumber v-model="detail.point" placeholder="请输入积分" class="w144"></InputNumber>
-            </FormItem>
-            <FormItem label="预存款:">
-              <InputNumber v-model="detail.deposit" placeholder="请输入预存款" class="w144"></InputNumber>
-            </FormItem>
+          <FormItem label="账号：" prop="username">
+            <Input v-model="detail.username" placeholder="请输入账号" :disabled="this.$route.params.id !== 'add'"></Input>
+          </FormItem>
+          <FormItem label="昵称：" prop="name">
+            <Input v-model="detail.name" placeholder="请输入昵称"></Input>
+          </FormItem>
+          <FormItem label="密码：" prop="password">
+            <Input v-model="detail.password" type="password" placeholder="请输入密码"></Input>
+          </FormItem>
+          <FormItem label="确认密码：" prop="rePassword">
+            <Input v-model="detail.rePassword" type="password" placeholder="请再次输入密码"></Input>
+          </FormItem>
+          <FormItem label="E-mail：">
+            <Input v-model="detail.email" type="email" placeholder="请输入E-mail"></Input>
+          </FormItem>
+          <FormItem label="积分:">
+            <InputNumber v-model="detail.point" placeholder="请输入积分" class="w144"></InputNumber>
+          </FormItem>
+          <FormItem label="预存款:">
+            <InputNumber v-model="detail.deposit" placeholder="请输入预存款" class="w144"></InputNumber>
+          </FormItem>
 
-            <FormItem label="会员等级：" prop="memberRank">
-              <Select v-model="detail.memberRank" class="w144">
-                <Option v-for="item in memberRankList" :value="item.rankId" :key="item.rankId">
-                  {{item.name}}
-                </Option>
-              </Select>
-              <a href="#/member_rank" style="padding-left:10px;">编辑会员等级</a>
-            </FormItem>
-            <FormItem label="是否启用：">
-              <RadioGroup v-model="detail.isAccountEnabled">
-                <Radio label="01">是</Radio>
-                <Radio label="00">否</Radio>
-              </RadioGroup>
-            </FormItem>
+          <FormItem label="会员等级：" prop="memberRank">
+            <Select v-model="detail.memberRank" class="w144">
+              <Option v-for="item in memberRankList" :value="item.rankId" :key="item.rankId">
+                {{item.name}}
+              </Option>
+            </Select>
+            <a href="#/member_rank" style="padding-left:10px;">编辑会员等级</a>
+          </FormItem>
+          <FormItem label="是否启用：">
+            <RadioGroup v-model="detail.isAccountEnabled">
+              <Radio label="01">是</Radio>
+              <Radio label="00">否</Radio>
+            </RadioGroup>
+          </FormItem>
+          <div class="j_tip">
+            设置会员属性<a href="#/member_attr" style="padding-left:10px;">编辑会员属性</a>
           </div>
-          <div :hidden="active !== '1'">
-            <FormItem
-              v-for="(item, index) in detail.items"
-              v-if="item.isEnabled === '01'"
-              :key="index"
-              :label="item.name+'：'"
-              :prop="'items.' + index + '.value'"
-              :rules="{required: item.isRequired === '01', type: item.attributeType === 'checkbox' ? 'array' : (item.attributeType === 'number' ? 'number' : (item.attributeType === 'date' ? 'date' : 'string')), message: '内容不能为空', trigger: 'blur'}">
-              <Input v-model="item.value" v-if="item.attributeType === 'text'"></Input>
-              <InputNumber v-model="item.value" class="w144" v-if="item.attributeType === 'number'"></InputNumber>
-              <Input v-model="item.value" v-if="item.attributeType === 'alphaint'"></Input>
-              <Select v-model="item.value" v-if="item.attributeType === 'select'" class="w144 border">
-                <Option :value="row" v-for="(row, rowIndex) in item.attributeOptionList" :key="rowIndex">
-                  {{row}}
-                </Option>
-              </Select>
-              <CheckboxGroup v-model="item.value" v-if="item.attributeType === 'checkbox'">
-                <Checkbox :label="row" v-for="row in item.attributeOptionList" :key="row"></Checkbox>
-              </CheckboxGroup>
-              <DatePicker type="date" v-model="item.value" @on-change="item.value=$event" class="w144" v-if="item.attributeType === 'date'"></DatePicker>
-            </FormItem>
-          </div>
+          <FormItem
+            v-for="(item, index) in detail.items"
+            v-if="item.isEnabled === '01'"
+            :key="index"
+            :label="item.name+'：'"
+            :prop="'items.' + index + '.value'"
+            :rules="{required: item.isRequired === '01', type: item.attributeType === 'checkbox' ? 'array' : (item.attributeType === 'number' ? 'number' : (item.attributeType === 'date' ? 'date' : 'string')), message: '内容不能为空', trigger: 'blur'}">
+            <Input v-model="item.value" v-if="item.attributeType === 'text'"></Input>
+            <InputNumber v-model="item.value" class="w144" v-if="item.attributeType === 'number'"></InputNumber>
+            <Input v-model="item.value" v-if="item.attributeType === 'alphaint'"></Input>
+            <Select v-model="item.value" v-if="item.attributeType === 'select'" class="w144 border">
+              <Option :value="row" v-for="(row, rowIndex) in item.attributeOptionList" :key="rowIndex">
+                {{row}}
+              </Option>
+            </Select>
+            <CheckboxGroup v-model="item.value" v-if="item.attributeType === 'checkbox'">
+              <Checkbox :label="row" v-for="row in item.attributeOptionList" :key="row"></Checkbox>
+            </CheckboxGroup>
+            <DatePicker type="date" v-model="item.value" @on-change="item.value=$event" class="w144" v-if="item.attributeType === 'date'"></DatePicker>
+          </FormItem>
         </Form>
       </Content>
       <Footer>
@@ -193,10 +192,6 @@ export default {
           ctx.detail.items.push(item)
         })
       })
-    },
-    // 功能
-    activeChange (e) {
-      this.active = e
     },
     // 提交
     submit (name) {

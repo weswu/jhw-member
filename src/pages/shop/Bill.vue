@@ -2,7 +2,7 @@
   <Layout class="ivu-layout-has-sider">
     <MenuBar :data="'menuShop'" :active="'shop_bill'"/>
     <Layout class="j_layout_content">
-      <JHeader :title="'物流单据管理'"/>
+      <JHeader :title="'物流单据设置'"/>
       <Content>
         <div class="j_search">
           <Button type="info" icon="plus" class="w130" @click="url('/shop_bill/add')">添加物流单据</Button>

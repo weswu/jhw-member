@@ -30,7 +30,7 @@
       <FormItem label="确认密码" prop="rePassword" v-if="!model.memberId || resetPassword">
         <Input v-model="model.rePassword" placeholder="请再次输入密码" type="password"></Input>
       </FormItem>
-      <FormItem label="性别：">
+      <FormItem label="性别">
         <Select v-model="model.sex" style="width: 187px;">
           <Option value="00">男</Option>
           <Option value="01">女</Option>
@@ -101,7 +101,7 @@ export default {
           { validator: validatePass, trigger: 'blur' }
         ],
         rePassword: [
-          { required: true, message: '密码不能为空', trigger: 'blur' },
+          { required: true, message: '确认密码不能为空', trigger: 'blur' },
           { validator: validatePassCheck, trigger: 'blur' }
         ],
         email: [
