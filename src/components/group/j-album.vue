@@ -28,8 +28,8 @@
             {{item.filename}}
           </div>
         </div>
-        <div v-if="list.length === 0">
-          暂无数据
+        <div v-if="list.length === 0" style="text-align: center;padding: 20px;">
+          {{text}}
         </div>
       </div>
       <JPagination :total="total" :searchData='searchData' @on-change="get"/>
@@ -113,11 +113,13 @@ export default {
         pageSize: 20
       },
       imglist: [],
-      albumId: 'all'
+      albumId: 'all',
+      text: '加载中...'
     }
   },
   methods: {
     get () {
+      this.text = '加载中...'
       this.$http.get('/rest/api/album/attr/list/' + this.albumId + '?' + qs.stringify(this.searchData)).then((res) => {
         if (res.success) {
           let data = res.attributes.data
@@ -126,6 +128,7 @@ export default {
           })
           this.list = data || []
           this.total = res.attributes.count
+          this.text = ''
         } else {
           this.$Message.error(res.msg)
         }

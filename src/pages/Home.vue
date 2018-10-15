@@ -4,11 +4,11 @@
       <Row :gutter="24">
         <Col :lg="16" :md="16" class="j_col">
           <JWebsite style="margin-bottom: 25px;"/>
-          <div ref="HomeSortable" v-if="!isSubEmp">
+          <div ref="HomeSortable">
             <div v-for="item in $store.state.customData.homeSort" :key="item.value" v-if="item.status === '01'">
               <JStatic style="margin-bottom: 25px;" v-if="item.value === 'static'"/>
-              <JLink style="margin-bottom: 25px;" v-if="item.value === 'link'"/>
-              <JOrder style="margin-bottom: 25px;" v-if="item.value === 'order'"/>
+              <JLink style="margin-bottom: 25px;" v-if="item.value === 'link' && !isSubEmp"/>
+              <JOrder style="margin-bottom: 25px;" v-if="item.value === 'order' && !isSubEmp"/>
             </div>
           </div>
         </Col>

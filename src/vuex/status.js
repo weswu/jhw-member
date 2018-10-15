@@ -1,6 +1,11 @@
+import {
+  getMenuByRouter
+} from '@/utils/util'
+import routers from '@/router/routers'
 // 存放各种常量
 const state = {
   IMG_HOST: 'http://img.jihui88.com/',
+  menuList: [],
   lanList: [
     { value: '1', text: '中文', type: 'cn' },
     { value: '2', text: '英文', type: 'en' }
@@ -479,11 +484,17 @@ const state = {
   ]
 }
 
-const getters = {}
+const getters = {
+  menuList: state => state.menuList
+}
 
 const mutations = {
   setLanList (state, data) {
     state.lanList = data
+  },
+  setMenuList (state, data) {
+    let list = getMenuByRouter(routers, data)
+    state.menuList = list
   }
 }
 

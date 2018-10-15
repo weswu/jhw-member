@@ -4,12 +4,14 @@
       <a href="#/account" class="a_underline">立即验证</a>
       <a href="https://v.qq.com/x/page/f0753d6r4fb.html" class="a_underline" target="_blank" style="margin-left:5px">视频教程</a>
     </div>
-    <Button icon="plus" class="orange yd_website" @click="add">创建新网站</Button> 您有{{onlineCount}}个网站上线了
+    <div v-if="!isSubEmp">
+      <Button icon="plus" class="orange yd_website" @click="add">创建新网站</Button> 您有{{onlineCount}}个网站上线了
+    </div>
     <ul class="static_info j_scroll">
       <li class="item" v-for="item in list" :key="item.id">
         <p>
           <span class="name">{{item.seoTitle}}</span>
-          <Poptip placement="right" class="j_poptip_confirm_edit"
+          <Poptip placement="right" class="j_poptip_confirm_edit" v-if="!isSubEmp"
             confirm
             @on-ok="edit(item)">
             <i class="iconfont icon-bianji2"></i>
@@ -35,16 +37,16 @@
           <a :href="item.url | http" target="_blank" class="url">{{item.url}}</a>
           <span class="time" v-if="item.endTime">(到期时间：{{item.endTime | time}})</span>
 
-          <a href="javascript:;" class="buy" @click="buy(item.id)" v-if="!item.new">购买</a>
+          <a href="javascript:;" class="buy" @click="buy(item.id)" v-if="!item.new && !isSubEmp">购买</a>
 
-          <a href="javascript:;" class="buy" v-if="item.new" @click="again(item.id)">续费</a>
-          <a :href="'http://buy.jihui88.com/#/?layoutId=' + item.id" class="buy" target="_blank" v-if="item.new">升级</a>
+          <a href="javascript:;" class="buy" v-if="item.new && !isSubEmp" @click="again(item.id)">续费</a>
+          <a :href="'http://buy.jihui88.com/#/?layoutId=' + item.id" class="buy" target="_blank" v-if="item.new && !isSubEmp">升级</a>
         </p>
         <p v-if="item.country">
           温馨提醒：您选择的“<span v-html="countryFilter(item.country)"></span><span v-if="item.country === 'en' || item.country === 'hc'">“不需要备案，如果要上线网站，请联系我们：139-6793-8189，我们将帮您免费办理域名绑定。</span>
           <span v-else>”需要备案（大概需要21个工作日的审核时间），请尽早联系我们：139-6793-8189，我们将协助您办理备案手续。</span>
         </p>
-        <p class="more">
+        <p class="more" v-if="!isSubEmp">
           <a :href="'http://pc.jihui88.com/pc/design.html?layoutId=' + item.id" target="_blank" class="a_underline" @click="goEdit(item)">进入编辑</a>
           <Poptip placement="top" class="j_poptip_ul">
             <span class="a_underline">更多选项</span>
@@ -167,7 +169,8 @@ export default {
       id: '',
       modalDel: false,
       modal_loading: false,
-      ids: ''
+      ids: '',
+      isSubEmp: false
     }
   },
   computed: {
@@ -175,7 +178,8 @@ export default {
       lanList: state => state.status.lanList,
       staticList: state => state.staticList,
       versionType: state => state.status.versionType,
-      countryType: state => state.status.countryType
+      countryType: state => state.status.countryType,
+      userInfo: state => state.userInfo
     })
   },
   created () {
@@ -186,6 +190,14 @@ export default {
       }, 500)
     } else {
       this.get()
+    }
+  },
+  watch: {
+    userInfo: {
+      handler () {
+        let pris = this.userInfo.privilege
+        if (pris) this.isSubEmp = true
+      }
     }
   },
   methods: {

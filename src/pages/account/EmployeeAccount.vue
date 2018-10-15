@@ -68,7 +68,7 @@ export default {
         { title: '账号', minWidth: 80, key: 'username' },
         { title: '姓名', minWidth: 80, key: 'name' },
         { title: '职位', minWidth: 80, key: 'position' },
-        { title: '站点', width: 160, key: 'layoutId', render: this.staticFilter },
+        { title: '所属站点', width: 160, key: 'layoutId', render: this.staticFilter },
         { title: '手机号码', minWidth: 85, key: 'mobile' },
         { title: 'Email', minWidth: 100, key: 'email' },
         { title: '操作', className: 'j_table_operate', align: 'right', width: 250, render: this.renderOperate }

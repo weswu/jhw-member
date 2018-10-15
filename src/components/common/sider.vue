@@ -3,33 +3,33 @@
     <Header :style="{padding: 0}" class="layout-header-bar" @click.native="collapsedSider">
       <Icon :class="rotateIcon" :style="{margin: '10px 10px 0'}" type="navicon" size="20"></Icon>
     </Header>
-    <Menu ref="menu" theme="dark" width="auto" :class="menuitemClasses" :active-name="activeName" :open-names="open" @on-select="mrouter" accordion v-if="list.length > 0">
-      <div v-for="item in list" :key="item.name">
-        <Tooltip :content="item.text" placement="right" :transfer="transfer" :disabled="disabled" v-if="!item.children && !item.hidden">
-          <MenuItem :name="item.name" v-if="!item.url">
-            <i :class="'iconfont icon-' + item.icon"></i>
-            <span>{{item.text}}</span>
+    <Menu ref="menu" theme="dark" width="auto" :class="menuitemClasses" :active-name="activeName" :open-names="openNames" @on-select="mrouter" accordion v-if="list.length > 0">
+      <div v-for="item in menuList" :key="item.name">
+        <Tooltip :content="item.meta.title" placement="right" :transfer="transfer" :disabled="disabled" v-if="!item.children">
+          <MenuItem :name="item.name" v-if="!item.meta.href">
+            <i :class="'iconfont icon-' + item.meta.icon"></i>
+            <span>{{item.meta.title}}</span>
           </MenuItem>
 
-          <a :href="item.url" target="_blank" v-if="item.url">
+          <a :href="item.meta.href" target="_blank" v-if="item.meta.href">
             <MenuItem :name="item.name">
-              <i :class="'iconfont icon-' + item.icon"></i>
-              <span>{{item.text}}</span>
+              <i :class="'iconfont icon-' + item.meta.icon"></i>
+              <span>{{item.meta.title}}</span>
             </MenuItem>
           </a>
         </Tooltip>
 
-        <Submenu :name="item.name" v-if="item.children && item.children.length > 0 && !item.hidden">
+        <Submenu :name="item.name" v-if="item.children && item.children.length > 0">
           <template slot="title">
-            <Tooltip :content="item.text" placement="right" :transfer="transfer" :disabled="disabled">
-              <i :class="'iconfont icon-' + item.icon"></i>
-              <span>{{item.text}}</span>
+            <Tooltip :content="item.meta.title" placement="right" :transfer="transfer" :disabled="disabled">
+              <i :class="'iconfont icon-' + item.meta.icon"></i>
+              <span>{{item.meta.title}}</span>
             </Tooltip>
           </template>
-          <Tooltip v-for="(row, i) in item.children" :key="i" :content="row.text" placement="right" :transfer="transfer" :disabled="disabled" v-if="!row.hidden">
+          <Tooltip v-for="(row, i) in item.children" :key="i" :content="row.meta.title" placement="right" :transfer="transfer" :disabled="disabled">
             <MenuItem :name="row.name">
-              <i :class="'iconfont icon-' + row.icon"></i>
-              <span>{{row.text}}</span>
+              <i :class="'iconfont icon-' + row.meta.icon"></i>
+              <span>{{row.meta.title}}</span>
             </MenuItem>
           </Tooltip>
         </Submenu>
@@ -46,8 +46,8 @@ export default {
     return {
       transfer: true, // 是否将弹层放置于 body 内，它将不受父级样式影响
       disabled: false, // 是否禁用提示框
-      activeName: 'index',
-      open: [],
+      activeName: '',
+      openNames: [],
       list: [],
       list2: [
         { name: 'index',
@@ -111,6 +111,9 @@ export default {
         'menu-item',
         this.customData.isCollapsed ? 'collapsed-menu' : ''
       ]
+    },
+    menuList () {
+      return this.$store.state.status.menuList
     }
   },
   watch: {
@@ -127,6 +130,7 @@ export default {
     // 初始化选中样式
     this.initRoute(this.$route)
     this.intiPri()
+    this.$store.commit('status/setMenuList', this.userInfo.privilege)
   },
   mounted () {
     var vm = this
@@ -164,14 +168,12 @@ export default {
       }
     },
     initRoute (to) {
-      if (to.meta.parent) {
-        if (to.path === '/category/news') {
-          this.activeName = 'news'
-        } else {
-          this.activeName = to.meta.parent
-        }
+      if (to.path === '/category/news') {
+        this.activeName = 'news'
+      } else {
+        this.activeName = this.$route.matched.length > 1 ? this.$route.matched[1].name : ''
       }
-      this.open = to.meta.open ? to.meta.open.split('') : []
+      this.openNames = this.$route.matched[0].name.split('') || []
       this.$nextTick(() => {
         this.$refs.menu.updateOpened()
       })
@@ -183,7 +185,7 @@ export default {
       this.$store.dispatch('SAVE_CUSTOM_DATA')
     },
     mrouter (name) {
-      this.$router.push({path: '/' + name})
+      if (name !== 'wcd' && name !== 'fenxiao') this.$router.push({path: '/' + name})
     },
     getCps () {
       if (!this.$cookie.get('sid') || this.$cookie.get('sid').length < 1) {

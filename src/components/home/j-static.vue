@@ -6,7 +6,7 @@
             <Website :searchData="searchData"/>
           </div>
         </TabPane>
-        <TabPane label="我的小程序" name="1">
+        <TabPane label="我的小程序" name="1" v-if="!isSubEmp">
           <div style="padding: 0 28px 28px 28px;">
             <Xiaochengxu/>
           </div>
@@ -16,6 +16,7 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
 import Website from '@/components/pc/website'
 import Xiaochengxu from '@/components/static/xiaochengxu'
 export default {
@@ -30,12 +31,24 @@ export default {
         page: 1,
         pageSize: 2,
         sortType: 'desc'
-      }
+      },
+      isSubEmp: false
     }
+  },
+  computed: {
+    ...mapState(['userInfo'])
   },
   methods: {
     handleTabRemove (name) {
       this['tabActive'] = name
+    }
+  },
+  watch: {
+    userInfo: {
+      handler () {
+        let pris = this.userInfo.privilege
+        if (pris) this.isSubEmp = true
+      }
     }
   }
 }

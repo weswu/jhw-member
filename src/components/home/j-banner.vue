@@ -1,6 +1,6 @@
 <template>
   <div class="j_carousel j_panel">
-    <Carousel v-model="value1" :height="auto" :radius-dot="radiusDot" :dots="dots" loop>
+    <Carousel v-model="value1" :height="'auto'" :radius-dot="radiusDot" :dots="dots" loop>
       <CarouselItem>
         <a href="http://xueyuan.jihui88.com/news-detail-201950.html" target="_blank"><img :src="'platform/img/banner1.jpg'"/></a>
       </CarouselItem>

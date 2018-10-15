@@ -1,19 +1,19 @@
 <template>
   <Layout class="ivu-layout-has-sider j_category">
-    <MenuBar :data="'menu_' + $route.params.id" :active="'category/' + $route.params.id"/>
+    <MenuBar :data="'menu_' + type" :active="'category/' + type"/>
     <Layout class="j_layout_content">
       <Content>
         <JHeader :title="'分类管理'" :lan="true" @on-change="get"/>
         <div class="j_search">
-          <Button type="info" icon="plus" class="w130" @click="add">添加{{$route.params.id === 'product' ?'产品':'新闻'}}分类</Button>
-          <a href="https://v.qq.com/x/page/e0753kcg4xb.html" class="a_underline" target="_blank" style="margin-left:10px;" v-if="$route.params.id === 'product'">产品分类视频教程</a>
-          <a href="https://v.qq.com/x/page/g075303kosj.html" class="a_underline" target="_blank" style="margin-left:10px;" v-if="$route.params.id === 'news'">新闻分类视频教程</a>
+          <Button type="info" icon="plus" class="w130" @click="add">添加{{type === 'product' ?'产品':'新闻'}}分类</Button>
+          <a href="https://v.qq.com/x/page/e0753kcg4xb.html" class="a_underline" target="_blank" style="margin-left:10px;" v-if="type === 'product'">产品分类视频教程</a>
+          <a href="https://v.qq.com/x/page/g075303kosj.html" class="a_underline" target="_blank" style="margin-left:10px;" v-if="type === 'news'">新闻分类视频教程</a>
         </div>
         <Table
           ref="selection"
           :row-class-name="rowClassName"
           :columns="columns"
-          :data="this.type === 'product' ? this.$store.state.productCategory : this.$store.state.newsCategory"
+          :data="type === 'product' ? this.$store.state.productCategory : this.$store.state.newsCategory"
           @on-selection-change="handleSelectChange"
         ></Table>
       </Content>
@@ -33,9 +33,9 @@
     <Detail ref="detail" @on-change="get"/>
     <TransferCategory
       ref="transferCategory"
-      :data="$store.state[$route.params.id+'Category']"
+      :data="$store.state[type+'Category']"
       :ids="ids"
-      :type="'category/'+$route.params.id"
+      :type="'category/'+type"
       @on-change="get"/>
     <JAlbum ref="album" @on-change="picChange"/>
   </Layout>
@@ -70,7 +70,7 @@ export default {
         { title: '操作', className: 'j_table_operate', align: 'left', width: 160, render: this.renderOperate }
       ],
       ids: '',
-      type: this.$route.params.id,
+      type: 'product',
       list: [],
       item: {},
       toggle: false
@@ -81,6 +81,7 @@ export default {
   },
   created () {
     this.get()
+    debugger
     if (this.type === 'product') {
       let col1 = { title: '分类图片', width: 105, render: this.imgFilter }
       let col2 = { title: '分类描述', width: 105, render: this.descFilter }
@@ -574,7 +575,7 @@ export default {
         h('a', {
           on: {
             click: () => {
-              this.$refs.seoDetail.open(params.row.categoryId, 'cate_' + this.$route.params.id)
+              this.$refs.seoDetail.open(params.row.categoryId, 'cate_' + this.type)
             }
           }
         }, 'SEO'),
