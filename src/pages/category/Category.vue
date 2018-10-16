@@ -70,7 +70,7 @@ export default {
         { title: '操作', className: 'j_table_operate', align: 'left', width: 160, render: this.renderOperate }
       ],
       ids: '',
-      type: 'product',
+      type: this.$route.meta.id,
       list: [],
       item: {},
       toggle: false
@@ -81,7 +81,6 @@ export default {
   },
   created () {
     this.get()
-    debugger
     if (this.type === 'product') {
       let col1 = { title: '分类图片', width: 105, render: this.imgFilter }
       let col2 = { title: '分类描述', width: 105, render: this.descFilter }

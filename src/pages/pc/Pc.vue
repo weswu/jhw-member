@@ -1,12 +1,9 @@
 <template>
-  <Layout class="ivu-layout-has-sider j_pc">
-    <MenuBar :data="'menuPc'" :active="'pc'"/>
-    <Layout class="j_layout_content">
-      <JHeader :title="'我的网站'"></JHeader>
-      <Content>
-        <Website/>
-      </Content>
-    </Layout>
+  <Layout class="j_layout_content j_pc">
+    <JHeader :title="'我的网站'"></JHeader>
+    <Content>
+      <Website/>
+    </Content>
   </Layout>
 </template>
 

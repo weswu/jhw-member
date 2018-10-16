@@ -1,16 +1,16 @@
 <template>
   <div class="j_home_static j_panel">
     <Tabs :value="tabActive">
-        <TabPane label="我的网站" name="0">
-          <div style="padding: 0 28px 28px 28px;">
-            <Website :searchData="searchData"/>
-          </div>
-        </TabPane>
-        <TabPane label="我的小程序" name="1" v-if="!isSubEmp">
-          <div style="padding: 0 28px 28px 28px;">
-            <Xiaochengxu/>
-          </div>
-        </TabPane>
+      <TabPane label="我的网站" name="0">
+        <div style="padding: 0 28px 28px 28px;">
+          <Website :searchData="searchData"/>
+        </div>
+      </TabPane>
+      <TabPane label="我的小程序" name="1" v-if="!isSubEmp">
+        <div style="padding: 0 28px 28px 28px;">
+          <Xiaochengxu/>
+        </div>
+      </TabPane>
     </Tabs>
   </div>
 </template>

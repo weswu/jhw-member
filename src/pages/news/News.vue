@@ -217,9 +217,17 @@ export default {
       categoryList: state => state.newsCategory
     })
   },
+  beforeRouteEnter (to, from, next) {
+    next(vm => {
+      if (from.meta.parent !== 'news') {
+        vm.$cookie.set('newsPage', 1)
+      } else {
+        vm.searchData.page = parseInt(vm.$cookie.get('newsPage')) || 1
+      }
+      vm.get()
+    })
+  },
   created () {
-    this.searchData.page = parseInt(this.$cookie.get('newsPage')) || 1
-    this.get()
     this.$store.dispatch('getCategory', 'news')
   },
   methods: {

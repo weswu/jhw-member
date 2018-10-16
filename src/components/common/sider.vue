@@ -3,20 +3,13 @@
     <Header :style="{padding: 0}" class="layout-header-bar" @click.native="collapsedSider">
       <Icon :class="rotateIcon" :style="{margin: '10px 10px 0'}" type="navicon" size="20"></Icon>
     </Header>
-    <Menu ref="menu" theme="dark" width="auto" :class="menuitemClasses" :active-name="activeName" :open-names="openNames" @on-select="mrouter" accordion v-if="list.length > 0">
+    <Menu ref="menu" theme="dark" width="auto" :class="menuitemClasses" :active-name="activeName" :open-names="openNames" @on-select="mrouter" accordion v-if="menuList.length > 0">
       <div v-for="item in menuList" :key="item.name">
         <Tooltip :content="item.meta.title" placement="right" :transfer="transfer" :disabled="disabled" v-if="!item.children">
-          <MenuItem :name="item.name" v-if="!item.meta.href">
+          <MenuItem :name="item.name === 'index' ? '' : item.name">
             <i :class="'iconfont icon-' + item.meta.icon"></i>
             <span>{{item.meta.title}}</span>
           </MenuItem>
-
-          <a :href="item.meta.href" target="_blank" v-if="item.meta.href">
-            <MenuItem :name="item.name">
-              <i :class="'iconfont icon-' + item.meta.icon"></i>
-              <span>{{item.meta.title}}</span>
-            </MenuItem>
-          </a>
         </Tooltip>
 
         <Submenu :name="item.name" v-if="item.children && item.children.length > 0">
@@ -27,10 +20,17 @@
             </Tooltip>
           </template>
           <Tooltip v-for="(row, i) in item.children" :key="i" :content="row.meta.title" placement="right" :transfer="transfer" :disabled="disabled">
-            <MenuItem :name="row.name">
+            <MenuItem :name="row.meta.manage || row.name" v-if="!row.meta.href">
               <i :class="'iconfont icon-' + row.meta.icon"></i>
               <span>{{row.meta.title}}</span>
             </MenuItem>
+
+            <a :href="row.meta.href + (item.name === 'fenxiao' ? sid : '')" target="_blank" v-if="row.meta.href">
+              <MenuItem :name="row.name">
+                <i :class="'iconfont icon-' + row.meta.icon"></i>
+                <span>{{row.meta.title}}</span>
+              </MenuItem>
+            </a>
           </Tooltip>
         </Submenu>
       </div>
@@ -48,53 +48,7 @@ export default {
       disabled: false, // 是否禁用提示框
       activeName: '',
       openNames: [],
-      list: [],
-      list2: [
-        { name: 'index',
-          icon: 'ai-home',
-          text: '首页'
-        },
-        { name: '1',
-          icon: 'fl-renyuan',
-          text: '账号信息',
-          children: [
-            { name: 'account', icon: 'account-only', text: '账号管理' },
-            { name: 'cost_paid', icon: 'price', text: '费用中心' },
-            { name: 'point', icon: 'jifen', text: '积分管理' }
-          ]
-        },
-        { name: '2',
-          icon: 'fl-shuju',
-          text: '数据管理中心',
-          children: [
-            { name: 'static', icon: 'qiu', text: '站点管理' },
-            { name: 'enterprise', icon: 'kujialeqiyezhan_gongsishili', text: '公司信息' },
-            { name: 'product', icon: 'product', text: '产品管理' },
-            { name: 'news', icon: 'xinwenzixun', text: '新闻管理' },
-            { name: 'album', icon: 'xiangce', text: '相册管理' },
-            { name: 'member', icon: 'huiyuan', text: '客户管理' },
-            { name: 'shop', icon: 'jiankangshangcheng', text: '商城管理' }
-          ]
-        },
-        { name: 'pc',
-          icon: 'diannao-tianchong',
-          text: '网站界面管理'
-        },
-        { name: 'basis',
-          icon: 'xiaochengxu',
-          text: '小程序界面管理'
-        },
-        { name: 'fenxiao',
-          icon: 'fenxiao',
-          text: '微分销',
-          url: 'http://cps.jihui88.com/dashboard/login' + this.getCps()
-        },
-        { name: 'wcd',
-          icon: 'haibao',
-          text: '微传单',
-          url: 'http://wcd.jihui88.com/leaflet/index.html#/home_my'
-        }
-      ]
+      sid: ''
     }
   },
   computed: {
@@ -122,14 +76,14 @@ export default {
     },
     userInfo: {
       handler () {
-        this.intiPri()
+        this.$store.commit('status/setMenuList', this.userInfo.privilege)
       }
     }
   },
   created () {
     // 初始化选中样式
     this.initRoute(this.$route)
-    this.intiPri()
+    this.getCps()
     this.$store.commit('status/setMenuList', this.userInfo.privilege)
   },
   mounted () {
@@ -139,41 +93,14 @@ export default {
     }, 1000)
   },
   methods: {
-    // 一级二级导航权限
-    intiPri () {
-      let pris = this.userInfo.privilege
-      if (pris) {
-        let pri = pris.split(',')
-        let list = []
-        this.list2.forEach(item => {
-          item.hidden = true
-          pri.forEach(row => {
-            if (row === item.name) {
-              item.hidden = false
-            }
-          })
-          item.children && item.children.forEach(item2 => {
-            item2.hidden = true
-            pri.forEach(row => {
-              if (row === item2.name + 'Man') {
-                item2.hidden = false
-              }
-            })
-          })
-          list.push(item)
-        })
-        this.list = list
-      } else {
-        this.list = this.list2
-      }
-    },
     initRoute (to) {
+      let match = this.$route.matched
       if (to.path === '/category/news') {
         this.activeName = 'news'
       } else {
-        this.activeName = this.$route.matched.length > 1 ? this.$route.matched[1].name : ''
+        this.activeName = match.length > 1 ? match[1].name : ''
       }
-      this.openNames = this.$route.matched[0].name.split('') || []
+      this.openNames = match.length > 0 ? (match[0].name && match[0].name.split(',')) : []
       this.$nextTick(() => {
         this.$refs.menu.updateOpened()
       })
@@ -191,7 +118,7 @@ export default {
       if (!this.$cookie.get('sid') || this.$cookie.get('sid').length < 1) {
         return ''
       }
-      return '/index/' + this.$cookie.get('sid')
+      this.sid = '/index/' + this.$cookie.get('sid')
     }
   }
 }

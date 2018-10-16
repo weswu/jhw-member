@@ -8,19 +8,21 @@ export const forEach = (arr, fn) => {
   }
 }
 export const hasOneOf = (targetarr, arr) => {
-  return targetarr.some(_ => arr.indexOf(_) > -1)
+  let bol = false
+  arr.split(',').forEach(item => {
+    if (item === targetarr) {
+      bol = true
+    }
+  })
+  return bol
 }
 
 export const hasChild = (item) => {
   return item.children && item.children.length !== 0
 }
-const showThisMenuEle = (item, access) => {
+export const showThisMenuEle = (item, access) => {
   if (item.meta && access) {
-    let name = item.name
-    if (item.path === '') {
-      name = name + 'Man'
-    }
-    if (hasOneOf(name, access)) return true
+    if (item.name && hasOneOf(name, access)) return true
     else return false
   } else return true
 }
@@ -45,6 +47,5 @@ export const getMenuByRouter = (list, access) => {
       if (showThisMenuEle(item, access)) res.push(obj)
     }
   })
-  console.log(res)
   return res
 }

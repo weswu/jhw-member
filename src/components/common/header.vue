@@ -72,15 +72,16 @@
             <p>账号：{{user.username}}</p>
           </div>
           <Row>
-            <Col span="8"><a href="#/account"><i class="iconfont icon-account-only"></i>账号信息</a></Col>
-            <Col span="8"><a href="#/account"><i class="iconfont icon-anquan"></i>安全设置</a></Col>
-            <Col span="8"><a href="#/cost_paid"><i class="iconfont icon-price"></i>费用中心</a></Col>
+            <Col span="8" v-for="(item, index) in list" v-if="index < 3" :key="index">
+              <a :href="'#/' + item.path"><i :class="'iconfont icon-' + item.icon"></i>{{item.name}}</a>
+            </Col>
           </Row>
-          <Row>
-            <Col span="8"><a href="#/point_origin"><i class="iconfont icon-quanyi"></i>积分规则</a></Col>
-            <Col span="8"><a href="#/point"><i class="iconfont icon-jifen"></i>账号积分</a></Col>
-            <Col span="8"><a href="#/enterprise"><i class="iconfont icon-gongsi"></i>公司信息</a></Col>
+          <Row v-if="list.length > 2">
+            <Col span="8" v-for="(item, index) in list" v-if="index > 2" :key="index">
+              <a :href="'#/' + item.path"><i :class="'iconfont icon-' + item.icon"></i>{{item.name}}</a>
+            </Col>
           </Row>
+          <div style="height:80px;"></div>
           <a href="javascript:;" @click="signout" class="signout"> <span v-if="user.username !== '未登录'">退出</span><span v-else>登录</span> </a>
         </DropdownMenu>
       </Dropdown>
@@ -105,14 +106,43 @@ export default {
     return {
       visible: false,
       message: false,
-      messageList: []
+      messageList: [],
+      list: [
+        { name: '账号信息', icon: 'account-only', path: 'account' },
+        { name: '安全设置', icon: 'anquan', path: 'account' },
+        { name: '费用中心', icon: 'price', path: 'cost_paid' },
+        { name: '积分规则', icon: 'quanyi', path: 'point_origin' },
+        { name: '账号积分', icon: 'jifen', path: 'point' },
+        { name: '公司信息', icon: 'gongsi', path: 'enterprise' }
+      ]
     }
   },
   computed: {
     ...mapState(['user', 'userInfo', 'status'])
   },
+  watch: {
+    userInfo: {
+      handler () {
+        let pris = this.userInfo.privilege
+        if (pris) {
+          let pri = pris.split(',')
+          let list = []
+          this.list.forEach(item => {
+            pri.forEach(row => {
+              if (row === item.path) {
+                list.push(item)
+              }
+            })
+          })
+          this.list = list
+        }
+      }
+    }
+  },
   created () {
     this.$store.commit('setLanId', window.localStorage.getItem('lanId') || '1')
+    this.$cookie.set('newsPage', 1)
+    this.$cookie.set('productPage', 1)
     if (window.location.search.substr(1).indexOf('&lanId=') > -1) {
       var vm = this
       this.$store.dispatch('lanIdChange', window.localStorage.getItem('lanId')).then((res) => {
@@ -242,7 +272,6 @@ export default {
         text-align: center;
         .ivu-dropdown-menu{
           width: 270px;
-          height: 404px;
         }
         .info{
           border-bottom: 1px solid #eaeaea;

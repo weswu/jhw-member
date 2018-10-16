@@ -2,7 +2,7 @@
   <JDialog ref="dialog" :title="'分类'" :width="620" :tip="tip" @on-ok="ok" :okText="'提交'">
     <Form ref="modalForm" :model="detail" :label-width="80" slot="content" class="j_category_detail">
       <FormItem label="上级分类：">
-        <CategorySelect ref="categorySelect" v-if="$route.params.id === 'product' || $route.params.id === 'news'" :categoryId="detail.belongId" :list="$store.state[$route.params.id+'Category']" @on-change="categoryChange" :isDefalut="true"/>
+        <CategorySelect ref="categorySelect" v-if="$route.meta.id === 'product' || $route.meta.id === 'news'" :categoryId="detail.belongId" :list="$store.state[$route.meta.id+'Category']" @on-change="categoryChange" :isDefalut="true"/>
         <CategorySelect ref="categorySelect" v-else :categoryId="detail.belongId" :list="list" @on-change="categoryChange" :isDefalut="true"/>
       </FormItem>
       <FormItem label="分类名称：">
@@ -54,9 +54,9 @@ export default {
       this.detail.belongId = e
     },
     ok () {
-      if (this.$route.params.id === 'product') {
+      if (this.$route.meta.id === 'product') {
         this.detail.type = '10'
-      } else if (this.$route.params.id === 'news') {
+      } else if (this.$route.meta.id === 'news') {
         this.detail.type = '11'
       } else {
         this.detail.type = '13'

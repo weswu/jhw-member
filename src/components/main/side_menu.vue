@@ -1,45 +1,36 @@
 <template>
-  <Sider id="J_Menu_Bar" ref="side1" hide-trigger collapsible :collapsed-width="0" v-model="isCollapsed" width="180" v-if="win !== 'small' || detail">
-    <div class="title">
-      <span v-if="win === 'small' || !detail">{{status[data].title || 'Basic Table'}}</span>
-      <span v-else @click="back" class="back"><i class="iconfont icon-fanhui"></i>返回</span>
-    </div>
-    <div @click="collapsedSider" :class="rotateIcon">
-      <div class="navbar-collapse-bg"></div>
-      <img src="platform/img/toggle.png" alt="">
-    </div>
-    <Menu width="auto" :class="menuitemClasses" :active-name="active" @on-select="mrouter">
-      <MenuItem :name="item.value" v-for="(item, index) in status[data].menu" :key="index">
-        <span class="name">{{item.text}}</span><Badge :count="item.count" class-name="demo-badge-alone" v-if="item.count"></Badge>
-      </MenuItem>
-    </Menu>
-  </Sider>
+  <Layout class="ivu-layout-has-sider">
+    <Sider id="J_Menu_Bar" ref="side1" hide-trigger collapsible :collapsed-width="0" v-model="isCollapsed" width="180" v-if="win !== 'small' || detail">
+      <div class="title">
+        <span v-if="win === 'small' || !detail">{{list.meta.title || 'Basic Table'}}</span>
+        <span v-else @click="back" class="back"><i class="iconfont icon-fanhui"></i>返回</span>
+      </div>
+      <div @click="collapsedSider" :class="rotateIcon">
+        <div class="navbar-collapse-bg"></div>
+        <img src="platform/img/toggle.png" alt="">
+      </div>
+      <Menu ref="menu" width="auto" :class="menuitemClasses" :active-name="$route.name" @on-select="mrouter">
+        <MenuItem :name="item.path" v-for="(item, index) in list.children" :key="index">
+          <span class="name">{{item.meta.title}}</span>
+        </MenuItem>
+      </Menu>
+    </Sider>
+    <router-view/>
+  </Layout>
 </template>
 
 <script>
 import { mapState } from 'vuex'
 export default {
-  props: {
-    data: {
-      type: String,
-      default: '0'
-    },
-    active: {
-      type: String,
-      default: '0'
-    },
-    detail: {
-      type: Boolean,
-      default: false
-    }
-  },
   data () {
     return {
-      isCollapsed: false
+      isCollapsed: false,
+      list: [],
+      detail: false
     }
   },
   computed: {
-    ...mapState(['status', 'win', 'userInfo']),
+    ...mapState(['win', 'userInfo']),
     rotateIcon () {
       return [
         'rotate',
@@ -54,6 +45,9 @@ export default {
     }
   },
   watch: {
+    $route (to, from) {
+      this.init()
+    },
     userInfo: {
       handler () {
         this.init()
@@ -61,27 +55,22 @@ export default {
     }
   },
   created () {
-    if (this.data === 'menuMessage') {
-      this.status[this.data].menu[1].count = this.userInfo.noReaderMsg
-    }
     this.init()
   },
   methods: {
     init () {
       // 三级导航权限
-      let pris = this.userInfo.privilege
-      if (pris) {
-        let pri = pris.split(',')
-        let list = []
-        this.status[this.data].menu.forEach(item => {
-          pri.forEach(row => {
-            if (row === item.value) {
-              list.push(item)
-            }
-          })
+      let routers = this.$router.options.routes
+      routers.forEach(item => {
+        item.children && item.children.forEach(row => {
+          if (row.name === this.$route.matched[1].name) {
+            this.list = row
+          }
         })
-        this.status[this.data].menu = list
-      }
+      })
+      this.$nextTick(() => {
+        this.$refs.menu.updateActiveName()
+      })
     },
     collapsedSider () {
       this.$refs.side1.toggleCollapse()
@@ -192,7 +181,6 @@ export default {
   .menu-item {
     .name{
       display: inline-block;
-      width: 105px;
       text-overflow: ellipsis;
       white-space: nowrap;
       overflow: hidden;

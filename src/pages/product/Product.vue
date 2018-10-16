@@ -182,9 +182,17 @@ export default {
       staticList: state => state.staticList
     })
   },
+  beforeRouteEnter (to, from, next) {
+    next(vm => {
+      if (from.meta.parent !== 'product') {
+        vm.$cookie.set('productPage', 1)
+      } else {
+        vm.searchData.page = parseInt(vm.$cookie.get('productPage')) || 1
+      }
+      vm.get()
+    })
+  },
   created () {
-    this.searchData.page = parseInt(this.$cookie.get('productPage')) || 1
-    this.get()
     this.$store.dispatch('getCategory', 'product')
     this.initCol()
   },
