@@ -1,27 +1,22 @@
 <template>
-  <Layout class="ivu-layout-has-sider j_static">
-    <MenuBar :data="'menuStatic'" :active="'static'"/>
-    <Layout class="j_layout_content">
-      <JHeader :title="'站点数据管理'"/>
-      <Content>
-        <div class="j_search">
-          <Button class="grey" @click="active = item.value" v-for="(item, index) in btns" :key="index" :class="{primary: active === item.value}">{{item.text}}</Button>
-        </div>
-        <Website v-if="active === '0'"/>
-        <Xiaochengxu v-if="active === '1'"/>
-      </Content>
-    </Layout>
+  <Layout class="j_layout_content j_static">
+    <JHeader :title="'站点数据管理'"/>
+    <Content>
+      <div class="j_search">
+        <Button class="grey" @click="active = item.value" v-for="(item, index) in btns" :key="index" :class="{primary: active === item.value}">{{item.text}}</Button>
+      </div>
+      <Website v-if="active === '0'"/>
+      <Xiaochengxu v-if="active === '1'"/>
+    </Content>
   </Layout>
 </template>
 
 <script>
-import MenuBar from '@/components/common/menu_bar'
 import JHeader from '@/components/group/j-header'
 import Website from '@/components/pc/website'
 import Xiaochengxu from '@/components/static/xiaochengxu'
 export default {
   components: {
-    MenuBar,
     JHeader,
     Website,
     Xiaochengxu

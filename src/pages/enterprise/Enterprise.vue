@@ -1,68 +1,65 @@
 <template>
-  <Layout class="ivu-layout-has-sider j_enterprise">
-    <MenuBar :data="'menuEnter'" :active="'enterprise'"/>
-    <Layout class="j_layout_content j_form_detail">
-      <JHeader :title="'基本资料'" :lan="true" :tip="'请完善以下信息，方便我们更好的为您服务'" @on-user="initUser" @on-enterprise="initUser"/>
-      <Content>
-        <Form :model="user" :rules="rules" :label-width="130" ref="model">
-          <span class="title" style="margin-top:0px;">基本信息：</span>
-          <FormItem label="公司Logo：">
-            <JImage :src="user.enterprise.logo" @on-change="picChange" :width="104"/>
-          </FormItem>
-          <FormItem label="公司全称：" prop="enterprise.name">
-            <Input v-model="user.enterprise.name" placeholder="请输入公司全称"></Input>
-          </FormItem>
-          <FormItem label="法人：" prop="enterprise.legalPre">
-            <Input v-model="user.enterprise.legalPre" placeholder="请输入法人"></Input>
-          </FormItem>
-          <FormItem label="成立时间：">
-            <DatePicker type="date" placeholder="选择时间" v-model="user.enterprise.regTime" @on-change="user.enterprise.regTime=$event"></DatePicker>
-          </FormItem>
-          <span class="title">联系信息：</span>
-          <FormItem label="单位地址：" prop="enterprise.addresslist">
-            <Cascader :data="areaList" v-model="user.enterprise.addresslist" style="width: 450px;"></Cascader>
-          </FormItem>
-          <FormItem label="详细地址：" prop="address">
-            <Input v-model="user.address" placeholder="请输入详细地址"></Input>
-            <Button @click="map" class="submit">地图定位</Button>
-          </FormItem>
-          <FormItem label="邮编：">
-            <Input v-model="user.zipcode" placeholder="请输入邮编"></Input>
-          </FormItem>
-          <FormItem label="联系电话：">
-            <Input v-model="user.phone" placeholder="请输入联系电话"></Input>
-          </FormItem>
-          <FormItem label="法人手机：">
-            <Input v-model="user.enterprise.legalPersonCellphone" placeholder="请输入法人手机"></Input>
-          </FormItem>
-          <FormItem label="传真：">
-            <Input v-model="user.fax" placeholder="请输入传真"></Input>
-          </FormItem>
-          <span class="title">业务联系人信息：</span>
-          <FormItem label="姓名：" prop="name">
-            <Input v-model="user.name" placeholder="请输入姓名"></Input>
-          </FormItem>
-          <FormItem label="手机：" prop="cellphone">
-            <Input v-model="user.cellphone" placeholder="请输入手机"></Input>
-          </FormItem>
-          <FormItem label="Email：">
-            <Input v-model="user.email" placeholder="请输入Email"></Input>
-          </FormItem>
-          <FormItem label="性别：">
-            <Select v-model="user.sex" style="width: 187px;">
-              <Option value="00">男</Option>
-              <Option value="01">女</Option>
-            </Select>
-          </FormItem>
-          <FormItem label="职务：">
-            <Input v-model="user.position" placeholder="请输入职务"></Input>
-          </FormItem>
-        </Form>
-      </Content>
-      <Footer>
-        <Button type="primary" size="small" @click="submit">保存</Button>
-      </Footer>
-    </Layout>
+  <Layout class="j_layout_content j_form_detail j_enterprise">
+    <JHeader :title="'基本资料'" :lan="true" :tip="'请完善以下信息，方便我们更好的为您服务'" @on-user="initUser" @on-enterprise="initUser"/>
+    <Content>
+      <Form :model="user" :rules="rules" :label-width="130" ref="model">
+        <span class="title" style="margin-top:0px;">基本信息：</span>
+        <FormItem label="公司Logo：">
+          <JImage :src="user.enterprise.logo" @on-change="picChange" :width="104"/>
+        </FormItem>
+        <FormItem label="公司全称：" prop="enterprise.name">
+          <Input v-model="user.enterprise.name" placeholder="请输入公司全称"></Input>
+        </FormItem>
+        <FormItem label="法人：" prop="enterprise.legalPre">
+          <Input v-model="user.enterprise.legalPre" placeholder="请输入法人"></Input>
+        </FormItem>
+        <FormItem label="成立时间：">
+          <DatePicker type="date" placeholder="选择时间" v-model="user.enterprise.regTime" @on-change="user.enterprise.regTime=$event"></DatePicker>
+        </FormItem>
+        <span class="title">联系信息：</span>
+        <FormItem label="单位地址：" prop="enterprise.addresslist">
+          <Cascader :data="areaList" v-model="user.enterprise.addresslist" style="width: 450px;"></Cascader>
+        </FormItem>
+        <FormItem label="详细地址：" prop="address">
+          <Input v-model="user.address" placeholder="请输入详细地址"></Input>
+          <Button @click="map" class="submit">地图定位</Button>
+        </FormItem>
+        <FormItem label="邮编：">
+          <Input v-model="user.zipcode" placeholder="请输入邮编"></Input>
+        </FormItem>
+        <FormItem label="联系电话：">
+          <Input v-model="user.phone" placeholder="请输入联系电话"></Input>
+        </FormItem>
+        <FormItem label="法人手机：">
+          <Input v-model="user.enterprise.legalPersonCellphone" placeholder="请输入法人手机"></Input>
+        </FormItem>
+        <FormItem label="传真：">
+          <Input v-model="user.fax" placeholder="请输入传真"></Input>
+        </FormItem>
+        <span class="title">业务联系人信息：</span>
+        <FormItem label="姓名：" prop="name">
+          <Input v-model="user.name" placeholder="请输入姓名"></Input>
+        </FormItem>
+        <FormItem label="手机：" prop="cellphone">
+          <Input v-model="user.cellphone" placeholder="请输入手机"></Input>
+        </FormItem>
+        <FormItem label="Email：">
+          <Input v-model="user.email" placeholder="请输入Email"></Input>
+        </FormItem>
+        <FormItem label="性别：">
+          <Select v-model="user.sex" style="width: 187px;">
+            <Option value="00">男</Option>
+            <Option value="01">女</Option>
+          </Select>
+        </FormItem>
+        <FormItem label="职务：">
+          <Input v-model="user.position" placeholder="请输入职务"></Input>
+        </FormItem>
+      </Form>
+    </Content>
+    <Footer>
+      <Button type="primary" size="small" @click="submit">保存</Button>
+    </Footer>
     <Modal class-name="j_map_modal"
       v-model="modal"
       width="700"
@@ -81,14 +78,13 @@
 <script>
 import qs from 'qs'
 import { mapState } from 'vuex'
-import MenuBar from '@/components/common/menu_bar'
 import JHeader from '@/components/group/j-header'
 import JImage from '@/components/group/j-image'
 import Map from '@/pages/enterprise/Amap'
 import Cropimg from '@/components/common/cropimg'
 export default {
   components: {
-    MenuBar, JHeader, JImage, Map, Cropimg
+    JHeader, JImage, Map, Cropimg
   },
   computed: {
     ...mapState({

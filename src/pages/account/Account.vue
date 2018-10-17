@@ -1,113 +1,110 @@
 <template>
-  <Layout class="ivu-layout-has-sider j_account">
-      <MenuBar :data="'menuAccount'" :active="'account'"/>
-      <Layout class="j_layout_content">
-        <JHeader :title="'安全设置'"/>
-        <Content class="scroll">
-          <div class="j_tip" style="margin-top:0">
-            温馨提示：<a href="https://v.qq.com/x/page/c0753vzonsm.html" class="a_underline" target="_blank">安全设置视频教程</a>
+  <Layout class="j_layout_content j_account">
+    <JHeader :title="'安全设置'"/>
+    <Content class="scroll">
+      <div class="j_tip" style="margin-top:0">
+        温馨提示：<a href="https://v.qq.com/x/page/c0753vzonsm.html" class="a_underline" target="_blank">安全设置视频教程</a>
+      </div>
+      <Row :gutter="24" class="account_user">
+        <Col span="6" style="width:130px">
+          <div @click="avatar">
+            <Avatar shape="square" :src="$store.state.status.IMG_HOST+user.headimg" size="large" v-if="user.headimg" class="head_portrait"/>
+            <i class="iconfont icon-huiyuan" v-if="!user.headimg"></i>
           </div>
-          <Row :gutter="24" class="account_user">
-            <Col span="6" style="width:130px">
-              <div @click="avatar">
-                <Avatar shape="square" :src="$store.state.status.IMG_HOST+user.headimg" size="large" v-if="user.headimg" class="head_portrait"/>
-                <i class="iconfont icon-huiyuan" v-if="!user.headimg"></i>
-              </div>
-              <a href="javascript:;" @click="avatar">修改头像</a>
-            </Col>
-            <Col span="18">
-              <div class="name">
-                账号昵称：<Input v-model="user.nickName" @on-blur="input" placeholder="账号昵称" style="width:130px"></Input><br>
-                会员账号ID：{{user.username}}<br>
-                注册时间： {{user.addTime | time}}<br>
-                <Badge :count="user.username === '未登录' ? '未登录' : '正常'" class-name="badge-normal" style="margin-right: 2px"></Badge>
-                <Badge count="VIP" :class="[user.pcSitePayTime ? 'badge-vip' : 'badge-gray']"></Badge>
-              </div>
-            </Col>
-          </Row>
-          <div class="account_bind">
-            <span>您当前的账号安全程度</span>
-            <Progress :percent="percent" hide-info></Progress>
-            <span>安全级别:
-              <span v-if="percent < 60" style="color:#e7ae5f">低</span>
-              <span v-if="percent === 60" style="color:#e7ae5f">中</span>
-              <span v-if="percent > 60" style="color:#e7ae5f">高</span>
-            </span>
-            <span v-if="percent < 100" style="padding-left: 40px">继续努力</span>
-            <span v-if="percent === 100" style="padding-left: 40px">继续保持</span>
+          <a href="javascript:;" @click="avatar">修改头像</a>
+        </Col>
+        <Col span="18">
+          <div class="name">
+            账号昵称：<Input v-model="user.nickName" @on-blur="input" placeholder="账号昵称" style="width:130px"></Input><br>
+            会员账号ID：{{user.username}}<br>
+            注册时间： {{user.addTime | time}}<br>
+            <Badge :count="user.username === '未登录' ? '未登录' : '正常'" class-name="badge-normal" style="margin-right: 2px"></Badge>
+            <Badge count="VIP" :class="[user.pcSitePayTime ? 'badge-vip' : 'badge-gray']"></Badge>
           </div>
-          <div class="account_bind_edit">
-            <Row type="flex">
-              <Col span="4" class="flex-left">登录密码</Col>
-              <Col span="14">安全性高的密码可以使帐号更安全。建议您定期更换密码，设置一个包含字母，符号或数字中至少两项且长度超过6位的密码。</Col>
-              <Col span="6" class="flex-right">
-                <span class="success"><i class="iconfont icon-dagou"></i>已设置</span>
-                <span>|</span> <a href="javascript:;" @click="password">修改</a>
-              </Col>
-            </Row>
-            <Row type="flex" v-for="(item, index) in list" :key="index" v-if="item.type === 'cellphone'">
-              <Col span="4" class="flex-left">手机绑定</Col>
-              <Col span="14">
-                <span v-if="item.nickname && item.nickname !== '未绑定'">您已绑定了手机{{item.nickname}} [您的手机为安全手机，可以找回密码，但不能用于登录]</span>
-                <span v-else>您可以绑定手机, 可以找回密码，但不能用于登录</span>
-                <br>温馨提醒：绑定时请允许浏览器弹出绑定窗口
-              </Col>
-              <Col span="6" class="flex-right">
-                <span class="success" v-if="item.nickname && item.nickname !== '未绑定'"><i class="iconfont icon-dagou"></i>已设置</span>
-                <span class="error" v-else><i class="iconfont icon-gantanhao"></i>未设置</span>
-                <span>|</span> <a href="javascript:;" @click="unbind(item)">修改</a></Col>
-            </Row>
-            <Row type="flex">
-              <Col span="4" class="flex-left">备用邮箱</Col>
-              <Col span="14">
-                <span v-if="user.email">您已绑定了邮箱{{user.email | limitEmail}} [可用于找回您的密码。]</span>
-                <span v-else>您可以绑定邮箱, 可用于找回您的密码</span>
-              </Col>
-              <Col span="6" class="flex-right">
-                <span class="success" v-if="user.email"><i class="iconfont icon-dagou"></i>已设置</span>
-                <span class="error" v-else><i class="iconfont icon-gantanhao"></i>未设置</span>
-                <span>|</span> <a href="javascript:;" @click="changeEail">修改</a>
-              </Col>
-            </Row>
-            <Row type="flex" v-for="(item, index) in list" :key="index" v-if="item.type === 'weixin'">
-              <Col span="4" class="flex-left">微信绑定</Col>
-              <Col span="14">
-                <span v-if="item.nickname && item.nickname !== '未绑定'">您已绑定了微信{{item.nickname}} [可用于扫码登录]</span>
-                <span v-else>您可以绑定微信, 可用于扫码登录</span>
-                <br>温馨提醒：绑定时请允许浏览器弹出绑定窗口
-              </Col>
-              <Col span="6" class="flex-right">
-                <span class="success" v-if="item.nickname && item.nickname !== '未绑定'"><i class="iconfont icon-dagou"></i>已设置</span>
-                <span class="error" v-else><i class="iconfont icon-gantanhao"></i>未设置</span>
-                <span>|</span> <a href="javascript:;" @click="unbind(item)">修改</a>
-              </Col>
-            </Row>
-            <Row type="flex" v-for="(item, index) in list" :key="index" v-if="item.type === 'qq'">
-              <Col span="4" class="flex-left">QQ绑定</Col>
-              <Col span="14">
-                <span v-if="item.nickname && item.nickname !== '未绑定'">您已绑定了QQ{{item.nickname}} [可用于快捷登录]</span>
-                <span v-else>您可以绑定QQ, 可用于快捷登录</span>
-                <br>温馨提醒：绑定时请允许浏览器弹出绑定窗口
-              </Col>
-              <Col span="6" class="flex-right">
-                <span class="success" v-if="item.nickname && item.nickname !== '未绑定'"><i class="iconfont icon-dagou"></i>已设置</span>
-                <span class="error" v-else><i class="iconfont icon-gantanhao"></i>未设置</span>
-                <span>|</span> <a href="javascript:;" @click="unbind(item)">修改</a>
-              </Col>
-            </Row>
-          </div>
-        </Content>
-      </Layout>
-      <div class="login-frame" :class="open ? 'fade_in' : ''">
-          <div class="wrapper" :style="{width: width + 'px'}">
-            <iframe id="loginiFrame" :src="src" frameBorder="0" scrolling="no"></iframe>
-            <img src="http://www.jihui88.com/member/static/images/f-x.png" alt="close" class="close" @click="close">
-          </div>
+        </Col>
+      </Row>
+      <div class="account_bind">
+        <span>您当前的账号安全程度</span>
+        <Progress :percent="percent" hide-info></Progress>
+        <span>安全级别:
+          <span v-if="percent < 60" style="color:#e7ae5f">低</span>
+          <span v-if="percent === 60" style="color:#e7ae5f">中</span>
+          <span v-if="percent > 60" style="color:#e7ae5f">高</span>
+        </span>
+        <span v-if="percent < 100" style="padding-left: 40px">继续努力</span>
+        <span v-if="percent === 100" style="padding-left: 40px">继续保持</span>
+      </div>
+      <div class="account_bind_edit">
+        <Row type="flex">
+          <Col span="4" class="flex-left">登录密码</Col>
+          <Col span="14">安全性高的密码可以使帐号更安全。建议您定期更换密码，设置一个包含字母，符号或数字中至少两项且长度超过6位的密码。</Col>
+          <Col span="6" class="flex-right">
+            <span class="success"><i class="iconfont icon-dagou"></i>已设置</span>
+            <span>|</span> <a href="javascript:;" @click="password">修改</a>
+          </Col>
+        </Row>
+        <Row type="flex" v-for="(item, index) in list" :key="index" v-if="item.type === 'cellphone'">
+          <Col span="4" class="flex-left">手机绑定</Col>
+          <Col span="14">
+            <span v-if="item.nickname && item.nickname !== '未绑定'">您已绑定了手机{{item.nickname}} [您的手机为安全手机，可以找回密码，但不能用于登录]</span>
+            <span v-else>您可以绑定手机, 可以找回密码，但不能用于登录</span>
+            <br>温馨提醒：绑定时请允许浏览器弹出绑定窗口
+          </Col>
+          <Col span="6" class="flex-right">
+            <span class="success" v-if="item.nickname && item.nickname !== '未绑定'"><i class="iconfont icon-dagou"></i>已设置</span>
+            <span class="error" v-else><i class="iconfont icon-gantanhao"></i>未设置</span>
+            <span>|</span> <a href="javascript:;" @click="unbind(item)">修改</a></Col>
+        </Row>
+        <Row type="flex">
+          <Col span="4" class="flex-left">备用邮箱</Col>
+          <Col span="14">
+            <span v-if="user.email">您已绑定了邮箱{{user.email | limitEmail}} [可用于找回您的密码。]</span>
+            <span v-else>您可以绑定邮箱, 可用于找回您的密码</span>
+          </Col>
+          <Col span="6" class="flex-right">
+            <span class="success" v-if="user.email"><i class="iconfont icon-dagou"></i>已设置</span>
+            <span class="error" v-else><i class="iconfont icon-gantanhao"></i>未设置</span>
+            <span>|</span> <a href="javascript:;" @click="changeEail">修改</a>
+          </Col>
+        </Row>
+        <Row type="flex" v-for="(item, index) in list" :key="index" v-if="item.type === 'weixin'">
+          <Col span="4" class="flex-left">微信绑定</Col>
+          <Col span="14">
+            <span v-if="item.nickname && item.nickname !== '未绑定'">您已绑定了微信{{item.nickname}} [可用于扫码登录]</span>
+            <span v-else>您可以绑定微信, 可用于扫码登录</span>
+            <br>温馨提醒：绑定时请允许浏览器弹出绑定窗口
+          </Col>
+          <Col span="6" class="flex-right">
+            <span class="success" v-if="item.nickname && item.nickname !== '未绑定'"><i class="iconfont icon-dagou"></i>已设置</span>
+            <span class="error" v-else><i class="iconfont icon-gantanhao"></i>未设置</span>
+            <span>|</span> <a href="javascript:;" @click="unbind(item)">修改</a>
+          </Col>
+        </Row>
+        <Row type="flex" v-for="(item, index) in list" :key="index" v-if="item.type === 'qq'">
+          <Col span="4" class="flex-left">QQ绑定</Col>
+          <Col span="14">
+            <span v-if="item.nickname && item.nickname !== '未绑定'">您已绑定了QQ{{item.nickname}} [可用于快捷登录]</span>
+            <span v-else>您可以绑定QQ, 可用于快捷登录</span>
+            <br>温馨提醒：绑定时请允许浏览器弹出绑定窗口
+          </Col>
+          <Col span="6" class="flex-right">
+            <span class="success" v-if="item.nickname && item.nickname !== '未绑定'"><i class="iconfont icon-dagou"></i>已设置</span>
+            <span class="error" v-else><i class="iconfont icon-gantanhao"></i>未设置</span>
+            <span>|</span> <a href="javascript:;" @click="unbind(item)">修改</a>
+          </Col>
+        </Row>
+      </div>
+    </Content>
+    <div class="login-frame" :class="open ? 'fade_in' : ''">
+        <div class="wrapper" :style="{width: width + 'px'}">
+          <iframe id="loginiFrame" :src="src" frameBorder="0" scrolling="no"></iframe>
+          <img src="http://www.jihui88.com/member/static/images/f-x.png" alt="close" class="close" @click="close">
         </div>
       </div>
-      <Password ref="password"/>
-      <JAlbum :title="'修改头像'" ref="ablum" @on-change="picChange" v-if="ablumToggle"/>
-      <Cropimg ref="cropimg" @on-change="cropChange"/>
+    </div>
+    <Password ref="password"/>
+    <JAlbum :title="'修改头像'" ref="ablum" @on-change="picChange" v-if="ablumToggle"/>
+    <Cropimg ref="cropimg" @on-change="cropChange"/>
   </Layout>
 </template>
 

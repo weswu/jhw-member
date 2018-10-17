@@ -1,18 +1,15 @@
 <template>
-  <Layout class="ivu-layout-has-sider j_link">
-    <MenuBar :data="'menuEnter'" :active="active"/>
-    <Layout class="j_layout_content">
-      <JHeader :title="title" :lan="true" @on-change="get"/>
-      <Content>
-        <div class="j_search">
-          <Button type="info" icon="plus" class="w130" @click="add">添加{{title}}</Button>
-        </div>
-        <DragableTable
-          :list="list"
-          :columns="columns"
-          @on-update="tableUpdate"/>
-      </Content>
-    </Layout>
+  <Layout class="j_layout_content j_link">
+    <JHeader :title="title" :lan="true" @on-change="get"/>
+    <Content>
+      <div class="j_search">
+        <Button type="info" icon="plus" class="w130" @click="add">添加{{title}}</Button>
+      </div>
+      <DragableTable
+        :list="list"
+        :columns="columns"
+        @on-update="tableUpdate"/>
+    </Content>
     <Modal
       v-model="modal"
       :title="title"
@@ -27,14 +24,12 @@
 </template>
 
 <script>
-import MenuBar from '@/components/common/menu_bar'
 import JHeader from '@/components/group/j-header'
 import DragableTable from '@/components/group/j-dragable-table'
 import ItemDetail from '@/pages/enterprise/ItemDetail'
 export default {
   props: ['title', 'active', 'type'],
   components: {
-    MenuBar,
     JHeader,
     DragableTable,
     ItemDetail

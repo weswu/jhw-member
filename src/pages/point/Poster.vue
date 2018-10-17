@@ -1,42 +1,39 @@
 <template>
-  <Layout class="ivu-layout-has-sider j_point_poster">
-    <MenuBar :data="'menuPoint'" :active="'poster_list'"/>
-    <Layout class="j_layout_content">
-      <JHeader :title="'推广'" :tip="'你可以把以下专属于你的推广海报保存到相册，并转发到朋友圈和微信群，即可获取积分和现金抵扣。'"/>
-      <Content>
-        <div class="j_search">
-          <Row type="flex" justify="space-between">
-            <Col>
-              <Button type="info" class="w130" @click="member">我推广的会员</Button>
-              <Button class="info" @click="add">马上推荐朋友</Button>
-            </Col>
-            <Col>
-              <span class="spread-url">我的推广链接：{{url}}
-                <Button class="info" v-clipboard:copy="url" v-clipboard:success="onCopy">复制</Button>
-              </span>
-            </Col>
-          </Row>
+  <Layout class="j_layout_content j_point_poster">
+    <JHeader :title="'推广'" :tip="'你可以把以下专属于你的推广海报保存到相册，并转发到朋友圈和微信群，即可获取积分和现金抵扣。'"/>
+    <Content>
+      <div class="j_search">
+        <Row type="flex" justify="space-between">
+          <Col>
+            <Button type="info" class="w130" @click="member">我推广的会员</Button>
+            <Button class="info" @click="add">马上推荐朋友</Button>
+          </Col>
+          <Col>
+            <span class="spread-url">我的推广链接：{{url}}
+              <Button class="info" v-clipboard:copy="url" v-clipboard:success="onCopy">复制</Button>
+            </span>
+          </Col>
+        </Row>
+      </div>
+      <div class="j_search">
+        <Button class="grey" @click="active = item.value" v-for="(item, index) in btns" :key="index" :class="{primary: active === item.value}">{{item.text}}</Button>
+      </div>
+      <div class="list j_scroll">
+        <div v-for='item in list' :key="item.posterId" class='item' v-if='item.posterCate === active'>
+          <img class='extend_img' :src="$store.state.status.IMG_HOST + item.pic | picUrl(4)" v-if="!item.checked">
+          <img class='extend_img' :src="item.pic" v-if="item.checked">
+          <p class='extend_desc'>{{item.posterDesc}}</p>
+          <Button @click='saveImg(item, 1)' type="primary" size="small">保存图片</Button>
+          <Poptip placement="top" width="200">
+            <Button class="qr" @click='saveImg(item)' type="primary" size="small">微信扫一扫</Button>
+            <div class="api" slot="content">
+              <img :src="'http://buy.jihui88.com/api/order/qrcode?url=' + item.pic" v-if="item.pic === pic">
+            </div>
+          </Poptip>
         </div>
-        <div class="j_search">
-          <Button class="grey" @click="active = item.value" v-for="(item, index) in btns" :key="index" :class="{primary: active === item.value}">{{item.text}}</Button>
-        </div>
-        <div class="list j_scroll">
-          <div v-for='item in list' :key="item.posterId" class='item' v-if='item.posterCate === active'>
-            <img class='extend_img' :src="$store.state.status.IMG_HOST + item.pic | picUrl(4)" v-if="!item.checked">
-            <img class='extend_img' :src="item.pic" v-if="item.checked">
-            <p class='extend_desc'>{{item.posterDesc}}</p>
-            <Button @click='saveImg(item, 1)' type="primary" size="small">保存图片</Button>
-            <Poptip placement="top" width="200">
-              <Button class="qr" @click='saveImg(item)' type="primary" size="small">微信扫一扫</Button>
-              <div class="api" slot="content">
-                <img :src="'http://buy.jihui88.com/api/order/qrcode?url=' + item.pic" v-if="item.pic === pic">
-              </div>
-            </Poptip>
-          </div>
-        </div>
-        <a id="picDownload" :href="pic" style="display:none" target="_blank" download="poster.jpg">下载</a>
-      </Content>
-    </Layout>
+      </div>
+      <a id="picDownload" :href="pic" style="display:none" target="_blank" download="poster.jpg">下载</a>
+    </Content>
     <Rank ref="rank" v-if="rankBol"/>
     <Modal
       v-model="modal"

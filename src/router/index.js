@@ -17,7 +17,7 @@ const turnTo = (to, access, next) => {
 
 router.beforeEach((to, from, next) => {
   // 权限
-  if (to.meta && !to.meta.access) turnTo(to, store.state.userInfo.privilege, next)
+  if (to.meta.title && !to.meta.access) turnTo(to, store.state.userInfo.privilege, next)
   // 标题
   if (to.meta.seoTitle) {
     document.title = to.meta.seoTitle

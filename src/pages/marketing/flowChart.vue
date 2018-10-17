@@ -22,7 +22,7 @@
        <Col class="info">
          <div>
            <p>
-             线上引流：<a href="#/seo">智能SEO</a>、搜索推广、社群营销、<a href="http://cps.jihui88.com/" target="_blank">微分销</a>、<a href="#/basis">小程序</a>、朋友圈营销、DSP付费推广、公众号、<a href="https://mp.weixin.qq.com/s/uTmohqA5GbXMD0hEV9lOBA" target="_blank">自媒体</a><br/>
+             线上引流：<a href="#/flow_chart/1">智能SEO</a>、搜索推广、社群营销、<a href="#/flow_chart/4">微分销</a>、<a href="#/flow_chart/5">小程序</a>、朋友圈营销、DSP付费推广、公众号、<a href="#/flow_chart/9">自媒体</a><br/>
              线下引流：<a>手机子站配合样本</a>、经销商、代理商、社会化业务员、展会营销、门店等
            </p>
            <p>

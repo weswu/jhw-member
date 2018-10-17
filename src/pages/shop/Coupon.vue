@@ -1,47 +1,42 @@
 <template>
-  <Layout class="ivu-layout-has-sider">
-    <MenuBar :data="'menuShop'" :active="'coupon'"/>
-    <Layout class="j_layout_content">
-      <JHeader :title="'营销管理'">
-        <div slot="btn">
-          <Select v-model="searchData.listType" class="primary" @on-change="get" style="width:167px">
-            <Option value="1">所有优惠券</Option>
-            <Option value="2">未开始</Option>
-            <Option value="3">进行中</Option>
-            <Option value="4">已结束</Option>
-          </Select>
-        </div>
-      </JHeader>
-      <Content>
-        <div class="j_search">
-          <Row type="flex" justify="space-between">
-            <Col>
-              <Button type="info" icon="plus" class="w130" @click="url('/coupon/add')">添加优惠券</Button>
-            </Col>
-            <Col>
-              <Input v-model="searchData.name" class="w144" placeholder="请输入优惠券名称" clearable @on-change="clearInput"></Input>
-              <Button class="search" @click="search">搜索</Button>
-              <a :href="'http://www.jihui88.com/member/mem_s.html#/coupon_ent_list/'+$store.state.user.enterpriseId" target="_blank">
-                <Button class="info">领取优惠卷网址</Button>
-              </a>
-            </Col>
-          </Row>
-        </div>
-        <Table :columns="columns" :data="list"/>
-        <JPagination :checkbox="true" :total="total" :searchData='searchData' @on-change="get"/>
-      </Content>
-    </Layout>
+  <Layout class="j_layout_content">
+    <JHeader :title="'营销管理'">
+      <div slot="btn">
+        <Select v-model="searchData.listType" class="primary" @on-change="get" style="width:167px">
+          <Option value="1">所有优惠券</Option>
+          <Option value="2">未开始</Option>
+          <Option value="3">进行中</Option>
+          <Option value="4">已结束</Option>
+        </Select>
+      </div>
+    </JHeader>
+    <Content>
+      <div class="j_search">
+        <Row type="flex" justify="space-between">
+          <Col>
+            <Button type="info" icon="plus" class="w130" @click="url('/coupon/add')">添加优惠券</Button>
+          </Col>
+          <Col>
+            <Input v-model="searchData.name" class="w144" placeholder="请输入优惠券名称" clearable @on-change="clearInput"></Input>
+            <Button class="search" @click="search">搜索</Button>
+            <a :href="'http://www.jihui88.com/member/mem_s.html#/coupon_ent_list/'+$store.state.user.enterpriseId" target="_blank">
+              <Button class="info">领取优惠卷网址</Button>
+            </a>
+          </Col>
+        </Row>
+      </div>
+      <Table :columns="columns" :data="list"/>
+      <JPagination :checkbox="true" :total="total" :searchData='searchData' @on-change="get"/>
+    </Content>
   </Layout>
 </template>
 
 <script>
 import qs from 'qs'
-import MenuBar from '@/components/common/menu_bar'
 import JHeader from '@/components/group/j-header'
 import JPagination from '@/components/group/j-pagination'
 export default {
   components: {
-    MenuBar,
     JHeader,
     JPagination
   },

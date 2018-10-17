@@ -1,26 +1,21 @@
 <template>
-  <Layout class="j_layout ivu-layout-has-sider j_bind">
-    <MenuBar :data="'menuStatic'" :active="'bind'"/>
-    <Layout class="j_layout_content">
-      <JHeader :title="'域名绑定'" :website="true" :type="true" :tip="tip"/>
-      <div class="j_search">
-        <Input v-model="address" class="w180" placeholder="输入新域名" clearable></Input>
-        <Button class="submit" @click="add" style="padding:6px 20px">提交</Button>
-      </div>
-      <Content>
-        <Table :columns="columns" :data="list"></Table>
-      </Content>
-    </Layout>
+  <Layout class="j_layout_content j_bind">
+    <JHeader :title="'域名绑定'" :website="true" :type="true" :tip="tip"/>
+    <div class="j_search">
+      <Input v-model="address" class="w180" placeholder="输入新域名" clearable></Input>
+      <Button class="submit" @click="add" style="padding:6px 20px">提交</Button>
+    </div>
+    <Content>
+      <Table :columns="columns" :data="list"></Table>
+    </Content>
   </Layout>
 </template>
 
 <script>
 import qs from 'qs'
-import MenuBar from '@/components/common/menu_bar'
 import JHeader from '@/components/group/j-header'
 export default {
   components: {
-    MenuBar,
     JHeader
   },
   data () {

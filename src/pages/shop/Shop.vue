@@ -1,66 +1,63 @@
 <template>
-  <Layout class="ivu-layout-has-sider j_shop">
-    <MenuBar :data="'menuShop'" :active="'shop'"/>
-    <Layout class="j_layout_content">
-      <JHeader :title="'订单列表'"/>
-      <Content>
-        <div class="j_search">
-          <Input v-model="orderSn" class="w180" clearable placeholder="请输入订单编号" @on-change="clearInput"></Input>
-          <Button class="search" @click="search">搜索</Button>
-          <Poptip placement="bottom" class="j_poptip_confirm_edit"
-            confirm
-            width="600"
-            @on-ok="advancedSearch">
-            <Button class="grey w130">高级搜索</Button>
-            <div slot="title">
-              <Form :model="searchData" :label-width="90">
-                <FormItem label="订单编号：" class="formitem_left">
-                  <Input v-model="searchData.orderSn" class="w180" clearable></Input>
-                </FormItem>
-                <FormItem label="会员账号：" class="formitem_left">
-                  <Input v-model="searchData.username" class="w180" clearable></Input>
-                </FormItem>
-                <FormItem label="收货人：" class="formitem_left">
-                  <Input v-model="searchData.shipName" class="w180" clearable></Input>
-                </FormItem>
-                <FormItem label="手机号码：" class="formitem_left">
-                  <Input v-model="searchData.shipMobile" class="w180" clearable></Input>
-                </FormItem>
-                <FormItem label="收货地址：" class="formitem_left">
-                  <Input v-model="searchData.shipArea" class="w180" clearable></Input>
-                </FormItem>
-                <FormItem label="配送状态：" class="formitem_left">
-                  <Select v-model="searchData.shippingStatus" class="w180">
-                    <Option value="">请选择</Option>
-                    <Option :value="item.value" v-for="item in shippingStatus1" :key="item.value">{{item.text}}</Option>
-                  </Select>
-                </FormItem>
-                <FormItem label="付款状态：" class="formitem_left">
-                  <Select v-model="searchData.paymentStatus" class="w180">
-                    <Option value="">请选择</Option>
-                    <Option :value="item.value" v-for="item in paymentStatus1" :key="item.value">{{item.text}}</Option>
-                  </Select>
-                </FormItem>
-                <FormItem label="订单状态：" class="formitem_left">
-                  <Select v-model="searchData.orderStatus" class="w180">
-                    <Option value="">请选择</Option>
-                    <Option :value="item.value" v-for="item in orderStatus1" :key="item.value">{{item.text}}</Option>
-                  </Select>
-                </FormItem>
-              </Form>
-            </div>
-          </Poptip>
-          <span class="a_underline" style="margin-left: 20px;" @click="myShow">我的显示</span>
-        </div>
-        <Table ref="selection" :columns="columns" :data="list" @on-selection-change="handleSelectChange"/>
-        <JPagination :checkbox="true" :total="total" :searchData='searchData' @on-change="get">
-          <span slot="btn">
-            <Checkbox v-model="toggle" @on-change="handleSelectAll(toggle)"/>
-            <Button type="ghost" size="small" @click="delAll">删除</Button>
-          </span>
-        </JPagination>
-      </Content>
-    </Layout>
+  <Layout class="j_layout_content j_shop">
+    <JHeader :title="'订单列表'"/>
+    <Content>
+      <div class="j_search">
+        <Input v-model="orderSn" class="w180" clearable placeholder="请输入订单编号" @on-change="clearInput"></Input>
+        <Button class="search" @click="search">搜索</Button>
+        <Poptip placement="bottom" class="j_poptip_confirm_edit"
+          confirm
+          width="600"
+          @on-ok="advancedSearch">
+          <Button class="grey w130">高级搜索</Button>
+          <div slot="title">
+            <Form :model="searchData" :label-width="90">
+              <FormItem label="订单编号：" class="formitem_left">
+                <Input v-model="searchData.orderSn" class="w180" clearable></Input>
+              </FormItem>
+              <FormItem label="会员账号：" class="formitem_left">
+                <Input v-model="searchData.username" class="w180" clearable></Input>
+              </FormItem>
+              <FormItem label="收货人：" class="formitem_left">
+                <Input v-model="searchData.shipName" class="w180" clearable></Input>
+              </FormItem>
+              <FormItem label="手机号码：" class="formitem_left">
+                <Input v-model="searchData.shipMobile" class="w180" clearable></Input>
+              </FormItem>
+              <FormItem label="收货地址：" class="formitem_left">
+                <Input v-model="searchData.shipArea" class="w180" clearable></Input>
+              </FormItem>
+              <FormItem label="配送状态：" class="formitem_left">
+                <Select v-model="searchData.shippingStatus" class="w180">
+                  <Option value="">请选择</Option>
+                  <Option :value="item.value" v-for="item in shippingStatus1" :key="item.value">{{item.text}}</Option>
+                </Select>
+              </FormItem>
+              <FormItem label="付款状态：" class="formitem_left">
+                <Select v-model="searchData.paymentStatus" class="w180">
+                  <Option value="">请选择</Option>
+                  <Option :value="item.value" v-for="item in paymentStatus1" :key="item.value">{{item.text}}</Option>
+                </Select>
+              </FormItem>
+              <FormItem label="订单状态：" class="formitem_left">
+                <Select v-model="searchData.orderStatus" class="w180">
+                  <Option value="">请选择</Option>
+                  <Option :value="item.value" v-for="item in orderStatus1" :key="item.value">{{item.text}}</Option>
+                </Select>
+              </FormItem>
+            </Form>
+          </div>
+        </Poptip>
+        <span class="a_underline" style="margin-left: 20px;" @click="myShow">我的显示</span>
+      </div>
+      <Table ref="selection" :columns="columns" :data="list" @on-selection-change="handleSelectChange"/>
+      <JPagination :checkbox="true" :total="total" :searchData='searchData' @on-change="get">
+        <span slot="btn">
+          <Checkbox v-model="toggle" @on-change="handleSelectAll(toggle)"/>
+          <Button type="ghost" size="small" @click="delAll">删除</Button>
+        </span>
+      </JPagination>
+    </Content>
     <JDialog ref="dialog" :title="'我的显示'" :tip="'温馨提醒：勾选不要超过10个，以免列表显示不下。'" @on-ok="initCol('ok')">
       <div slot="content">
         <CheckboxGroup v-model="myShowSelect" class="j_checkout">
@@ -74,13 +71,11 @@
 <script>
 import qs from 'qs'
 import { mapState } from 'vuex'
-import MenuBar from '@/components/common/menu_bar'
 import JHeader from '@/components/group/j-header'
 import JPagination from '@/components/group/j-pagination'
 import JDialog from '@/components/group/j-dialog'
 export default {
   components: {
-    MenuBar,
     JHeader,
     JPagination,
     JDialog

@@ -1,59 +1,54 @@
 <template>
-  <Layout class="ivu-layout-has-sider">
-    <MenuBar :data="'menuMember'" :active="'member'"/>
-    <Layout class="j_layout_content">
-      <Content>
-        <JHeader :title="'会员管理'"/>
-        <div class="j_search">
-          <Row type="flex" justify="space-between">
-            <Col>
-              <Button type="info" icon="plus" class="w130" @click="url('/member/add')">添加会员</Button>
-            </Col>
-            <Col>
-              <Input v-model="name" class="w180" clearable placeholder="请输入用户名" @on-change="clearInput"></Input>
-              <Button class="search" @click="search">搜索</Button>
-              <Poptip placement="bottom-end" class="j_poptip_confirm_edit"
-                confirm
-                width="370"
-                @on-ok="advancedSearch">
-                <Button class="grey w130">高级搜索</Button>
-                <div slot="title">
-                  <Form :model="searchData" :label-width="85">
-                    <FormItem label="会员用户名：">
-                      <Input v-model="searchData.name" class="w244" clearable></Input>
-                    </FormItem>
-                    <FormItem label="会员等级：">
-                      <Select v-model="searchData.memberRankId" class="w244">
-                        <Option value="">请选择</Option>
-                        <Option :value="item.rankId" v-for="item in $store.state.memberRankList" :key="item.rankId">{{item.name}}</Option>
-                      </Select>
-                    </FormItem>
-                  </Form>
-                </div>
-              </Poptip>
-            </Col>
-          </Row>
-        </div>
-        <Table ref="selection" :columns="columns" :data="list" @on-selection-change="handleSelectChange"/>
-        <JPagination :checkbox="true" :total="total" :searchData='searchData' @on-change="get">
-          <span slot="btn">
-            <Checkbox v-model="toggle" @on-change="handleSelectAll(toggle)"/>
-            <Button type="ghost" size="small"  @click="delAll">删除</Button>
-          </span>
-        </JPagination>
-      </Content>
-    </Layout>
+  <Layout class="j_layout_content">
+    <Content>
+      <JHeader :title="'会员管理'"/>
+      <div class="j_search">
+        <Row type="flex" justify="space-between">
+          <Col>
+            <Button type="info" icon="plus" class="w130" @click="url('/member/add')">添加会员</Button>
+          </Col>
+          <Col>
+            <Input v-model="name" class="w180" clearable placeholder="请输入用户名" @on-change="clearInput"></Input>
+            <Button class="search" @click="search">搜索</Button>
+            <Poptip placement="bottom-end" class="j_poptip_confirm_edit"
+              confirm
+              width="370"
+              @on-ok="advancedSearch">
+              <Button class="grey w130">高级搜索</Button>
+              <div slot="title">
+                <Form :model="searchData" :label-width="85">
+                  <FormItem label="会员用户名：">
+                    <Input v-model="searchData.name" class="w244" clearable></Input>
+                  </FormItem>
+                  <FormItem label="会员等级：">
+                    <Select v-model="searchData.memberRankId" class="w244">
+                      <Option value="">请选择</Option>
+                      <Option :value="item.rankId" v-for="item in $store.state.memberRankList" :key="item.rankId">{{item.name}}</Option>
+                    </Select>
+                  </FormItem>
+                </Form>
+              </div>
+            </Poptip>
+          </Col>
+        </Row>
+      </div>
+      <Table ref="selection" :columns="columns" :data="list" @on-selection-change="handleSelectChange"/>
+      <JPagination :checkbox="true" :total="total" :searchData='searchData' @on-change="get">
+        <span slot="btn">
+          <Checkbox v-model="toggle" @on-change="handleSelectAll(toggle)"/>
+          <Button type="ghost" size="small"  @click="delAll">删除</Button>
+        </span>
+      </JPagination>
+    </Content>
   </Layout>
 </template>
 
 <script>
 import qs from 'qs'
-import MenuBar from '@/components/common/menu_bar'
 import JHeader from '@/components/group/j-header'
 import JPagination from '@/components/group/j-pagination'
 export default {
   components: {
-    MenuBar,
     JHeader,
     JPagination
   },

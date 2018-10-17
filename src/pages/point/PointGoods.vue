@@ -1,24 +1,19 @@
 <template>
-  <Layout class="j_layout ivu-layout-has-sider j_category">
-    <MenuBar :data="'menuPoint'" :active="'point_goods'"/>
-    <Layout class="j_layout_content">
-      <JHeader :title="'积分兑换'" :count="count"/>
-      <Content>
-        <Table :columns="columns" :data="list"></Table>
-        <JPagination :total="total" :searchData='searchData' @on-change="get"/>
-      </Content>
-    </Layout>
+  <Layout class="j_layout_content j_category">
+    <JHeader :title="'积分兑换'" :count="count"/>
+    <Content>
+      <Table :columns="columns" :data="list"></Table>
+      <JPagination :total="total" :searchData='searchData' @on-change="get"/>
+    </Content>
   </Layout>
 </template>
 
 <script>
 import qs from 'qs'
-import MenuBar from '@/components/common/menu_bar'
 import JHeader from '@/components/group/j-header'
 import JPagination from '@/components/group/j-pagination'
 export default {
   components: {
-    MenuBar,
     JHeader,
     JPagination
   },

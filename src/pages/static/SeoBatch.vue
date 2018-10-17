@@ -1,18 +1,15 @@
 <template>
-  <Layout class="ivu-layout-has-sider j_static_batch">
-    <MenuBar :data="'menuStatic'" :active="'seo_batch'"/>
-    <Layout class="j_layout_content">
-      <JHeader :title="'批量提交'" :type="true" :tip="tip"/>
-      <Content>
-        <div class="j_search" style="padding-bottom: 17px;">
-          <Button class="grey" @click="active = item.value" v-for="(item, index) in btns" :key="index" :class="{primary: active === item.value}">{{item.text}}</Button>
-        </div>
-        <Baidu v-if="active === '0'"/>
-        <Haoso v-if="active === '1'"/>
-        <Sogou v-if="active === '2'"/>
-        <a href="https://www.bing.com/toolbox/submit-site-url" target="_blank" class="a_underline" v-if="active === '3'">必应Bing管理员</a>
-      </Content>
-    </Layout>
+  <Layout class="j_layout_content j_static_batch">
+    <JHeader :title="'批量提交'" :type="true" :tip="tip"/>
+    <Content>
+      <div class="j_search" style="padding-bottom: 17px;">
+        <Button class="grey" @click="active = item.value" v-for="(item, index) in btns" :key="index" :class="{primary: active === item.value}">{{item.text}}</Button>
+      </div>
+      <Baidu v-if="active === '0'"/>
+      <Haoso v-if="active === '1'"/>
+      <Sogou v-if="active === '2'"/>
+      <a href="https://www.bing.com/toolbox/submit-site-url" target="_blank" class="a_underline" v-if="active === '3'">必应Bing管理员</a>
+    </Content>
   </Layout>
 </template>
 

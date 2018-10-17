@@ -1,26 +1,21 @@
 <template>
-  <Layout class="ivu-layout-has-sider">
-    <MenuBar :data="'menuShop'" :active="'shop_pay'"/>
-    <Layout class="j_layout_content j_sort">
-      <JHeader :title="'支付方式管理'"/>
-      <Content class="sort">
-        <div class="j_search">
-          <Button type="info" icon="plus" class="w130" @click="url('/shop_pay/add')">添加支付方式</Button>
-        </div>
-        <DragableTable :list="list" :columns="columns" @on-update="tableUpdate"/>
-      </Content>
-    </Layout>
+  <Layout class="j_layout_content j_sort">
+    <JHeader :title="'支付方式管理'"/>
+    <Content class="sort">
+      <div class="j_search">
+        <Button type="info" icon="plus" class="w130" @click="url('/shop_pay/add')">添加支付方式</Button>
+      </div>
+      <DragableTable :list="list" :columns="columns" @on-update="tableUpdate"/>
+    </Content>
   </Layout>
 </template>
 
 <script>
 import qs from 'qs'
-import MenuBar from '@/components/common/menu_bar'
 import JHeader from '@/components/group/j-header'
 import DragableTable from '@/components/group/j-dragable-table'
 export default {
   components: {
-    MenuBar,
     JHeader,
     DragableTable
   },

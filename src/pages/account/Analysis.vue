@@ -1,25 +1,20 @@
 <template>
-  <Layout class="ivu-layout-has-sider">
-    <MenuBar :data="'menuAccount'" :active="'employee_account_analysis'"/>
-    <Layout class="j_layout_content">
-      <JHeader :title="'员工推广分析'"/>
-      <Content>
-        <div class="j_search">
-          <DatePicker type="daterange" :options="options" split-panels placeholder="选择搜索时间段" @on-change="search" style="width: 200px"></DatePicker>
-        </div>
-        <Table :columns="columns" :data="list"></Table>
-      </Content>
-    </Layout>
+  <Layout class="j_layout_content">
+    <JHeader :title="'员工推广分析'"/>
+    <Content>
+      <div class="j_search">
+        <DatePicker type="daterange" :options="options" split-panels placeholder="选择搜索时间段" @on-change="search" style="width: 200px"></DatePicker>
+      </div>
+      <Table :columns="columns" :data="list"></Table>
+    </Content>
   </Layout>
 </template>
 
 <script>
 import qs from 'qs'
-import MenuBar from '@/components/common/menu_bar'
 import JHeader from '@/components/group/j-header'
 export default {
   components: {
-    MenuBar,
     JHeader
   },
   data () {

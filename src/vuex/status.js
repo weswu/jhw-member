@@ -494,6 +494,13 @@ const mutations = {
   },
   setMenuList (state, data) {
     let list = getMenuByRouter(routers, data)
+    list.forEach(row => {
+      row.children && row.children.forEach(item => {
+        if (item.meta.manage) {
+          item.meta.manage = item.children[0] && item.children[0].name
+        }
+      })
+    })
     state.menuList = list
   }
 }

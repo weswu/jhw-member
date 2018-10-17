@@ -1,42 +1,37 @@
 <template>
-  <Layout class="ivu-layout-has-sider j_static">
-    <MenuBar :data="'menuStatic'" :active="'third_party_statistics'"/>
-    <Layout class="j_layout_content">
-      <JHeader :title="'第三方统计'"
-        :type="true" :tip="tip"
-        :website="true" @on-layout="get"/>
-      <Content>
-        <Form :model="detail" :label-width="75">
-          <FormItem label="页头设置：">
-            <RadioGroup v-model="detail.analysisHeadState">
-              <Radio label="01">启用</Radio>
-              <Radio label="00">关闭</Radio>
-            </RadioGroup><br/>
-            <Input v-model="detail.analysisHeadContent" type="textarea" v-if="detail.analysisHeadState === '01'"></Input>
-          </FormItem>
-          <FormItem label="页尾设置：">
-            <RadioGroup v-model="detail.analysisTailState">
-              <Radio label="01">启用</Radio>
-              <Radio label="00">关闭</Radio>
-            </RadioGroup><br/>
-            <Input v-model="detail.analysisTailContent" type="textarea" v-if="detail.analysisTailState === '01'"></Input>
-          </FormItem>
-          <FormItem class="submit" :label-width="1">
-            <Button type="primary" @click="submit">保存</Button>
-          </FormItem>
-        </Form>
-      </Content>
-    </Layout>
+  <Layout class="j_layout_content">
+    <JHeader :title="'第三方统计'"
+      :type="true" :tip="tip"
+      :website="true" @on-layout="get"/>
+    <Content>
+      <Form :model="detail" :label-width="75">
+        <FormItem label="页头设置：">
+          <RadioGroup v-model="detail.analysisHeadState">
+            <Radio label="01">启用</Radio>
+            <Radio label="00">关闭</Radio>
+          </RadioGroup><br/>
+          <Input v-model="detail.analysisHeadContent" type="textarea" v-if="detail.analysisHeadState === '01'"></Input>
+        </FormItem>
+        <FormItem label="页尾设置：">
+          <RadioGroup v-model="detail.analysisTailState">
+            <Radio label="01">启用</Radio>
+            <Radio label="00">关闭</Radio>
+          </RadioGroup><br/>
+          <Input v-model="detail.analysisTailContent" type="textarea" v-if="detail.analysisTailState === '01'"></Input>
+        </FormItem>
+        <FormItem class="submit" :label-width="1">
+          <Button type="primary" @click="submit">保存</Button>
+        </FormItem>
+      </Form>
+    </Content>
   </Layout>
 </template>
 
 <script>
 import qs from 'qs'
-import MenuBar from '@/components/common/menu_bar'
 import JHeader from '@/components/group/j-header'
 export default {
   components: {
-    MenuBar,
     JHeader
   },
   data () {

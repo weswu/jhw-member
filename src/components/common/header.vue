@@ -136,13 +136,13 @@ export default {
           })
           this.list = list
         }
+        this.$store.commit('status/setMenuList', this.userInfo.privilege)
       }
     }
   },
   created () {
+    this.$store.commit('status/setMenuList', this.userInfo.privilege)
     this.$store.commit('setLanId', window.localStorage.getItem('lanId') || '1')
-    this.$cookie.set('newsPage', 1)
-    this.$cookie.set('productPage', 1)
     if (window.location.search.substr(1).indexOf('&lanId=') > -1) {
       var vm = this
       this.$store.dispatch('lanIdChange', window.localStorage.getItem('lanId')).then((res) => {

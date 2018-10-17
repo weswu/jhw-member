@@ -1,34 +1,31 @@
 <template>
-  <Layout class="ivu-layout-has-sider j_category">
-    <MenuBar :data="'menu_' + type" :active="'category/' + type"/>
-    <Layout class="j_layout_content">
-      <Content>
-        <JHeader :title="'分类管理'" :lan="true" @on-change="get"/>
-        <div class="j_search">
-          <Button type="info" icon="plus" class="w130" @click="add">添加{{type === 'product' ?'产品':'新闻'}}分类</Button>
-          <a href="https://v.qq.com/x/page/e0753kcg4xb.html" class="a_underline" target="_blank" style="margin-left:10px;" v-if="type === 'product'">产品分类视频教程</a>
-          <a href="https://v.qq.com/x/page/g075303kosj.html" class="a_underline" target="_blank" style="margin-left:10px;" v-if="type === 'news'">新闻分类视频教程</a>
-        </div>
-        <Table
-          ref="selection"
-          :row-class-name="rowClassName"
-          :columns="columns"
-          :data="type === 'product' ? this.$store.state.productCategory : this.$store.state.newsCategory"
-          @on-selection-change="handleSelectChange"
-        ></Table>
-      </Content>
-      <div class="j_pagination fixed border">
-        <div class="btn">
-          <Checkbox v-model="toggle" @on-change="handleSelectAll(toggle)"/>
-          <Button type="ghost" size="small" @click="delAll">删除</Button>
-          <Button type="ghost" size="small" @click="displayAll('1')">显示</Button>
-          <Button type="ghost" size="small" @click="displayAll('0')">隐藏</Button>
-          <Button type="ghost" size="small" @click="categoryAll">转移分类</Button>
-          <Button type="ghost" size="small" @click="hiddenAll(false)">展开</Button>
-          <Button type="ghost" size="small" @click="hiddenAll(true)">折叠</Button>
-        </div>
+  <Layout class="j_layout_content j_category">
+    <Content>
+      <JHeader :title="'分类管理'" :lan="true" @on-change="get"/>
+      <div class="j_search">
+        <Button type="info" icon="plus" class="w130" @click="add">添加{{type === 'product' ?'产品':'新闻'}}分类</Button>
+        <a href="https://v.qq.com/x/page/e0753kcg4xb.html" class="a_underline" target="_blank" style="margin-left:10px;" v-if="type === 'product'">产品分类视频教程</a>
+        <a href="https://v.qq.com/x/page/g075303kosj.html" class="a_underline" target="_blank" style="margin-left:10px;" v-if="type === 'news'">新闻分类视频教程</a>
       </div>
-    </Layout>
+      <Table
+        ref="selection"
+        :row-class-name="rowClassName"
+        :columns="columns"
+        :data="type === 'product' ? this.$store.state.productCategory : this.$store.state.newsCategory"
+        @on-selection-change="handleSelectChange"
+      ></Table>
+    </Content>
+    <div class="j_pagination fixed border">
+      <div class="btn">
+        <Checkbox v-model="toggle" @on-change="handleSelectAll(toggle)"/>
+        <Button type="ghost" size="small" @click="delAll">删除</Button>
+        <Button type="ghost" size="small" @click="displayAll('1')">显示</Button>
+        <Button type="ghost" size="small" @click="displayAll('0')">隐藏</Button>
+        <Button type="ghost" size="small" @click="categoryAll">转移分类</Button>
+        <Button type="ghost" size="small" @click="hiddenAll(false)">展开</Button>
+        <Button type="ghost" size="small" @click="hiddenAll(true)">折叠</Button>
+      </div>
+    </div>
     <SeoDetail ref="seoDetail"/>
     <Detail ref="detail" @on-change="get"/>
     <TransferCategory
@@ -44,7 +41,6 @@
 <script>
 import qs from 'qs'
 import { mapState } from 'vuex'
-import MenuBar from '@/components/common/menu_bar'
 import JHeader from '@/components/group/j-header'
 import SeoDetail from '@/pages/static/SeoDetail'
 import Detail from '@/pages/category/Detail'
@@ -52,7 +48,6 @@ import TransferCategory from '@/components/group/transfer-category'
 import JAlbum from '@/components/group/j-album'
 export default {
   components: {
-    MenuBar,
     JHeader,
     SeoDetail,
     Detail,

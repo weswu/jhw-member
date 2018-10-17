@@ -52,7 +52,10 @@ export default {
     }
   },
   computed: {
-    ...mapState(['customData', 'userInfo']),
+    ...mapState({
+      menuList: state => state.status.menuList,
+      customData: state => state.customData
+    }),
     rotateIcon () {
       return [
         'yd_collapsed',
@@ -72,19 +75,17 @@ export default {
   },
   watch: {
     $route (to, from) {
-      this.initRoute(to)
+      this.initRoute()
     },
-    userInfo: {
+    menuList: {
       handler () {
-        this.$store.commit('status/setMenuList', this.userInfo.privilege)
+        this.initRoute()
       }
     }
   },
   created () {
     // 初始化选中样式
-    this.initRoute(this.$route)
     this.getCps()
-    this.$store.commit('status/setMenuList', this.userInfo.privilege)
   },
   mounted () {
     var vm = this
@@ -93,16 +94,12 @@ export default {
     }, 1000)
   },
   methods: {
-    initRoute (to) {
+    initRoute () {
       let match = this.$route.matched
-      if (to.path === '/category/news') {
-        this.activeName = 'news'
-      } else {
-        this.activeName = match.length > 1 ? match[1].name : ''
-      }
+      this.activeName = match.length > 1 ? (match[1].meta.manage || match[1].name) : ''
       this.openNames = match.length > 0 ? (match[0].name && match[0].name.split(',')) : []
       this.$nextTick(() => {
-        this.$refs.menu.updateOpened()
+        this.$refs.menu && this.$refs.menu.updateOpened()
       })
     },
     collapsedSider () {

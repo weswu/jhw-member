@@ -1,7 +1,5 @@
   <template>
-  <Layout class="j_layout ivu-layout-has-sider j_product">
-    <MenuBar :data="'menu_product'" :active="'product'"/>
-    <Layout class="j_layout_content">
+    <Layout class="j_layout_content j_product">
       <Content>
         <JHeader :title="'产品列表'" :lan="true" @on-change="lanChange"/>
         <div class="j_search">
@@ -77,23 +75,21 @@
             </span>
           </JPagination>
       </Content>
+      <SeoDetail ref="seoDetail"/>
+      <TransferCategory ref="transferCategory" :data="categoryList" :ids="ids" :type="'product'" @on-change="get"/>
+      <JDialog ref="dialog" :title="'我的显示'" :tip="'温馨提醒：勾选不要超过9个，以免列表显示不下。'" @on-ok="initCol('ok')">
+        <div slot="content">
+          <CheckboxGroup v-model="myShowSelect" class="j_checkout">
+            <Checkbox :label="item" v-for="(item, index) in myShowList" :key="index">{{item}}</Checkbox>
+          </CheckboxGroup>
+        </div>
+      </JDialog>
     </Layout>
-    <SeoDetail ref="seoDetail"/>
-    <TransferCategory ref="transferCategory" :data="categoryList" :ids="ids" :type="'product'" @on-change="get"/>
-    <JDialog ref="dialog" :title="'我的显示'" :tip="'温馨提醒：勾选不要超过9个，以免列表显示不下。'" @on-ok="initCol('ok')">
-      <div slot="content">
-        <CheckboxGroup v-model="myShowSelect" class="j_checkout">
-          <Checkbox :label="item" v-for="(item, index) in myShowList" :key="index">{{item}}</Checkbox>
-        </CheckboxGroup>
-      </div>
-    </JDialog>
-  </Layout>
 </template>
 
 <script>
 import qs from 'qs'
 import { mapState } from 'vuex'
-import MenuBar from '@/components/common/menu_bar'
 import JHeader from '@/components/group/j-header'
 import JPagination from '@/components/group/j-pagination'
 import JDialog from '@/components/group/j-dialog'
@@ -103,7 +99,6 @@ import TransferCategory from '@/components/group/transfer-category'
 import categorySelect from '@/components/group/j-category-select'
 export default {
   components: {
-    MenuBar,
     JHeader,
     JPagination,
     JDialog,

@@ -1,29 +1,25 @@
 <template>
-  <Layout class="ivu-layout-has-sider j_seo">
-    <MenuBar :data="'menuStatic'" :active="'seo'"/>
-    <Layout class="j_layout_content">
-      <JHeader ref="header" :title="'SEO管理'" :lanHidden='true' :website="active === '4' || (!header && active === '0')" :lan="active === '1' || (header && active === '0')"></JHeader>
-      <Content>
-        <div class="j_search">
-          <Button class="grey" @click="active = item.value" v-for="(item, index) in btns" :key="index" :class="{primary: active === item.value}">{{item.text}}</Button>
-          <a href="https://v.qq.com/x/page/u0753y5akkv.html" class="a_underline" target="_blank">SEO管理视频教程</a>
-        </div>
-        <div class="warpper j_scroll">
-          <SBase @on-change="headerChange" v-if="active === '0'"/>
-          <STemplate @on-change="active = '0'" v-if="active === '1'"/>
-          <KeywordStore v-if="active === '2'"/>
-          <LongTailKeyword v-if="active === '3'"/>
-          <InnerLink v-if="active === '4'"/>
-          <JTab v-if="active === '5'"/>
-          <Paid v-if="active === '6'"/>
-        </div>
-      </Content>
-    </Layout>
+  <Layout class="j_layout_content j_seo">
+    <JHeader ref="header" :title="'SEO管理'" :lanHidden='true' :website="active === '4' || (!header && active === '0')" :lan="active === '1' || (header && active === '0')"></JHeader>
+    <Content>
+      <div class="j_search">
+        <Button class="grey" @click="active = item.value" v-for="(item, index) in btns" :key="index" :class="{primary: active === item.value}">{{item.text}}</Button>
+        <a href="https://v.qq.com/x/page/u0753y5akkv.html" class="a_underline" target="_blank">SEO管理视频教程</a>
+      </div>
+      <div class="warpper j_scroll">
+        <SBase @on-change="headerChange" v-if="active === '0'"/>
+        <STemplate @on-change="active = '0'" v-if="active === '1'"/>
+        <KeywordStore v-if="active === '2'"/>
+        <LongTailKeyword v-if="active === '3'"/>
+        <InnerLink v-if="active === '4'"/>
+        <JTab v-if="active === '5'"/>
+        <Paid v-if="active === '6'"/>
+      </div>
+    </Content>
   </Layout>
 </template>
 
 <script>
-import MenuBar from '@/components/common/menu_bar'
 import JHeader from '@/components/group/j-header'
 import SBase from '@/components/seo/base'
 import STemplate from '@/components/seo/template'
@@ -34,7 +30,6 @@ import JTab from '@/components/seo/tag'
 import Paid from '@/components/seo/paid'
 export default {
   components: {
-    MenuBar,
     JHeader,
     SBase,
     STemplate,
@@ -58,6 +53,9 @@ export default {
       active: '0',
       header: false
     }
+  },
+  created () {
+    this.active = this.$route.query.active || '0'
   },
   methods: {
     headerChange (e) {

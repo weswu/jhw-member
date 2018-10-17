@@ -1,27 +1,22 @@
 <template>
-  <Layout class="ivu-layout-has-sider">
-    <MenuBar :data="'menuShop'" :active="'shop_bill'"/>
-    <Layout class="j_layout_content">
-      <JHeader :title="'物流单据设置'"/>
-      <Content>
-        <div class="j_search">
-          <Button type="info" icon="plus" class="w130" @click="url('/shop_bill/add')">添加物流单据</Button>
-        </div>
-        <Table :columns="columns" :data="list" class="sort"/>
-        <JPagination :total="total" :searchData='searchData' @on-change="get"/>
-      </Content>
-    </Layout>
+  <Layout class="j_layout_content">
+    <JHeader :title="'物流单据设置'"/>
+    <Content>
+      <div class="j_search">
+        <Button type="info" icon="plus" class="w130" @click="url('/shop_bill/add')">添加物流单据</Button>
+      </div>
+      <Table :columns="columns" :data="list" class="sort"/>
+      <JPagination :total="total" :searchData='searchData' @on-change="get"/>
+    </Content>
   </Layout>
 </template>
 
 <script>
 import qs from 'qs'
-import MenuBar from '@/components/common/menu_bar'
 import JHeader from '@/components/group/j-header'
 import JPagination from '@/components/group/j-pagination'
 export default {
   components: {
-    MenuBar,
     JHeader,
     JPagination
   },

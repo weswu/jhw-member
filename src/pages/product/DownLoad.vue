@@ -1,69 +1,64 @@
 <template>
-  <Layout class="ivu-layout-has-sider j_product_import j_product_import_download">
-    <MenuBar :data="'menu_product'" :active="'product_download'"/>
-    <Layout class="j_layout_content">
-      <Content>
-        <JHeader :title="'下载'" :lan="true"/>
-        <div class="j_tip">
-          温馨提示：<a href="https://v.qq.com/x/page/n0753o7p54m.html" class="a_underline" target="_blank">下载视频教程</a>
-        </div>
-        <div class="j_search">
-          <Button class="grey primary w130">产品表格下载</Button>
-          <Button class="grey w130" @click="exportProductImg">产品相册下载</Button>
-        </div>
-        <table class="j_table j_table_li">
-          <thead>
-            <tr>
-              <th>表格模板内容：需要的请“打勾”，再点下载。</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>
-                <CheckboxGroup v-model="col">
-                  <Checkbox :label="item.text === '-' ? item.value : item.text" v-for="item in list" :key="item.value">{{item.text}}</Checkbox>
-                </CheckboxGroup>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-        <table class="j_table j_table_li" style="margin: 25px 0 35px 0">
-          <thead>
-            <tr>
-              <th>
-                表格模板内容：需要的请“打勾”，再点下载。温馨提醒（如需下载下面的内容，请先选择好所属的网站编号）
-                <Select v-model="$store.state.layoutId" class="small" style="width:120px">
-                  <Option v-for="item in staticList" :value="item.layoutId" :key="item.layoutId" :label="item.label">
-                    <span>网站编号：{{ item.layoutId }}</span>
-                  </Option>
-                </Select>
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>
-                <CheckboxGroup v-model="col2">
-                  <Checkbox :label="item.text === '-' ? item.value : item.text" v-for="item in list2" :key="item.value">{{item.text}}</Checkbox>
-                </CheckboxGroup>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-        <Button type="primary" @click="ok" style="width:124px;">下载</Button>
-      </Content>
-    </Layout>
+  <Layout class="j_layout_content j_product_import j_product_import_download">
+    <Content>
+      <JHeader :title="'下载'" :lan="true"/>
+      <div class="j_tip">
+        温馨提示：<a href="https://v.qq.com/x/page/n0753o7p54m.html" class="a_underline" target="_blank">下载视频教程</a>
+      </div>
+      <div class="j_search">
+        <Button class="grey primary w130">产品表格下载</Button>
+        <Button class="grey w130" @click="exportProductImg">产品相册下载</Button>
+      </div>
+      <table class="j_table j_table_li">
+        <thead>
+          <tr>
+            <th>表格模板内容：需要的请“打勾”，再点下载。</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>
+              <CheckboxGroup v-model="col">
+                <Checkbox :label="item.text === '-' ? item.value : item.text" v-for="item in list" :key="item.value">{{item.text}}</Checkbox>
+              </CheckboxGroup>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <table class="j_table j_table_li" style="margin: 25px 0 35px 0">
+        <thead>
+          <tr>
+            <th>
+              表格模板内容：需要的请“打勾”，再点下载。温馨提醒（如需下载下面的内容，请先选择好所属的网站编号）
+              <Select v-model="$store.state.layoutId" class="small" style="width:120px">
+                <Option v-for="item in staticList" :value="item.layoutId" :key="item.layoutId" :label="item.label">
+                  <span>网站编号：{{ item.layoutId }}</span>
+                </Option>
+              </Select>
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>
+              <CheckboxGroup v-model="col2">
+                <Checkbox :label="item.text === '-' ? item.value : item.text" v-for="item in list2" :key="item.value">{{item.text}}</Checkbox>
+              </CheckboxGroup>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <Button type="primary" @click="ok" style="width:124px;">下载</Button>
+    </Content>
   </Layout>
 </template>
 
 <script>
 import qs from 'qs'
 import { mapState } from 'vuex'
-import MenuBar from '@/components/common/menu_bar'
 import JHeader from '@/components/group/j-header'
 export default {
   components: {
-    MenuBar,
     JHeader
   },
   computed: {

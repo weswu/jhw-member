@@ -1,13 +1,10 @@
 <template>
-  <Layout class="ivu-layout-has-sider">
-    <MenuBar :data="'menuShop'" :active="'shop_refund'"/>
-    <Layout class="j_layout_content">
-      <JHeader :title="'商品退货管理'"/>
-      <Content>
-        <Table :columns="columns" :data="list" class="sort"/>
-        <JPagination :total="total" :searchData='searchData' @on-change="get"/>
-      </Content>
-    </Layout>
+  <Layout class="j_layout_content">
+    <JHeader :title="'商品退货管理'"/>
+    <Content>
+      <Table :columns="columns" :data="list" class="sort"/>
+      <JPagination :total="total" :searchData='searchData' @on-change="get"/>
+    </Content>
     <Detail ref="detail" @on-change="get"/>
   </Layout>
 </template>
@@ -15,13 +12,11 @@
 <script>
 import qs from 'qs'
 import { mapState } from 'vuex'
-import MenuBar from '@/components/common/menu_bar'
 import JHeader from '@/components/group/j-header'
 import JPagination from '@/components/group/j-pagination'
 import Detail from '@/components/shop/refund-detail.vue'
 export default {
   components: {
-    MenuBar,
     JHeader,
     JPagination,
     Detail

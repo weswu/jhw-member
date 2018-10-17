@@ -1,41 +1,36 @@
 <template>
-  <Layout class="ivu-layout-has-sider j_cert">
-    <MenuBar :data="'menuEnter'" :active="'cert'"/>
-    <Layout class="j_layout_content">
-      <JHeader :title="'荣誉证书'" :lan="true" @on-change="lanChange"/>
-      <Content>
-        <div class="j_search">
-          <Row type="flex" justify="space-between">
-            <Col>
-              <Button type="info" icon="plus" class="w130" @click="add">添加荣誉证书</Button>
-            </Col>
-            <Col>
-              <Input v-model="searchData.name" class="w180" clearable placeholder="请输入证书名称" @on-change="clearInput"></Input>
-              <Button class="search" @click="search">搜索</Button>
-            </Col>
-          </Row>
-        </div>
-        <DragableTable
-          :list="list"
-          :columns="columns"
-          @on-update="tableUpdate"/>
-        <JPagination :total="total" :searchData='searchData' @on-change="get"/>
-      </Content>
-    </Layout>
+  <Layout class="j_layout_content j_cert">
+    <JHeader :title="'荣誉证书'" :lan="true" @on-change="lanChange"/>
+    <Content>
+      <div class="j_search">
+        <Row type="flex" justify="space-between">
+          <Col>
+            <Button type="info" icon="plus" class="w130" @click="add">添加荣誉证书</Button>
+          </Col>
+          <Col>
+            <Input v-model="searchData.name" class="w180" clearable placeholder="请输入证书名称" @on-change="clearInput"></Input>
+            <Button class="search" @click="search">搜索</Button>
+          </Col>
+        </Row>
+      </div>
+      <DragableTable
+        :list="list"
+        :columns="columns"
+        @on-update="tableUpdate"/>
+      <JPagination :total="total" :searchData='searchData' @on-change="get"/>
+    </Content>
     <Detail ref='detail' @on-change="get"/>
   </Layout>
 </template>
 
 <script>
 import qs from 'qs'
-import MenuBar from '@/components/common/menu_bar'
 import JHeader from '@/components/group/j-header'
 import DragableTable from '@/components/group/j-dragable-table'
 import JPagination from '@/components/group/j-pagination'
 import Detail from '@/pages/enterprise/CertDetail2'
 export default {
   components: {
-    MenuBar,
     JHeader,
     DragableTable,
     JPagination,

@@ -1,15 +1,12 @@
 <template>
-  <Layout class="ivu-layout-has-sider j_member_attr">
-    <MenuBar :data="'menuMember'" :active="'member_attr'"/>
-    <Layout class="j_layout_content">
-      <JHeader :title="'会员属性配置'"/>
-      <Content>
-        <div class="j_search">
-          <Button type="info" icon="plus" class="w130" @click="add">添加会员属性</Button>
-        </div>
-        <DragableTable :list="memberAttrList" :columns="columns" @on-update="tableUpdate"/>
-      </Content>
-    </Layout>
+  <Layout class="j_layout_content">
+    <JHeader :title="'会员属性配置'"/>
+    <Content>
+      <div class="j_search">
+        <Button type="info" icon="plus" class="w130" @click="add">添加会员属性</Button>
+      </div>
+      <DragableTable :list="memberAttrList" :columns="columns" @on-update="tableUpdate"/>
+    </Content>
     <Detail ref='detail' @on-change="get"/>
   </Layout>
 </template>
@@ -17,13 +14,11 @@
 <script>
 import qs from 'qs'
 import { mapState } from 'vuex'
-import MenuBar from '@/components/common/menu_bar'
 import JHeader from '@/components/group/j-header'
 import Detail from '@/pages/member/AttrDetail'
 import DragableTable from '@/components/group/j-dragable-table'
 export default {
   components: {
-    MenuBar,
     JHeader,
     Detail,
     DragableTable

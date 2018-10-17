@@ -1,15 +1,12 @@
 <template>
-  <Layout class="ivu-layout-has-sider">
-    <MenuBar :data="'menuMember'" :active="'member_rank'"/>
-    <Layout class="j_layout_content">
-      <Content>
-        <JHeader :title="'会员等级配置'"/>
-        <div class="j_search">
-          <Button type="info" icon="plus" class="w130" @click="add">添加会员等级</Button>
-        </div>
-        <Table :columns="columns" :data="memberRankList"/>
-      </Content>
-    </Layout>
+  <Layout class="j_layout_content">
+    <Content>
+      <JHeader :title="'会员等级配置'"/>
+      <div class="j_search">
+        <Button type="info" icon="plus" class="w130" @click="add">添加会员等级</Button>
+      </div>
+      <Table :columns="columns" :data="memberRankList"/>
+    </Content>
     <Detail ref='detail' @on-change="get"/>
   </Layout>
 </template>
@@ -17,12 +14,10 @@
 <script>
 import qs from 'qs'
 import { mapState } from 'vuex'
-import MenuBar from '@/components/common/menu_bar'
 import JHeader from '@/components/group/j-header'
 import Detail from '@/pages/member/RankDetail'
 export default {
   components: {
-    MenuBar,
     JHeader,
     Detail
   },

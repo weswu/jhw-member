@@ -1,85 +1,82 @@
 <template>
-  <Layout class="ivu-layout-has-sider j_news">
-    <MenuBar :data="'menu_news'" :active="'news'"/>
-    <Layout class="j_layout_content">
-      <JHeader :title="'新闻列表'" :lan="true" @on-change="lanChange"/>
-      <Content>
-        <div class="j_search">
-          <Row type="flex" justify="space-between">
-            <Col>
-              <Button type="info" icon="plus" class="w130" @click="url('/news/add')">添加新闻</Button>
-            </Col>
-            <Col>
-              <a href="https://v.qq.com/x/page/q0753wldx5d.html" class="a_underline" target="_blank" style="margin-right:20px;">新闻视频教程</a>
-              <Input v-model="title" class="w180" placeholder="请输入新闻标题" clearable @on-change="clearInput"></Input>
-              <Button class="search" @click="search">搜索</Button>
-              <Poptip placement="bottom-end" class="j_poptip_confirm_edit advancedSearch"
-                confirm
-                width="600"
-                @on-ok="advancedSearch">
-                <Button class="grey w130">高级搜索</Button>
-                <div slot="title">
-                  <Form :model="searchData" :label-width="85">
-                    <FormItem label="标题：" class="formitem_left">
-                      <Input v-model="searchData.title" class="w180" placeholder="请输入新闻标题" clearable></Input>
-                    </FormItem>
-                    <FormItem label="分类：" :label-width="62" class="formitem_left">
-                      <div style="width:203px">
-                        <categorySelect :categoryId="searchData.category" :list="$store.state.newsCategory" :isDefalut="true" @on-change="categoryChange"/>
-                      </div>
-                    </FormItem>
-                    <FormItem label="图片新闻：" class="formitem_left">
-                      <Select v-model="searchData.imagenews" class="w180" placeholder="全部">
-                        <Option value="">全部</Option>
-                        <Option value="01">是</Option>
-                        <Option value="00">否</Option>
-                      </Select>
-                    </FormItem>
-                    <FormItem label="滚动新闻：" class="formitem_left">
-                      <Select v-model="searchData.rollingnews" class="w180" placeholder="全部">
-                        <Option value="">全部</Option>
-                        <Option value="01">是</Option>
-                        <Option value="00">否</Option>
-                      </Select>
-                    </FormItem>
-                    <FormItem label="置顶新闻：" class="formitem_left">
-                      <Select v-model="searchData.topnews" class="w180" placeholder="全部">
-                        <Option value="">全部</Option>
-                        <Option value="01">是</Option>
-                        <Option value="00">否</Option>
-                      </Select>
-                    </FormItem>
-                    <FormItem label="显示/隐藏：" class="formitem_left">
-                      <Select v-model="searchData.display" class="w180" placeholder="全部">
-                        <Option value="">全部</Option>
-                        <Option value="01">显示</Option>
-                        <Option value="00">隐藏</Option>
-                      </Select>
-                    </FormItem>
-                  </Form>
-                </div>
-              </Poptip>
-            </Col>
-          </Row>
-        </div>
-        <DragableTable
-          ref="selection"
-          :list="list"
-          :columns="columns"
-          @on-update="tableUpdate"
-          @on-selection-change="handleSelectChange"/>
-        <JPagination :fixed="true" :checkbox="true" :total="total" :searchData='searchData' @on-change="get">
-          <span slot="btn">
-            <Checkbox v-model="toggle" @on-change="handleSelectAll(toggle)"/>
-            <Button type="ghost" size="small" @click="delAll">删除</Button>
-            <Button type="ghost" size="small" @click="copyAll">复制</Button>
-            <Button type="ghost" size="small" @click="displayAll('01')">显示</Button>
-            <Button type="ghost" size="small" @click="displayAll('00')">隐藏</Button>
-            <Button type="ghost" size="small" @click="categoryAll">转移分类</Button>
-          </span>
-        </JPagination>
-      </Content>
-    </Layout>
+  <Layout class="j_layout_content j_news">
+    <JHeader :title="'新闻列表'" :lan="true" @on-change="lanChange"/>
+    <Content>
+      <div class="j_search">
+        <Row type="flex" justify="space-between">
+          <Col>
+            <Button type="info" icon="plus" class="w130" @click="url('/news/add')">添加新闻</Button>
+          </Col>
+          <Col>
+            <a href="https://v.qq.com/x/page/q0753wldx5d.html" class="a_underline" target="_blank" style="margin-right:20px;">新闻视频教程</a>
+            <Input v-model="title" class="w180" placeholder="请输入新闻标题" clearable @on-change="clearInput"></Input>
+            <Button class="search" @click="search">搜索</Button>
+            <Poptip placement="bottom-end" class="j_poptip_confirm_edit advancedSearch"
+              confirm
+              width="600"
+              @on-ok="advancedSearch">
+              <Button class="grey w130">高级搜索</Button>
+              <div slot="title">
+                <Form :model="searchData" :label-width="85">
+                  <FormItem label="标题：" class="formitem_left">
+                    <Input v-model="searchData.title" class="w180" placeholder="请输入新闻标题" clearable></Input>
+                  </FormItem>
+                  <FormItem label="分类：" :label-width="62" class="formitem_left">
+                    <div style="width:203px">
+                      <categorySelect :categoryId="searchData.category" :list="$store.state.newsCategory" :isDefalut="true" @on-change="categoryChange"/>
+                    </div>
+                  </FormItem>
+                  <FormItem label="图片新闻：" class="formitem_left">
+                    <Select v-model="searchData.imagenews" class="w180" placeholder="全部">
+                      <Option value="">全部</Option>
+                      <Option value="01">是</Option>
+                      <Option value="00">否</Option>
+                    </Select>
+                  </FormItem>
+                  <FormItem label="滚动新闻：" class="formitem_left">
+                    <Select v-model="searchData.rollingnews" class="w180" placeholder="全部">
+                      <Option value="">全部</Option>
+                      <Option value="01">是</Option>
+                      <Option value="00">否</Option>
+                    </Select>
+                  </FormItem>
+                  <FormItem label="置顶新闻：" class="formitem_left">
+                    <Select v-model="searchData.topnews" class="w180" placeholder="全部">
+                      <Option value="">全部</Option>
+                      <Option value="01">是</Option>
+                      <Option value="00">否</Option>
+                    </Select>
+                  </FormItem>
+                  <FormItem label="显示/隐藏：" class="formitem_left">
+                    <Select v-model="searchData.display" class="w180" placeholder="全部">
+                      <Option value="">全部</Option>
+                      <Option value="01">显示</Option>
+                      <Option value="00">隐藏</Option>
+                    </Select>
+                  </FormItem>
+                </Form>
+              </div>
+            </Poptip>
+          </Col>
+        </Row>
+      </div>
+      <DragableTable
+        ref="selection"
+        :list="list"
+        :columns="columns"
+        @on-update="tableUpdate"
+        @on-selection-change="handleSelectChange"/>
+      <JPagination :fixed="true" :checkbox="true" :total="total" :searchData='searchData' @on-change="get">
+        <span slot="btn">
+          <Checkbox v-model="toggle" @on-change="handleSelectAll(toggle)"/>
+          <Button type="ghost" size="small" @click="delAll">删除</Button>
+          <Button type="ghost" size="small" @click="copyAll">复制</Button>
+          <Button type="ghost" size="small" @click="displayAll('01')">显示</Button>
+          <Button type="ghost" size="small" @click="displayAll('00')">隐藏</Button>
+          <Button type="ghost" size="small" @click="categoryAll">转移分类</Button>
+        </span>
+      </JPagination>
+    </Content>
     <SeoDetail ref="seoDetail"/>
     <TransferCategory ref="transferCategory" :data="categoryList" :ids="ids" :type="'news'" @on-change="get"/>
   </Layout>
@@ -88,7 +85,6 @@
 <script>
 import qs from 'qs'
 import { mapState } from 'vuex'
-import MenuBar from '@/components/common/menu_bar'
 import JHeader from '@/components/group/j-header'
 import JPagination from '@/components/group/j-pagination'
 import DragableTable from '@/components/group/j-dragable-table'
@@ -97,7 +93,6 @@ import TransferCategory from '@/components/group/transfer-category'
 import categorySelect from '@/components/group/j-category-select'
 export default {
   components: {
-    MenuBar,
     JHeader,
     JPagination,
     DragableTable,

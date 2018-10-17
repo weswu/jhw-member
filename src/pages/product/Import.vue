@@ -1,72 +1,67 @@
 <template>
-  <Layout class="ivu-layout-has-sider j_product_import j_product_import_download">
-    <MenuBar :data="'menu_product'" :active="'product_import'"/>
-    <Layout class="j_layout_content">
-      <Content>
-        <JHeader :title="'导入'" :lan="true"/>
-        <div class="import_title">
-          Excle表格批量上传<a href="https://v.qq.com/x/page/j0753rag7kr.html" class="a_underline" target="_blank" style="font-size: 12px;padding-left: 20px;">导入视频教程</a>
-        </div>
-        <div class="j_tip">
-          <span class="red">步骤一：</span>“打勾”生成产品表格模板
-        </div>
-        <table class="j_table j_table_li">
-          <thead>
-            <tr>
-              <th>表格模板内容：</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>
-                <CheckboxGroup v-model="col">
-                  <Checkbox :label="item.text === '-' ? item.value : item.text" v-for="item in list" :key="item.value">{{item.text}}</Checkbox>
-                </CheckboxGroup>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-        <Button type="primary" style="margin-bottom:22px;" @click="generate">生成产品表格模板</Button>
-        <div class="j_tip">
-          <span class="red">步骤二：</span>进行批量上传产品表格前，请先把产品图片上传好
-        </div>
-        <Button type="primary" @click="uploadPic" style="margin-bottom:16px;">上传产品图片</Button>
-        <JUpload :id="albumId" @on-success="handleSuccess" style="height: 0px;">
-          <span slot="content">
-            <div id="productUpload" style="display:none">上传</div>
-          </span>
-        </JUpload>
-        <div class="j_tip">
-          <span class="red">步骤三：</span>提交填写好的产品表格
-        </div>
-        <Row :gutter="24" class="form">
-          <Col span="3">
-            <span class="star">*</span>上传表格:
-          </Col>
-          <Col span="21">
-            <Upload ref="upload2" action="/rest/api/product/uploadProductsByExcel"
-              formenctype="multipart/form-data"
-              :on-success="handleSuccess2">
-              <div id="fileUpload" >
-                <span class="select">选择文件</span>{{name}}
-              </div>
-            </Upload>
-          </Col>
-        </Row>
-      </Content>
-    </Layout>
+  <Layout class="j_layout_content j_product_import j_product_import_download">
+    <Content>
+      <JHeader :title="'导入'" :lan="true"/>
+      <div class="import_title">
+        Excle表格批量上传<a href="https://v.qq.com/x/page/j0753rag7kr.html" class="a_underline" target="_blank" style="font-size: 12px;padding-left: 20px;">导入视频教程</a>
+      </div>
+      <div class="j_tip">
+        <span class="red">步骤一：</span>“打勾”生成产品表格模板
+      </div>
+      <table class="j_table j_table_li">
+        <thead>
+          <tr>
+            <th>表格模板内容：</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>
+              <CheckboxGroup v-model="col">
+                <Checkbox :label="item.text === '-' ? item.value : item.text" v-for="item in list" :key="item.value">{{item.text}}</Checkbox>
+              </CheckboxGroup>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <Button type="primary" style="margin-bottom:22px;" @click="generate">生成产品表格模板</Button>
+      <div class="j_tip">
+        <span class="red">步骤二：</span>进行批量上传产品表格前，请先把产品图片上传好
+      </div>
+      <Button type="primary" @click="uploadPic" style="margin-bottom:16px;">上传产品图片</Button>
+      <JUpload :id="albumId" @on-success="handleSuccess" style="height: 0px;">
+        <span slot="content">
+          <div id="productUpload" style="display:none">上传</div>
+        </span>
+      </JUpload>
+      <div class="j_tip">
+        <span class="red">步骤三：</span>提交填写好的产品表格
+      </div>
+      <Row :gutter="24" class="form">
+        <Col span="3">
+          <span class="star">*</span>上传表格:
+        </Col>
+        <Col span="21">
+          <Upload ref="upload2" action="/rest/api/product/uploadProductsByExcel"
+            formenctype="multipart/form-data"
+            :on-success="handleSuccess2">
+            <div id="fileUpload" >
+              <span class="select">选择文件</span>{{name}}
+            </div>
+          </Upload>
+        </Col>
+      </Row>
+    </Content>
   </Layout>
 </template>
 
 <script>
 import qs from 'qs'
 import { mapState } from 'vuex'
-import MenuBar from '@/components/common/menu_bar'
 import JHeader from '@/components/group/j-header'
 import JUpload from '@/components/group/j-upload'
 export default {
   components: {
-    MenuBar,
     JHeader,
     JUpload
   },

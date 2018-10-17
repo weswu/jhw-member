@@ -1,17 +1,17 @@
 <template>
   <Layout class="ivu-layout-has-sider">
-    <Sider id="J_Menu_Bar" ref="side1" hide-trigger collapsible :collapsed-width="0" v-model="isCollapsed" width="180" v-if="win !== 'small' || detail">
+    <Sider id="J_Side_Menu" ref="side1" hide-trigger collapsible :collapsed-width="0" v-model="isCollapsed" width="180" v-if="win !== 'small' || detail">
       <div class="title">
-        <span v-if="win === 'small' || !detail">{{list.meta.title || 'Basic Table'}}</span>
+        <span v-if="win === 'small' || !detail">{{title || 'Basic Table'}}</span>
         <span v-else @click="back" class="back"><i class="iconfont icon-fanhui"></i>返回</span>
       </div>
       <div @click="collapsedSider" :class="rotateIcon">
         <div class="navbar-collapse-bg"></div>
         <img src="platform/img/toggle.png" alt="">
       </div>
-      <Menu ref="menu" width="auto" :class="menuitemClasses" :active-name="$route.name" @on-select="mrouter">
-        <MenuItem :name="item.path" v-for="(item, index) in list.children" :key="index">
-          <span class="name">{{item.meta.title}}</span>
+      <Menu ref="menu" width="auto" :class="menuitemClasses" :active-name="activeName" @on-select="mrouter">
+        <MenuItem :name="item.value || item.path" v-for="(item, index) in list" :key="index">
+          <span class="name">{{item.text || item.meta.title}}</span>
         </MenuItem>
       </Menu>
     </Sider>
@@ -26,11 +26,17 @@ export default {
     return {
       isCollapsed: false,
       list: [],
-      detail: false
+      detail: false,
+      activeName: '',
+      title: ''
     }
   },
   computed: {
-    ...mapState(['win', 'userInfo']),
+    ...mapState({
+      menuList: state => state.status.menuList,
+      win: state => state.win,
+      userInfo: state => state.userInfo
+    }),
     rotateIcon () {
       return [
         'rotate',
@@ -60,14 +66,21 @@ export default {
   methods: {
     init () {
       // 三级导航权限
-      let routers = this.$router.options.routes
-      routers.forEach(item => {
-        item.children && item.children.forEach(row => {
-          if (row.name === this.$route.matched[1].name) {
-            this.list = row
-          }
+      this.detail = this.$route.meta.detail || false
+      if (this.detail) {
+        this.list = this.$route.meta.menu
+        this.activeName = '0'
+      } else {
+        this.menuList.forEach(item => {
+          item.children && item.children.forEach(row => {
+            if (row.name === this.$route.matched[1].name) {
+              this.list = row.children
+              this.title = row.meta.title
+            }
+          })
         })
-      })
+        this.activeName = this.$route.name
+      }
       this.$nextTick(() => {
         this.$refs.menu.updateActiveName()
       })
@@ -92,7 +105,7 @@ export default {
 </script>
 
 <style lang="less">
-#J_Menu_Bar{
+#J_Side_Menu{
   background: #ebedf1;
   .title{
     height: 70px;

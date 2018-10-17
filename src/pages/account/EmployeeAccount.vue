@@ -1,22 +1,19 @@
 <template>
-  <Layout class="ivu-layout-has-sider j_employee_account">
-    <MenuBar :data="'menuAccount'" :active="'employee_account'"/>
-    <Layout class="j_layout_content">
-      <JHeader :title="'员工账号管理'">
-        <div slot="btn">
-          <Button type="primary" @click="add">新增员工</Button>
-        </div>
-      </JHeader>
-      <Content>
-        <Table ref="selection" :columns="columns" :data="list" @on-selection-change="handleSelectChange"></Table>
-        <JPagination :checkbox="true" :total="total" :searchData='searchData' @on-change="get">
-          <span slot="btn">
-            <Checkbox v-model="toggle" @on-change="handleSelectAll(toggle)"/>
-            <Button type="ghost" size="small" @click="delAll">删除</Button>
-          </span>
-        </JPagination>
-      </Content>
-    </Layout>
+  <Layout class="j_layout_content">
+    <JHeader :title="'员工账号管理'">
+      <div slot="btn">
+        <Button type="primary" @click="add">新增员工</Button>
+      </div>
+    </JHeader>
+    <Content>
+      <Table ref="selection" :columns="columns" :data="list" @on-selection-change="handleSelectChange"></Table>
+      <JPagination :checkbox="true" :total="total" :searchData='searchData' @on-change="get">
+        <span slot="btn">
+          <Checkbox v-model="toggle" @on-change="handleSelectAll(toggle)"/>
+          <Button type="ghost" size="small" @click="delAll">删除</Button>
+        </span>
+      </JPagination>
+    </Content>
     <Modal
       v-model="modal1"
       title="员工推广"
@@ -47,14 +44,12 @@
 <script>
 import qs from 'qs'
 import { mapState } from 'vuex'
-import MenuBar from '@/components/common/menu_bar'
 import JHeader from '@/components/group/j-header'
 import JPagination from '@/components/group/j-pagination'
 import Detail from '@/pages/account/EmployeeDetail'
 import Authority from '@/pages/account/Authority'
 export default {
   components: {
-    MenuBar,
     JHeader,
     JPagination,
     Detail,

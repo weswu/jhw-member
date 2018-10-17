@@ -22,7 +22,7 @@ export const hasChild = (item) => {
 }
 export const showThisMenuEle = (item, access) => {
   if (item.meta && access) {
-    if (item.name && hasOneOf(name, access)) return true
+    if (item.name && hasOneOf(item.name, access)) return true
     else return false
   } else return true
 }
