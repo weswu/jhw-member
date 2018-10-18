@@ -8,7 +8,7 @@
             <div v-html="item.title"></div>
           </div>
           <div class="j_col content">
-            <div v-html="item.desc"></div>
+            <div class="desc" v-html="item.desc"></div>
           </div>
         </div>
       </div>
@@ -26,7 +26,7 @@ export default {
     return {
       list: [
         {
-          name: '智能seo',
+          name: '智能SEO',
           title: '线上引流：智能SEO',
           desc: '<p>1、<a href="#/seo">SEO基础设置</a>、<a href="#/seo?active=1">SEO模板配置</a>、<a href="#/seo?active=2">关键词管理</a>、<a href="#/seo?active=3">长尾关键词</a>、<a href="#/seo?active=4">内部链接设置</a>、<a href="#/seo?active=5">Tag标签管理</a>、<a href="#/seo?active=6">付费SEO推广</a></p><p>2、<a href="#/sitemap">Sitemap生成</a></p><p>3、<a href="#/seo_batch">批量提交</a></p><p>4、SEO成果查询：站长工具、SEO综合查询、关键词排名、反链查询、权重查询、收录查询、收录率查询、关键词优化分析、Meta信息挖掘</p><p>5、付费SEO推广</p>'
         },
@@ -127,6 +127,9 @@ export default {
     }
   }
   .content{
+    .desc{
+      width: 100%;
+    }
     p{
       padding: 8px 0 8px 21px;
       border-bottom: 1px solid #dedede;
