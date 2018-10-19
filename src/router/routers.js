@@ -534,22 +534,22 @@ export default [
         ]
       },
       {
-        path: 'wcd',
-        name: 'wcd',
-        meta: {
-          title: '微传单',
-          href: 'http://cps.jihui88.com/dashboard/login',
-          icon: 'haibao',
-          showInMenu: true
-        }
-      },
-      {
         path: 'fenxiao',
         name: 'fenxiao',
         meta: {
           title: '微分销',
-          href: 'http://wcd.jihui88.com/leaflet/index.html#/home_my',
+          href: 'http://cps.jihui88.com/dashboard/login',
           icon: 'fenxiao',
+          showInMenu: true
+        }
+      },
+      {
+        path: 'wcd',
+        name: 'wcd',
+        meta: {
+          title: '微传单',
+          href: 'http://wcd.jihui88.com/leaflet/index.html#/home_my',
+          icon: 'haibao',
           showInMenu: true
         }
       }

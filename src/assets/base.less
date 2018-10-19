@@ -1083,6 +1083,33 @@ a.primary{
     width: 100%
   }
 }
+// j_row
+.j_row{
+  position: relative;
+  -webkit-flex: 1;
+  flex: 1;
+  display: -webkit-flex;
+  display: flex;
+  -webkit-justify-content: center;
+  justify-content: center;
+  .j_col {
+    position: relative;
+    min-width: 0;
+    display: -webkit-flex;
+    display: flex;
+    -webkit-flex: 1;
+    flex: 1;
+  }
+  .j_col.middle {
+    -webkit-align-items: center;
+    align-items: center;
+  }
+  .j_col.center {
+    -webkit-justify-content: center;
+    justify-content: center
+  }
+}
+
 // 小窗口
 #JHW{
   &.small{
