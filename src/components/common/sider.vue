@@ -86,6 +86,7 @@ export default {
   created () {
     // 初始化选中样式
     this.getCps()
+    this.initRoute()
   },
   mounted () {
     var vm = this

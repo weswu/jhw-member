@@ -20,12 +20,12 @@
       width="500"
       cancelText="取消">
       <div class="j_tip" style="margin: 0 0 10px 0;">
-        注：请选择站点后再推广二维码
-        <Select v-model="$store.state.layoutId" class="small" @on-change="layoutChange" style="float: right;width: 130px;">
-          <Option v-for="item in staticList" :value="item.layoutId" :key="item.layoutId">网站编号：{{ item.layoutId }}</Option>
+        注：请选择推广站点
+        <Select v-model="item.layoutId" class="small" @on-change="layoutChange" style="float: right;width: 130px;">
+          <Option v-for="item in staticList" :value="item.id" :key="item.id">网站编号：{{ item.id }}</Option>
         </Select>
       </div>
-      <Tabs style="clear:both">
+      <Tabs style="clear:both" v-if="item.layoutId">
         <TabPane label="手机网站推广">
           <img :src="'http://wcd.jihui88.com/rest/comm/qrbar/create?w=130&text='+posterUrl"><br/>
           <a href="javascritp:;" class="downloadQr" target="_blank" @click="downloadQr" style="padding-left:31px;">下载二维码</a>
@@ -79,7 +79,9 @@ export default {
       // 推广
       modal1: false,
       posterUrl: '',
-      posterId: ''
+      posterId: '',
+      item: {},
+      index: 0
     }
   },
   computed: {
@@ -104,9 +106,9 @@ export default {
     add () {
       this.$refs.detail.open('新增员工')
     },
-    layoutChange () {
+    layoutChange (e) {
       var vm = this
-      let layoutId = this.$store.state.layoutId
+      let layoutId = this.item.layoutId
       this.posterUrl = 'http://pc.jihui88.com/rest/site/' + layoutId + '/index?posterId=' + this.posterId
       if (this.staticList.length === 0) return this.$Message.info('未生成站点或者刷新页面')
       this.staticList.forEach(item => {
@@ -114,6 +116,12 @@ export default {
           vm.posterUrl = item.bind.address + '?posterId=' + this.posterId
         }
       })
+      if (e) {
+        this.changeLayoutId(e, this.item.memberId)
+        let detail = this.list[this.index]
+        detail.layoutId = e
+        this.$set(this.list, this.index, detail)
+      }
     },
     // 批量操作
     handleSelectChange (status) {
@@ -157,11 +165,11 @@ export default {
         let option = [
           h('Option', {
             props: {
-              value: null
+              value: ''
             }
           }, '请选择')
         ]
-        this.staticList.forEach(item => {
+        this.staticList && this.staticList.forEach(item => {
           option.push(h('Option', {
             props: {
               value: item.id
@@ -175,15 +183,7 @@ export default {
           on: {
             'on-change': (val) => {
               params.row.layoutId = val
-              let data = {
-                memberId: params.row.memberId,
-                layoutId: val
-              }
-              this.$http.post('/rest/api/submember/changeLayoutId', qs.stringify(data)).then((res) => {
-                if (res.success) {
-                  this.$Message.success('修改成功')
-                }
-              })
+              this.changeLayoutId(val, params.row.memberId)
             }
           }
         }, option)
@@ -196,6 +196,17 @@ export default {
           }
         }, '选择推广站点')
       }
+    },
+    changeLayoutId (val, id) {
+      let data = {
+        memberId: id,
+        layoutId: val
+      }
+      this.$http.post('/rest/api/submember/changeLayoutId', qs.stringify(data)).then((res) => {
+        if (res.success) {
+          this.$Message.success('修改成功')
+        }
+      })
     },
     renderOperate (h, params) {
       var ctx = this
@@ -259,6 +270,8 @@ export default {
           on: {
             click: () => {
               this.posterId = ctx.encodeId(params.row.memberId)
+              this.item = params.row
+              this.index = params.index
               this.layoutChange()
               this.modal1 = true
             }

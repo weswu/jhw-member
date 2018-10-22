@@ -38,7 +38,7 @@ export default [
         name: 'liucheng',
         meta: {
           icon: 'ziliucheng',
-          title: '流程图',
+          title: '运营流程',
           showInMenu: true,
           manage: 'flow_chart'
         },
@@ -48,7 +48,7 @@ export default [
             path: 'flow_chart',
             name: 'flow_chart',
             meta: {
-              title: '企业数字化转型流程图',
+              title: '运营流程',
               showInMenu: true
             },
             components: require('@/pages/marketing/flowChart')
@@ -57,13 +57,35 @@ export default [
             path: 'flow_chart/:id',
             name: 'flow_chart_detail',
             meta: {
-              title: '流程图',
+              title: '运营流程',
               detail: true,
               menu: [
                 { text: '基本信息', value: '0' }
               ]
             },
             components: require('@/pages/marketing/flowChartDetail')
+          }
+        ]
+      },
+      {
+        path: '',
+        name: 'employee_analysisMan',
+        meta: {
+          icon: 'Group',
+          title: '员工推广',
+          showInMenu: true,
+          manage: 'employee_analysis'
+        },
+        component: SideMenu,
+        children: [
+          {
+            path: 'employee_analysis',
+            name: 'employee_analysis',
+            meta: {
+              title: '员工推广分析',
+              showInMenu: true
+            },
+            components: require('@/pages/account/Analysis')
           }
         ]
       }
@@ -599,7 +621,7 @@ export default [
             path: 'employee_account_analysis',
             name: 'employee_account_analysis',
             meta: {
-              title: '员工账号管理',
+              title: '员工推广分析',
               showInMenu: true
             },
             components: require('@/pages/account/Analysis')

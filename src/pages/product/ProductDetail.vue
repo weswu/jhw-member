@@ -110,17 +110,17 @@
             </RadioGroup>
           </FormItem>
           <hr/>
-          <FormItem label="产品规格：">
-            <Button type="ghost" size="small" @click="attrAdd">添加产品规格</Button>
-          </FormItem>
           <!-- 产品属性 -->
-          <Attr :list="attrtList"/>
           <FormItem label="属性价格：">
             <RadioGroup v-model="detail.attrState">
-              <Radio label="01">开启</Radio>
+              <Radio label="01">开启产品规格</Radio>
               <Radio label="00">关闭</Radio>
             </RadioGroup>
           </FormItem>
+          <FormItem label="产品规格：" :hidden="detail.attrState !== '01'">
+            <Button type="ghost" size="small" @click="attrAdd">添加产品规格</Button>
+          </FormItem>
+          <Attr :list="attrtList" :hidden="detail.attrState !== '01'"/>
           <AttrPanel ref="attr" :attrtList="attrtList" :data="detail.attrItems" :hidden="detail.attrState !== '01'"/>
           <hr/>
           <FormItem label="总价格：" v-if="detail.customAttrMapStore.length > 0">
