@@ -23,7 +23,7 @@
             </FormItem>
             <div v-if="detail.country === 'cn'">
               <FormItem>
-                <Input v-model="detail.icp" placeholder="填写ICP备案号"></Input> <Button class="submit" @click="submit">提交</Button>
+                <Input v-model="detail.icp" placeholder="填写ICP备案号（公信备案）"></Input> <Button class="submit" @click="submit">提交</Button>
               </FormItem>
               <a class="a_underline" target="_blank" href="https://help.aliyun.com/knowledge_detail/36922.html?spm=a2c4g.11186623.6.545.txarXU">查看阿里云备案教程</a>
               <a class="a_underline" target="_blank" href="https://beian.aliyun.com/?spm=5176.8006371.388261.5.5d907e630O5Nkf">视频教程</a>
@@ -67,10 +67,10 @@
                 <span class="grey">网安备案配置</span>
               </div>
               <FormItem>
-                <Input v-model="detail.psr" placeholder="填写网安备案号"></Input> <Button class="submit" @click="submit">提交</Button>
+                <Input v-model="detail.psr" placeholder="填写网安备案号（公安备案）"></Input> <Button class="submit" @click="submit">提交</Button>
               </FormItem>
               <FormItem>
-                <Input v-model="detail.seccurityLink" placeholder="填写网安备案链接地址"></Input> <Button class="submit" @click="submit">提交</Button>
+                <Input v-model="detail.seccurityLink" placeholder="填写网安备案链接地址（公安备案）"></Input> <Button class="submit" @click="submit">提交</Button>
               </FormItem>
               <a class="a_underline" target="_blank" href="https://docs.qq.com/doc/B7xfV62RQmDe1mclWr0lzVOU0CnQYE2DAa9O3">查看网安备案教程</a>
               <a class="a_underline" target="_blank" :href="'http://buy.jihui88.com/#/?tab=tab1&layoutId='+$store.state.layoutId">前往购买 "代理备案"</a>

@@ -1,35 +1,23 @@
 <template>
   <Layout class="j_layout_content j_form_detail j_beian">
-    <JHeader :title="'域名备案'" :website="true"/>
+    <JHeader :title="'域名备案'"/>
     <Content>
       <div class="j_search">
+        <div class="j_tip" :hidden="true">
+          温馨提醒：
+          <span>请完善备案信息，方便网站“界面编辑”调取。备案主要是为了规范网络安全化，维护网站经营者的合法权益，保障网民的合法利益。</span>
+        </div>
         <Button class="grey" @click="activeChange(item.value)" v-for="(item, index) in btns" :key="index" :class="{primary: active === item.value}">{{item.text}}</Button>
         <div class="j_tip">
           温馨提醒：
-          <span v-if="active === '0'">请完善备案信息，方便网站“界面编辑”调取。备案主要是为了规范网络安全化，维护网站经营者的合法权益，保障网民的合法利益。</span>
-          <span v-if="active === '1'">备案只针对国内的空间，放国外不需要备案。如有问题，请咨询：QQ：260404208</span>
-          <span v-if="active === '2'">为了更好的帮您备案，请提交以下相关资料（备案只针对国内的空间，放国外不需要备案。）如有问题，请咨询：QQ：260404208</span>
+          <span v-if="active === '0'">备案只针对国内的空间，放国外不需要备案。如有问题，请咨询：QQ：260404208</span>
+          <span v-if="active === '1'">为了更好的帮您备案，请提交以下相关资料（备案只针对国内的空间，放国外不需要备案。）如有问题，请咨询：QQ：260404208</span>
         </div>
       </div>
 
-      <div v-if="active === '0'">
-        <Form :model="bindDetail" :label-width="200" ref="model">
-          <FormItem label="ICP备案号（公信备案）：">
-            <Input v-model="bindDetail.icp" placeholder="填写ICP备案号" style="width:250px;"></Input>
-          </FormItem>
-          <FormItem label="网安备案号（公安备案）：">
-            <Input v-model="bindDetail.psr" placeholder="填写网安备案号" style="width:250px;"></Input>
-          </FormItem>
-          <FormItem label="网安备案链接地址（公安备案）：">
-            <Input v-model="bindDetail.seccurityLink" placeholder="填写网安备案链接地址" style="width:250px;"></Input>
-          </FormItem>
-        </Form>
-        <Button type="primary" size="small" @click="submitBind" style="margin-top:20px;margin-left:7px;">提交</Button>
-      </div>
+      <a href="https://beian.aliyun.com/?utm_content=se_1351982" target="_blank"><Button type="info" class="w130" v-if="active === '0'">查看教程</Button></a>
 
-      <a href="https://beian.aliyun.com/?utm_content=se_1351982" target="_blank"><Button type="info" class="w130" v-if="active === '1'">查看教程</Button></a>
-
-      <div v-if="active === '2'">
+      <div v-if="active === '1'">
         <a href="http://buy.jihui88.com/#/?tab=tab1" target="_blank"><Button class="orange">前往购买“代理备案”</Button></a>
         <hr style="background:#c9c9c9;margin: 28px 0"/>
         <Form :model="detail" :label-width="150" ref="model" class="j_scroll">
@@ -44,7 +32,7 @@
             </Poptip>
             <span>（备注：填写您申请好的域名）</span></div>
           <FormItem label="域名：">
-            <Input v-model="bindDetail.address" placeholder="填写您的域名" @on-change="bindAddressChange = true"></Input>
+            <Input v-model="detail.bind.address" placeholder="填写您的域名"></Input>
           </FormItem>
           <div class="j_beian_title">域名证书：
             <Poptip trigger="hover" placement="right">
@@ -205,17 +193,16 @@
         </Form>
       </div>
     </Content>
-    <Footer v-if="active === '2'">
+    <Footer v-if="active === '1'">
       <Button type="primary" size="small" @click="submit">提交</Button>
     </Footer>
     <Detail ref="beianDetail"/>
-    <JAlbum ref="ablum" v-if="active === '2'" @on-change="picChange"/>
+    <JAlbum ref="ablum" v-if="active === '1'" @on-change="picChange"/>
   </Layout>
 </template>
 
 <script>
 import qs from 'qs'
-import { mapState } from 'vuex'
 import JHeader from '@/components/group/j-header'
 import JAlbum from '@/components/group/j-album'
 import Detail from '@/pages/static/Detail'
@@ -228,9 +215,8 @@ export default {
   data () {
     return {
       btns: [
-        { text: '基本信息', value: '0' },
-        { text: '自助备案（备案在阿里云）', value: '1' },
-        { text: '代理备案', value: '2' }
+        { text: '自助备案（备案在阿里云）', value: '0' },
+        { text: '代理备案', value: '1' }
       ],
       active: '0',
       type: '00',
@@ -241,17 +227,8 @@ export default {
         enterprise: {},
         webinfo: {}
       },
-      bindDetail: {},
       uploadText: '',
       bindAddressChange: false
-    }
-  },
-  computed: {
-    ...mapState(['layoutId'])
-  },
-  watch: {
-    layoutId () {
-      this.getBind()
     }
   },
   created () {
@@ -267,21 +244,12 @@ export default {
         }
       })
     },
-    getBind () {
-      this.layoutId && this.$http.get('/rest/pc/api/bind/detail/' + this.layoutId).then((res) => {
-        if (res.success) {
-          this.bindDetail = res.attributes.data
-        } else {
-          this.$Message.error(res.msg)
-        }
-      })
-    },
     add () {
       this.$refs.beianDetail.open()
     },
     activeChange (e) {
       this.active = e
-      if (e === '2' && !this.detail.profileId) {
+      if (e === '1' && !this.detail.profileId) {
         this.get()
       }
     },
@@ -297,25 +265,6 @@ export default {
       e.target.src = 'http://img.jihui88.com/upload/j/j2/jihui/picture/2018/07/27/2242dbcc-9807-45a6-a080-c94b12c1bc82.jpg'
       e.target.onerror = null
     },
-    submitBind (tip) {
-      // 域名提交
-      if (this.bindDetail.id) {
-        let bindDetail = {
-          model: JSON.stringify(this.bindDetail),
-          _method: 'put'
-        }
-        this.$http.post('/rest/pc/api/bind/detail/' + this.bindDetail.id, qs.stringify(bindDetail)).then((res) => {
-          if (res.success) {
-            this.bindAddressChange = false
-            if (tip !== 'tip') this.$Message.success('保存成功')
-          } else {
-            this.$Message.error(res.msg)
-          }
-        })
-      } else {
-        this.$Message.info('请选择站点')
-      }
-    },
     submit () {
       let data = {
         model: JSON.stringify(this.detail),
@@ -328,9 +277,6 @@ export default {
           this.$Message.error(res.msg)
         }
       })
-      if (this.bindAddressChange) {
-        this.submitBind('tip')
-      }
     }
   }
 }
