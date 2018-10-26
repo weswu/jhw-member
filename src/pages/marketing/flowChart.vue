@@ -25,19 +25,19 @@
             </div>
             <div class="p">
               <span>2</span>
-              访问量（{{detail.viewCount}}）：<a href="#/pc">网站</a>、微网站、手机站、小程序、H5微传单、商城、微商城、视频、营销工具、粉丝管理
+              访问量（{{count1}}）：<a href="#/pc">网站（{{detail.viewCount}}）</a>、微网站、手机站（0）、小程序（0）、H5微传单、商城、微商城、视频、营销工具、粉丝管理
             </div>
             <div class="p">
               <span>3</span>
-              询盘量（{{detail.messageCount}}）：注册、留言、在线咨询、电话咨询、购买、参与促销
+              询盘量（{{count2}}）：<a href="#/member">会员注册（{{detail.memberCount}}）</a>、<a href="#/message">留言（{{detail.messageCount}}）</a>、在线咨询、电话咨询、购买、参与促销
             </div>
             <div class="p">
               <span>4</span>
-              客户量（{{detail.memberCount}}）：客户管理、客户跟踪、售前服务、老客户促销
+              客户量（0）：客户管理（0）、客户跟踪、售前服务、老客户促销
             </div>
             <div class="p">
               <span>5</span>
-              成交量（{{detail.orderCount}}）：订单管理、支付管理、交付管理、售后服务、供应链
+              成交量（{{count4}}）：<a href="#/shop">订单管理（{{detail.orderCount}}）</a>、<a href="#/shop_pay">支付管理</a>、交付管理、售后服务、供应链
             </div>
             <div class="p">
               <span>6</span>
@@ -60,6 +60,20 @@ export default {
     return {
       value1: 0,
       detail: {}
+    }
+  },
+  computed: {
+    count1 () {
+      return this.detail.viewCount
+    },
+    count2 () {
+      return this.detail.memberCount + this.detail.messageCount
+    },
+    count3 () {
+      return 0
+    },
+    count4 () {
+      return this.detail.orderCount
     }
   },
   created () {

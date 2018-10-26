@@ -23,11 +23,11 @@ export default {
         { type: 'index', title: '序号', align: 'center', width: 60 },
         { title: '分站编号', minWidth: 85, key: 'layoutId' },
         { title: '运营人员', minWidth: 85, key: 'name' },
-        { title: '新增浏量', minWidth: 85, key: 'viewCount' },
-        { title: '新增询盘', minWidth: 85, key: 'messageCount' },
-        { title: '新增成交', minWidth: 85, key: 'orderCount' },
-        { title: '新增注册', minWidth: 85, key: 'registerCount' },
-        { title: '转发量', minWidth: 85, key: 'shareCount' }
+        { title: '新增浏量', minWidth: 102, sortable: true, key: 'viewCount' },
+        { title: '新增询盘', minWidth: 102, sortable: true, key: 'messageCount' },
+        { title: '新增成交', minWidth: 102, sortable: true, key: 'orderCount' },
+        { title: '新增注册', minWidth: 102, sortable: true, key: 'registerCount' },
+        { title: '转发量', minWidth: 102, sortable: true, key: 'shareCount' }
       ],
       list: [],
       searchData: {
