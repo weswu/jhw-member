@@ -231,9 +231,6 @@ export default {
       bindAddressChange: false
     }
   },
-  created () {
-    this.getBind()
-  },
   methods: {
     get () {
       this.$http.get('/rest/api/profile/detail/all').then((res) => {
