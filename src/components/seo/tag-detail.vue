@@ -56,7 +56,7 @@ export default {
       }
       this.$http.post('/rest/api/tag/detail' + url, qs.stringify(data)).then((res) => {
         if (res.success) {
-          this.$Message.success('添加成功')
+          this.$Message.success('操作成功')
           this.$emit('on-change')
           this.modal = false
         } else {

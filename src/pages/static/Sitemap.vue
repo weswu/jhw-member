@@ -7,7 +7,7 @@
       <Form ref="modalForm" :model="detail" :label-width="110" v-if="form">
         <div class="j_form_title">robots.txt</div>
         <FormItem label="robots.txt：">
-          <Input v-model="detail.robots" type="textarea" :autosize="{minRows: 3}"></Input>
+          <Input v-model="detail.robots" type="textarea" :autosize="{minRows: 3, maxRows: 13}"></Input>
         </FormItem>
         <div class="j_form_title">Sitemap</div>
         <FormItem label="修改频率：">
@@ -34,7 +34,7 @@
             <Radio label="01">开启</Radio>
             <Radio label="00">关闭</Radio>
           </RadioGroup><br/>
-          <Input v-model="detail.content" type="textarea" :autosize="{minRows: 3}" v-if="detail.contentState === '01'"></Input>
+          <Input v-model="detail.content" type="textarea" :autosize="{minRows: 20, maxRows: 24}" v-if="detail.contentState === '01'"></Input>
         </FormItem>
         <FormItem style="margin-top:20px">
           <Button type="primary" @click="submit">保存并生成</Button>
@@ -47,7 +47,7 @@
         但是很多时候，由于种种原因，并不是所有网页都能被收录进搜索引擎数据库。<br/>
         Sitemap就允许站长提供给搜索引擎一个网站地图，列出您所有需要被抓取的网页及重要性级别。
       </p>
-      <Button class="info" @click="url('/seo_batch')">批量提交Sitemap</Button>
+      <Button class="info" @click="url('/seo_batch')" style="margin-bottom:20px">批量提交Sitemap</Button>
     </Content>
   </Layout>
 </template>

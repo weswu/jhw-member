@@ -2,7 +2,7 @@
   <Row id="J_Header" type="flex" justify="space-between">
     <Col>
       <div class="logo">
-        <a href="http://www.jihui88.com"><img src="http://img.jihui88.com/upload/w/w5/www2/picture/2017/07/05/54b68a5c-fdd2-4842-9e1e-b88d1c403f28.png" height="30" alt=""></a>
+        <a :href="host"><img :src="logo" height="30" alt=""></a>
       </div>
       <Badge count="体验版 v4" class="badge-primary"></Badge>
     </Col>
@@ -114,7 +114,9 @@ export default {
         { name: '积分规则', icon: 'quanyi', path: 'point_origin' },
         { name: '账号积分', icon: 'jifen', path: 'point' },
         { name: '公司信息', icon: 'gongsi', path: 'enterprise' }
-      ]
+      ],
+      host: 'http://www.jihui88.com',
+      logo: 'http://img.jihui88.com/upload/w/w5/www2/picture/2017/07/05/54b68a5c-fdd2-4842-9e1e-b88d1c403f28.png'
     }
   },
   computed: {
@@ -153,6 +155,7 @@ export default {
     }
     this.getUserInfo()
     this.getCustomData()
+    if (location.host !== 'www.jihui88.com') { this.getLogo() }
   },
   methods: {
     ...mapActions(['getUser', 'getUserInfo', 'getCustomData', 'getEnterprise']),
@@ -210,6 +213,17 @@ export default {
       if (this.messageList.length > 0) {
         this.message = true
       }
+    },
+    getLogo () {
+      this.$http.get('/rest/api/agent/config/getConfigByDomain?domain=' + location.host).then((res) => {
+        if (res.success) {
+          let data = res.attributes.data
+          if (data.manageLogo1) {
+            this.logo = data.manageLogo1
+          }
+          this.host = location.origin
+        }
+      })
     }
   }
 }

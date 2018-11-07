@@ -123,6 +123,8 @@ export default {
             item._checked = false
           })
           this.btns.forEach(item => {
+            if (item.value === '') { item.count = res.attributes.count }
+            if (item.value === '03') { item.count = res.attributes.count03 }
             if (item.value === '10') { item.count = res.attributes.count10 }
             if (item.value === '11') { item.count = res.attributes.count11 }
             if (item.value === '12') { item.count = res.attributes.count12 }
