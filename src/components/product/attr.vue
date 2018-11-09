@@ -5,8 +5,8 @@
       v-for="(item, index) in list"
       :key="index"
       v-if="item.isEnabled === '01'">
-      <CheckboxGroup v-model="item.value" v-if="item.attributeType === 'checkbox'">
-        <Checkbox :label="row" v-for="(row, rowIndex) in item.attributeOptionList" :key="rowIndex"></Checkbox>
+      <CheckboxGroup v-model="item.value" v-if="item.attributeType === 'checkbox'" @on-change="checkAllGroupChange" sort>
+        <Checkbox :label="row" v-for="row in item.attributeOptionList" :key="row"></Checkbox>
       </CheckboxGroup>
     </FormItem>
   </div>
@@ -15,7 +15,12 @@
 <script>
 export default {
   props: {
-    list: {}
+    list: Array
+  },
+  methods: {
+    checkAllGroupChange (e) {
+      this.$emit('on-change')
+    }
   }
 }
 </script>

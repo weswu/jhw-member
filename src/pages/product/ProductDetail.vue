@@ -120,7 +120,7 @@
           <FormItem label="产品规格：" :hidden="detail.attrState !== '01'">
             <Button type="ghost" size="small" @click="attrAdd">添加产品规格</Button>
           </FormItem>
-          <Attr :list="attrtList" :hidden="detail.attrState !== '01'"/>
+          <Attr :list="attrtList" :hidden="detail.attrState !== '01'" @on-change="attrListChange"/>
           <AttrPanel ref="attr" :attrtList="attrtList" :data="detail.attrItems" :hidden="detail.attrState !== '01'"/>
           <hr/>
           <FormItem label="总价格：" v-if="detail.customAttrMapStore.length > 0">
@@ -218,7 +218,6 @@ export default {
       // 多图
       imgList: [],
       attrtList: [],
-      attrtListText: [],
       // editor1
       editor1: false,
       editor2: false,
@@ -310,90 +309,28 @@ export default {
     attrChange (item) {
       this.attrtList.push(item)
     },
+    attrListChange () {
+      let arr = this.attrtList[0]
+      this.$set(this.attrtList, 0, arr)
+      this.attrtList.forEach(att => {
+        let value = []
+        let values = att.value
+        if (att.value.length > 0) {
+          att.attributeOptionList.forEach(item => {
+            values.forEach(val => {
+              if (item === val) {
+                value.push(item)
+              }
+            })
+          })
+          att.value = value
+        }
+      })
+      this.$refs.attr.reBuild()
+      // 不能监听数组 只能监听checkBox
+    },
     initAttr () {
       var ctx = this
-      let data = [
-        {
-          name: 'aaaa',
-          state: '01',
-          attributeType: 'checkbox',
-          enterpriseId: 'Enterp_0000000000000000000000039',
-          categoryId: 'Category_00000000000000000087647',
-          attId: '8a9e457e638c1f5801639639c4cd020b',
-          orderList: 21,
-          formula: null,
-          addTime: 1527233758410,
-          updateTime: 1527233758410,
-          isRequired: '00',
-          isEnabled: '01',
-          attributeOptionList: [
-            'bbbb'
-          ],
-          value: ['bbbb']
-        },
-        {
-          name: 'ac',
-          state: '01',
-          attributeType: 'checkbox',
-          enterpriseId: 'Enterp_0000000000000000000000039',
-          categoryId: 'Category_00000000000000000087647',
-          attId: '8a9e457e638c1f580163966e9ef30259',
-          orderList: 22,
-          formula: null,
-          addTime: 1527237222078,
-          updateTime: 1527237222078,
-          isRequired: '00',
-          isEnabled: '01',
-          attributeOptionList: [
-            'ddd',
-            'eee'
-          ]
-        },
-        {
-          name: 'dd',
-          state: '01',
-          attributeType: 'checkbox',
-          enterpriseId: 'Enterp_0000000000000000000000039',
-          categoryId: 'Category_00000000000000000087647',
-          attId: '8a9e457e638c1f580163968d011d0264',
-          orderList: 23,
-          formula: null,
-          addTime: 1527239213316,
-          updateTime: 1527239213316,
-          isRequired: '00',
-          isEnabled: '01',
-          attributeOptionList: [
-            'cc'
-          ]
-        },
-        {
-          name: '属性',
-          state: '01',
-          attributeType: 'checkbox',
-          enterpriseId: 'Enterp_0000000000000000000000039',
-          categoryId: 'Category_00000000000000000087647',
-          attId: '8a9e457e638c1f5801639694e4010268',
-          orderList: 24,
-          formula: null,
-          addTime: 1527239730174,
-          updateTime: 1527239730174,
-          isRequired: '00',
-          isEnabled: '01',
-          attributeOptionList: [
-            'a',
-            'b',
-            'c'
-          ]
-        }
-      ]
-      this.attrtListText = data
-      this.detail.productAttributeMapStore.forEach(item => {
-        ctx.attrtList.forEach(att => {
-          if (item.productAttribute.attId === att.attId) {
-            att.value = item.attributeOptionList
-          }
-        })
-      })
       this.$http.get('/rest/api/attr/list/' + this.detail.category).then(res => {
         if (res.success) {
           this.attrtList = res.attributes.data

@@ -218,7 +218,7 @@ export default {
       this.$http.get('/rest/api/agent/config/getConfigByDomain?domain=' + location.host).then((res) => {
         if (res.success) {
           let data = res.attributes.data
-          if (data.manageLogo1) {
+          if (data && data.manageLogo1) {
             this.logo = data.manageLogo1
           }
           this.host = location.origin

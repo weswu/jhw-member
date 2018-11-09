@@ -18,7 +18,7 @@
           <td><InputNumber v-model="sku.stockNum"></InputNumber></td>
           <td>
             <img src="http://dfwjjingtai.b0.upaiyun.com/upload//j//j2//jihui88//picture//2016//10//12/28b30359-2faf-4020-8cc3-7b775b6a6b4b.png!120?v=3861432547" width="33" heigt="33" v-if="!sku.pic">
-            <img :src="sku.pic" width="33" heigt="33" v-if="!sku.pic">
+            <img :src="sku.pic" width="33" heigt="33" v-if="sku.pic">
             <Button type="ghost" size="small" @click="uploadImg(index)">选择图片</Button>
             <Button type="ghost" size="small" @click="del(index)">消除</Button>
           </td>
@@ -64,16 +64,29 @@ export default {
   watch: {
     'allCheckedLength': {
       handler: 'reBuild'
+    },
+    data () {
+      this.init()
     }
   },
-  created () {
-    this.init()
-  },
   methods: {
+    init () {
+      if (this.data) {
+        this.data.forEach(item => {
+          if (item.memberPriceState === '00') {
+            item.memberPriceStateBol = false
+          } else {
+            item.memberPriceStateBol = true
+          }
+          item.values = item.skuCode.split(',') || []
+          this.skus.push(item)
+        })
+      }
+    },
     // 笛卡尔积算法  https://codepen.io/JayceWu/pen/dOxLex
     reBuild: function (val, oldVal) {
-      this.skus = []
       var ori = []
+      var skus = []
       this.attrtList.forEach((item, index) => {
         var value = item.value
         if (value && value.length > 0) {
@@ -90,8 +103,14 @@ export default {
           sku.values.push(item)
         })
         sku.skuCode = sku.values.join()
-        this.skus.push(sku)
+        this.skus.forEach(sItem => {
+          if (sItem.skuCode === sku.skuCode) {
+            sku = sItem
+          }
+        })
+        skus.push(sku)
       }
+      this.skus = skus
     },
     descartes (list) {
       // parent上一级索引;count指针计数
@@ -135,19 +154,6 @@ export default {
             break
           }
         }
-      }
-    },
-    init () {
-      if (this.data) {
-        this.data.forEach(item => {
-          if (item.memberPriceState === '00') {
-            item.memberPriceStateBol = false
-          } else {
-            item.memberPriceStateBol = true
-          }
-          item.values = item.skuCode.split(',') || []
-          this.skus.push(item)
-        })
       }
     },
     picChange (e) {
