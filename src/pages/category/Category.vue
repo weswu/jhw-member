@@ -4,8 +4,8 @@
       <JHeader :title="'分类管理'" :lan="true" @on-change="get"/>
       <div class="j_search">
         <Button type="info" icon="plus" class="w130" @click="add">添加{{type === 'product' ?'产品':'新闻'}}分类</Button>
-        <a href="https://v.qq.com/x/page/e0753kcg4xb.html" class="a_underline" target="_blank" style="margin-left:10px;" v-if="type === 'product'">产品分类视频教程</a>
-        <a href="https://v.qq.com/x/page/g075303kosj.html" class="a_underline" target="_blank" style="margin-left:10px;" v-if="type === 'news'">新闻分类视频教程</a>
+        <a :href="agent.vProductCategory" class="a_underline" target="_blank" style="margin-left:10px;" v-if="type === 'product' && agent.vProductCategory">产品分类视频教程</a>
+        <a :href="agent.vNewsCategory" class="a_underline" target="_blank" style="margin-left:10px;" v-if="type === 'news' && agent.vNewsCategory">新闻分类视频教程</a>
       </div>
       <Table
         ref="selection"
@@ -72,7 +72,7 @@ export default {
     }
   },
   computed: {
-    ...mapState(['productCategory', 'newsCategory'])
+    ...mapState(['productCategory', 'newsCategory', 'agent'])
   },
   created () {
     this.get()

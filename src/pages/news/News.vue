@@ -8,7 +8,7 @@
             <Button type="info" icon="plus" class="w130" @click="url('/news/add')">添加新闻</Button>
           </Col>
           <Col>
-            <a href="https://v.qq.com/x/page/q0753wldx5d.html" class="a_underline" target="_blank" style="margin-right:20px;">新闻视频教程</a>
+            <a :href="agent.vNews" class="a_underline" target="_blank" style="margin-right:20px;" v-if="agent.vNews">新闻视频教程</a>
             <Input v-model="title" class="w180" placeholder="请输入新闻标题" clearable @on-change="clearInput"></Input>
             <Button class="search" @click="search">搜索</Button>
             <Poptip placement="bottom-end" class="j_poptip_confirm_edit advancedSearch"
@@ -209,7 +209,8 @@ export default {
   },
   computed: {
     ...mapState({
-      categoryList: state => state.newsCategory
+      categoryList: state => state.newsCategory,
+      agent: state => state.agent
     })
   },
   beforeRouteEnter (to, from, next) {

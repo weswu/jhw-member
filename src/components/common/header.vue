@@ -2,7 +2,7 @@
   <Row id="J_Header" type="flex" justify="space-between">
     <Col>
       <div class="logo">
-        <a :href="host"><img :src="logo" height="30" alt=""></a>
+        <a :href="host"><img :src="agent.manageLogo1" height="30" alt=""></a>
       </div>
       <Badge count="体验版 v4" class="badge-primary"></Badge>
     </Col>
@@ -27,7 +27,7 @@
         </a>
         <DropdownMenu slot="list">
           <ul class="browser-dropdown">
-            <li><a href="http://v.qq.com/vplus/4aa13bffe0e2662991069f1800862a96/foldervideos/gr2002901enccnk" target="_blank">教程中心</a></li>
+            <li v-if="agent.vManage"><a :href="agent.vManage" target="_blank">教程中心</a></li>
             <li><a href="http://xueyuan.jihui88.com/news.html" target="_blank">建站资讯</a></li>
             <li><a href="#/update">更新日志</a></li>
           </ul>
@@ -115,12 +115,11 @@ export default {
         { name: '账号积分', icon: 'jifen', path: 'point' },
         { name: '公司信息', icon: 'gongsi', path: 'enterprise' }
       ],
-      host: 'http://www.jihui88.com',
-      logo: 'http://img.jihui88.com/upload/w/w5/www2/picture/2017/07/05/54b68a5c-fdd2-4842-9e1e-b88d1c403f28.png'
+      host: location.origin
     }
   },
   computed: {
-    ...mapState(['user', 'userInfo', 'status'])
+    ...mapState(['user', 'userInfo', 'status', 'agent'])
   },
   watch: {
     userInfo: {
@@ -155,10 +154,10 @@ export default {
     }
     this.getUserInfo()
     this.getCustomData()
-    if (location.host !== 'www.jihui88.com') { this.getLogo() }
+    if (location.host !== 'www.jihui88.com') { this.getAgent() }
   },
   methods: {
-    ...mapActions(['getUser', 'getUserInfo', 'getCustomData', 'getEnterprise']),
+    ...mapActions(['getUser', 'getUserInfo', 'getCustomData', 'getEnterprise', 'getAgent']),
     get () {
       this.getUser()
       this.getEnterprise()
@@ -213,17 +212,6 @@ export default {
       if (this.messageList.length > 0) {
         this.message = true
       }
-    },
-    getLogo () {
-      this.$http.get('/rest/api/agent/config/getConfigByDomain?domain=' + location.host).then((res) => {
-        if (res.success) {
-          let data = res.attributes.data
-          if (data && data.manageLogo1) {
-            this.logo = data.manageLogo1
-          }
-          this.host = location.origin
-        }
-      })
     }
   }
 }

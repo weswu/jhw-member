@@ -28,7 +28,7 @@
           <div class="item" @click="yindao">
             <span>新手提示</span> <p>让您快速了解我们的后台</p>
           </div>
-          <a href="http://v.qq.com/vplus/4aa13bffe0e2662991069f1800862a96/foldervideos/gr2002901enccnk" target="_blank" class="item">
+          <a :href="agent.vManage" target="_blank" class="item" v-if="agent.vManage">
             <span>视频教程</span> <p>视频教程大全，方便您详细观看</p>
           </a>
       </div>
@@ -39,12 +39,16 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
 import Feedback from '@/components/home/j-feedback'
 import YinDao from '@/components/home/j-yindao'
 export default {
   components: {
     Feedback,
     YinDao
+  },
+  computed: {
+    ...mapState(['agent'])
   },
   data () {
     return {

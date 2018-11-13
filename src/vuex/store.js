@@ -31,6 +31,22 @@ const state = {
   staticList: [],
   layoutId: '',
   win: '', // 小于400的窗口
+  agent: {
+    manageLogo1: 'http://img.jihui88.com/upload/w/w5/www2/picture/2017/07/05/54b68a5c-fdd2-4842-9e1e-b88d1c403f28.png',
+    vManage: 'http://v.qq.com/vplus/4aa13bffe0e2662991069f1800862a96/foldervideos/gr2002901enccnk',
+    vAccount: 'https://v.qq.com/x/page/c0753vzonsm.html',
+    vProduct: 'https://v.qq.com/x/page/w0753bnm9kh.html',
+    vProductCategory: 'https://v.qq.com/x/page/e0753kcg4xb.html',
+    vImport: 'https://v.qq.com/x/page/j0753rag7kr.html',
+    vDownload: 'https://v.qq.com/x/page/n0753o7p54m.html',
+    vNews: 'https://v.qq.com/x/page/q0753wldx5d.html',
+    vNewsCategory: 'https://v.qq.com/x/page/g075303kosj.html',
+    vWebsite: 'https://v.qq.com/x/page/f0753d6r4fb.html',
+    vSeo: 'https://v.qq.com/x/page/u0753y5akkv.html',
+    vSitemap: 'https://v.qq.com/x/page/l0753l1jw2c.html',
+    vSeoBatch: 'https://v.qq.com/x/page/u0753ji3n5n.html',
+    vAnalysis: 'https://v.qq.com/x/page/j0753ycgfeh.html'
+  }, // 经销商
   // 记录操作习惯
   customData: {
     yindao: false,
@@ -81,6 +97,7 @@ const getters = {
   staticList: state => state.staticList,
   layoutId: state => state.layoutId,
   win: state => state.win,
+  agent: state => state.agent,
   customData: state => state.customData
 }
 
@@ -132,6 +149,9 @@ const mutations = {
   },
   setWin (state, win) {
     state.win = win
+  },
+  setAgent (state, agent) {
+    state.agent = agent
   },
   setCustomData (state, customData) {
     state.customData = customData
@@ -465,6 +485,18 @@ const store = new Vuex.Store({
           console.log('自定义数据保存成功')
         } else {
           console.log(res.msg)
+        }
+      })
+    },
+    getAgent ({commit, state}) {
+      return this._vm.$http.get('/rest/api/agent/config/getConfigByDomain?domain=' + location.host).then(res => {
+        if (res.success) {
+          let data = res.attributes.data
+          if (data) {
+            let video = JSON.parse(data.manageVideoLink)
+            data = Object.assign(data, video)
+            this.commit('setAgent', res.attributes.data)
+          }
         }
       })
     }

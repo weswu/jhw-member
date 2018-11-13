@@ -14,6 +14,7 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
 import MenuBar from '@/components/common/menu_bar'
 import JHeader from '@/components/group/j-header'
 import Baidu from '@/components/static/batch/baidu'
@@ -27,9 +28,12 @@ export default {
     Haoso,
     Sogou
   },
+  computed: {
+    ...mapState(['agent'])
+  },
   data () {
     return {
-      tip: '温馨提醒：向各大搜索引擎提交网址，可以加快网站被搜索引擎收录。 一个网站只需提交一次（首页），搜索引擎会自动收录网页。 不保证一定能收录您提交的网站。<a href="https://v.qq.com/x/page/u0753ji3n5n.html" class="a_underline" target="_blank">批量提交视频教程</a>',
+      tip: '温馨提醒：向各大搜索引擎提交网址，可以加快网站被搜索引擎收录。 一个网站只需提交一次（首页），搜索引擎会自动收录网页。 不保证一定能收录您提交的网站。 ',
       btns: [
         { text: '百度', value: '0' },
         { text: '好搜', value: '1' },
@@ -39,7 +43,21 @@ export default {
       active: '0'
     }
   },
-  methods: {}
+  watch: {
+    agent () {
+      this.init()
+    }
+  },
+  created () {
+    this.init()
+  },
+  methods: {
+    init () {
+      if (this.agent.vSeoBatch) {
+        this.tip = this.tip + '<a href="' + this.agent.vSeoBatch + '" class="a_underline" target="_blank">批量提交视频教程</a>'
+      }
+    }
+  }
 }
 </script>
 

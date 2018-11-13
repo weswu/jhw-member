@@ -3,7 +3,7 @@
     <JHeader :title="'安全设置'"/>
     <Content class="scroll">
       <div class="j_tip" style="margin-top:0">
-        温馨提示：<a href="https://v.qq.com/x/page/c0753vzonsm.html" class="a_underline" target="_blank">安全设置视频教程</a>
+        温馨提示：<a :href="agent.vAccount" class="a_underline" target="_blank" v-if="agent.vAccount">安全设置视频教程</a>
       </div>
       <Row :gutter="24" class="account_user">
         <Col span="6" style="width:130px">
@@ -190,7 +190,7 @@ export default {
     }
   },
   computed: {
-    ...mapState(['user']),
+    ...mapState(['user', 'agent']),
     percent () {
       let percent = 20
       if (this.user.email) {

@@ -3,7 +3,7 @@
     <Content>
       <JHeader :title="'导入'" :lan="true"/>
       <div class="import_title">
-        Excle表格批量上传<a href="https://v.qq.com/x/page/j0753rag7kr.html" class="a_underline" target="_blank" style="font-size: 12px;padding-left: 20px;">导入视频教程</a>
+        Excle表格批量上传<a :href="agent.vImport" class="a_underline" target="_blank" style="font-size: 12px;padding-left: 20px;" v-if="agent.vImport">导入视频教程</a>
       </div>
       <div class="j_tip">
         <span class="red">步骤一：</span>“打勾”生成产品表格模板
@@ -98,7 +98,8 @@ export default {
   },
   computed: {
     ...mapState({
-      categoryList: state => state.albumCategory
+      categoryList: state => state.albumCategory,
+      agent: state => state.agent
     })
   },
   watch: {

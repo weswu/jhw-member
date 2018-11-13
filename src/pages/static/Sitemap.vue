@@ -62,18 +62,24 @@ export default {
   },
   data () {
     return {
-      tip: '本工具能提供以下功能：<br/>1、一个符合0.90国际规范的Sitemap文件<br/>2、一个能引导搜索引擎蜘蛛（Spider）发现网站地图的robots.txt文件<br/>3、向各大搜索引擎提交Sitemap的快捷入口<br/>温馨提示：<a href="https://v.qq.com/x/page/l0753l1jw2c.html" class="a_underline" target="_blank">Sitemap生成视频教程</a>',
+      tip: '本工具能提供以下功能：<br/>1、一个符合0.90国际规范的Sitemap文件<br/>2、一个能引导搜索引擎蜘蛛（Spider）发现网站地图的robots.txt文件<br/>3、向各大搜索引擎提交Sitemap的快捷入口',
       form: false,
       detail: {}
     }
   },
   computed: {
-    ...mapState(['layoutId'])
+    ...mapState(['layoutId', 'agent'])
   },
   watch: {
     layoutId () {
       if (this.form) this.get()
+    },
+    agent () {
+      this.init()
     }
+  },
+  created () {
+    this.init()
   },
   methods: {
     get () {
@@ -87,6 +93,11 @@ export default {
           this.detail = res.attributes.data
         }
       })
+    },
+    init () {
+      if (this.agent.vSitemap) {
+        this.tip = this.tip + '<br/>温馨提示：<a href="' + this.agent.vSitemap + '" class="a_underline" target="_blank">Sitemap生成视频教程</a>'
+      }
     },
     update () {
       this.$http.post('/rest/pc/api/sitemap/build', qs.stringify({

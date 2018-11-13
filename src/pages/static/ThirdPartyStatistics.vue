@@ -29,22 +29,34 @@
 
 <script>
 import qs from 'qs'
+import { mapState } from 'vuex'
 import JHeader from '@/components/group/j-header'
 export default {
   components: {
     JHeader
   },
+  computed: {
+    ...mapState(['agent'])
+  },
   data () {
     return {
-      tip: '温馨提醒：请选择好右边的网站编号再来设置下面的按钮。<a href="https://v.qq.com/x/page/j0753ycgfeh.html" class="a_underline" target="_blank">视频教程</a>',
+      tip: '温馨提醒：请选择好右边的网站编号再来设置下面的按钮。',
       detail: {
         analysisHeadState: '00',
         analysisTailState: '00'
       }
     }
   },
+  watch: {
+    agent: {
+      handler () {
+        this.init()
+      }
+    }
+  },
   created () {
     this.get()
+    this.init()
   },
   methods: {
     get () {
@@ -55,6 +67,11 @@ export default {
           if (!this.detail.analysisTailState) this.detail.analysisTailState = '00'
         }
       })
+    },
+    init () {
+      if (this.agent.vAnalysis) {
+        this.tip = this.tip + '<a href="' + this.agent.vAnalysis + '" class="a_underline" target="_blank">视频教程</a>'
+      }
     },
     submit () {
       let data = {

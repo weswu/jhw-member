@@ -4,7 +4,7 @@
     <Content>
       <div class="j_search">
         <Button class="grey" @click="active = item.value" v-for="(item, index) in btns" :key="index" :class="{primary: active === item.value}">{{item.text}}</Button>
-        <a href="https://v.qq.com/x/page/u0753y5akkv.html" class="a_underline" target="_blank">SEO管理视频教程</a>
+        <a :href="agent.vSeo" class="a_underline" target="_blank" v-if="agent.vSeo">SEO管理视频教程</a>
       </div>
       <div class="warpper j_scroll">
         <SBase @on-change="headerChange" v-if="active === '0'"/>
@@ -20,6 +20,7 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
 import JHeader from '@/components/group/j-header'
 import SBase from '@/components/seo/base'
 import STemplate from '@/components/seo/template'
@@ -38,6 +39,9 @@ export default {
     InnerLink,
     JTab,
     Paid
+  },
+  computed: {
+    ...mapState(['agent'])
   },
   data () {
     return {
