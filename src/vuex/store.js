@@ -493,9 +493,12 @@ const store = new Vuex.Store({
         if (res.success) {
           let data = res.attributes.data
           if (data) {
-            let video = JSON.parse(data.manageVideoLink)
+            let video = {}
+            if (data.manageVideoLink) {
+              video = JSON.parse(data.manageVideoLink)
+            }
             data = Object.assign(data, video)
-            this.commit('setAgent', res.attributes.data)
+            this.commit('setAgent', data)
           }
         }
       })

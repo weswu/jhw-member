@@ -2,7 +2,7 @@
   <div class="j_static_website">
     <div class="j_tip" style="margin-top: 13px;">由于互联网信息管理法规，发布网站需要验证您的手机号信息。
       <a href="#/account" class="a_underline">立即验证</a>
-      <a :href="agent.vWebsite" class="a_underline" target="_blank" style="margin-left:5px" v-if="agent.vWebsite">视频教程</a>
+      <a :href="agent.vWebsite" class="a_underline" target="_blank" style="margin-left:5px" v-if="show && agent.vWebsite">视频教程</a>
     </div>
     <div v-if="!isSubEmp">
       <Button icon="plus" class="orange yd_website" @click="add">创建新网站</Button> 您有{{onlineCount}}个网站上线了
@@ -170,7 +170,8 @@ export default {
       modalDel: false,
       modal_loading: false,
       ids: '',
-      isSubEmp: false
+      isSubEmp: false,
+      show: false
     }
   },
   computed: {
@@ -184,14 +185,17 @@ export default {
     })
   },
   created () {
+    var ctx = this
     if (!window.token) {
-      var ctx = this
       setTimeout(function () {
         ctx.get()
       }, 500)
     } else {
       this.get()
     }
+    setTimeout(function () {
+      ctx.show = true
+    }, 1000)
   },
   watch: {
     userInfo: {
