@@ -2,17 +2,17 @@
   <Layout class="j_home" style="background: #e7eaef">
     <Content :style="{padding: '32px 32px 0 30px'}">
       <Row :gutter="24">
-        <Col :lg="16" :md="16" class="j_col">
+        <Col :lg="agent.agentId ? 24 : 16" :md="agent.agentId ? 24 : 16" class="j_col">
           <JWebsite style="margin-bottom: 25px;"/>
           <div ref="HomeSortable">
             <div v-for="item in $store.state.customData.homeSort" :key="item.value" v-if="item.status === '01'">
               <JStatic style="margin-bottom: 25px;" v-if="item.value === 'static'"/>
               <JLink style="margin-bottom: 25px;" v-if="item.value === 'link' && !isSubEmp"/>
-              <JOrder style="margin-bottom: 25px;" v-if="item.value === 'order' && !isSubEmp"/>
+              <JOrder style="margin-bottom: 25px;" v-if="item.value === 'order' && !isSubEmp && !agent.agentId"/>
             </div>
           </div>
         </Col>
-        <Col :lg="8" :md="8" class="j_col" style="padding-left:17px;">
+        <Col :lg="8" :md="8" class="j_col" style="padding-left:17px;" v-if="!agent.agentId">
           <JBanner/>
           <JSubscribe v-if="!isSubEmp"/>
           <div v-for="item in $store.state.customData.homeSort" :key="item.value" v-if="item.status === '01'">
@@ -59,7 +59,7 @@ export default {
     }
   },
   computed: {
-    ...mapState(['customData', 'userInfo'])
+    ...mapState(['customData', 'userInfo', 'agent'])
   },
   mounted () {
     var ctx = this

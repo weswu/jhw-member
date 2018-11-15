@@ -2,7 +2,7 @@
   <Row id="J_Header" type="flex" justify="space-between">
     <Col>
       <div class="logo">
-        <a :href="host"><img :src="agent.manageLogo1" height="30" alt=""></a>
+        <a :href="host"><img :src="'http://img.jihui88.com/'+agent.manageLogo1" alt=""></a>
       </div>
       <Badge count="体验版 v4" class="badge-primary"></Badge>
     </Col>
@@ -21,15 +21,15 @@
         </DropdownMenu>
       </Dropdown>
       <a href="#/" class="header_link">首页</a>
-      <Dropdown placement="bottom" class="j_dropdown_browser j_dropdown_word">
+      <Dropdown placement="bottom" class="j_dropdown_browser j_dropdown_word" v-if="agent.vManage || agent.dNews || agent.dLog">
         <a class="header_link">
           文档
         </a>
         <DropdownMenu slot="list">
           <ul class="browser-dropdown">
             <li v-if="agent.vManage"><a :href="agent.vManage" target="_blank">教程中心</a></li>
-            <li><a href="http://xueyuan.jihui88.com/news.html" target="_blank">建站资讯</a></li>
-            <li><a href="#/update">更新日志</a></li>
+            <li v-if="agent.dNews"><a :href="agent.dNews" target="_blank">建站资讯</a></li>
+            <li v-if="agent.dLog"><a :href="agent.dLog" :target="agent.agentId ? '_blank' : '_self'">更新日志</a></li>
           </ul>
         </DropdownMenu>
       </Dropdown>
@@ -167,13 +167,13 @@ export default {
       this.ilogout('iframepclogout', 'http://pc.jihui88.com/rest/api/user/logout')
       // 订购系统注销操作
       this.ilogout('iframeorderlogout', 'http://buy.jihui88.com/api/user/logout')
-      this.ilogout('iframebuylogout', 'http://www.jihui88.com/rest/buy/api/user/logout')
+      this.ilogout('iframebuylogout', this.host + '/rest/buy/api/user/logout')
       if (this.user.username === '未登录') {
-        window.location.href = 'http://www.jihui88.com/manage_v4/login.html?backURL=' + decodeURIComponent(window.location.origin + window.location.pathname)
+        window.location.href = this.host + '/manage_v4/login.html?backURL=' + decodeURIComponent(window.location.origin + window.location.pathname)
       } else {
         this.$http.get('/rest/api/user/logout').then((res) => {
           if (res.success) {
-            window.location.href = 'http://www.jihui88.com/manage_v4/login.html?backURL=' + window.location.origin + window.location.pathname
+            window.location.href = this.host + '/manage_v4/login.html?backURL=' + window.location.origin + window.location.pathname
           } else {
             this.$Message.success(res.msg)
           }
@@ -226,11 +226,12 @@ export default {
   background: #383d41;
   .logo{
     float:left;
-    width: 120px;    height: 50px;
+    height: 50px;
     border-right: 1px solid #000;
     img{
-      height: 36px;
-      margin: 4px 0 0 25px;
+      max-height: 36px;
+      margin: 0 16px 0 25px;
+      vertical-align: middle;
     }
   }
   .userInfo{

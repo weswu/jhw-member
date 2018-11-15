@@ -93,11 +93,6 @@ export default {
   },
   data () {
     return {
-      btns: [
-        { text: '主域名绑定', value: '0' },
-        { text: '客户二级域名绑定', value: '1' },
-        { text: '机汇网二级域名绑定', value: '2' }
-      ],
       detail: {
         country: 'cn'
       },

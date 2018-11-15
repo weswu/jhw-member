@@ -1,11 +1,14 @@
 <template>
   <div class="j_static_website">
-    <div class="j_tip" style="margin-top: 13px;">由于互联网信息管理法规，发布网站需要验证您的手机号信息。
+    <div class="j_tip" style="margin-top: 13px;" v-if="show && !agent.agentId">由于互联网信息管理法规，发布网站需要验证您的手机号信息。
       <a href="#/account" class="a_underline">立即验证</a>
-      <a :href="agent.vWebsite" class="a_underline" target="_blank" style="margin-left:5px" v-if="show && agent.vWebsite">视频教程</a>
+      <a :href="agent.vWebsite" class="a_underline" target="_blank" style="margin-left:5px" v-if="agent.vWebsite">视频教程</a>
+    </div>
+    <div class="j_tip" style="margin-top: 13px;" v-if="agent.agentId && agent.vWebsite">
+      温馨提醒：<a :href="agent.vWebsite" class="a_underline" target="_blank">视频教程</a>
     </div>
     <div v-if="!isSubEmp">
-      <Button icon="plus" class="orange yd_website" @click="add">创建新网站</Button> 您有{{onlineCount}}个网站上线了
+      <Button icon="plus" class="orange yd_website" @click="add" v-if="!agent.agentId">创建新网站</Button> 您有{{onlineCount}}个网站上线了
     </div>
     <ul class="static_info j_scroll">
       <li class="item" v-for="item in list" :key="item.id">
@@ -37,17 +40,18 @@
           <a :href="item.url | http" target="_blank" class="url">{{item.url}}</a>
           <span class="time" v-if="item.endTime">(到期时间：{{item.endTime | time}})</span>
 
-          <a href="javascript:;" class="buy" @click="buy(item.id)" v-if="!item.new && !isSubEmp">购买</a>
-
-          <a href="javascript:;" class="buy" v-if="item.new && !isSubEmp" @click="again(item.id)">续费</a>
-          <a :href="'http://buy.jihui88.com/#/?layoutId=' + item.id" class="buy" target="_blank" v-if="item.new && !isSubEmp">升级</a>
+          <span v-if="!agent.agentId">
+            <a href="javascript:;" class="buy" @click="buy(item.id)" v-if="!item.new && !isSubEmp">购买</a>
+            <a href="javascript:;" class="buy" v-if="item.new && !isSubEmp" @click="again(item.id)">续费</a>
+            <a :href="'http://buy.jihui88.com/#/?layoutId=' + item.id" class="buy" target="_blank" v-if="item.new && !isSubEmp">升级</a>
+          </span>
         </p>
         <p v-if="item.country">
-          温馨提醒：您选择的“<span v-html="countryFilter(item.country)"></span><span v-if="item.country === 'en' || item.country === 'hc'">“不需要备案，如果要上线网站，请联系我们：139-6793-8189，我们将帮您免费办理域名绑定。</span>
-          <span v-else>”需要备案（大概需要21个工作日的审核时间），请尽早联系我们：139-6793-8189，我们将协助您办理备案手续。</span>
+          温馨提醒：您选择的“<span v-html="countryFilter(item.country)"></span><span v-if="item.country === 'en' || item.country === 'hc'">“不需要备案，如果要上线网站，请联系我们：{{agent.user.cellphone | tel}}，我们将帮您免费办理域名绑定。</span>
+          <span v-else>”需要备案（大概需要21个工作日的审核时间），请尽早联系我们：{{agent.user.cellphone | tel}}，我们将协助您办理备案手续。</span>
         </p>
         <p class="more" v-if="!isSubEmp">
-          <a :href="'http://pc.jihui88.com/pc/design.html?layoutId=' + item.id" target="_blank" class="a_underline" @click="goEdit(item)">进入编辑</a>
+          <a :href="'http://pc.' + (agent.agentId ? agent.bindUrl : 'jihui88.com') + '/pc/design.html?layoutId=' + item.id" target="_blank" class="a_underline" @click="goEdit(item)">进入编辑</a>
           <Poptip placement="top" class="j_poptip_ul">
             <span class="a_underline">更多选项</span>
             <ul slot="content">
@@ -82,7 +86,7 @@
       </div>
     </Modal>
     <JPagination :fixed="true" :total="total" :searchData='searchData' @on-change="get"></JPagination>
-    <JDialog ref="lan" :title="'设置语言版本'" :tip="'温馨提醒：语言切换仅限中英文。如需其他语言，请联系我们139-6793-8189。'" @on-ok="save" >
+    <JDialog ref="lan" :title="'设置语言版本'" :tip="'温馨提醒：语言切换仅限中英文。如需其他语言，请联系我们' + agent.user.cellphone +'。'" @on-ok="save" >
       <div slot="content">
         <Select v-model="lan" style="width:144px">
           <Option v-for="item in lanList" :value="item.value" :key="item.value">{{ item.text }}</Option>
@@ -141,8 +145,8 @@ export default {
   },
   data () {
     return {
-      list: [],
-      listTest: [
+      listTest: [],
+      list: [
         {
           id: '99',
           seoTitle: '我的网站',
@@ -151,9 +155,10 @@ export default {
           url: '',
           language: '1',
           count: 1,
+          country: 'cn',
           bind: {
             address: '',
-            country: '',
+            country: 'cn',
             online: '01'
           }
         }
@@ -195,13 +200,18 @@ export default {
     }
     setTimeout(function () {
       ctx.show = true
-    }, 1000)
+    }, 500)
   },
   watch: {
     userInfo: {
       handler () {
         let pris = this.userInfo.privilege
         if (pris) this.isSubEmp = true
+      }
+    },
+    agent: {
+      handler () {
+        this.init()
       }
     }
   },
@@ -233,6 +243,7 @@ export default {
           this.total = res.attributes.count
           this.onlineCount = res.attributes.onlineCount
           this.getCount = 0
+          this.init()
         } else {
           if (res.msgType === 'notLogin' && this.getCount < 3) {
             var ctx = this
@@ -245,6 +256,15 @@ export default {
           }
         }
       })
+    },
+    init () {
+      if (this.agent.agentId && this.list.length > 0) {
+        this.list.forEach(item => {
+          if (item.url.indexOf('http://pc.jihui88.com/rest/site/') > -1) {
+            item.url = 'http://pc.' + this.agent.bindUrl + '/rest/site/' + item.id + '/index'
+          }
+        })
+      }
     },
     add () {
       this.$refs.add.open()

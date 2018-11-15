@@ -7,7 +7,7 @@
         <div class="j_search">
           <Button class="grey" @click="search(item.value)"
             v-for="(item, index) in btns" :key="index" :class="{primary: searchData.type === item.value}"
-            v-if="item.status">{{item.text}}<span v-if="item.count !== ''">({{item.count}})</span></Button>
+            v-if="!agent.agentId || index === 0 || index === 1">{{item.text}}<span v-if="item.count !== ''">({{item.count}})</span></Button>
         </div>
         <div class="j_search" v-if="searchData.type === '03'" style="margint-top: 12px;">
           <Row type="flex" justify="space-between">
@@ -60,18 +60,18 @@ export default {
       btns: [
         { text: '全部类型消息', value: '', status: true, count: '' },
         { text: '客户消息', value: '03', status: true, count: '' },
-        { text: '系统消息', value: '04', status: false },
-        { text: '浏览者消息', value: '05', status: false },
-        { text: '用户反馈', value: '06', status: false },
-        { text: '用户消息', value: '07', status: false },
-        { text: '开具发票', value: '08', status: false },
-        { text: '朋友介绍', value: '09', status: false },
+        // { text: '系统消息', value: '04', status: false },
+        // { text: '浏览者消息', value: '05', status: false },
+        // { text: '用户反馈', value: '06', status: false },
+        // { text: '用户消息', value: '07', status: false },
+        // { text: '开具发票', value: '08', status: false },
+        // { text: '朋友介绍', value: '09', status: false },
         { text: '产品消息', value: '10', status: true, count: '' },
         { text: '安全消息', value: '11', status: true, count: '' },
         { text: '服务消息', value: '12', status: true, count: '' },
-        { text: '活动消息', value: '13', status: true, count: '' },
-        { text: '机汇网留言', value: '21', status: false },
-        { text: '东方五金网留言', value: '22', status: false }
+        { text: '活动消息', value: '13', status: true, count: '' }
+        // { text: '机汇网留言', value: '21', status: false },
+        // { text: '东方五金网留言', value: '22', status: false }
       ],
       columns: [],
       list: [],

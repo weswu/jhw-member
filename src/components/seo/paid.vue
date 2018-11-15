@@ -1,7 +1,7 @@
 <template>
   <div class="j_seo_paid">
     <div class="j_search">
-      <Button class="mormal" @click="active = item.value" v-for="(item, index) in btns" :key="index" :class="{active: active === item.value}">{{item.text}}</Button>
+      <Button class="mormal" @click="active = item.value" v-for="(item, index) in btns" :key="index" :class="{active: active === item.value}" v-if="!agent.agentId || index === 0">{{item.text}}</Button>
     </div>
     <div v-if="active === '0'">
       <JTable :title="'付费SEO推广的套餐'">
@@ -62,7 +62,7 @@
         2、百度+百度移动+搜狗+360累计100个关键词首页</div>
       </div>
       <div class="" style="color: #a7a7a7;margin-top: 25px;margin-bottom: 50px">
-        温馨提醒：客户选择的关键词必须符合机汇网普及版服务包综合指数150以内，套餐有多种达标方案，只要满足其中任意一种达标方案即视为达标，客户享受机汇网提供的关键词达标365天的服务，域名，空间到期后客户自行交费，SEO未达标365天，机汇网继续提供服务。如果规定时间内未达标，客户也不愿意继续等待，客户可以申请退款，机汇网根据提供服务关键词的达标比例为客户退款。
+        温馨提醒：客户选择的关键词必须符合{{agent.user.enterprise.name}}普及版服务包综合指数150以内，套餐有多种达标方案，只要满足其中任意一种达标方案即视为达标，客户享受{{agent.user.enterprise.name}}提供的关键词达标365天的服务，域名，空间到期后客户自行交费，SEO未达标365天，{{agent.user.enterprise.name}}继续提供服务。如果规定时间内未达标，客户也不愿意继续等待，客户可以申请退款，{{agent.user.enterprise.name}}根据提供服务关键词的达标比例为客户退款。
       </div>
       <div style="position: relative;">
         <div style="position: absolute;">如有意向联系我们：</div>
@@ -73,17 +73,21 @@
     <div v-if="active === '1'"><br><br>
       登录网址：<a href="http://seo.jihui88.com/" target="_blank">seo.jihui88.com</a><br><br><br>
       <span style="color: #a6a6a6">
-        温馨提示：登录账号和密码同机汇网后台
+        温馨提示：登录账号和密码同{{agent.user.enterprise.name}}后台
       </span>
     </div>
   </div>
 </template>
 
 <script>
+import { mapState } from 'vuex'
 import JTable from '@/components/group/j-table'
 export default {
   components: {
     JTable
+  },
+  computed: {
+    ...mapState(['agent'])
   },
   data () {
     return {

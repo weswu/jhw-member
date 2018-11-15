@@ -31,8 +31,9 @@ const state = {
   staticList: [],
   layoutId: '',
   win: '', // 小于400的窗口
-  agent: {
-    manageLogo1: 'http://img.jihui88.com/upload/w/w5/www2/picture/2017/07/05/54b68a5c-fdd2-4842-9e1e-b88d1c403f28.png',
+  agent: { // 经销商
+    agentId: 'ccc',
+    manageLogo1: 'upload/w/w5/www2/picture/2017/07/05/54b68a5c-fdd2-4842-9e1e-b88d1c403f28.png',
     vManage: 'http://v.qq.com/vplus/4aa13bffe0e2662991069f1800862a96/foldervideos/gr2002901enccnk',
     vAccount: 'https://v.qq.com/x/page/c0753vzonsm.html',
     vProduct: 'https://v.qq.com/x/page/w0753bnm9kh.html',
@@ -45,8 +46,16 @@ const state = {
     vSeo: 'https://v.qq.com/x/page/u0753y5akkv.html',
     vSitemap: 'https://v.qq.com/x/page/l0753l1jw2c.html',
     vSeoBatch: 'https://v.qq.com/x/page/u0753ji3n5n.html',
-    vAnalysis: 'https://v.qq.com/x/page/j0753ycgfeh.html'
-  }, // 经销商
+    dNews: 'http://xueyuan.jihui88.com/news.html',
+    dLog: '#/update',
+    user: {
+      qq: '1550676880',
+      cellphone: '13967938189',
+      enterprise: {
+        name: '机汇网'
+      }
+    }
+  },
   // 记录操作习惯
   customData: {
     yindao: false,

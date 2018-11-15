@@ -13,6 +13,7 @@
 
 <script>
 import qs from 'qs'
+import { mapState } from 'vuex'
 import JHeader from '@/components/group/j-header'
 export default {
   components: {
@@ -33,6 +34,9 @@ export default {
       list: [],
       address: ''
     }
+  },
+  computed: {
+    ...mapState(['agent'])
   },
   created () {
     this.get()
@@ -108,7 +112,7 @@ export default {
               style: {
                 'white-space': 'normal'
               }
-            }, '温馨提示：自动绑定只针对购买过站点的客户，请先购买站点，如有问题，请咨询：13967938189')
+            }, '温馨提示：自动绑定只针对购买过站点的客户，请先购买站点，如有问题，请咨询：' + this.agent.user.cellphone)
           ])
         ])
       }

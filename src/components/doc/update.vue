@@ -5,7 +5,7 @@
       <JHeader :title="'更新日志'" ></JHeader>
       <Content>
         <div class="j_tip" style="margin-top:0">
-          温馨提示：如果您对我们的系统有任何建议，<a href="http://wpa.qq.com/msgrd?v=3&uin=1550676880&site=qq&menu=yes" target="_blank" class="a_underline">请点这里提交</a>
+          温馨提示：如果您对我们的系统有任何建议，<a :href="'http://wpa.qq.com/msgrd?v=3&uin='+agent.user.qq+'&site=qq&menu=yes'" target="_blank" class="a_underline">请点这里提交</a>
         </div>
         <ul class="ul">
           <li v-for="(item, index) in list" :key="index" v-if="(index+1) > (searchData.page - 1) * searchData.pageSize && index < searchData.page * searchData.pageSize">
@@ -33,6 +33,7 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
 import MenuBar from '@/components/common/menu_bar'
 import JHeader from '@/components/group/j-header'
 import JPagination from '@/components/group/j-pagination'
@@ -41,6 +42,9 @@ export default {
     MenuBar,
     JHeader,
     JPagination
+  },
+  computed: {
+    ...mapState(['agent'])
   },
   data () {
     return {

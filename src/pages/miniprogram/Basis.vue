@@ -23,8 +23,8 @@
           <a href="http://buy.jihui88.com/#/?ids=297e2669613f7026016140f7719b001a" target="_blank"><Button type="primary" v-if="detail.state === '02'">点击购买</Button></a>
           <div>
             <a href="http://anli.jihui88.com/case.html" class="a_underline" target="_blank" style="margin-right:15px;">查看更多案例</a>
-            <Tooltip content="13967938189" placement="top">
-                <a href="tel:13967938189" class="a_underline">人工客服</a>
+            <Tooltip :content="agent.user.cellphone" placement="top" v-if="agent.user.cellphone">
+              <a :href="'tel:'+agent.user.cellphone" class="a_underline">人工客服</a>
             </Tooltip>
           </div>
         </div>
@@ -34,10 +34,14 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
 import JHeader from '@/components/group/j-header'
 export default {
   components: {
     JHeader
+  },
+  computed: {
+    ...mapState(['agent'])
   },
   data () {
     return {

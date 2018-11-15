@@ -93,3 +93,9 @@ Vue.filter('postfix', function (src) {
 Vue.filter('http', function (src) {
   return src.indexOf('http') > -1 ? src : ('http://' + src)
 })
+Vue.filter('tel', function (tel) {
+  if (tel.length === 11) {
+    tel = tel.substr(0, 3) + '-' + tel.substr(3, 4) + '-' + tel.substr(7, 4)
+  }
+  return tel
+})

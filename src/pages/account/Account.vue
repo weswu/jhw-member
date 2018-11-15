@@ -23,7 +23,7 @@
           </div>
         </Col>
       </Row>
-      <div class="account_bind">
+      <div class="account_bind" v-if="!agent.agentId">
         <span>您当前的账号安全程度</span>
         <Progress :percent="percent" hide-info></Progress>
         <span>安全级别:
@@ -43,7 +43,7 @@
             <span>|</span> <a href="javascript:;" @click="password">修改</a>
           </Col>
         </Row>
-        <Row type="flex" v-for="(item, index) in list" :key="index" v-if="item.type === 'cellphone'">
+        <Row type="flex" v-for="(item, index) in list" :key="index" v-if="item.type === 'cellphone' && !agent.agentId">
           <Col span="4" class="flex-left">手机绑定</Col>
           <Col span="14">
             <span v-if="item.nickname && item.nickname !== '未绑定'">您已绑定了手机{{item.nickname}} [您的手机为安全手机，可以找回密码，但不能用于登录]</span>
@@ -55,7 +55,7 @@
             <span class="error" v-else><i class="iconfont icon-gantanhao"></i>未设置</span>
             <span>|</span> <a href="javascript:;" @click="unbind(item)">修改</a></Col>
         </Row>
-        <Row type="flex">
+        <Row type="flex" v-if="!agent.agentId">
           <Col span="4" class="flex-left">备用邮箱</Col>
           <Col span="14">
             <span v-if="user.email">您已绑定了邮箱{{user.email | limitEmail}} [可用于找回您的密码。]</span>
@@ -67,7 +67,7 @@
             <span>|</span> <a href="javascript:;" @click="changeEail">修改</a>
           </Col>
         </Row>
-        <Row type="flex" v-for="(item, index) in list" :key="index" v-if="item.type === 'weixin'">
+        <Row type="flex" v-for="(item, index) in list" :key="index" v-if="item.type === 'weixin' && !agent.agentId">
           <Col span="4" class="flex-left">微信绑定</Col>
           <Col span="14">
             <span v-if="item.nickname && item.nickname !== '未绑定'">您已绑定了微信{{item.nickname}} [可用于扫码登录]</span>
@@ -80,7 +80,7 @@
             <span>|</span> <a href="javascript:;" @click="unbind(item)">修改</a>
           </Col>
         </Row>
-        <Row type="flex" v-for="(item, index) in list" :key="index" v-if="item.type === 'qq'">
+        <Row type="flex" v-for="(item, index) in list" :key="index" v-if="item.type === 'qq' && !agent.agentId">
           <Col span="4" class="flex-left">QQ绑定</Col>
           <Col span="14">
             <span v-if="item.nickname && item.nickname !== '未绑定'">您已绑定了QQ{{item.nickname}} [可用于快捷登录]</span>
@@ -376,7 +376,8 @@ export default {
   }
   .account_user{
     width:660px;
-    padding: 2px 0 20px 0;
+    padding: 2px 0 20px 0;;
+    border-bottom: 1px solid #c9c9c9;
     .ivu-avatar-large{
       width: 110px;
       height: 110px;
@@ -394,7 +395,6 @@ export default {
   .account_bind{
     color: #5f5f5f;
     padding: 40px 0;
-    border-top: 1px solid #c9c9c9;
     border-bottom: 1px solid #e4e4e4;
     span{
       padding-right: 20px

@@ -5,7 +5,7 @@
       <div v-for="(item, index) in list" :key="index" v-if="index === current">
         <div class="j_row j_flow_chart_item">
           <div class="j_col content">
-            <div class="desc" v-html="item.desc" v-if="index !== 0"></div>
+            <div class="desc" v-html="item.desc" v-if="index !== 0 && index !== 2 && index !== 5"></div>
             <div class="desc" v-if="index === 0">
               <p>1、<a href="#/seo">SEO智能设置</a>、<a href="#/seo?active=1">SEO模板配置</a>、<a href="#/seo?active=2">关键词管理</a>、<a href="#/seo?active=3">长尾关键词</a>、<a href="#/seo?active=4">内部链接设置</a>、<a href="#/seo?active=5">Tag标签管理</a>、<a href="#/seo?active=6">付费SEO推广</a></p>
               <p>2、<a href="#/sitemap">Sitemap生成</a></p>
@@ -39,6 +39,12 @@
                 、<a href="http://tool.chinaz.com/baidu/entry" target="_blank">收录率查询</a>、<a href="http://tool.chinaz.com/kwevaluate" target="_blank">关键词优化分析</a>、<a href="http://tool.chinaz.com/baidu/metadig.aspx" target="_blank">Meta信息挖掘</a></p>
               <p>5、<a href="#/seo?active=6">付费SEO推广</a></p>
             </div>
+            <div v-if="index === 2">
+              <p>社群营销6步：</p><p>1、社群定位</p><p>2、价值主张</p><p>3、社群角色</p><p>4、社群运营维护</p><p>5、保持粘性</p><p>6、社群传播和工具</p><p>欢迎大家联系 QQ：{{agent.user.qq}}  &nbsp;&nbsp;&nbsp;&nbsp;获取PPT</p>
+            </div>
+            <div v-if="index === 5">
+              <p>欢迎大家联系QQ：{{agent.user.qq}}，获取PPT</p>
+            </div>
           </div>
         </div>
       </div>
@@ -47,6 +53,7 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
 import JHeader from '@/components/group/j-header'
 export default {
   components: {
@@ -57,7 +64,6 @@ export default {
       list: [
         {
           name: '智能SEO',
-          title: '线上引流：智能SEO',
           desc: ''
         },
         {
@@ -66,8 +72,7 @@ export default {
         },
         {
           name: '社群营销',
-          title: '社群营销<p>欢迎大家联系<br/>QQ：1550676880<br/>获取PPT</p>',
-          desc: '<p>社群营销6步：</p><p>1、社群定位</p><p>2、价值主张</p><p>3、社群角色</p><p>4、社群运营维护</p><p>5、保持粘性</p><p>6、社群传播和工具</p><p>欢迎大家联系 QQ：1550676880  &nbsp;&nbsp;&nbsp;&nbsp;获取PPT</p>'
+          desc: ''
         },
         {
           name: '微分销',
@@ -79,7 +84,7 @@ export default {
         },
         {
           name: '朋友圈营销',
-          desc: '<p>欢迎大家联系QQ：1550676880，获取PPT</p>'
+          desc: ''
         },
         {
           name: 'DSP付费推广',
@@ -126,6 +131,9 @@ export default {
       domain: '',
       bindList: []
     }
+  },
+  computed: {
+    ...mapState(['agent'])
   },
   created () {
     this.get()

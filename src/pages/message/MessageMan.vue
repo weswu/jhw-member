@@ -9,7 +9,7 @@
           </div>
         </JHeader>
         <div class="j_tip">
-          提醒：以下联系人都可以设置为消息接收人，机汇网不会将这些信息对外披露或向第三方提供。
+          提醒：以下联系人都可以设置为消息接收人，{{agent.user.enterprise.name}}不会将这些信息对外披露或向第三方提供。
         </div>
         <Table :columns="columns" :data="list"></Table>
       </Content>
@@ -31,7 +31,7 @@ export default {
     Detail
   },
   computed: {
-    ...mapState(['user', 'userInfo'])
+    ...mapState(['user', 'userInfo', 'agent'])
   },
   data () {
     return {
