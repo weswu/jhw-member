@@ -493,7 +493,7 @@ const mutations = {
     state.lanList = data
   },
   setMenuList (state, data) {
-    let agent = 'basisMan,fenxiao,wcd,cost_paidMan,pointMan'
+    let agent = 'basisMan,basis,senior,fenxiao,wcd,cost_paidMan,cost_paid,cost_order,cost_purchased,pointMan,point,point_goods,point_origin,poster_list'
     if (location.host !== 'www.jihui88.com') {
       routers.forEach(row => {
         row.children && row.children.forEach(item => {

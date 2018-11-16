@@ -66,7 +66,16 @@
       </div>
       <div style="position: relative;">
         <div style="position: absolute;">如有意向联系我们：</div>
-        <div style="padding-left: 115px;">电话：400-7111-011<br>俞小姐：136-2679-9628</div>
+        <div style="padding-left: 115px;" v-if="!agent.agentId">
+          电话：400-7111-011<br>俞小姐：136-2679-9628
+        </div>
+        <div style="padding-left: 115px;" v-if="agent.agentId">
+          电话：{{agent.user.phone || '400-7111-011'}}<br>
+          <span v-if="agent.user.name">
+            {{agent.user.name}}：
+          </span>
+          {{agent.user.cellphone}}
+        </div>
       </div>
     </div>
 

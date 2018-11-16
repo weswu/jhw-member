@@ -32,8 +32,8 @@ const state = {
   layoutId: '',
   win: '', // 小于400的窗口
   agent: { // 经销商
-    agentId: 'ccc',
-    manageLogo1: 'upload/w/w5/www2/picture/2017/07/05/54b68a5c-fdd2-4842-9e1e-b88d1c403f28.png',
+    bindUrl: 'www.jihui88.com',
+    manageLogo1: '',
     vManage: 'http://v.qq.com/vplus/4aa13bffe0e2662991069f1800862a96/foldervideos/gr2002901enccnk',
     vAccount: 'https://v.qq.com/x/page/c0753vzonsm.html',
     vProduct: 'https://v.qq.com/x/page/w0753bnm9kh.html',

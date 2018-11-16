@@ -2,7 +2,7 @@
   <Row id="J_Header" type="flex" justify="space-between">
     <Col>
       <div class="logo">
-        <a :href="host"><img :src="'http://img.jihui88.com/'+agent.manageLogo1" alt=""></a>
+        <a :href="'http://'+agent.bindUrl"><img :src="'http://img.jihui88.com/'+agent.manageLogo1" alt=""></a>
       </div>
       <Badge count="体验版 v4" class="badge-primary"></Badge>
     </Col>
@@ -58,8 +58,8 @@
       <span class="border" style="background:#383d41"></span>
       <Dropdown placement="bottom-end" class="j_dropdown_username">
         <a href="javascript:void(0)" style="color: #999" class="header_link">
-            {{user.username}}
-            <Icon type="arrow-down-b"></Icon>
+          {{user.username}}
+          <Icon type="arrow-down-b"></Icon>
         </a>
         <a href="javascript:void(0)" class="avatar header_link">
           <i class="iconfont icon-huiyuan" v-if="!$store.state.user.headimg"></i>
@@ -72,12 +72,17 @@
             <p>账号：{{user.username}}</p>
           </div>
           <Row>
-            <Col span="8" v-for="(item, index) in list" v-if="index < 3" :key="index">
+            <Col span="8" v-for="(item, index) in list" v-if="index < 3 && !agent.agentId" :key="index">
               <a :href="'#/' + item.path"><i :class="'iconfont icon-' + item.icon"></i>{{item.name}}</a>
             </Col>
           </Row>
-          <Row v-if="list.length > 2">
+          <Row v-if="list.length > 2 && !agent.agentId">
             <Col span="8" v-for="(item, index) in list" v-if="index > 2" :key="index">
+              <a :href="'#/' + item.path"><i :class="'iconfont icon-' + item.icon"></i>{{item.name}}</a>
+            </Col>
+          </Row>
+          <Row v-if="agent.agentId">
+            <Col span="8" v-for="(item, index) in agentlist" :key="index">
               <a :href="'#/' + item.path"><i :class="'iconfont icon-' + item.icon"></i>{{item.name}}</a>
             </Col>
           </Row>
@@ -113,6 +118,11 @@ export default {
         { name: '费用中心', icon: 'price', path: 'cost_paid' },
         { name: '积分规则', icon: 'quanyi', path: 'point_origin' },
         { name: '账号积分', icon: 'jifen', path: 'point' },
+        { name: '公司信息', icon: 'gongsi', path: 'enterprise' }
+      ],
+      agentlist: [
+        { name: '账号信息', icon: 'account-only', path: 'account' },
+        { name: '安全设置', icon: 'anquan', path: 'account' },
         { name: '公司信息', icon: 'gongsi', path: 'enterprise' }
       ],
       host: location.origin
@@ -154,10 +164,9 @@ export default {
     }
     this.getUserInfo()
     this.getCustomData()
-    if (location.host !== 'www.jihui88.com') { this.getAgent() }
   },
   methods: {
-    ...mapActions(['getUser', 'getUserInfo', 'getCustomData', 'getEnterprise', 'getAgent']),
+    ...mapActions(['getUser', 'getUserInfo', 'getCustomData', 'getEnterprise']),
     get () {
       this.getUser()
       this.getEnterprise()
@@ -230,6 +239,7 @@ export default {
     border-right: 1px solid #000;
     img{
       max-height: 36px;
+      min-width: 50px;
       margin: 0 16px 0 25px;
       vertical-align: middle;
     }

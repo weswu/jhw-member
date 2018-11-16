@@ -51,18 +51,18 @@
           <span v-else>”需要备案（大概需要21个工作日的审核时间），请尽早联系我们：{{agent.user.cellphone | tel}}，我们将协助您办理备案手续。</span>
         </p>
         <p class="more" v-if="!isSubEmp">
-          <a :href="'http://pc.' + (agent.agentId ? agent.bindUrl : 'jihui88.com') + '/pc/design.html?layoutId=' + item.id" target="_blank" class="a_underline" @click="goEdit(item)">进入编辑</a>
+          <a :href="'http://pc.' + ((agent.agentId && agent.bindUrl) ? agent.bindUrl : 'jihui88.com') + '/pc/design.html?layoutId=' + item.id" target="_blank" class="a_underline" @click="goEdit(item)">进入编辑</a>
           <Poptip placement="top" class="j_poptip_ul">
             <span class="a_underline">更多选项</span>
             <ul slot="content">
-              <Poptip placement="right" width="200"
+              <Poptip placement="right" width="200" v-if="!agent.agentId"
                 confirm
                 title="是否复制？"
                 @on-ok="copy(item)">
                 <li> 复制网站 </li>
               </Poptip>
 
-              <li @click="del(item.id)"> 删除网站 </li>
+              <li @click="del(item.id)" v-if="!agent.agentId"> 删除网站 </li>
 
               <li @click="countryChange(item)"> 变更机房 </li>
               <li @click="bind(item.id)"> 网站上线 </li>
@@ -260,7 +260,7 @@ export default {
     init () {
       if (this.agent.agentId && this.list.length > 0) {
         this.list.forEach(item => {
-          if (item.url.indexOf('http://pc.jihui88.com/rest/site/') > -1) {
+          if (item.url.indexOf('http://pc.jihui88.com/rest/site/') > -1 && this.agent.bindUrl) {
             item.url = 'http://pc.' + this.agent.bindUrl + '/rest/site/' + item.id + '/index'
           }
         })
