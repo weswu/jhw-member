@@ -16,7 +16,7 @@
         <Badge count="VIP" :class="[user.pcSitePayTime ? 'badge-vip' : 'badge-gray']"></Badge>
       </p>
     </div>
-    <div class="buy">
+    <div class="buy" v-if="!agent.agentId">
       <Select class="primary" placeholder="升级购买" @on-change="change" style="width:123px">
         <Option class="head" value="0" label="升级购买"> 网站 </Option>
         <Option v-for="item in staticList" :value="item.layoutId" :key="item.layoutId" label="升级购买">
@@ -47,7 +47,7 @@ export default {
     }
   },
   computed: {
-    ...mapState(['user', 'staticList'])
+    ...mapState(['user', 'staticList', 'agent'])
   },
   methods: {
     href () {

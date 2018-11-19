@@ -6,7 +6,7 @@
           <Website :searchData="searchData"/>
         </div>
       </TabPane>
-      <TabPane label="我的小程序" name="1" v-if="!isSubEmp">
+      <TabPane label="我的小程序" name="1" v-if="!isSubEmp && !agent.agentId">
         <div style="padding: 0 28px 28px 28px;">
           <Xiaochengxu/>
         </div>
@@ -36,7 +36,7 @@ export default {
     }
   },
   computed: {
-    ...mapState(['userInfo'])
+    ...mapState(['userInfo', 'agent'])
   },
   methods: {
     handleTabRemove (name) {

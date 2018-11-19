@@ -416,8 +416,6 @@ export default {
     // 过滤
     lanFilter (val) {
       let text = ''
-      if (val === '0') text = '<span class="type">未开通</span>'
-      if (val === '1') text = '<span class="type">已开通</span>'
       this.lanList.forEach(item => {
         if (item.value === val) {
           text = item.text

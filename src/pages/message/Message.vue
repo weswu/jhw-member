@@ -89,7 +89,7 @@ export default {
     }
   },
   computed: {
-    ...mapState(['userInfo', 'status'])
+    ...mapState(['userInfo', 'status', 'agent'])
   },
   watch: {
     '$route' (to, from) {

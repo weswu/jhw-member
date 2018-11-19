@@ -173,7 +173,7 @@ export default {
     },
     signout () {
       // 新版PC注销操作
-      this.ilogout('iframepclogout', 'http://pc.jihui88.com/rest/api/user/logout')
+      this.ilogout('iframepclogout', 'http://pc.' + (this.agent.agentId ? this.agent.bindUrl : 'jihui88.com') + '/rest/api/user/logout')
       // 订购系统注销操作
       this.ilogout('iframeorderlogout', 'http://buy.jihui88.com/api/user/logout')
       this.ilogout('iframebuylogout', this.host + '/rest/buy/api/user/logout')

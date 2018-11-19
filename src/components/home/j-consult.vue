@@ -1,8 +1,8 @@
 <template>
   <div class="j_consult">
-    <div class="j_consult_btn yd_zixun" @click="toggle">
+    <div class="j_consult_btn yd_zixun" @click="toggle" :style="agent.agentId ? 'height:70px' : ''">
       <i class="iconfont icon-paimaizixun"></i>
-      咨<br/>询<br/> <span>.</span><br/>建<br/>议
+      咨<br/>询<br/> <span v-if="!agent.agentId"><span class="dian">.</span><br/>建<br/>议</span>
     </div>
     <div class="shipin yd_jiaocheng" @click="toggle2">教<br/>程</div>
     <Card class="j_consult_content" v-if="display">
@@ -13,7 +13,7 @@
           <Col span="20"> <span>智能顾问</span> <p>智能诊断，秒级解答</p></Col>
         </a>
       </Row>
-      <Row>
+      <Row v-if="!agent.agentId">
         <Col span="4"> <i class="iconfont icon-dkw_tianxie"></i> </Col>
         <Col span="20" style="cursor: pointer">
           <div @click="open">
@@ -98,7 +98,7 @@ export default {
     i{
       margin-top: 5px;    display: inline-block;
     }
-    span{
+    .dian{
       font-size: 18px;
     }
   }
