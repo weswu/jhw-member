@@ -29,7 +29,7 @@ axios.interceptors.response.use(res => {
   if (!res.data.success) {
     if (res.data.msg === '未登录' || res.data.msg === '未登陆') {
       window.localStorage.setItem('lanId', '1')
-      if (location.port !== '8080') {
+      if (location.port !== '8080' && location.host !== 'm2.jihui88.com') {
         window.location.href = window.location.origin + '/manage_v4/login.html?backURL=' + window.location.origin + window.location.pathname
       }
     }

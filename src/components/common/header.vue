@@ -2,7 +2,7 @@
   <Row id="J_Header" type="flex" justify="space-between">
     <Col>
       <div class="logo">
-        <a :href="'http://'+agent.bindUrl"><img :src="'http://img.jihui88.com/'+agent.manageLogo1" alt=""></a>
+        <a :href="'http://'+agent.bindUrl" target="_blank"><img :src="'http://img.jihui88.com/'+agent.manageLogo1" alt=""></a>
       </div>
       <Badge count="体验版 v4" class="badge-primary"></Badge>
     </Col>

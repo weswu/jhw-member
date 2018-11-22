@@ -23,12 +23,12 @@
             <Button type="ghost" size="small" @click="del(index)">消除</Button>
           </td>
           <td><Input v-model="sku.barCode"></Input></td>
-          <td><Checkbox v-model="sku.memberPriceStateBol" @on-change="change(sku)">启用</Checkbox> <span class="a_normal" @click="setting" v-if="sku.memberPriceState === '01'">设置</span> </td>
+          <td><Checkbox v-model="sku.memberPriceStateBol" @on-change="change(sku)">启用</Checkbox> <span class="a_normal" @click="setting(sku, index)" v-if="sku.memberPriceState === '01'">设置</span> </td>
         </tr>
       </tbody>
     </table>
     <JAlbum ref="ablum" @on-change="picChange"/>
-    <attrPrice ref="attrPrice" @on-change="picChange"/>
+    <attrPrice ref="attrPrice" @on-change="attrPriceChange"/>
   </div>
 </template>
 
@@ -72,6 +72,7 @@ export default {
   methods: {
     init () {
       if (this.data) {
+        let skus = []
         this.data.forEach(item => {
           if (item.memberPriceState === '00') {
             item.memberPriceStateBol = false
@@ -79,12 +80,14 @@ export default {
             item.memberPriceStateBol = true
           }
           item.values = item.skuCode.split(',') || []
-          this.skus.push(item)
+          skus.push(item)
         })
+        this.skus = skus
       }
     },
     // 笛卡尔积算法  https://codepen.io/JayceWu/pen/dOxLex
     reBuild: function (val, oldVal) {
+      var ctx = this
       var ori = []
       var skus = []
       this.attrtList.forEach((item, index) => {
@@ -93,21 +96,29 @@ export default {
           ori.push(value)
         }
       })
-      console.log(JSON.stringify(ori))
+      console.log('ori=' + JSON.stringify(ori))
       var ret = this.descartes(ori)
-      console.log(JSON.stringify(ret))
+      console.log('ret=' + JSON.stringify(ret))
       for (var i = 0; i < ret.length; i++) {
-        var sku = {skuCode: '', costPrice: '', stockNum: 1, barCode: ''}
+        var sku = {skuCode: '', costPrice: '', stockNum: 1, propertyNames: '', pic: '', barCode: '', memberPrice: [], memberPriceState: ''}
         sku.values = []
-        ret[i].forEach(item => {
+        ret[i].forEach((item, retIndex) => {
           sku.values.push(item)
+          sku.propertyNames = sku.propertyNames + ctx.attrtList[retIndex].name + ':' + item + ';'
         })
         sku.skuCode = sku.values.join()
         this.skus.forEach(sItem => {
           if (sItem.skuCode === sku.skuCode) {
-            sku = sItem
+            sku.costPrice = sItem.costPrice
+            sku.stockNum = sItem.stockNum
+            sku.pic = sItem.pic
+            sku.barCode = sItem.barCode
+            sku.memberPrice = sItem.memberPrice
+            sku.memberPriceState = sItem.memberPriceState
+            sku.memberPriceStateBol = sItem.memberPriceStateBol
           }
         })
+        console.log('sku=' + JSON.stringify(sku))
         skus.push(sku)
       }
       this.skus = skus
@@ -169,8 +180,12 @@ export default {
     change (item) {
       item.memberPriceState = item.memberPriceStateBol ? '01' : '00'
     },
-    setting (item) {
+    setting (item, index) {
+      this.index = index
       this.$refs.attrPrice.open(item.memberPrice, item.id)
+    },
+    attrPriceChange (list) {
+      this.skus[this.index].memberPrice = list
     },
     getValueName (sku, property) {
       var valueName = ''

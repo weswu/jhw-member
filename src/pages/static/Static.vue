@@ -3,7 +3,7 @@
     <JHeader :title="'站点数据管理'"/>
     <Content>
       <div class="j_search">
-        <Button class="grey" @click="active = item.value" v-for="(item, index) in btns" :key="index" :class="{primary: active === item.value}" v-if="index === 0 || !agent.agentId">{{item.text}}</Button>
+        <Button class="grey" @click="active = item.value" v-for="(item, index) in btns" :key="index" :class="{primary: active === item.value}" v-if="index === 0">{{item.text}}</Button>
       </div>
       <Website v-if="active === '0'"/>
       <Xiaochengxu v-if="active === '1'"/>
@@ -12,7 +12,6 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
 import JHeader from '@/components/group/j-header'
 import Website from '@/components/pc/website'
 import Xiaochengxu from '@/components/static/xiaochengxu'
@@ -21,9 +20,6 @@ export default {
     JHeader,
     Website,
     Xiaochengxu
-  },
-  computed: {
-    ...mapState(['agent'])
   },
   data () {
     return {

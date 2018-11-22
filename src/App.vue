@@ -44,7 +44,9 @@ export default {
   },
   created () {
     // 经销商
-    if (location.host !== 'www.jihui88.com') {
+    if (location.host !== 'www.jihui88.com' && location.host !== 'm2.jihui88.com') {
+      this.agent.manageLogo1 = '666'
+      this.$store.commit('setAgent', this.agent)
       this.$store.dispatch('getAgent')
     } else {
       this.agent.manageLogo1 = 'upload/w/w5/www2/picture/2017/07/05/54b68a5c-fdd2-4842-9e1e-b88d1c403f28.png'

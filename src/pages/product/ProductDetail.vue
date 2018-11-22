@@ -343,6 +343,50 @@ export default {
           })
         }
       })
+      /**
+      // 测试
+      ctx.attrtList = [
+        {
+          name: '颜色',
+          state: '01',
+          attributeType: 'checkbox',
+          formula: null,
+          orderList: 1,
+          attId: '8a9e457e66e737590166eb9eff9f0053',
+          isRequired: '00',
+          isEnabled: '01',
+          attributeOptionStore: '["黑色","红色","蓝色"]',
+          attributeOptionList: [
+            '黑色',
+            '红色',
+            '蓝色'
+          ]
+        },
+        {
+          name: '颜色A',
+          state: '01',
+          attributeType: 'checkbox',
+          formula: null,
+          orderList: 1,
+          attId: '8a9e457e66e73759',
+          isRequired: '01',
+          isEnabled: '01',
+          attributeOptionStore: '["黑色A","红色A","蓝色A"]',
+          attributeOptionList: [
+            '黑色A',
+            '红色A',
+            '蓝色A'
+          ]
+        }
+      ]
+      this.detail.productAttributeMapStore.forEach(item => {
+        ctx.attrtList.forEach(att => {
+          if (item.productAttribute.attId === att.attId) {
+            att.value = item.attributeOptionList
+          }
+        })
+      })
+      **/
     },
     // 提交
     submit () {
@@ -392,7 +436,25 @@ export default {
       if (this.detail.attrState && this.detail.attrState === '01' && this.$refs.attr.skus.length === 0) {
         return this.$Message.info('请设置产品规格或者关闭属性固定价格')
       }
-      this.detail.attrItems = this.$refs.attr.skus
+      let skus = []
+      this.$refs.attr.skus.forEach(item => {
+        if (item.memberPrice.length > 0) {
+          item.memberPrice.forEach(priceItem => {
+            priceItem.rankId = priceItem.memberRank.rankId || ''
+          })
+        }
+        skus.push({
+          skuCode: item.skuCode,
+          costPrice: item.costPrice,
+          stockNum: item.stockNum,
+          propertyNames: item.propertyNames,
+          pic: item.pic,
+          barCode: item.barCode,
+          memberPrice: item.memberPrice,
+          memberPriceState: item.memberPriceState
+        })
+      })
+      this.detail.attrItems = skus
       // 定制规格
       var customAttrList = []
       this.$refs.attrCustom.list.forEach(item => {

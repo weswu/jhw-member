@@ -46,6 +46,7 @@ const state = {
     vSeo: 'https://v.qq.com/x/page/u0753y5akkv.html',
     vSitemap: 'https://v.qq.com/x/page/l0753l1jw2c.html',
     vSeoBatch: 'https://v.qq.com/x/page/u0753ji3n5n.html',
+    vAnalysis: 'https://v.qq.com/x/page/j0753ycgfeh.html',
     dNews: 'http://xueyuan.jihui88.com/news.html',
     dLog: '#/update',
     user: {
