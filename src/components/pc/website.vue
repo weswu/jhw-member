@@ -8,7 +8,10 @@
       温馨提醒：<a :href="agent.vWebsite" class="a_underline" target="_blank">视频教程</a>
     </div>
     <div v-if="!isSubEmp">
-      <Button icon="plus" class="orange yd_website" @click="add" v-if="!agent.agentId">创建新网站</Button> 您有{{onlineCount}}个网站上线了
+      <Button icon="plus" class="orange yd_website" @click="add" v-if="!agent.agentId">
+        创建新网站<br/>
+        <span class="free">（免费体验1个月）</span>
+      </Button> 您有{{onlineCount}}个网站上线了
     </div>
     <ul class="static_info j_scroll">
       <li class="item" v-for="item in list" :key="item.id">
@@ -457,32 +460,48 @@ export default {
     top: 0;
   }
 }
-.j_static_website .j_poptip_ul{
-  .ivu-poptip-popper{
-    z-index: 999;
-  }
-  height: 16px;
-  line-height: 16px;
-  .ivu-poptip-body {
-    .ivu-poptip,.ivu-poptip-rel{
-      width: 100%
+.j_static_website {
+  .yd_website{
+    font-size:14px;
+    line-height: 1.2;
+    padding: 4px 12px;
+    .free{
+       font-size:12px;color: rgba(255, 255, 255, 0.5);
+       transform: scale(0.85);
+       -webkit-transform: scale(0.85);
     }
+    .ivu-icon-plus{
+      font-size: 12px;
+    }
+  }
+  .j_poptip_ul{
     .ivu-poptip-popper{
-      padding: 0 5px 0 3px;
-      text-align: left;
+      z-index: 999;
     }
-    .ivu-poptip-body{
-      padding: 16px 16px 8px;
+    height: 16px;
+    line-height: 16px;
+    .ivu-poptip-body {
+      .ivu-poptip,.ivu-poptip-rel{
+        width: 100%
+      }
+      .ivu-poptip-popper{
+        padding: 0 5px 0 3px;
+        text-align: left;
+      }
+      .ivu-poptip-body{
+        padding: 16px 16px 8px;
+      }
     }
-  }
-  li{
-    text-align: center;
-    a{
-      color: #595959;
-      display: block
+    li{
+      text-align: center;
+      a{
+        color: #595959;
+        display: block
+      }
     }
   }
 }
+
 .static_info{
   margin-top: 20px;
   border-left: 1px solid #e9e9e9;
