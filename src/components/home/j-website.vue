@@ -8,7 +8,7 @@
       <span>
         账号昵称：
         <span class="nickName" @click="href">{{user.nickName || user.username}}</span>
-        <div class="j_tip">温馨提醒：为了您账号的安全，请及时 <span class="a_underline" @click="href">设置您的邮箱及密码</span></div>
+        <div class="j_tip">温馨提醒：为了您账号的安全，请及时 <span class="a_underline" @click="href">设置您的<span v-if="!agent.agentId">邮箱及</span>密码</span></div>
       </span>
       <p>
         <span>注册时间：{{user.addTime | time}}</span>
