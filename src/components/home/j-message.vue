@@ -6,7 +6,7 @@
           <div class="j_null">暂无公告</div>
         </div>
       </TabPane>
-      <TabPane label="客户消息" name="1">
+      <TabPane label="客户留言" name="1">
         <ul>
           <li v-for="(item, index) in list" :key="index">
             <div class="title" @click="detail(item, index)">

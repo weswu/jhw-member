@@ -35,6 +35,7 @@
       </Dropdown>
       <Dropdown placement="bottom" class="j_dropdown_message" @on-visible-change="messageChange">
         <a href="#/message" class="header_link">
+          消息
           <i class="iconfont icon-tixing2 yd_message"><span class="badge">{{userInfo.noReaderMsg}}</span></i>
         </a>
         <DropdownMenu slot="list">
@@ -353,7 +354,7 @@ export default {
       text-align: left;
       i{
         cursor: pointer;
-        font-size: 22px;
+        font-size: 16px;vertical-align: middle;
         .badge{
           font-size: 12px;
           background: #ff6700;

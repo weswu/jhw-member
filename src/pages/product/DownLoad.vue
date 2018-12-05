@@ -114,7 +114,7 @@ export default {
       })
     },
     exportProductImg () {
-      this.$http.get('/api/product/exportProductImg').then(res => {
+      this.$http.get('/rest/api/product/exportProductImg').then(res => {
         if (res.success) {
           window.open(res.attributes.data)
         }

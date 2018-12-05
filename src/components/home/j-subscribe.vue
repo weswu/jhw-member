@@ -58,7 +58,7 @@ export default {
         },
         {
           name0: '公告',
-          name1: '客户消息',
+          name1: '客户留言',
           value: 'message',
           active: '1'
         },

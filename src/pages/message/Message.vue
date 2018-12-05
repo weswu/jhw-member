@@ -59,7 +59,7 @@ export default {
     return {
       btns: [
         { text: '全部类型消息', value: '', status: true, count: '' },
-        { text: '客户消息', value: '03', status: true, count: '' },
+        { text: '客户留言', value: '03', status: true, count: '' },
         // { text: '系统消息', value: '04', status: false },
         // { text: '浏览者消息', value: '05', status: false },
         // { text: '用户反馈', value: '06', status: false },
