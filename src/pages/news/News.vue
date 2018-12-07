@@ -217,6 +217,7 @@ export default {
     next(vm => {
       if (from.meta.parent !== 'news') {
         vm.$cookie.set('newsPage', 1)
+        vm.$cookie.set('newsIndex', '')
       } else {
         vm.searchData.page = parseInt(vm.$cookie.get('newsPage')) || 1
       }
@@ -233,13 +234,17 @@ export default {
         if (res.success) {
           this.total = res.attributes.count
           let data = res.attributes.data
-          data.forEach(item => {
+          let idx = parseInt(this.$cookie.get('newsIndex'))
+          data.forEach((item, index) => {
             item._checked = false
             item.edittingCell = {
               title: false,
               sort: false,
               api: 'news',
               id: item.newsId
+            }
+            if (idx === index) {
+              item._highlight = true
             }
           })
           this.list = data
@@ -395,6 +400,7 @@ export default {
           on: {
             click: () => {
               this.$cookie.set('newsPage', this.searchData.page)
+              this.$cookie.set('newsIndex', params.index)
               this.$router.push({path: '/news/' + params.row.newsId2})
             }
           }

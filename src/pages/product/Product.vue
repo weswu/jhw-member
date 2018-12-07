@@ -182,6 +182,7 @@ export default {
     next(vm => {
       if (from.meta.parent !== 'product') {
         vm.$cookie.set('productPage', 1)
+        vm.$cookie.set('productIndex', '')
       } else {
         vm.searchData.page = parseInt(vm.$cookie.get('productPage')) || 1
       }
@@ -199,7 +200,8 @@ export default {
         if (res.success) {
           this.total = res.attributes.count
           let data = res.attributes.data
-          data.forEach(item => {
+          let idx = parseInt(this.$cookie.get('productIndex'))
+          data.forEach((item, index) => {
             item._checked = false
             item.edittingCell = {
               name: false,
@@ -212,6 +214,9 @@ export default {
             if (!item.isBest) { item.isBest = '00' }
             if (!item.isNew) { item.isNew = '00' }
             if (!item.isHot) { item.isHot = '00' }
+            if (idx === index) {
+              item._highlight = true
+            }
           })
           this.list = data || []
         }
@@ -788,6 +793,7 @@ export default {
           on: {
             click: () => {
               this.$cookie.set('productPage', this.searchData.page)
+              this.$cookie.set('productIndex', params.index)
               this.$router.push({path: '/product/' + params.row.productId2})
             }
           }

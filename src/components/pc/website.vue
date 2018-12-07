@@ -148,8 +148,8 @@ export default {
   },
   data () {
     return {
-      listTest: [],
-      list: [
+      list: [],
+      listTest: [
         {
           id: '99',
           seoTitle: '我的网站',
@@ -352,6 +352,7 @@ export default {
     delItem () {
       this.modal_loading = true
       this.$http.delete('/rest/pc/api/baseLayout/detail/' + this.id).then((res) => {
+        this.modal_loading = false
         if (res.success) {
           this.$Message.success('删除成功')
           for (let i = 0; i < this.staticList.length; i++) {
@@ -360,11 +361,9 @@ export default {
             }
           }
           this.$store.commit('setStaticList', this.staticList)
-          this.modal_loading = false
           this.modalDel = false
           this.get()
         } else {
-          this.modal_loading = false
           this.$Message.success(res.msg)
         }
       })

@@ -1,6 +1,7 @@
 <template>
   <Table
     ref="dragable"
+    highlight-row
     :columns="columns"
     :data="list"
     @on-selection-change="selectChange"
