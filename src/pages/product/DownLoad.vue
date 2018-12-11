@@ -6,49 +6,52 @@
         温馨提示：<a :href="agent.vDownload" class="a_underline" target="_blank">下载视频教程</a>
       </div>
       <div class="j_search">
-        <Button class="grey primary w130">产品表格下载</Button>
+        <Button class="grey primary w130" @click="active = '0'">产品表格下载</Button>
         <Button class="grey w130" @click="exportProductImg">产品相册下载</Button>
       </div>
-      <table class="j_table j_table_li">
-        <thead>
-          <tr>
-            <th>表格模板内容：需要的请“打勾”，再点下载。</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>
-              <CheckboxGroup v-model="col">
-                <Checkbox :label="item.text === '-' ? item.value : item.text" v-for="item in list" :key="item.value">{{item.text}}</Checkbox>
-              </CheckboxGroup>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-      <table class="j_table j_table_li" style="margin: 25px 0 35px 0">
-        <thead>
-          <tr>
-            <th>
-              表格模板内容：需要的请“打勾”，再点下载。温馨提醒（如需下载下面的内容，请先选择好所属的网站编号）
-              <Select v-model="$store.state.layoutId" class="small" style="width:120px">
-                <Option v-for="item in staticList" :value="item.layoutId" :key="item.layoutId" :label="item.label">
-                  <span>网站编号：{{ item.layoutId }}</span>
-                </Option>
-              </Select>
-            </th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>
-              <CheckboxGroup v-model="col2">
-                <Checkbox :label="item.text === '-' ? item.value : item.text" v-for="item in list2" :key="item.value">{{item.text}}</Checkbox>
-              </CheckboxGroup>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-      <Button type="primary" @click="ok" style="width:124px;">下载</Button>
+      <div v-if="active === '0'">
+        <table class="j_table j_table_li">
+          <thead>
+            <tr>
+              <th>表格模板内容：需要的请“打勾”，再点下载。</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>
+                <CheckboxGroup v-model="col">
+                  <Checkbox :label="item.text === '-' ? item.value : item.text" v-for="item in list" :key="item.value">{{item.text}}</Checkbox>
+                </CheckboxGroup>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <table class="j_table j_table_li" style="margin: 25px 0 35px 0">
+          <thead>
+            <tr>
+              <th>
+                表格模板内容：需要的请“打勾”，再点下载。温馨提醒（如需下载下面的内容，请先选择好所属的网站编号）
+                <Select v-model="$store.state.layoutId" class="small" style="width:120px">
+                  <Option v-for="item in staticList" :value="item.layoutId" :key="item.layoutId" :label="item.label">
+                    <span>网站编号：{{ item.layoutId }}</span>
+                  </Option>
+                </Select>
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>
+                <CheckboxGroup v-model="col2">
+                  <Checkbox :label="item.text === '-' ? item.value : item.text" v-for="item in list2" :key="item.value">{{item.text}}</Checkbox>
+                </CheckboxGroup>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <Button type="primary" @click="ok" style="width:124px;">下载</Button><a :href="url1" target="_blank" class="a_underline" style="margin-left:15px;" v-if="url1">浏览器阻止，点击这里下载</a>
+      </div>
+      <a :href="url2" target="_blank" v-if="active === '1'" style="margin-top:20px;display: block;"><Button type="primary" style="width:124px;">下载</Button></a>
     </Content>
   </Layout>
 </template>
@@ -66,6 +69,7 @@ export default {
   },
   data () {
     return {
+      active: '0',
       col: [],
       col2: [],
       list: [
@@ -98,7 +102,9 @@ export default {
         { value: '4', text: '-' },
         { value: '5', text: '-' },
         { value: '6', text: '-' }
-      ]
+      ],
+      url1: '',
+      url2: ''
     }
   },
   methods: {
@@ -109,14 +115,16 @@ export default {
       }
       this.$http.post('/rest/api/product/exportProductsToExcel?' + qs.stringify(data)).then(res => {
         if (res.success) {
+          this.url1 = res.attributes.data
           window.open(res.attributes.data)
         }
       })
     },
     exportProductImg () {
+      this.active = '1'
       this.$http.get('/rest/api/product/exportProductImg').then(res => {
         if (res.success) {
-          window.open(res.attributes.data)
+          this.url2 = res.attributes.data
         }
       })
     }
