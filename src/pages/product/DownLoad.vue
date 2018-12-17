@@ -6,8 +6,8 @@
         温馨提示：<a :href="agent.vDownload" class="a_underline" target="_blank">下载视频教程</a>
       </div>
       <div class="j_search">
-        <Button class="grey primary w130" @click="active = '0'">产品表格下载</Button>
-        <Button class="grey w130" @click="exportProductImg">产品相册下载</Button>
+        <Button :class="'grey w130 ' + (active === '0' ? 'primary' :'')" @click="active = '0'">产品表格下载</Button>
+        <Button :class="'grey w130 ' + (active === '1' ? 'primary' :'')"  @click="exportProductImg">产品相册下载</Button>
       </div>
       <div v-if="active === '0'">
         <table class="j_table j_table_li">
@@ -51,7 +51,7 @@
         </table>
         <Button type="primary" @click="ok" style="width:124px;">下载</Button><a :href="url1" target="_blank" class="a_underline" style="margin-left:15px;" v-if="url1">浏览器阻止，点击这里下载</a>
       </div>
-      <a :href="url2" target="_blank" v-if="active === '1'" style="margin-top:20px;display: block;"><Button type="primary" style="width:124px;">下载</Button></a>
+      <a :href="url2" target="_blank" v-if="active === '1'" style="margin-top:20px;display: block;"><Button type="primary" style="width:124px;"><span v-if="!url2">链接生成中</span><span v-else>下载</span></Button></a>
     </Content>
   </Layout>
 </template>
