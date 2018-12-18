@@ -1,6 +1,6 @@
 <template>
   <div id="JHW" :class="(win === 'small' ? 'small' : win === 'mobile' ? 'webapp' : '') + ' ' + className">
-    <Layout>
+    <Layout style="height: 100%;">
       <Header v-show="win !== 'small'"/>
       <Layout class="j_layout ivu-layout-has-sider" :class="{detail: detail}">
         <Sider v-show="win !== 'small'"/>

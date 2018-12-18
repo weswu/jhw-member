@@ -119,7 +119,7 @@ export default {
         { title: '产品型号', className: 'j_table_title', sortable: true, key: 'prodtype', minWidth: 130, render: this.prodtypeFilter },
         { title: '产品价格', minWidth: 90, render: this.priceFilter },
         { title: '产品分类', className: 'j_table_category', sortable: true, key: 'category', width: 160, render: this.categoryFilter },
-        { title: '添加时间', sortable: true, key: 'addTime', minWidth: 105, render: this.dataFilter },
+        { title: '添加时间', sortable: true, key: 'addTime', minWidth: 105 },
         { title: '显示／隐藏', sortable: true, key: 'isdisplay', width: 113, render: this.isdisplayFilter },
         { title: '是否上架', sortable: true, key: 'isMarketable', width: 102, render: this.isMarketableFilter },
         { title: '排序', className: 'j_table_sort', sortable: true, key: 'sort', minWidth: 125, render: this.sortFilter }

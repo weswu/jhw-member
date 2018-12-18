@@ -137,7 +137,7 @@ export default {
       text-align: right;
     }
     .ivu-icon-arrow-down-b{
-      display: none;
+      display: none !important;
     }
     .icon-update{
       font-size: 18px;

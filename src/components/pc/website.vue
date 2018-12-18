@@ -55,7 +55,7 @@
         </p>
         <p class="more" v-if="!isSubEmp">
           <a :href="'http://pc.' + ((agent.agentId && agent.bindUrl) ? agent.bindUrl : 'jihui88.com') + '/pc/design.html?layoutId=' + item.id" target="_blank" class="a_underline" @click="goEdit(item)">进入编辑</a>
-          <Poptip placement="top" class="j_poptip_ul">
+          <Poptip placement="right-end" class="j_poptip_ul">
             <span class="a_underline">更多选项</span>
             <ul slot="content">
               <Poptip placement="right" width="200" v-if="!agent.agentId"
@@ -152,6 +152,21 @@ export default {
       listTest: [
         {
           id: '99',
+          seoTitle: '我的网站',
+          new: false,
+          state: '00',
+          url: '',
+          language: '1',
+          count: 1,
+          country: 'cn',
+          bind: {
+            address: '',
+            country: 'cn',
+            online: '01'
+          }
+        },
+        {
+          id: '100',
           seoTitle: '我的网站',
           new: false,
           state: '00',

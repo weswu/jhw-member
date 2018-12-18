@@ -1,5 +1,5 @@
 <template>
-  <div :class="{j_head: tip, j_head2: type}" v-if="$store.state.win !== 'small'">
+  <div class="safari_header" :class="{j_head: tip, j_head2: type}" v-if="$store.state.win !== 'small'">
     <div class="j_header">
       <Row type="flex" justify="space-between">
         <Col>
@@ -19,7 +19,9 @@
         </Col>
       </Row>
     </div>
-    <div class="j_tip" v-html="tip" v-if="tip"></div>
+    <div class="j_header_tip" v-if="tip">
+      <div class="j_tip" v-html="tip" v-if="tip"></div>
+    </div>
   </div>
 </template>
 
@@ -82,8 +84,12 @@ export default {
     border-bottom: none;
     margin-bottom: 0;
   }
+  .j_header_tip{
+    padding-bottom: 20px;
+  }
   .j_tip{
-    margin: 0 0 20px 0;
+    margin-top: 0;
+    margin-bottom: 0;
   }
   &.j_head2{
     .j_header{
@@ -92,10 +98,12 @@ export default {
     }
   }
 }
+.safari_header{
+  padding-bottom: 24px;
+}
 .j_header{
   border-bottom: 1px solid #c9c9c9;
   padding: 26px 0 12px 0;
-  margin-bottom: 24px;
   .title{
     padding: 0 15px;
     color: #595959;

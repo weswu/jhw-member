@@ -147,6 +147,7 @@ export default {
     padding-left: 14px;
     cursor: pointer;
     position: absolute;
+    display: inline-block;
   }
   .explain{
     color: #b9b9b9;margin-top: 72px;

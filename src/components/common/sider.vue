@@ -126,7 +126,7 @@ export default {
 @import '../../assets/variables.less';
 #J_Sider{
   background: #2d303c;
-  height: 100%;
+  height: calc(100vh - 50px);
   transition: none;
   overflow-y: auto;
   overflow-x: hidden;

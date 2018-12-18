@@ -37,15 +37,14 @@ export default {
   }
   img{
     width: 100%;
-    height: 100%;
   }
   .ivu-carousel-dots li button.radius{
     width: 11px;height: 11px;
     background: #f4f3f5;
   }
   .ivu-carousel-dots li.ivu-carousel-active > button.radius{
-      width: 11px;height: 11px;
-      background: #e7eaef
+    width: 11px;height: 11px;
+    background: #e7eaef
   }
 }
 </style>
