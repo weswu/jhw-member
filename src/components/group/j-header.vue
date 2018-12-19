@@ -19,9 +19,7 @@
         </Col>
       </Row>
     </div>
-    <div class="j_header_tip" v-if="tip">
-      <div class="j_tip" v-html="tip" v-if="tip"></div>
-    </div>
+    <div class="j_tip" v-html="tip" v-if="tip"></div>
   </div>
 </template>
 
@@ -83,9 +81,6 @@ export default {
   .j_header{
     border-bottom: none;
     margin-bottom: 0;
-  }
-  .j_header_tip{
-    padding-bottom: 20px;
   }
   .j_tip{
     margin-top: 0;

@@ -8,7 +8,7 @@
     </Col>
     <Col class="userInfo">
       <Dropdown placement="bottom" class="j_dropdown_browser">
-        <a class="header_link">
+        <a class="header_link" href="javascript:;">
           建议用：360/谷歌浏览器
         </a>
         <DropdownMenu slot="list">
@@ -22,7 +22,7 @@
       </Dropdown>
       <a href="#/" class="header_link">首页</a>
       <Dropdown placement="bottom" class="j_dropdown_browser j_dropdown_word" v-if="agent.vManage || agent.dNews || agent.dLog">
-        <a class="header_link">
+        <a class="header_link" href="javascript:;">
           文档
         </a>
         <DropdownMenu slot="list">
@@ -126,7 +126,8 @@ export default {
         { name: '安全设置', icon: 'anquan', path: 'account' },
         { name: '公司信息', icon: 'gongsi', path: 'enterprise' }
       ],
-      host: location.origin
+      host: location.origin,
+      safari: false
     }
   },
   computed: {
@@ -165,6 +166,10 @@ export default {
     }
     this.getUserInfo()
     this.getCustomData()
+    // 判断是否safari浏览器
+    if (/Safari/.test(navigator.userAgent) && !/Chrome/.test(navigator.userAgent)) {
+      this.safari = true
+    }
   },
   methods: {
     ...mapActions(['getUser', 'getUserInfo', 'getCustomData', 'getEnterprise']),

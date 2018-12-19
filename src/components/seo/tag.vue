@@ -4,7 +4,7 @@
       <Button class="mormal" @click="active = item.value" v-for="(item, index) in btns" :key="index" :class="{active: active === item.value}">{{item.text}}</Button>
     </div>
     <div v-if="active === '0'">
-      <div class="j_search">
+      <div class="j_search" style="height:51px;">
         <Row type="flex" justify="space-between">
           <Col>
             <Button type="info" icon="plus" class="w130" @click="add">添加标签</Button>

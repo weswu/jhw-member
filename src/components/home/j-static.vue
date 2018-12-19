@@ -2,7 +2,7 @@
   <div class="j_home_static j_panel">
     <Tabs :value="tabActive">
       <TabPane label="我的网站" name="0">
-        <div style="padding: 0 28px 28px 28px;">
+        <div :class="safari ? 'j_home_static_safari' : ''" style="padding: 0 28px 28px 28px;">
           <Website :searchData="searchData"/>
         </div>
       </TabPane>
@@ -32,11 +32,18 @@ export default {
         pageSize: 2,
         sortType: 'desc'
       },
-      isSubEmp: false
+      isSubEmp: false,
+      safari: false
     }
   },
   computed: {
     ...mapState(['userInfo', 'agent'])
+  },
+  created () {
+    // 判断是否safari浏览器
+    if (/Safari/.test(navigator.userAgent) && !/Chrome/.test(navigator.userAgent)) {
+      this.safari = true
+    }
   },
   methods: {
     handleTabRemove (name) {
@@ -58,6 +65,9 @@ export default {
 .j_home_static{
   .static_info {
     overflow: hidden;
+  }
+  .j_home_static_safari .ivu-poptip-popper[x-placement="right-end"] .ivu-poptip-arrow{
+    bottom: 60px;
   }
 }
 </style>

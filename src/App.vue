@@ -2,7 +2,7 @@
   <div id="JHW" :class="(win === 'small' ? 'small' : win === 'mobile' ? 'webapp' : '') + ' ' + className">
     <Layout style="height: 100%;">
       <Header v-show="win !== 'small'"/>
-      <Layout class="j_layout ivu-layout-has-sider" :class="{detail: detail}">
+      <Layout class="j_layout ivu-layout-has-sider height50" :class="{detail: detail}">
         <Sider v-show="win !== 'small'"/>
         <router-view/>
       </Layout>
@@ -107,3 +107,9 @@ export default {
   }
 }
 </script>
+
+<style>
+.height50{
+  height: calc(100vh - 50px);
+}
+</style>

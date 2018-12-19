@@ -2,7 +2,7 @@
   <Layout class="j_layout_content j_product_import j_product_import_download">
     <Content>
       <JHeader :title="'下载'" :lan="true"/>
-      <div class="j_tip" v-if="agent.vDownload">
+      <div class="j_tip" v-if="agent.vDownload" style="margin-top:0">
         温馨提示：<a :href="agent.vDownload" class="a_underline" target="_blank">下载视频教程</a>
       </div>
       <div class="j_search">

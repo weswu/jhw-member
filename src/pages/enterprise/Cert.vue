@@ -2,14 +2,14 @@
   <Layout class="j_layout_content j_cert">
     <JHeader :title="'荣誉证书'" :lan="true" @on-change="lanChange"/>
     <Content>
-      <div class="j_search">
+      <div class="j_search j_search_41">
         <Row type="flex" justify="space-between">
           <Col>
             <Button type="info" icon="plus" class="w130" @click="add">添加荣誉证书</Button>
           </Col>
           <Col>
             <Input v-model="searchData.name" class="w180" clearable placeholder="请输入证书名称" @on-change="clearInput"></Input>
-            <Button class="search" @click="search">搜索</Button>
+            <Button class="search" @click="search" style="display:inline-block">搜索</Button>
           </Col>
         </Row>
       </div>

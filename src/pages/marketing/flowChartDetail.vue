@@ -1,5 +1,5 @@
 <template>
-  <Layout class="j_layout_content j_flow_chart">
+  <Layout class="j_layout_content j_flow_chart j_flow_chart_detail">
     <JHeader :title="list[current].name"></JHeader>
     <Content>
       <div v-for="(item, index) in list" :key="index" v-if="index === current">
@@ -39,10 +39,10 @@
                 、<a href="http://tool.chinaz.com/baidu/entry" target="_blank">收录率查询</a>、<a href="http://tool.chinaz.com/kwevaluate" target="_blank">关键词优化分析</a>、<a href="http://tool.chinaz.com/baidu/metadig.aspx" target="_blank">Meta信息挖掘</a></p>
               <p>5、<a href="#/seo?active=6">付费SEO推广</a></p>
             </div>
-            <div v-if="index === 2">
+            <div class="desc" v-if="index === 2">
               <p>社群营销6步：</p><p>1、社群定位</p><p>2、价值主张</p><p>3、社群角色</p><p>4、社群运营维护</p><p>5、保持粘性</p><p>6、社群传播和工具</p><p>欢迎大家联系 QQ：{{agent.user.qq}}  &nbsp;&nbsp;&nbsp;&nbsp;获取PPT</p>
             </div>
-            <div v-if="index === 5">
+            <div class="desc" v-if="index === 5">
               <p>欢迎大家联系QQ：{{agent.user.qq}}，获取PPT</p>
             </div>
           </div>

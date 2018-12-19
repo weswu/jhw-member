@@ -3,7 +3,7 @@
       <Content>
         <JHeader :title="'产品列表'" :lan="true" @on-change="lanChange"/>
         <div class="j_search">
-          <Row type="flex" justify="space-between">
+          <Row type="flex" justify="space-between" class="j_product_search">
             <Col>
               <Button type="info" icon="plus" class="w130" @click="url('/product/add')">添加产品</Button>
             </Col>
@@ -904,5 +904,11 @@ export default {
   text-align: right;
   padding-right: 10px;
   margin-top: 10px;
+}
+
+@media screen and (min-width: 1100px) {
+  .j_product_search{
+    height: 41px;
+  }
 }
 </style>

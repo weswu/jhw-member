@@ -96,9 +96,10 @@ export default {
 <style lang="less">
 .j_row.item{
   border: 1px solid #dedede;
+  height: 333px;
   .title{
     flex: 0 0 256px;
-    background: #eee;
+    background: #f3f3f3;
     text-align: center;
   }
   .content{

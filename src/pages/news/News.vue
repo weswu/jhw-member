@@ -3,7 +3,7 @@
     <JHeader :title="'新闻列表'" :lan="true" @on-change="lanChange"/>
     <Content>
       <div class="j_search">
-        <Row type="flex" justify="space-between">
+        <Row type="flex" justify="space-between" class="j_news_search">
           <Col>
             <Button type="info" icon="plus" class="w130" @click="url('/news/add')">添加新闻</Button>
           </Col>
@@ -465,6 +465,12 @@ export default {
     .ivu-select-dropdown-list{
       width: 203px;
     }
+  }
+}
+
+@media screen and (min-width: 1030px) {
+  .j_news_search{
+    height: 41px;
   }
 }
 </style>

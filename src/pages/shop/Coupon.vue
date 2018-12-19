@@ -11,7 +11,7 @@
       </div>
     </JHeader>
     <Content>
-      <div class="j_search">
+      <div class="j_search j_search_41">
         <Row type="flex" justify="space-between">
           <Col>
             <Button type="info" icon="plus" class="w130" @click="url('/coupon/add')">添加优惠券</Button>

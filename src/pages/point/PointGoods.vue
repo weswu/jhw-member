@@ -1,5 +1,5 @@
 <template>
-  <Layout class="j_layout_content j_category">
+  <Layout class="j_layout_content">
     <JHeader :title="'积分兑换'" :count="count"/>
     <Content>
       <Table :columns="columns" :data="list"></Table>
