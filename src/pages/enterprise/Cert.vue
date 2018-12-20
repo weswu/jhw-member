@@ -85,6 +85,7 @@ export default {
     get () {
       this.$http.get('/rest/api/cert/list?' + qs.stringify(this.searchData)).then(res => {
         if (res.success) {
+          this.total = res.attributes.count
           let data = res.attributes.data
           data.forEach(item => {
             item.serverPath = item.att && item.att.serverPath

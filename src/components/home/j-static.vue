@@ -69,5 +69,8 @@ export default {
   .j_home_static_safari .ivu-poptip-popper[x-placement="right-end"] .ivu-poptip-arrow{
     bottom: 60px;
   }
+  .j_home_static_safari .ivu-poptip-popper[x-placement="right"] .ivu-poptip-arrow{
+    top: 20%;
+  }
 }
 </style>
