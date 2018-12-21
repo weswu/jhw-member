@@ -58,13 +58,13 @@
           <Poptip placement="right-end" class="j_poptip_ul">
             <span class="a_underline">更多选项</span>
             <ul slot="content">
-              <Poptip placement="top" width="200"
+              <Poptip placement="top" width="200" v-if="!agent.agentId"
                 confirm
                 title="是否复制？"
                 @on-ok="copy(item)">
                 <li> 复制网站 </li>
               </Poptip>
-              <li @click="del(item.id)"> 删除网站 </li>
+              <li @click="del(item.id)" v-if="!agent.agentId"> 删除网站 </li>
               <li @click="countryChange(item)"> 变更机房 </li>
               <li @click="bind(item.id)"> 网站上线 </li>
               <li @click="lanSetting(item)"> 语言设置 </li>

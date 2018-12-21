@@ -22,6 +22,6 @@
 
 #### safari 兼容
 1.页面空白  npm install --save-dev babel-polyfill       main.js 添加import 'babel-polyfill'
-2.Error in mounted hook: "TypeError: 'false' is not a constructor (evaluating 'new _assist.MutationObserver')"
+2.Error in mounted hook: 'TypeError: 'false' is not a constructor (evaluating 'new _assist.MutationObserver')'
 在model 下出错 未知 暂无能用
 3.时间

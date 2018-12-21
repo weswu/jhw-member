@@ -35,28 +35,7 @@ export default {
     return {
       modal: false,
       columns: [],
-      list: [
-        {
-          name: '商量aaaaaaaaaa',
-          productId: 'Product_000000000000000000581124',
-          _checked: false
-        },
-        {
-          name: 'aaabc',
-          productId: 'Product_000000000000000000567121',
-          _checked: false
-        },
-        {
-          name: '测试积分1',
-          productId: 'Product_000000000000000000567119',
-          _checked: false
-        },
-        {
-          name: '测试产品积分',
-          productId: 'Product_000000000000000000567118',
-          _checked: false
-        }
-      ],
+      list: [],
       searchData: {
         page: 1,
         pageSize: 5
@@ -68,7 +47,6 @@ export default {
   methods: {
     get () {
       var ctx = this
-      this.ids = ''
       this.$http.get('/rest/api/product/list?' + qs.stringify(this.searchData)).then(res => {
         if (res.success) {
           this.total = res.attributes.count

@@ -319,6 +319,15 @@ export default [
               showInMenu: true
             },
             components: require('@/pages/product/DownLoad')
+          },
+          {
+            path: 'batch_import_tag',
+            name: 'batch_import_tag',
+            meta: {
+              title: '批量导入标签',
+              showInMenu: true
+            },
+            components: require('@/pages/product/BatchTag')
           }
         ]
       },
