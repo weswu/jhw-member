@@ -82,7 +82,7 @@ export default {
         this.activeName = this.$route.name
       }
       this.$nextTick(() => {
-        this.$refs.menu.updateActiveName()
+        this.$refs.menu && this.$refs.menu.updateActiveName()
       })
     },
     collapsedSider () {
