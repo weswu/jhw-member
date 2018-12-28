@@ -146,8 +146,8 @@ export default {
   },
   data () {
     return {
-      list: [],
-      listTest: [
+      listTest: [],
+      list: [
         {
           id: '99',
           seoTitle: '我的网站',
@@ -309,7 +309,7 @@ export default {
     },
     // 网站上线
     bind (e) {
-      this.$store.commit('setLayoutId', parseInt(e))
+      this.$store.commit('setLayoutId', e)
       this.$router.push({path: '/bind', query: {layoutId: e}})
     },
     // 更多

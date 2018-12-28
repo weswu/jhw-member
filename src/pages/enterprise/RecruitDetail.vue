@@ -17,6 +17,9 @@
       <FormItem label="招聘人数：">
         <Input v-model="detail.sum" placeholder="请输入招聘人数"></Input>
       </FormItem>
+      <FormItem label="职责：">
+        <Input v-model="detail.obligation" type="textarea" :rows="4" style="width:450px;" placeholder="请输入岗位职责" />
+      </FormItem>
       <FormItem label="要求：">
         <UE :content='detail.content' ref='ue' :eWidth="535" :eHeight="350"></UE>
       </FormItem>

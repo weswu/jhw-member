@@ -21,12 +21,13 @@
         </DropdownMenu>
       </Dropdown>
       <a href="#/" class="header_link">首页</a>
-      <Dropdown placement="bottom" class="j_dropdown_browser j_dropdown_word" v-if="agent.vManage || agent.dNews || agent.dLog">
+      <Dropdown placement="bottom" class="j_dropdown_browser j_dropdown_word">
         <a class="header_link" href="javascript:;">
-          文档
+          帮助
         </a>
         <DropdownMenu slot="list">
           <ul class="browser-dropdown">
+            <li><a href="https://docs.qq.com/doc/B3DcZh3LYq1T0nH23W15cjOF4HCYjk0Il6ZP1" target="_blank">常见问题</a></li>
             <li v-if="agent.vManage"><a :href="agent.vManage" target="_blank">教程中心</a></li>
             <li v-if="agent.dNews"><a :href="agent.dNews" target="_blank">建站资讯</a></li>
             <li v-if="agent.dLog"><a :href="agent.dLog" :target="agent.agentId ? '_blank' : '_self'">更新日志</a></li>

@@ -141,7 +141,7 @@ export default {
             content: '温馨提醒：如果您之前有绑定过域名的，请前往重新“域名绑定”',
             okText: '前往',
             onOk: () => {
-              this.$store.commit('setLayoutId', parseInt(this.detail.layoutId))
+              this.$store.commit('setLayoutId', this.detail.layoutId)
               this.$router.push({path: '/bind', query: {layoutId: this.detail.layoutId}})
             }
           })

@@ -391,7 +391,7 @@ export default {
     // 提交
     submit () {
       var ctx = this
-      this.detail.purchaseNum = this.detail.purchaseNum + ''
+      this.detail.purchaseNum = this.detail.purchaseNum ? (this.detail.purchaseNum + '') : ''
       // 多分类
       this.detail.category = this.$refs.category.list.join()
       // 上架
@@ -416,7 +416,6 @@ export default {
         }
       })
       this.detail.photo2 = JSON.stringify(imageListStore)
-      this.detail.productImageListStore = JSON.stringify(imageListStore)
       this.detail.taglist = ''
       // 编辑器
       if (this.$refs.ue1) this.detail.proddesc = this.$refs.ue1.getUEContent()
