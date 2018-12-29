@@ -17,12 +17,14 @@
       <FormItem label="招聘人数：">
         <Input v-model="detail.sum" placeholder="请输入招聘人数"></Input>
       </FormItem>
-      <FormItem label="职责：">
-        <Input v-model="detail.obligation" type="textarea" :rows="4" style="width:450px;" placeholder="请输入岗位职责" />
-      </FormItem>
-      <FormItem label="要求：">
-        <UE :content='detail.content' ref='ue' :eWidth="535" :eHeight="350"></UE>
-      </FormItem>
+      <Tabs active-key="key1" :animated="false">
+        <Tab-pane label="职责" key="key1">
+          <UE :content='detail.obligation' ref='ue2' :eWidth="666" :eHeight="350"></UE>
+        </Tab-pane>
+        <Tab-pane label="要求" key="key2">
+          <UE :content='detail.content' ref='ue' :eWidth="666" :eHeight="350"></UE>
+        </Tab-pane>
+      </Tabs>
     </Form>
   </Modal>
 </template>
@@ -57,6 +59,7 @@ export default {
           if (res.success) {
             this.detail = res.attributes.data
             this.$refs.ue.setUEContent(this.detail.content)
+            this.$refs.ue2.setUEContent(this.detail.obligation)
           } else {
             this.$Message.error(res.msg)
           }
@@ -64,6 +67,7 @@ export default {
       } else {
         this.detail = {}
         this.$refs.ue.setUEContent('<p><br/></p>')
+        this.$refs.ue2.setUEContent('<p><br/></p>')
       }
     },
     cancel () {
@@ -73,6 +77,7 @@ export default {
       this.$refs[name].validate((valid) => {
         if (valid) {
           this.detail.content = this.$refs.ue.getUEContent()
+          this.detail.obligation = this.$refs.ue2.getUEContent()
           let data = {
             model: JSON.stringify(this.detail)
           }
@@ -101,5 +106,8 @@ export default {
 .j_recruit_deatil .ivu-modal{
   width: 700px !important;
   top: 50px;
+  .ivu-tabs-nav-scroll{
+    margin-left: 37px;
+  }
 }
 </style>

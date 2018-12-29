@@ -202,8 +202,16 @@ export default {
           let detail = this.detail
           this.detail.items.forEach(item => {
             if (item.isEnabled === '01') {
-              if (item.attributeType === 'checkbox') {
+              if (item.attributeType === 'select') {
                 detail[item.attId] = item.value.join()
+              } else if (item.attributeType === 'checkbox') {
+                let val = ''
+                item.value.forEach(row => {
+                  if (row.checked === 'true') {
+                    val = val ? (val + ',' + row.value) : row.value
+                  }
+                })
+                detail[item.attId] = val
               } else if (item.attributeType === 'number') {
                 detail[item.attId] = item.value + ''
               } else if (item.attributeType === 'date') {
