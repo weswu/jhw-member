@@ -1,13 +1,13 @@
 <template>
   <div class="j_app j_panel">
     <Poptip trigger="hover" placement="right" width="228">
-      <img src="platform/img/app.png" alt="">
+      <img :src="agent.miniprogramcode ? ('http://img.jihui88.com/' + agent.miniprogramcode) : 'platform/img/app.png'" alt="">
       <div slot="content">
-        <img src="platform/img/app.png" alt="" style="width:182px;height:182px;">
+        <img :src="agent.miniprogramcode ? ('http://img.jihui88.com/' + agent.miniprogramcode) : 'platform/img/app.png'" alt="" style="width:182px;height:182px;">
       </div>
     </Poptip>
     <p>
-      <span>机汇网会员登录（小程序）</span>
+      <span>{{agent.user.enterprise.name}}会员登录（小程序）</span>
       随时随地移动管控<br>
       独有的行业咨询、在线直播<br>
       更安全，更便捷
@@ -16,7 +16,11 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
 export default {
+  computed: {
+    ...mapState(['agent'])
+  }
 }
 </script>
 

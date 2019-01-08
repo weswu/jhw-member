@@ -11,6 +11,7 @@
               <JOrder style="margin-bottom: 25px;" v-if="item.value === 'order' && !isSubEmp && !agent.agentId"/>
             </div>
           </div>
+          <JApp v-if="agent.miniprogramcode"/>
         </Col>
         <Col :lg="8" :md="8" class="j_col" style="padding-left:17px;" v-if="!agent.agentId">
           <JBanner/>

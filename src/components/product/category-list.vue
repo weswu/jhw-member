@@ -11,7 +11,7 @@
         <span class="a_normal" style="padding-left:10px;" @click="add">新增分类</span>
         <div class="j_tip j_tip_category" v-if="type === 'product'">
           <div style="position: absolute;">注意: </div>
-          <div style="padding-left: 35px;">产品分类修改后商城属性规格将会相应改变，建议先选择好分类后再设置商城属性规格。</div>
+          <div style="padding-left: 35px;">产品分类修改后商城属性规格将会相应改变，建议先选择好分类后再设置商城属性规格。产品分类改变后，商城规格将消失需重新添加</div>
         </div>
       </span>
       <span v-if="index > 0" class="a_normal" style="padding-left:10px;" @click="del(index)">删除分类</span>
