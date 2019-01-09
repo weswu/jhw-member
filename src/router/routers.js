@@ -269,6 +269,15 @@ export default [
               showInMenu: true
             },
             components: require('@/pages/enterprise/TeamIntro')
+          },
+          {
+            path: 'distribution',
+            name: 'distribution',
+            meta: {
+              title: '网络分布',
+              showInMenu: true
+            },
+            components: require('@/pages/enterprise/Distribution')
           }
         ]
       },
