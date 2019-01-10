@@ -78,7 +78,11 @@ export default {
           }
         })
       } else {
-        this.detail = {}
+        this.detail = {
+          province: '',
+          city: '',
+          country: ''
+        }
         this.$refs.ue.setUEContent('<p><br/></p>')
         this.$refs.ue2.setUEContent('<p><br/></p>')
       }

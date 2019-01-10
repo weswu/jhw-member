@@ -62,6 +62,10 @@ export default {
     add () {
       this.$refs.detail.open()
     },
+    lanChange () {
+      this.searchData.page = 1
+      this.get()
+    },
     // 过滤
     renderOperate (h, params) {
       var ctx = this
