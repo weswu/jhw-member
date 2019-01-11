@@ -110,11 +110,7 @@ export default {
     submit () {
       this.detail.summary = this.$refs.ue.getUEContent()
       this.detail.detail = this.$refs.ue2.getUEContent()
-      let url = 'distributionEdit'
-      if (!this.detail.distributionId) {
-        url = 'distributionSave'
-      }
-      this.$http.post('/rest/api/distribution/' + url, qs.stringify(this.detail)).then((res) => {
+      this.$http.post('/rest/api/distribution/distributionSave', qs.stringify(this.detail)).then((res) => {
         if (res.success) {
           this.$Message.success('保存成功')
           this.$emit('on-change')
