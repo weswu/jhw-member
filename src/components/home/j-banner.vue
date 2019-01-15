@@ -1,8 +1,8 @@
 <template>
   <div class="j_carousel j_panel">
     <Carousel v-model="value1" :height="'auto'" :radius-dot="radiusDot" :dots="dots" loop>
-      <CarouselItem>
-        <a href="http://xueyuan.jihui88.com/news-detail-201950.html" target="_blank"><img :src="'platform/img/banner1.jpg'"/></a>
+      <CarouselItem v-for="item in list" :key="item.attId">
+        <a :href="item.linkUrl" target="_blank"><img :src="item.serverPath"/></a>
       </CarouselItem>
     </Carousel>
   </div>
@@ -11,6 +11,7 @@
 
 <script>
 export default {
+  props: ['list'],
   data () {
     return {
       value1: 0,
@@ -26,9 +27,6 @@ export default {
 .j_carousel{
   padding: 25px;
   margin-bottom: 26px;
-  .ivu-carousel-track,.ivu-carousel-item{
-    width: 100% !important;
-  }
   .demo-carousel{
     background: @background-gray-color;
     text-align: center;

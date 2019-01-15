@@ -49,7 +49,9 @@
             </tr>
           </tbody>
         </table>
-        <Button type="primary" @click="ok" style="width:124px;">下载</Button><a :href="url1" target="_blank" class="a_underline" style="margin-left:15px;" v-if="url1">浏览器阻止，点击这里下载</a>
+        <Button type="primary" @click="ok" style="width:124px;">下载</Button>
+        <a :href="url1" target="_blank" class="a_underline" style="margin-left:15px;" v-if="url1">浏览器阻止，点击这里下载</a>
+        <span class="j_unit a_normal">{{text}}aaa</span>
       </div>
       <a :href="url2" target="_blank" v-if="active === '1'" style="margin-top:20px;display: block;"><Button type="primary" style="width:124px;"><span v-if="!url2">链接生成中</span><span v-else>下载</span></Button></a>
     </Content>
@@ -104,7 +106,9 @@ export default {
         { value: '6', text: '-' }
       ],
       url1: '',
-      url2: ''
+      url2: '',
+      text: '',
+      timer: ''
     }
   },
   methods: {
@@ -113,20 +117,39 @@ export default {
         fields: this.col.join() + (this.col2.length > 0 ? ',' + this.col2.join() : ''),
         layoutId: this.$store.state.layoutId
       }
+      this.$store.commit('setLoading', true)
+      this.timer = setInterval(() => {
+        this.setTime()
+      }, 2000)
       this.$http.post('/rest/api/product/exportProductsToExcel?' + qs.stringify(data)).then(res => {
+        this.$store.commit('setLoading', false)
         if (res.success) {
           this.url1 = res.attributes.data
           window.open(res.attributes.data)
         }
       })
     },
-    exportProductImg () {
-      this.active = '1'
-      this.$http.get('/rest/api/product/exportProductImg').then(res => {
+    setTime () {
+      this.$http.post('/rest/api/product/exportProductsToExcelStatus').then(res => {
         if (res.success) {
-          this.url2 = res.attributes.data
+          this.text = res.attributes.data
+          if (this.text.indexOf('products-download') > -1) {
+            this.$store.commit('setLoading', false)
+            clearInterval(this.timer)
+            this.timer = null
+          }
         }
       })
+    },
+    exportProductImg () {
+      this.active = '1'
+      if (!this.url2) {
+        this.$http.get('/rest/api/product/exportProductImg').then(res => {
+          if (res.success) {
+            this.url2 = res.attributes.data
+          }
+        })
+      }
     }
   }
 }

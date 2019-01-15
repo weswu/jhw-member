@@ -148,9 +148,8 @@ export default {
     },
     // 提交
     submit () {
-      console.log(this.detail.addTime)
       if (!this.detail.title) {
-        return this.$Message.info('新闻标题不能为空')
+        // return this.$Message.info('新闻标题不能为空')
       }
       if (this.$refs.ue) this.detail.content = this.$refs.ue.getUEContent()
       // 多分类
@@ -166,6 +165,7 @@ export default {
       this.$http.post('/rest/api/news/detail' + url, qs.stringify(data)).then((res) => {
         if (res.success) {
           this.detail = res.attributes.data
+          this.detail.addTime = this.dateFormat(this.detail.addTime, 'yyyy-MM-dd hh:mm:ss')
           this.$Message.success('保存成功')
         } else {
           this.$Message.error(res.msg)

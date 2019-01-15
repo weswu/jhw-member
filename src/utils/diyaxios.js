@@ -1,13 +1,14 @@
 import iView from 'iview'
 import axios from 'axios'
 axios.defaults.timeout = 15000
+
 // 添加一个请求拦截器
 axios.interceptors.request.use(config => {
+  iView.LoadingBar.start()
   // header都加上token
   if (config.url.indexOf('/rest/pc/api/') > -1 || config.url.indexOf('/rest/buy/api/') > -1) {
     config.headers['X-CSRF-Token'] = window.token
   }
-  iView.LoadingBar.start()
   return config
 }, function (error) {
   // Do something with request error
@@ -15,6 +16,7 @@ axios.interceptors.request.use(config => {
 })
 // 响应拦截器
 axios.interceptors.response.use(res => {
+  iView.LoadingBar.finish()
   if (res.status === 654) { // 百度云请求超时检测
     window.alert('请求超时！')
   }
@@ -34,7 +36,14 @@ axios.interceptors.response.use(res => {
       }
     }
   }
-  iView.LoadingBar.finish()
+  // 敏感词
+  if (res.data.msgType === 'badWord') {
+    let msg = res.data.msg.substring(1, res.data.msg.length - 1)
+    return iView.Message.error({
+      content: '您输入的内容含有敏感词“' + msg + '”，请重新填写。',
+      duration: 4
+    })
+  }
   return res.data
 }, (error) => {
   console.log('promise error:' + error)

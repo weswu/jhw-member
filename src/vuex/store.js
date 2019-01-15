@@ -32,6 +32,7 @@ const state = {
   layoutId: '',
   win: '', // 小于400的窗口
   agent: { // 经销商
+    // agentId: 'cc',
     bindUrl: 'www.jihui88.com',
     manageLogo1: '',
     vManage: 'http://v.qq.com/vplus/4aa13bffe0e2662991069f1800862a96/foldervideos/gr2002901enccnk',
@@ -49,6 +50,7 @@ const state = {
     vAnalysis: 'https://v.qq.com/x/page/j0753ycgfeh.html',
     dNews: 'http://xueyuan.jihui88.com/news.html',
     dLog: '#/update',
+    vDesign: 'http://v.qq.com/vplus/4aa13bffe0e2662991069f1800862a96/foldervideos/ja70029011ynh0d',
     user: {
       qq: '1550676880',
       cellphone: '13967938189',
@@ -213,7 +215,7 @@ const store = new Vuex.Store({
           })
           if (state.staticList.length === 0) this.dispatch('getStaticList')
         } else {
-          this._vm.$Message.success(res.msg)
+          res.msg && this._vm.$Message.error(res.msg)
         }
       })
     },
@@ -485,7 +487,7 @@ const store = new Vuex.Store({
         if (res.success) {
           // this.dispatch('getEnterprise')
         } else {
-          this._vm.$Message.success(res.msg)
+          this._vm.$Message.error(res.msg)
         }
       })
     },

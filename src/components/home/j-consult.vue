@@ -4,7 +4,6 @@
       <i class="iconfont icon-paimaizixun"></i>
       咨<br/>询<br/> <span v-if="!agent.agentId"><span class="dian">.</span><br/>建<br/>议</span>
     </div>
-    <div class="shipin yd_jiaocheng" @click="toggle2">教<br/>程</div>
     <Card class="j_consult_content" v-if="display">
       <i class="iconfont icon-x" @click="close"></i>
       <Row>
@@ -22,61 +21,34 @@
         </Col>
       </Row>
     </Card>
-    <Card class="j_consult_content j_consult_content2" v-if="display2">
-      <i class="iconfont icon-x" @click="close2"></i>
-      <div class="ivu-row">
-          <div class="item" @click="yindao">
-            <span>新手提示</span> <p>让您快速了解我们的后台</p>
-          </div>
-          <a :href="agent.vManage" target="_blank" class="item" v-if="agent.vManage">
-            <span>视频教程</span> <p>视频教程大全，方便您详细观看</p>
-          </a>
-      </div>
-    </Card>
     <Feedback ref="feedback"/>
-    <YinDao ref="yindao"/>
   </div>
 </template>
 
 <script>
 import { mapState } from 'vuex'
 import Feedback from '@/components/home/j-feedback'
-import YinDao from '@/components/home/j-yindao'
 export default {
   components: {
-    Feedback,
-    YinDao
+    Feedback
   },
   computed: {
     ...mapState(['agent'])
   },
   data () {
     return {
-      display: false,
-      display2: false
+      display: false
     }
   },
   methods: {
     toggle () {
       this.display = !this.display
-      this.display2 = false
-    },
-    toggle2 () {
-      this.display2 = !this.display2
-      this.display = false
     },
     close () {
       this.display = false
     },
-    close2 () {
-      this.display2 = false
-    },
     open () {
       this.$refs.feedback.open()
-    },
-    yindao () {
-      this.display2 = false
-      this.$refs.yindao.open()
     }
   }
 }

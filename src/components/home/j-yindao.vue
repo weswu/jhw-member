@@ -68,12 +68,12 @@ export default {
           index: 6
         },
         {
-          text: '点击"教程"，<br/>可以查看到后台相关教程（新手提示、视频教程）。',
+          text: '点击"帮助"，<br/>可以查看：新手提示、常见问题、视频教程等。',
           class: 'yd_jiaocheng',
           index: 7
         },
         {
-          text: '关闭“新手提示”后，您可以在后台-首页-右下角的“教程”-“新手提示”中重新打开。',
+          text: '关闭“新手提示”后，您可以在后台-首页-右上角的“帮助”-“新手提示”中重新打开。',
           class: 'end',
           index: 8
         }
@@ -99,7 +99,7 @@ export default {
         vm.$store.state.customData.yindao = true
         vm.$store.dispatch('SAVE_CUSTOM_DATA')
       }
-    }, 1000)
+    }, 2000)
   },
   methods: {
     init () {
@@ -192,7 +192,7 @@ export default {
       top: 50px;
     }
   }
-  .yd_message,.j_home_static,.yd_subscribe{
+  .yd_message,.j_home_static,.yd_subscribe,.yd_jiaocheng{
     left: -125px;
     top: 110px;
     &::after{
@@ -223,7 +223,7 @@ export default {
       top: -40px;
     }
   }
-  .yd_zixun,.yd_jiaocheng{
+  .yd_zixun{
     left: -385px;
     top: -42px;
     &::after{
@@ -240,7 +240,8 @@ export default {
     }
   }
   .yd_jiaocheng{
-    top: -80px;
+    top: 99px;
+    left: -137px;
   }
   // 基本内容
   .counter{
@@ -287,6 +288,9 @@ export default {
       float: right;
       text-align: center;
     }
+  }
+  .y_content{
+    background: #fef49b;
   }
   p{
     height: 128px;

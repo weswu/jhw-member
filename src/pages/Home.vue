@@ -2,7 +2,7 @@
   <Layout class="j_home" style="background: #e7eaef">
     <Content :style="{padding: '32px 32px 0 30px'}">
       <Row :gutter="24">
-        <Col :lg="agent.agentId ? 24 : 16" :md="agent.agentId ? 24 : 16" class="j_col">
+        <Col :lg="!agent.miniprogramcode && list.length === 0 ? 24 : 16" :md="!agent.miniprogramcode && list.length === 0 > 0 ? 24 : 16" class="j_col">
           <JWebsite style="margin-bottom: 25px;"/>
           <div ref="HomeSortable">
             <div v-for="item in $store.state.customData.homeSort" :key="item.value" v-if="item.status === '01'">
@@ -11,16 +11,15 @@
               <JOrder style="margin-bottom: 25px;" v-if="item.value === 'order' && !isSubEmp && !agent.agentId"/>
             </div>
           </div>
-          <JApp v-if="agent.miniprogramcode"/>
         </Col>
-        <Col :lg="8" :md="8" class="j_col" style="padding-left:17px;" v-if="!agent.agentId">
-          <JBanner/>
-          <JSubscribe v-if="!isSubEmp"/>
-          <div v-for="item in $store.state.customData.homeSort" :key="item.value" v-if="item.status === '01'">
+        <Col :lg="8" :md="8" class="j_col" style="padding-left:17px;">
+          <JBanner :list="list" v-if="list.length>0"/>
+          <JSubscribe v-if="!isSubEmp && !agent.agentId"/>
+          <div v-for="item in $store.state.customData.homeSort" :key="item.value" v-if="item.status === '01' && !agent.agentId">
             <JMessage style="margin-bottom: 25px;" v-if="item.value === 'message'"/>
             <JService style="margin-bottom: 25px;" v-if="item.value === 'service'"/>
           </div>
-          <JApp/>
+          <JApp v-if="agent.miniprogramcode || !agent.agentId"/>
         </Col>
       </Row>
       <JConsult/>
@@ -56,7 +55,8 @@ export default {
   },
   data () {
     return {
-      isSubEmp: false
+      isSubEmp: false,
+      list: []
     }
   },
   computed: {
@@ -87,6 +87,33 @@ export default {
         let pris = this.userInfo.privilege
         if (pris) this.isSubEmp = true
       }
+    },
+    agent: {
+      handler () {
+        this.init()
+      }
+    }
+  },
+  created () {
+    if (location.host === 'www.jihui88.com') {
+      this.list = [
+        {
+          serverPath: 'platform/img/banner1.jpg',
+          linkUrl: 'http://xueyuan.jihui88.com/news-detail-201950.html'
+        }
+      ]
+    }
+  },
+  methods: {
+    init () {
+      this.$http.get('/rest/api/comm/album/wxappbanner?enterpriseId=' + this.agent.user.enterpriseId).then(res => {
+        let data = res.attributes.data
+        data.forEach(item => {
+          item.serverPath = 'http://img.jihui88.com/' + item.serverPath
+          item.linkUrl = (item.linkUrl || 'javascript:;')
+        })
+        this.list = res.attributes.data
+      })
     }
   }
 }

@@ -5,6 +5,7 @@
         <a :href="'http://'+agent.bindUrl" target="_blank"><img :src="'http://img.jihui88.com/'+agent.manageLogo1" alt=""></a>
       </div>
       <Badge count="体验版 v4" class="badge-primary"></Badge>
+      <YinDao ref="yindao"/>
     </Col>
     <Col class="userInfo">
       <Dropdown placement="bottom" class="j_dropdown_browser">
@@ -23,12 +24,14 @@
       <a href="#/" class="header_link">首页</a>
       <Dropdown placement="bottom" class="j_dropdown_browser j_dropdown_word">
         <a class="header_link" href="javascript:;">
-          帮助
+          <span class="yd_jiaocheng">帮助</span>
         </a>
         <DropdownMenu slot="list">
           <ul class="browser-dropdown">
+            <li @click="yindao"><a href="javascript:;">新手提示</a></li>
             <li><a href="https://docs.qq.com/doc/B3DcZh3LYq1T0nH23W15cjOF4HCYjk0Il6ZP1" target="_blank">常见问题</a></li>
-            <li v-if="agent.vManage"><a :href="agent.vManage" target="_blank">教程中心</a></li>
+            <li v-if="agent.vManage"><a :href="agent.vManage" target="_blank">后台操作视频</a></li>
+            <li v-if="agent.vDesign"><a :href="agent.vDesign" target="_blank">建站流程视频</a></li>
             <li v-if="agent.dNews"><a :href="agent.dNews" target="_blank">建站资讯</a></li>
             <li v-if="agent.dLog"><a :href="agent.dLog" :target="agent.agentId ? '_blank' : '_self'">更新日志</a></li>
           </ul>
@@ -104,10 +107,12 @@
 import { mapState, mapActions } from 'vuex'
 import Detail from '@/pages/message/Detail'
 import JLoading from '@/components/group/j-loading'
+import YinDao from '@/components/home/j-yindao'
 export default {
   components: {
     Detail,
-    JLoading
+    JLoading,
+    YinDao
   },
   data () {
     return {
@@ -228,6 +233,9 @@ export default {
       if (this.messageList.length > 0) {
         this.message = true
       }
+    },
+    yindao () {
+      this.$refs.yindao.open()
     }
   }
 }
@@ -464,7 +472,7 @@ export default {
       color: #fff;
     }
     .ivu-dropdown-menu{
-      width: 100px;
+      width: 115px;
     }
   }
 }
