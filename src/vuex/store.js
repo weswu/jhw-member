@@ -51,12 +51,14 @@ const state = {
     dNews: 'http://xueyuan.jihui88.com/news.html',
     dLog: '#/update',
     vDesign: 'http://v.qq.com/vplus/4aa13bffe0e2662991069f1800862a96/foldervideos/ja70029011ynh0d',
+    miniprogramcode: 'http://www.jihui88.com/manage_v4/platform/img/app.png',
     user: {
       qq: '1550676880',
       cellphone: '13967938189',
       enterprise: {
         name: '机汇网'
-      }
+      },
+      enterpriseId: 'Enterp_0000000000000000000064700'
     }
   },
   // 记录操作习惯
@@ -510,6 +512,11 @@ const store = new Vuex.Store({
               video = JSON.parse(data.manageVideoLink)
             }
             data = Object.assign(data, video)
+            if (data.miniprogramcode) {
+              data.miniprogramcode = 'http://img.jihui88.com/' + data.miniprogramcode
+            } else {
+              data.miniprogramcode = ''
+            }
             this.commit('setAgent', data)
           }
         }

@@ -328,6 +328,16 @@ export default [
               showInMenu: true
             },
             components: require('@/pages/product/DownLoad')
+          },
+          {
+            path: 'product_sensitive',
+            name: 'product_sensitive',
+            meta: {
+              title: '产品敏感词',
+              id: 'product',
+              showInMenu: true
+            },
+            components: require('@/pages/category/Sensitive')
           }
         ]
       },
@@ -355,11 +365,21 @@ export default [
             path: 'news_category',
             name: 'news_category',
             meta: {
-              title: '分类管理',
+              title: '新闻分类',
               id: 'news',
               showInMenu: true
             },
             components: require('@/pages/category/Category')
+          },
+          {
+            path: 'news_sensitive',
+            name: 'news_sensitive',
+            meta: {
+              title: '新闻敏感词',
+              id: 'news',
+              showInMenu: true
+            },
+            components: require('@/pages/category/Sensitive')
           }
         ]
       },

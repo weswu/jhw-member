@@ -51,7 +51,7 @@
         </table>
         <Button type="primary" @click="ok" style="width:124px;">下载</Button>
         <a :href="url1" target="_blank" class="a_underline" style="margin-left:15px;" v-if="url1">浏览器阻止，点击这里下载</a>
-        <span class="j_unit a_normal">{{text}}aaa</span>
+        <span class="j_unit a_normal">{{text}}</span>
       </div>
       <a :href="url2" target="_blank" v-if="active === '1'" style="margin-top:20px;display: block;"><Button type="primary" style="width:124px;"><span v-if="!url2">链接生成中</span><span v-else>下载</span></Button></a>
     </Content>

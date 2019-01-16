@@ -1,9 +1,9 @@
 <template>
   <div class="j_app j_panel">
     <Poptip trigger="hover" placement="right" width="228">
-      <img :src="agent.miniprogramcode ? ('http://img.jihui88.com/' + agent.miniprogramcode) : 'platform/img/app.png'" alt="">
+      <img :src="agent.miniprogramcode" alt="">
       <div slot="content">
-        <img :src="agent.miniprogramcode ? ('http://img.jihui88.com/' + agent.miniprogramcode) : 'platform/img/app.png'" alt="" style="width:182px;height:182px;">
+        <img :src="agent.miniprogramcode" alt="" style="width:182px;height:182px;">
       </div>
     </Poptip>
     <p>

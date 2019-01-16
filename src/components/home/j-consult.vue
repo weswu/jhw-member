@@ -64,11 +64,14 @@ export default {
     width: 24px;
     height: 125px;
     background: #5bd1e7;
-    color: #fff;    text-align: center;
-    cursor: pointer;    line-height: 1.4;
+    color: #fff;
+    text-align: center;
+    cursor: pointer;
+    line-height: 1.4;
     box-shadow: 0 1px 6px rgba(0, 0, 0, 0.2);
     i{
-      margin-top: 5px;    display: inline-block;
+      margin-top: 5px;
+     display: inline-block;
     }
     .dian{
       font-size: 18px;

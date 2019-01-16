@@ -38,11 +38,11 @@ export default {
   }
   .ivu-carousel-dots li button.radius{
     width: 11px;height: 11px;
-    background: #f4f3f5;
+    background: #f0f0f0;
   }
   .ivu-carousel-dots li.ivu-carousel-active > button.radius{
     width: 11px;height: 11px;
-    background: #e7eaef
+    background: #e8e8e8
   }
 }
 </style>

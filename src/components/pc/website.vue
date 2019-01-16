@@ -146,8 +146,8 @@ export default {
   },
   data () {
     return {
-      listTest: [],
-      list: [
+      list: [],
+      listTest: [
         {
           id: '99',
           seoTitle: '我的网站',

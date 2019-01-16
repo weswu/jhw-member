@@ -12,6 +12,10 @@
 - [sortablejs] 拖拉组件
 - [vue-clipboard2] 复制
 
+
+### 内容
+  banner图片 applet applet@181214
+
 #### 后期优化
 搜索 `<!-- 优化`
 

@@ -95,24 +95,22 @@ export default {
     }
   },
   created () {
-    if (location.host === 'www.jihui88.com') {
-      this.list = [
-        {
-          serverPath: 'platform/img/banner1.jpg',
-          linkUrl: 'http://xueyuan.jihui88.com/news-detail-201950.html'
-        }
-      ]
+    if (location.port === '8080' || location.host === 'www.jihui88.com') {
+      this.init()
     }
   },
   methods: {
     init () {
       this.$http.get('/rest/api/comm/album/wxappbanner?enterpriseId=' + this.agent.user.enterpriseId).then(res => {
         let data = res.attributes.data
-        data.forEach(item => {
+        let list = []
+        for (var i = 0; i < data.length; i++) {
+          var item = data[data.length - 1 - i]
           item.serverPath = 'http://img.jihui88.com/' + item.serverPath
           item.linkUrl = (item.linkUrl || 'javascript:;')
-        })
-        this.list = res.attributes.data
+          list.push(item)
+        }
+        this.list = list
       })
     }
   }
