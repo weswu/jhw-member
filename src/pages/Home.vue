@@ -95,7 +95,9 @@ export default {
     }
   },
   created () {
-    if (location.port === '8080' || location.host === 'www.jihui88.com') {
+    if (this.agent.wxappBanner) {
+      this.list = this.agent.wxappBanner
+    } else if (location.port === '8080' || location.host === 'www.jihui88.com') {
       this.init()
     }
   },
@@ -111,6 +113,8 @@ export default {
           list.push(item)
         }
         this.list = list
+        this.agent.wxappBanner = list
+        this.$store.commit('setAgent', this.agent)
       })
     }
   }

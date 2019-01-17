@@ -52,6 +52,7 @@ const state = {
     dLog: '#/update',
     vDesign: 'http://v.qq.com/vplus/4aa13bffe0e2662991069f1800862a96/foldervideos/ja70029011ynh0d',
     miniprogramcode: 'http://www.jihui88.com/manage_v4/platform/img/app.png',
+    wxappBanner: '',
     user: {
       qq: '1550676880',
       cellphone: '13967938189',
