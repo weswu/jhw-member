@@ -18,7 +18,7 @@
             <Button class="search" @click="get">搜索</Button>
           </Col>
           <Col>
-            <a href="#/storage_service" class="a_underline">配置附件上传类型</a>
+            <a href="#/storage_service" class="a_underline" v-if="$route.name !== 'storage_service'">配置附件上传类型</a>
             <JUpload :albumId="searchData.belongId" @on-success="get" style="display: inline-block;margin-left: 7px;">
               <Button type="info" slot="content" @click="config"><i class="iconfont icon-shangchuan"></i>上传附件到当前目录</Button>
             </JUpload>
@@ -191,7 +191,18 @@ export default {
     },
     config (e) {
       if (!this.hasConfig) {
-        this.$Message.info('请配置附件上传类型')
+        if (this.$route.name === 'storage_service') {
+          this.modal = false
+          this.$Message.info({
+            duration: 3,
+            content: '请先设置“可选方案”，再上传'
+          })
+        } else {
+          this.$Message.info({
+            duration: 3,
+            content: '请配置附件上传类型,前往<a href="#/storage_service" class="a_underline">设置可选方案</a>'
+          })
+        }
         e.preventDefault()
         e.stopPropagation()
       }
