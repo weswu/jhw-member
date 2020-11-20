@@ -1,7 +1,7 @@
 ![logo.png](http://img.jihui88.com/upload/w/w5/www2/picture/2017/07/05/54b68a5c-fdd2-4842-9e1e-b88d1c403f28.png)
 
 # jhw-management-platform
-> [机汇网后台管理](http://www.jihui88.com/member_new/index.html#/)（v4.0）
+> [机汇网后台管理](http://www.jihui88.com/member_new/index.html#/)（v4.0） ggggfj/123456
 
 ## Demo
 ![图片](https://pro.modao.cc/uploads3/images/1966/19661206/artboard_1527473050.png)
