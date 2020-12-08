@@ -90,13 +90,23 @@ npm run build
 
 
 ## 技术支持
-- [机汇网后台平面地址](https://pro.modao.cc/app/5c5bQDgEFovlgX6fdP4W77J2upRmHzb#screen=s4b3e7bdfa2152531100800)
-- [机汇网内部文档（用户后台接口、界面编辑接口）](https://jihui88.oschina.io/jhw-api/?file=home-%E9%A6%96%E9%A1%B5)
-
-### 其它数据
 
 #### 接口
 - [jihuiapi](http://api.jihui88.net/jihuiapi/)
+- [PC网站设计](https://jihui88.oschina.io/jhdoc/?file=%E9%A6%96%E9%A1%B5)
+- [机汇网内部文档（用户后台接口、界面编辑接口）](https://jihui88.oschina.io/jhw-api/?file=home-%E9%A6%96%E9%A1%B5)
+
+#### 后台
+- [机汇网后台平面地址](https://pro.modao.cc/app/5c5bQDgEFovlgX6fdP4W77J2upRmHzb#screen=s4b3e7bdfa2152531100800)
+- [机汇网后台电脑端 平面](https://pro.modao.cc/app/tCqdvvXsSPIu6LbOjkeyrXJrPL6LdvV#screen=s9ee2bdf724153965675800)
+- [机汇网后台小程序](https://pro.modao.cc/app/N7eQz2ifFwfM0Jsy8zjMcJXdZIUnl7R#screen=sc40e5241d7152663162700)
+- [经销商后台 平面](https://pro.modao.cc/app/b3Vtu4k8TMQFBimdto15jpLCT6LK84o#screen=s9f2a2e5aee153992602900)
+- [经销商补单 平面](https://pro.modao.cc/app/54f9539e5c84161e102a3ab4c372f3f87c81632c#screen=s678db4b85b152421587700)
+- [内部公众号文章管理系统](http://wca.jihui88.com/home/index.html#/)
+- [jihui88系统后台管理登陆](http://www.jihui88.com/admin/login.jsp)
+- [新闻后台登录](http://www.jihui88.com/news/admin/login)
+- [机汇网PC网站系统后台](http://pc.jihui88.com/pc/admin.html)
+- [机汇网微传单](http://wcd.jihui88.com/leaflet/index.html)
 
 #### 官网/同类
 - [手机端](http://m.jihui88.com/)
@@ -109,17 +119,6 @@ npm run build
 - [templatemonster](https://www.templatemonster.com/)
 - [突唯阿 建站](http://tuweia.cn/)
 - [易企秀 微传单](https://store.eqxiu.com/index/)
-
-#### 后台
-- [机汇网后台电脑端 平面](https://pro.modao.cc/app/tCqdvvXsSPIu6LbOjkeyrXJrPL6LdvV#screen=s9ee2bdf724153965675800)
-- [机汇网后台小程序](https://pro.modao.cc/app/N7eQz2ifFwfM0Jsy8zjMcJXdZIUnl7R#screen=sc40e5241d7152663162700)
-- [经销商后台 平面](https://pro.modao.cc/app/b3Vtu4k8TMQFBimdto15jpLCT6LK84o#screen=s9f2a2e5aee153992602900)
-- [经销商补单 平面](https://pro.modao.cc/app/54f9539e5c84161e102a3ab4c372f3f87c81632c#screen=s678db4b85b152421587700)
-- [内部公众号文章管理系统](http://wca.jihui88.com/home/index.html#/)
-- [jihui88系统后台管理登陆](http://www.jihui88.com/admin/login.jsp)
-- [新闻后台登录](http://www.jihui88.com/news/admin/login)
-- [机汇网PC网站系统后台](http://pc.jihui88.com/pc/admin.html)
-- [机汇网微传单](http://wcd.jihui88.com/leaflet/index.html)
 
 
 
